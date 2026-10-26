@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터</title>
+<style>
+:root{--bg:#f2f4ee;--surface:#fbfcf8;--ink:#1c2a20;--mute:#5d6b60;--line:#cdd6c8;--accent:#2f6b4a;
+--y:#d9a514;--b:#2f72cf;--p:#8346c9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0c0a;--surface:#141814;--ink:#e6eee6;--mute:#93a496;--line:#2c3b2f;--accent:#6fc194;--y:#f0c040;--b:#5b9cf0;--p:#a878ec;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0c0a;--surface:#141814;--ink:#e6eee6;--mute:#93a496;--line:#2c3b2f;--accent:#6fc194;--y:#f0c040;--b:#5b9cf0;--p:#a878ec;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
+main{max-width:980px;margin:0 auto;padding:56px 16px 48px}
+.tools{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:16px;display:flex;gap:8px;z-index:5}
+.tools select{width:auto}
+.tools button{width:auto;margin:0;padding:6px 10px;background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+h1{font-size:1.7rem;margin:0 0 4px;letter-spacing:-.02em}
+h2{font-size:1.05rem;margin:0 0 12px}
+.sub{color:var(--mute);margin:0 0 20px;max-width:64ch}
+.grid{display:grid;grid-template-columns:270px 1fr;gap:16px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0;font-size:.9rem}
+label span.h{color:var(--mute);font-size:.78rem;display:block}
+input[type=number],input[type=text],select{width:72px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+select{width:auto;max-width:150px}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+fieldset{border:0;border-top:1px solid var(--line);margin:10px 0 0;padding:8px 0 0}
+legend{font-weight:600;font-size:.85rem;padding-right:8px;color:var(--accent)}
+button{background:var(--accent);color:var(--bg);border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;width:100%;margin-top:12px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.big{display:flex;flex-wrap:wrap;gap:20px;align-items:baseline;margin-bottom:14px}
+.big b{font-size:2.3rem;letter-spacing:-.03em;line-height:1}
+.big small{color:var(--mute)}
+.bar{display:grid;grid-template-columns:70px 1fr 130px;gap:10px;align-items:center;margin:6px 0}
+.bar i{display:block;height:14px;border-radius:7px}
+.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.stat small{color:var(--mute);display:block;font-size:.76rem}
+.stat b{font-variant-numeric:tabular-nums}
+.hist{display:flex;align-items:flex-end;gap:2px;height:130px;margin-top:6px}
+.hist div{flex:1;background:var(--accent);opacity:.75;border-radius:2px 2px 0 0;min-height:1px}
+.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:.76rem}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+.note{color:var(--mute);font-size:.8rem}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin:10px 0 0;text-align:center;font-size:.9rem}
+.px input{width:100%;text-align:center}
+.rt{display:flex;align-items:center;gap:6px}
+input:disabled{opacity:.4;cursor:not-allowed}
+.panel>fieldset:first-child{border-top:0;margin-top:0;padding-top:0}
+</style>
+</head>
+<body>
+<div class="tools"><select id="lang" aria-label="Language"><option value="ko">한국어</option><option value="en">English</option></select><button id="theme" type="button" aria-label="Theme">🌙</button></div>
+<main>
+<h1>패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터</h1>
+<p class="sub">Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.</p>
+<div class="grid">
+<div>
+<div class="panel">
+<button id="run" type="button" style="margin:0 0 4px">시뮬레이션 실행</button>
+<fieldset><legend>시뮬레이션</legend>
+<label>시뮬레이션 맵 수<select id="n"><option selected>5000</option><option>10000</option><option>20000</option><option>50000</option></select></label>
+</fieldset>
+<fieldset><legend>맵 (T16 기준)</legend>
+<label><div>맵 IIQ (%)<span class="h">효과의 절반만 반영</span></div><input type="number" id="iiq" value="200" min="0" max="500"></label>
+<label>무리 크기 (%)<input type="number" id="pack" value="60" min="0" max="300"></label>
+<label><div>작물 쌍 수<span class="h">4, 5: 3쌍은 수확 안 함</span></div><select id="pairs"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="3,4">3, 4</option><option value="4,4,5" selected>4, 5</option><option value="3,4,4,5">3, 4, 5</option></select></label>
+</fieldset>
+<fieldset><legend>시장가 (1카오스당 생기)</legend>
+<label>표시 화폐 단위<select id="unit"><option value="카오스">카오스</option><option value="디바인">디바인</option></select></label>
+<label>1디바인 =<span class="rt"><input type="number" id="ratio" value="300" min="1" step="1" disabled>카오스</span></label>
+<div class="px"><span><i class="dot" style="background:var(--y)"></i>노랑</span><span><i class="dot" style="background:var(--b)"></i>파랑</span><span><i class="dot" style="background:var(--p)"></i>보라</span>
+<input type="number" id="py" value="6" min="0" step="1"><input type="number" id="pb" value="16" min="0" step="1"><input type="number" id="pp" value="40" min="0" step="1"></div>
+</fieldset>
+<fieldset><legend>윤작 (Crop Rotation)</legend>
+<label>윤작(Crop Rotation)<input type="checkbox" id="rot" checked></label>
+<label>T1→T2 확률 (%)<input type="number" id="u1" value="25" min="0" max="100" step="0.5"></label>
+<label><div>T2→T3 확률 (%)<span class="h">글의 측정 20%, 다른 연구는 약 25%</span></div><input type="number" id="u2" value="20" min="0" max="100" step="0.5"></label>
+<label><div>T3→T4 확률 (%)<span class="h">글의 추정은 약 2~5.5%</span></div><input type="number" id="u3" value="3.5" min="0" max="100" step="0.1"></label>
+</fieldset>
+<fieldset><legend>아틀라스 패시브</legend>
+<label>생기의 수량 증가 (%)<input type="number" id="inc" value="18" min="0" max="500"></label>
+<label>T3 씨앗 확률 증가 (%)<input type="number" id="t3inc" value="30" min="0" max="300"></label>
+<label><div>숲의 중심: T4 씨앗 확률 증가 (%)<span class="h">Heart of the Grove</span></div><input type="number" id="t4inc" value="60" min="0" max="300"></label>
+<label><div>숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)<span class="h">Heart of the Grove</span></div><input type="number" id="nw" value="10" min="0" max="100"></label>
+<label>노랑 작물 확률 감소 (%)<input type="number" id="ry" value="0" min="0" max="100"></label>
+<label>파랑 작물 확률 감소 (%)<input type="number" id="rb" value="45" min="0" max="100"></label>
+<label>보라 작물 확률 감소 (%)<input type="number" id="rp" value="25" min="0" max="100"></label>
+<label><div>풍성한 수확: 추가 몬스터 10%<span class="h">Bountiful Harvest</span></div><input type="checkbox" id="bount" checked></label>
+<label>복제 몬스터 확률 (%)<input type="number" id="dupm" value="6" min="0" max="100"></label>
+<label><div>복제 철: 생기 복제 10%<span class="h">Doubling Season</span></div><input type="checkbox" id="dupl" checked></label>
+</fieldset>
+<fieldset><legend>갑충석 (시장가: 카오스)</legend>
+<label><span>복제의 수확 갑충석</span><span class="rt"><input type="number" id="scdp" value="100" min="0" step="0.1"><input type="checkbox" id="scd" checked></span></label>
+<label><span>기괴한 혈통의 갑충석</span><span class="rt"><input type="number" id="sclp" value="0" min="0" step="0.1" disabled><input type="checkbox" id="scl" disabled></span></label>
+</fieldset>
+</div>
+</div>
+<div>
+<div class="panel" aria-live="polite">
+<h2>맵 한 번당 결과</h2>
+<div class="big"><div><b id="tot">-</b><br><small>평균 총 생기</small></div><div><b id="val">-</b><br><small id="vlabel">맵 당 기대 화폐 획득량</small></div><div><b id="net">-</b><br><small>갑충석 비용 차감</small></div></div>
+<div id="bars"></div>
+</div>
+<div class="panel" id="cmpPanel">
+<h2>윤작 선택 전략 비교</h2>
+<div class="scroll"><table id="cmp"></table></div>
+</div>
+<div class="panel">
+<h2>분포</h2>
+<div class="stats" id="stats"></div>
+<div class="hist" id="hist"></div>
+<div class="axis"><span id="a0"></span><span>총 생기</span><span id="a1"></span></div>
+</div>
+<div class="panel" id="redPanel">
+<h2>색 감소 패시브 비교</h2>
+<div class="scroll"><table>
+<tr><th>노랑 / 파랑 / 보라 감소 (%)</th><th>맵당 기대 가치 (C)</th><th>균등 대비</th><th>0 / 45 / 0 대비</th></tr>
+<tr><td>0 / 0 / 0 (균등)</td><td>488</td><td>기준</td><td>-1%</td></tr>
+<tr><td>0 / 45 / 0</td><td>494</td><td>+1%</td><td>기준</td></tr>
+<tr><td>0 / 45 / 25</td><td>498</td><td>+2%</td><td>+1%</td></tr>
+<tr><td>25 / 45 / 0</td><td>484</td><td>-1%</td><td>-2%</td></tr>
+<tr><td>25 / 45 / 25</td><td>493</td><td>+1%</td><td>0%</td></tr>
+<tr><td>10 / 45 / 10</td><td>495</td><td>+1%</td><td>0%</td></tr>
+</table></div>
+<p class="note">고정값. 기본 설정(윤작, 4쌍 : 5쌍 = 2 : 1, 비시듦 10%, 시장가 6/16/40)에서 같은 작물 배치 20,000맵으로 짝지어 비교. 입력을 바꾸면 달라질 수 있음.</p>
+</div>
+<div class="panel note">
+<b>모델 가정.</b> 작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.
+</div>
+</div>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const R=()=>Math.random();
+const RANGE=[[4.5,10],[12,25],[37,57],[190,280]],DROP=[.02,.1,1,1],MEAN=[7.25,18.5,47,235];
+const NAMES=["노랑","파랑","보라"],COL=["var(--y)","var(--b)","var(--p)"];
+function binom(n,p){let k=0;for(let i=0;i<n;i++)if(R()<p)k++;return k}
+function fmt(x,d=0){return x.toLocaleString("ko-KR",{maximumFractionDigits:d,minimumFractionDigits:d})}
+function params(){
+  const g=id=>{const v=parseFloat($(id).value);return isNaN(v)?0:v};
+  return {pack:g("pack"),iiq:g("iiq"),inc:g("inc"),mx:$("scd").checked?2:1,nw:g("nw")/100,cost:($("scd").checked?g("scdp"):0)*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1),pairs:$("pairs").value.split(",").map(Number),
+    t3:g("t3inc"),t4:g("t4inc"),guar:-1,
+    w:[1-g("ry")/100,1-g("rb")/100,1-g("rp")/100].map(x=>Math.max(0,x)),
+    rot:$("rot").checked,u:[g("u1")/100,g("u2")/100,g("u3")/100],bount:$("bount").checked,dupm:g("dupm")/100,dupl:$("dupl").checked,
+    price:[g("py"),g("pb"),g("pp")].map(r=>r>0?1000/r*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1):0),unit:$("unit").value==="디바인"?"D":"C",n:+$("n").value};
+}
+function pickType(w){const s=w[0]+w[1]+w[2];if(s<=0)return Math.floor(R()*3);let r=R()*s;for(let i=0;i<3;i++){r-=w[i];if(r<0)return i}return 2}
+function extra(p){return p<=1?(R()<p?1:0):1+(R()<p-1?1:0)}
+function genCrop(P,type){
+  if(P.rot)return {type,c:[23,0,0,0]};
+  const t4=R()<Math.min(1,.01*(1+P.t4/100))?1:0;
+  const t3=binom(3,Math.min(1,.25*(1+P.t3/100)));
+  const t2=binom(8,.75);
+  return {type,c:[23-t4-t3-t2,t2,t3,t4]};
+}
+// 씨앗당 평균 몬스터 수 (T1~T3)
+function monMean(P){return (1+P.pack/100+(P.bount?.1:0))*(1+P.dupm)}
+function amtMult(P){return P.mx*(1+P.iiq/200+P.inc/100)*(P.dupl?1.1:1)}
+function cropEV(P,crop){
+  const m=monMean(P),M=amtMult(P),c=crop.c;
+  const lf=M*(c[0]*m*DROP[0]*MEAN[0]+c[1]*m*DROP[1]*MEAN[1]+c[2]*m*DROP[2]*MEAN[2]+c[3]*(1+P.dupm)*MEAN[3]);
+  return lf*P.price[crop.type];
+}
+function simCrop(P,crop,out){
+  const scale=1+P.iiq/200+P.inc/100,mult=P.mx;
+  for(let t=0;t<4;t++){
+    const dropP=DROP[t];
+    for(let s=0;s<crop.c[t];s++){
+      let mon;
+      if(t===3){mon=1}
+      else{mon=1+extra(P.pack/100);if(P.bount&&R()<.1)mon++}
+      let tot=mon;for(let k=0;k<mon;k++)if(R()<P.dupm)tot++;
+      for(let k=0;k<tot;k++){
+        if(R()<dropP){
+          let a=Math.round((RANGE[t][0]+R()*(RANGE[t][1]-RANGE[t][0]))*scale)*mult;
+          if(P.dupl&&R()<.1)a*=2;
+          out.lf[crop.type]+=a;
+        }
+      }
+      if(t>=2)out.big[t-2]++;
+    }
+  }
+}
+function upgrade(P,crop){
+  const c=crop.c;
+  let u=binom(c[2],P.u[2]);c[2]-=u;c[3]+=u;
+  u=binom(c[1],P.u[1]);c[1]-=u;c[2]+=u;
+  u=binom(c[0],P.u[0]);c[0]-=u;c[1]+=u;
+}
+const MEMO=new Float64Array(1400000),STAMP=new Int32Array(1400000);let CALL=0;
+function planOpt(P,pairs,st,cand){
+  const N=pairs.length,q=P.nw,u=P.u;
+  const V=pairs.map(pr=>pr.map(cr=>{
+    const e=cr.c.slice(),arr=[];
+    for(let k=0;k<2*N;k++){
+      arr.push(cropEV(P,{type:cr.type,c:e}));
+      const n4=e[3]+u[2]*e[2],n3=e[2]*(1-u[2])+u[1]*e[1],n2=e[1]*(1-u[1])+u[0]*e[0],n1=e[0]*(1-u[0]);
+      e[0]=n1;e[1]=n2;e[2]=n3;e[3]=n4;
+    }
+    return arr;
+  }));
+  const call=++CALL;
+  const act=(code,a,b,c,i,s,j)=>{
+    const t=pairs[i][j].type,hc=t===0?a:t===1?b:c,H=a+b+c;
+    const na=a+(t===0),nb=b+(t===1),nc=c+(t===2),base=code&~(3<<(2*i));
+    let v=V[i][j][H-hc];
+    if(s===0){
+      v+=(1-q)*f(base|(1<<(2*i)),na,nb,nc);
+      if(q>0)v+=q*f(base|((3-j)<<(2*i)),na,nb,nc);
+    }else v+=f(base|(1<<(2*i)),na,nb,nc);
+    return v;
+  };
+  const f=(code,a,b,c)=>{
+    const key=((code*11+a)*11+b)*11+c;
+    if(STAMP[key]===call)return MEMO[key];
+    let best=0;
+    for(let i=0;i<N;i++){
+      const s=(code>>(2*i))&3;
+      if(s===1)continue;
+      if(s===0){for(let j=0;j<2;j++){const v=act(code,a,b,c,i,0,j);if(v>best)best=v}}
+      else{const v=act(code,a,b,c,i,s,s-2);if(v>best)best=v}
+    }
+    STAMP[key]=call;return MEMO[key]=best;
+  };
+  let code=0;for(let i=0;i<N;i++)code|=st[i]<<(2*i);
+  let bv=-1,pick=cand[0];
+  for(const [i,j] of cand){const v=act(code,0,0,0,i,st[i],j);if(v>bv){bv=v;pick=[i,j]}}
+  return pick;
+}
+function choose(P,pairs,st,cand,strat){
+  const ev=c=>cropEV(P,c),fresh=cand.filter(([i])=>st[i]===0),surv=cand.filter(([i])=>st[i]>=2);
+  if(strat==="random")return cand[Math.floor(R()*cand.length)];
+  if(strat!=="opt"&&surv.length){
+    let b=surv[0];for(const x of surv)if(ev(pairs[x[0]][x[1]])>ev(pairs[b[0]][b[1]]))b=x;return b;
+  }
+  if(strat==="greedy"){
+    let bi=-1,bv=Infinity;
+    for(const [i] of fresh){const v=Math.max(ev(pairs[i][0]),ev(pairs[i][1]));if(v<bv&&!(bi===i)){bv=v;bi=i}}
+    return [bi,ev(pairs[bi][0])>=ev(pairs[bi][1])?0:1];
+  }
+  return planOpt(P,pairs,st,cand);
+}
+function playRot(P,pairs0,strat,out){
+  const pairs=pairs0.map(pr=>pr.map(c=>({type:c.type,c:c.c.slice()})));
+  const N=pairs.length,st=new Array(N).fill(0);
+  let tot=0;
+  for(;;){
+    const cand=[];
+    for(let i=0;i<N;i++){if(st[i]===0)cand.push([i,0],[i,1]);else if(st[i]>=2)cand.push([i,st[i]-2])}
+    if(!cand.length)break;
+    const [i,j]=choose(P,pairs,st,cand,strat),pick=pairs[i][j],first=st[i]===0;
+    tot+=cropEV(P,pick);
+    if(out)simCrop(P,pick,out);
+    st[i]=1;
+    for(let k=0;k<N;k++){
+      if(k===i||st[k]===1)continue;
+      for(let jj=0;jj<2;jj++){
+        if(st[k]>=2&&jj!==st[k]-2)continue;
+        const c=pairs[k][jj];if(c.type!==pick.type)upgrade(P,c);
+      }
+    }
+    if(first&&R()<P.nw){const tw=pairs[i][1-j];st[i]=3-j;if(tw.type!==pick.type)upgrade(P,tw)}
+  }
+  return tot;
+}
+function renderCmp(P){
+  const el=$("cmpPanel");el.style.display=P.rot?"":"none";
+  if(!P.rot)return;
+  const n=P.n,names=["최적","탐욕 (현재 가치가 높은 쪽)","무작위"],m0=P.cmp[0].s/n;
+  $("cmp").innerHTML="<tr><th>전략</th><th>맵당 기대 가치 ("+P.unit+")</th><th>최적 대비</th></tr>"+P.cmp.map((c,k)=>{
+    const m=c.s/n,dm=c.d/n,se=Math.sqrt(Math.max(0,c.d2/n-dm*dm)/n);
+    return "<tr><td>"+names[k]+"</td><td>"+fmt(m)+"</td><td>"+(k?fmt((m/m0-1)*100)+"%":"기준")+"</td></tr>";
+  }).join("");
+}
+function runMap(P){
+  const out={lf:[0,0,0],big:[0,0]};
+  const pc=P.pairs;let n=pc[Math.floor(R()*pc.length)];
+  const pairs=[];
+  for(let i=0;i<n;i++)pairs.push([genCrop(P,P.guar>=0?P.guar:pickType(P.w)),genCrop(P,pickType(P.w))]);
+  if(!P.rot){
+    for(const [a,b] of pairs){const x=cropEV(P,a)>=cropEV(P,b),w=x?a:b,l=x?b:a;simCrop(P,w,out);if(R()<P.nw)simCrop(P,l,out)}
+    return out;
+  }
+  const S=["opt","greedy","random"];
+  const vs=S.map((st,k)=>playRot(P,pairs,st,k===0?out:null)/1000);
+  vs.forEach((v,k)=>{const c=P.cmp[k],d=v-vs[0];c.s+=v;c.d+=d;c.d2+=d*d});
+  return out;
+}
+function run0(){
+  const P=window.PP=params(),n=P.n;P.cmp=[0,1,2].map(()=>({s:0,d:0,d2:0}));
+  const sum=[0,0,0],tots=new Float64Array(n),vals=new Float64Array(n);let t3=0,t4=0,hasT4=0;
+  for(let i=0;i<n;i++){
+    const o=runMap(P);let tot=0,v=0;
+    for(let k=0;k<3;k++){sum[k]+=o.lf[k];tot+=o.lf[k];v+=o.lf[k]/1000*P.price[k]}
+    tots[i]=tot;vals[i]=v;t3+=o.big[0];t4+=o.big[1];if(o.big[1])hasT4++;
+  }
+  const mean=sum.map(x=>x/n),total=mean[0]+mean[1]+mean[2];
+  const sorted=Float64Array.from(tots).sort();
+  const q=p=>sorted[Math.min(n-1,Math.floor(p*n))];const sv=Float64Array.from(vals).sort();const qv=p=>sv[Math.min(n-1,Math.floor(p*n))];
+  const sd=Math.sqrt(tots.reduce((s,x)=>s+(x-total)**2,0)/n);
+  const avgVal=vals.reduce((s,x)=>s+x,0)/n;
+  $("tot").textContent=fmt(total);
+  $("val").textContent=fmt(avgVal)+" "+P.unit;$("vlabel").textContent="맵 당 기대 화폐 획득량";$("net").textContent=fmt(avgVal-P.cost)+" "+P.unit;
+  const mx=Math.max(...mean,1);
+  $("bars").innerHTML=mean.map((m,i)=>`<div class="bar"><span>${NAMES[i]}</span><i style="width:${m/mx*100}%;background:${COL[i]}"></i><em>${fmt(m)}<br><span class="note">${fmt(m/1000*P.price[i])} ${P.unit}</span></em></div>`).join("");
+  $("stats").innerHTML=[["중앙값",fmt(q(.5))],["하위 10%",fmt(q(.1))],["상위 10%",fmt(q(.9))],["평균 오차(±1σ)",fmt(sd/Math.sqrt(n)/Math.max(total,1e-9)*100)+"%"],["화폐 중앙값",fmt(qv(.5))+" "+P.unit],["화폐 하위 10%",fmt(qv(.1))+" "+P.unit],["화폐 상위 10%",fmt(qv(.9))+" "+P.unit],["T4가 나온 맵 비율",fmt(hasT4/n*100)+"%"]]
+    .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+  const lo=q(.01),hi=q(.99),bins=28,h=new Array(bins).fill(0),w=(hi-lo)/bins||1;
+  for(const x of tots){let k=Math.floor((x-lo)/w);if(k<0)k=0;if(k>=bins)k=bins-1;h[k]++}
+  const hm=Math.max(...h);
+  $("hist").innerHTML=h.map(c=>`<div style="height:${c/hm*100}%"></div>`).join("");
+  $("a0").textContent="≤ "+fmt(lo);$("a1").textContent="≥ "+fmt(hi);
+}
+function run(){run0();renderCmp(window.PP);applyLang()}
+let timer;
+document.querySelectorAll("main input,main select").forEach(e=>e.addEventListener("change",()=>{clearTimeout(timer);timer=setTimeout(run,250)}));
+$("run").addEventListener("click",run);
+function syncRot(){const r=$("rot").checked;["t3inc","t4inc"].forEach(id=>{$(id).disabled=r})}
+$("rot").addEventListener("change",syncRot);syncRot();
+function syncUnit(){$("ratio").disabled=$("unit").value!=="디바인"}
+$("unit").addEventListener("change",syncUnit);syncUnit();
+const EN={"패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터": "Path of Exile Harvest Simulator", "Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.": "A probability model estimated from Forgotten Arbiter's analysis (patch 3.19–3.22 data). Expected lifeforce per map is computed by Monte Carlo simulation. All figures are the article's estimates and may have changed in later patches.", "시뮬레이션 실행": "Run simulation", "시뮬레이션": "Simulation", "시뮬레이션 맵 수": "Maps to simulate", "맵 (T16 기준)": "Map (T16)", "맵 IIQ (%)": "Map IIQ (%)", "효과의 절반만 반영": "Only half of the effect counts", "무리 크기 (%)": "Pack size (%)", "작물 쌍 수": "Crop pairs", "4, 5: 3쌍은 수확 안 함": "4, 5: 3-pair groves are skipped", "시장가 (1카오스당 생기)": "Market price (lifeforce per 1 Chaos)", "표시 화폐 단위": "Display currency", "카오스": "Chaos", "디바인": "Divine", "1디바인 =": "1 Divine =", "노랑": "Yellow", "파랑": "Blue", "보라": "Purple", "윤작 (Crop Rotation)": "Crop Rotation", "윤작(Crop Rotation)": "Crop Rotation", "T1→T2 확률 (%)": "T1→T2 chance (%)", "T2→T3 확률 (%)": "T2→T3 chance (%)", "T3→T4 확률 (%)": "T3→T4 chance (%)", "글의 측정 20%, 다른 연구는 약 25%": "Article measured 20%, other research ~25%", "글의 추정은 약 2~5.5%": "Article estimate ~2–5.5%", "아틀라스 패시브": "Atlas passives", "생기의 수량 증가 (%)": "Increased quantity of lifeforce (%)", "T3 씨앗 확률 증가 (%)": "Increased chance of Tier 3 seeds (%)", "숲의 중심: T4 씨앗 확률 증가 (%)": "Heart of the Grove: increased chance of Tier 4 seeds (%)", "숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)": "Heart of the Grove: chance the unchosen crop does not wilt (%)", "노랑 작물 확률 감소 (%)": "Yellow crop chance reduction (%)", "파랑 작물 확률 감소 (%)": "Blue crop chance reduction (%)", "보라 작물 확률 감소 (%)": "Purple crop chance reduction (%)", "풍성한 수확: 추가 몬스터 10%": "Bountiful Harvest: 10% extra monster", "복제 몬스터 확률 (%)": "Duplicated monster chance (%)", "복제 철: 생기 복제 10%": "Doubling Season: 10% duplicated lifeforce", "갑충석 (시장가: 카오스)": "Scarabs (price in Chaos)", "복제의 수확 갑충석": "Harvest Scarab of Doubling", "기괴한 혈통의 갑충석": "Scarab of Monstrous Lineage", "맵 한 번당 결과": "Result per map", "평균 총 생기": "Average total lifeforce", "맵 당 기대 화폐 획득량": "Expected currency per map", "갑충석 비용 차감": "After scarab cost", "윤작 선택 전략 비교": "Crop Rotation strategy comparison", "분포": "Distribution", "총 생기": "Total lifeforce", "색 감소 패시브 비교": "Color reduction passive comparison", "노랑 / 파랑 / 보라 감소 (%)": "Yellow / Blue / Purple reduction (%)", "맵당 기대 가치 (C)": "Expected value per map (C)", "맵당 기대 가치 (D)": "Expected value per map (D)", "균등 대비": "vs even", "0 / 45 / 0 대비": "vs 0 / 45 / 0", "0 / 0 / 0 (균등)": "0 / 0 / 0 (even)", "기준": "Baseline", "고정값. 기본 설정(윤작, 4쌍 : 5쌍 = 2 : 1, 비시듦 10%, 시장가 6/16/40)에서 같은 작물 배치 20,000맵으로 짝지어 비교. 입력을 바꾸면 달라질 수 있음.": "Fixed values. Default settings (Crop Rotation, 4-pair : 5-pair = 2 : 1, 10% no-wilt, prices 6/16/40), compared on identical crop layouts over 20,000 maps. Values may differ if inputs change.", "모델 가정.": "Model assumptions.", "작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.": "The number of crop pairs is drawn uniformly from the selected values; in each pair the crop with the higher expected value is harvested. Each crop has 23 seeds: T4 about 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), the rest T1. Drop chance: T1 2%, T2 10%, T3·T4 100%; base drop amount T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (assumed uniform). The article does not give the exact interaction of duplicated monsters, so it is simplified as each monster independently adding one more. Einhar memories and Sacred Blossom are not included. Crop Rotation mode assumes each harvest can raise seeds in crops of other colors by at most one tier. The near-optimal strategy computes, at each choice, the harvest order of the remaining pairs and the colors from the actual seed state, approximates later upgrades by expectation, and replans after every harvest. If the unchosen crop does not wilt (Heart of the Grove), it can also be harvested and keeps being upgraded by later harvests of other colors; whether a surviving crop also receives the upgrade from the harvest just before it is unconfirmed and assumed to be yes.", "최적": "Optimal", "탐욕 (현재 가치가 높은 쪽)": "Greedy (higher current value)", "무작위": "Random", "전략": "Strategy", "최적 대비": "vs Optimal", "중앙값": "Median", "하위 10%": "Bottom 10%", "상위 10%": "Top 10%", "평균 오차(±1σ)": "Mean error (±1σ)", "화폐 중앙값": "Currency median", "화폐 하위 10%": "Currency bottom 10%", "화폐 상위 10%": "Currency top 10%", "T4가 나온 맵 비율": "Maps with a T4 seed"};
+let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
+function applyLang(){
+  if(!document.createTreeWalker)return;
+  const en=LANG==="en",w=document.createTreeWalker(document.body,4);let n;
+  while(n=w.nextNode()){
+    const pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE")continue;
+    if(n.__ko===undefined)n.__ko=n.nodeValue;
+    const k=n.__ko.trim();
+    n.nodeValue=en&&EN[k]?n.__ko.replace(k,()=>EN[k]):n.__ko;
+  }
+  document.documentElement.lang=LANG;
+  document.title=en?EN["패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터"]:"패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터";
+}
+try{
+  $("lang").value=LANG;
+  $("lang").addEventListener("change",()=>{LANG=$("lang").value;try{localStorage.setItem("lang",LANG)}catch(e){}applyLang()});
+  const dk=()=>document.documentElement.dataset.theme||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  const mark=()=>{$("theme").textContent=dk()==="dark"?"☀️":"🌙"};
+  try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+  mark();
+  $("theme").addEventListener("click",()=>{const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}mark()});
+}catch(e){}
+run();
+</script>
+</body>
+</html>
