@@ -1,6 +1,6 @@
-N=미구현 (do not read these data yet)
+N=not implemented (do not read these data)
 X=unsed  (do not read these data)
-[]=Required Level (do not sort gears or data by req level)
+[]=Required Level (do not sort gears or data by required level)
 No need to read one's that are marked N and X (even if there is data)
 
 PoE2 API에서 아래 데이터를 요청하는 코드를 작성
@@ -17,7 +17,7 @@ Arcanist's Etcher 신비학자의 식각기
 
 [검색 조건]
 1 Lastest PoE2 League (by defualt, later selected by user from two lastest league + standard)
-2. Instant Buyout only
+2. always use 'Instant Buyout' data only (never use or query any data other than Instant Buyout)
 3. Item Rarity=Normal, NOT Corrupted, NOT mirrored, NOT fractured
 4-A. Item Level>=82, Quality>=30% 장비 최저가 최대 10개의 가격
 4-B. Item Level>=82, Quality=0% 장비 최저가 최대 10개의 가격
@@ -37,6 +37,7 @@ One Hand Swords (N) 	한손 검		=2			[]
 Two Hand Axes (N)	양손 도끼		=3			[]
 Two Hand Maces		양손 철퇴		=3			[77] Massive Greathammer 거대한 대망치	[77] Ironwood Greathammer 철목 대망치
 Two Hand Swords (N)	양손 검		=3			[]
+Shields			방패		=2			[80] Tawhoan Tower Shield 타호아의 거대 방패
 
 [후처리]
 1. 정상적인 fetch 데이터가 2개 미만일 경우, 관련 데이터를 데이터 부족으로 표시
@@ -45,10 +46,10 @@ Instant Buyout은 허위 매물이 있기 어려우므로 가장 싼 매물이 �
 
 *Below is unsed data
 
+[ Main-hand]
 Crossbows 	석궁	T2	[65] Trarthan Cannon 트라투스 대포	
 
 [ Off-hand ]
-Shields (X)	방패		[80] Tawhoan Tower Shield 타호아의 거대 방패
 Quivers (X)
 
 [ Caster ]
