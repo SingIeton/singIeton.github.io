@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PoE Tools</title>
+<meta name="description" content="Path of Exile 1·2 계산기와 서비스 모음">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M3 26V12a9 9 0 0 1 18 0v14z' fill='none' stroke='%23cf8a45' stroke-width='2'/%3E%3Cpath d='M12 9.5l3 4.5-3 6.5-3-6.5z' fill='%23cf8a45'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+--serif:"Hahmlet","Noto Serif KR","Nanum Myeongjo","AppleMyungjo",serif;
+--sans:"IBM Plex Sans KR","Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+color-scheme:light;
+--bg0:#e9e6de;--sf0:#f4f2ec;--sf20:#e0dcd0;--ln0:#cdc7b6;--ln20:#b0a891;
+--ink:#1b1913;--mute:#625c4d;--g1:#8f4f14;--g2:#1d6a60;--g0:#575143;--gi:#fff;
+--mod:#3a3aa6;--gem:#1f8a80;--y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;
+--g:var(--g0);
+--bg:color-mix(in oklab,var(--bg0) 94%,var(--g));
+--sf:color-mix(in oklab,var(--sf0) 95%,var(--g));
+--sf2:color-mix(in oklab,var(--sf20) 93%,var(--g));
+--ln:color-mix(in oklab,var(--ln0) 88%,var(--g));
+--ln2:color-mix(in oklab,var(--ln20) 85%,var(--g));
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;}}
+:root[data-theme="dark"]{color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;}
+:root[data-game="poe1"]{--g:var(--g1)}
+:root[data-game="poe2"]{--g:var(--g2)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:72px}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:15px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+main{flex:1;outline:0}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+::selection{background:color-mix(in oklab,var(--g) 35%,transparent)}
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font:600 clamp(28px,4vw,38px)/1.2 var(--serif);letter-spacing:-.01em;margin:0;text-wrap:balance}
+h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
+.lead{color:var(--mute);margin:8px 0 0;max-width:68ch}
+.skip{position:absolute;left:12px;top:-60px;z-index:50;padding:8px 12px;background:var(--g);color:var(--gi);border:0;border-radius:3px}
+.skip:focus{top:8px}
+/* 헤더 */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in oklab,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.top .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 17px var(--serif);color:var(--ink)}
+.brand svg{color:var(--g)}
+.gnav{display:flex;height:100%}
+.gnav a{display:flex;align-items:center;gap:8px;padding:0 14px;text-decoration:none;font-weight:600;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px}
+.gnav a:hover{color:var(--ink)}
+.gnav a[aria-current]{color:var(--ink);border-bottom-color:var(--gc)}
+.gnav i{width:8px;height:8px;background:var(--gc);transform:rotate(45deg)}
+.gnav [data-game=poe1]{--gc:var(--g1)}.gnav [data-game=poe2]{--gc:var(--g2)}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--ln2);border-radius:3px;overflow:hidden}
+.seg button{border:0;background:none;color:var(--mute);padding:5px 10px;font-weight:600;font-size:13px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--g);color:var(--gi)}
+.ibtn{width:34px;height:32px;display:grid;place-items:center;border:1px solid var(--ln2);background:none;border-radius:3px;cursor:pointer}
+/* 홈: 차원문 */
+.hero{text-align:center;padding:48px 0 8px}
+.hero .lead{margin-inline:auto}
+.portals{display:grid;grid-template-columns:repeat(2,minmax(0,360px));justify-content:center;gap:40px;margin:36px 0 8px}
+.portal{--pg:var(--g1);position:relative;display:flex;flex-direction:column;align-items:center;padding:30px 28px 26px;text-decoration:none;border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:999px 999px 4px 4px;background:radial-gradient(90% 38% at 50% 0,color-mix(in oklab,var(--pg) 20%,transparent),transparent 75%),var(--sf);transition:border-color .2s}
+.portal[data-game=poe2]{--pg:var(--g2)}
+.portal::before{content:"";position:absolute;inset:7px;border:1px solid color-mix(in oklab,var(--pg) 22%,transparent);border-radius:999px 999px 2px 2px;pointer-events:none}
+.portal:hover{border-color:var(--pg)}
+.num{font:200 clamp(120px,15vw,184px)/1 var(--serif);color:var(--pg);margin:34px 0 4px}
+.ptitle{font:600 22px var(--serif)}
+.psub{color:var(--mute);font-size:13px}
+.plist{list-style:none;margin:18px 0;padding:0;width:100%}
+.portal .go{margin-top:18px}
+.plist li{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-top:1px solid var(--ln);font-size:14px}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mute);white-space:nowrap}
+.st::before{content:"";width:7px;height:7px;border:1px solid currentColor;border-radius:50%}
+.st.on{color:var(--pg,var(--g))}.st.on::before{background:currentColor}
+.go{display:inline-block;padding:8px 20px;border:1px solid var(--pg,var(--g));color:var(--pg,var(--g));border-radius:3px;font-weight:600;font-size:14px;transition:background .15s,color .15s}
+.portal:hover .go,.item.live:hover .go{background:var(--pg,var(--g));color:var(--gi)}
+@media (prefers-reduced-motion:no-preference){.intro .portal{animation:rise .8s cubic-bezier(.2,.8,.2,1) both}.intro .portal+.portal{animation-delay:.12s}}
+@keyframes rise{from{opacity:0;clip-path:inset(35% 0 0 0)}to{opacity:1;clip-path:inset(0)}}
+.quick{max-width:760px;margin:40px auto 0}
+.quick a{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;align-items:baseline;padding:12px 6px;border-top:1px solid var(--ln);text-decoration:none}
+.quick a:last-child{border-bottom:1px solid var(--ln)}
+.quick a:hover{background:color-mix(in oklab,var(--g) 8%,transparent)}
+.quick b{font-weight:600}.quick small{color:var(--mute);grid-column:2;font-size:13px}
+.chip{font-size:12px;font-weight:600;padding:0 8px;border:1px solid var(--pg);color:var(--pg);border-radius:3px;line-height:20px}
+.chip[data-game=poe1]{--pg:var(--g1)}.chip[data-game=poe2]{--pg:var(--g2)}
+/* 게임 페이지: 아이템 툴팁 카드 */
+.ghead{display:flex;align-items:center;gap:28px;padding:40px 0 8px}
+.mini{flex:none;width:88px;height:108px;display:grid;place-items:end center;padding-bottom:14px;position:relative;border:1px solid var(--g);border-radius:999px 999px 3px 3px;font:300 56px/1 var(--serif);color:var(--g)}
+.mini::before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in oklab,var(--g) 25%,transparent);border-radius:999px 999px 2px 2px}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;margin:28px 0 8px}
+.item{--pg:var(--g);display:flex;flex-direction:column;background:var(--sf);border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:3px;text-decoration:none;color:inherit}
+.item.soon{--pg:var(--mute)}
+.ihead{position:relative;text-align:center;padding:12px 30px 10px;border-bottom:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));background:color-mix(in oklab,var(--pg) 9%,transparent)}
+.ihead h3{margin:0;font:600 19px/1.3 var(--serif);color:var(--pg)}
+.ihead p{margin:0;color:var(--mute);font-size:12.5px}
+.ihead::before,.ihead::after{content:"";position:absolute;top:50%;width:7px;height:7px;background:var(--pg);transform:translateY(-50%) rotate(45deg)}
+.ihead::before{left:12px}.ihead::after{right:12px}
+.art{display:grid;place-items:center;padding:18px 0 4px;color:var(--pg)}
+.item.soon .art svg{filter:grayscale(1);opacity:.5}
+.ibody{padding:4px 22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;flex:1}
+.ibody p{margin:4px 0 0;font-size:14px}
+.sep{width:100%;height:9px;border:0;margin:4px 0;position:relative;background:linear-gradient(90deg,transparent,var(--ln2) 20%,var(--ln2) 80%,transparent) center/100% 1px no-repeat}
+.sep::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;border:1px solid var(--ln2);background:var(--sf);transform:translate(-50%,-50%) rotate(45deg)}
+.mods{list-style:none;margin:0;padding:0;color:var(--mod);font-size:14px}.mods li{margin:2px 0}
+.ibody .go,.ibody .st{margin-top:auto}
+.foot{border-top:1px solid var(--ln);margin-top:48px;padding:20px 0 28px;color:var(--mute);font-size:12.5px}
+@media(max-width:760px){.portals{grid-template-columns:minmax(0,360px);gap:28px}}
+@media(max-width:560px){.bn{display:none}.gnav a{padding:0 10px}.top .wrap{gap:8px}.ghead{gap:16px}.mini{width:72px;height:90px;font-size:44px}}
+</style>
+</head>
+<body>
+<button class="skip" id="skip" type="button"></button>
+<header class="top" id="topbar"></header>
+<main id="main" tabindex="-1"></main>
+<footer class="foot" id="foot"></footer>
+<script>
+/* 페이지별로 다른 값은 아래 두 줄뿐입니다. ROOT: 레포 루트(github.io 메인)까지의 상대경로, PAGE: "home" | "poe1" | "poe2" */
+const ROOT="../../",PAGE="poe2";
+
+/* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). 세 index.html의 이 블록을 동일하게 유지하세요. */
+const SITE={ko:"PoE Tools",en:"PoE Tools"};
+const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2 Tools"}];
+const SERVICES=[
+{id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
+ name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
+ desc:{ko:"맵 한 번에 얻는 생기의 기댓값을 계산하고, 윤작에서 어떤 작물을 수확할지 골라 줍니다.",en:"Calculates the expected lifeforce per map and picks which crops to harvest in Crop Rotation."},
+ mods:{ko:["윤작 선택 전략 3가지 비교","시장가와 아틀라스 패시브 반영","수확 중 최적 선택지 안내"],en:["Compares 3 Crop Rotation strategies","Uses market prices and Atlas passives","Suggests the best pick as you harvest"]}},
+{id:"basequality",dir:"base-quality",games:["poe2"],live:true,icon:"quality",name:{ko:"30% 베이스 퀄리티",en:"30% Base Quality "}},
+{id:"mageblood",dir:"mageblood-flip",games:["poe2"],live:true,name:{ko:"메이지블러드 플립",en:"Mageblood Flip"}}];
+
+let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
+if(LANG!=="en")LANG="ko";
+const $=id=>document.getElementById(id);
+const L=o=>o==null?"":typeof o==="string"?o:(o[LANG]||o.ko);
+const T=(ko,en)=>LANG==="en"?en:ko;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const MARK='<svg viewBox="0 0 24 28" width="22" height="26" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 26V12a9 9 0 0 1 18 0v14z"/><path d="M12 9.5l3 4.5-3 6.5-3-6.5z" fill="currentColor" stroke="none"/></svg>';
+const ICON={sun:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>',
+moon:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'};
+const ART={
+harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--y"],[48,10,26,13,"--b"],[76,2,22,15,"--p"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
+quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><polygon points="30,6 66,6 82,22 14,22" fill="var(--gem)" opacity=".85"/><polygon points="14,22 82,22 48,52" fill="var(--gem)"/><polygon points="30,6 48,22 14,22" fill="#fff" opacity=".18"/><polygon points="66,6 82,22 48,22" fill="#000" opacity=".14"/><polygon points="48,22 82,22 48,52" fill="#000" opacity=".2"/></svg>'};
+
+const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
+const gameHref=g=>ROOT+"poetools/"+g.id+"/"+g.id+".html";
+const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/"+s.dir+".html";
+const stat=live=>`<span class="st${live?" on":""}">${live?T("사용 가능","Available"):T("준비 중","Coming soon")}</span>`;
+const G=GAMES.find(x=>x.id===PAGE);
+
+function renderTop(){
+  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}poetools/poetools.html" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
+}
+let INTRO=true;
+function renderHome(){
+  $("main").innerHTML=`<div class="wrap"><div class="portals${INTRO?" intro":""}">${GAMES.map(g=>`<a class="portal" data-game="${g.id}" href="${gameHref(g)}"><span class="num" aria-hidden="true">${g.num}</span><span class="ptitle">${g.short}</span><span class="psub">${g.name}</span><span class="go">${T(g.short+" 서비스 보기","View "+g.short+" services")}</span><ul class="plist">${svcsOf(g).map(s=>`<li><span>${esc(L(s.name))}</span>${stat(s.live)}</li>`).join("")}</ul></a>`).join("")}</div></div>`;
+  INTRO=false;
+}
+function item(g,s){
+  const head=`<div class="ihead"><h3>${esc(L(s.name))}</h3><p>${esc(s.name[LANG==="en"?"ko":"en"])}</p></div>`;
+  const art=s.icon?`<div class="art">${ART[s.icon]}</div>`:"";
+  const body=`${art}<div class="ibody">${s.live?`${s.desc?`<p>${esc(L(s.desc))}</p>`:""}${s.mods?`<hr class="sep"><ul class="mods">${L(s.mods).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>`:""}<span class="go">${T("열기","Open")}</span>`:`<p>${T("곧 열립니다.","Opens soon.")}</p>${stat(false)}`}</div>`;
+  return s.live?`<a class="item live" href="${svcHref(g,s)}">${head}${body}</a>`:`<div class="item soon" aria-disabled="true">${head}${body}</div>`;
+}
+function renderGame(g){
+  const ss=svcsOf(g),n=ss.filter(s=>s.live).length;
+  const lead=n?T(`서비스 ${ss.length}개 중 ${n}개를 쓸 수 있습니다.`,`${n} of ${ss.length} services are available.`):T(`서비스 ${ss.length}개를 준비하고 있습니다.`,`${ss.length} services are in preparation.`);
+  $("main").innerHTML=`<div class="wrap"><div class="ghead"><span class="mini" aria-hidden="true">${g.num}</span><div><h1>${g.short}</h1><p class="lead">${g.name}</p><p class="lead">${lead}</p></div></div><div class="items">${ss.map(s=>item(g,s)).join("")}</div></div>`;
+}
+function render(mode){
+  document.documentElement.dataset.game=G?G.id:"home";
+  document.documentElement.lang=LANG;
+  $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
+  renderTop();
+  if(G)renderGame(G);else renderHome();
+  $("foot").innerHTML=`<div class="wrap">${T("비공식 팬 사이트입니다. Grinding Gear Games와 관련이 없으며, Path of Exile과 관련 명칭은 Grinding Gear Games의 것입니다.","Unofficial fan site, not affiliated with Grinding Gear Games. Path of Exile and related names belong to Grinding Gear Games.")}</div>`;
+  document.title=[G&&G.short,L(SITE)].filter(Boolean).join(" | ");
+  if(mode==="lang"){const b=document.querySelector('#topbar [data-lang="'+LANG+'"]');b&&b.focus()}
+}
+$("topbar").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.lang){LANG=b.dataset.lang;try{localStorage.setItem("lang",LANG)}catch(x){}render("lang");return}
+  if(b.id==="theme"){const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(x){}b.innerHTML=t==="dark"?ICON.sun:ICON.moon}
+});
+$("skip").addEventListener("click",()=>$("main").focus());
+render();
+</script>
+</body>
+</html>
