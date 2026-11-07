@@ -8,6 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M3 26V12a9 9 0 0 1 18 0v14z' fill='none' stroke='%23cf8a45' stroke-width='2'/%3E%3Cpath d='M12 9.5l3 4.5-3 6.5-3-6.5z' fill='%23cf8a45'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<script src="../style/bg.js"></script>
 <style>
 :root{
 --serif:"Hahmlet","Noto Serif KR","Nanum Myeongjo","AppleMyungjo",serif;
@@ -122,14 +123,14 @@ const ROOT="../../",PAGE="poe2";
 
 /* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). 세 index.html의 이 블록을 동일하게 유지하세요. */
 const SITE={ko:"PoE Tools",en:"PoE Tools"};
-const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2 Tools"}];
+const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile Tools"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2 Tools"}];
 const SERVICES=[
 {id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
  desc:{ko:"맵 한 번에 얻는 생기의 기댓값을 계산하고, 윤작에서 어떤 작물을 수확할지 골라 줍니다.",en:"Calculates the expected lifeforce per map and picks which crops to harvest in Crop Rotation."},
  mods:{ko:["윤작 선택 전략 3가지 비교","시장가와 아틀라스 패시브 반영","수확 중 최적 선택지 안내"],en:["Compares 3 Crop Rotation strategies","Uses market prices and Atlas passives","Suggests the best pick as you harvest"]}},
-{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"30% 베이스 퀄리티",en:"30% Base Quality "}},
-{id:"mageblood",dir:"mageblood-flip",games:["poe2"],live:true,name:{ko:"메이지블러드 플립",en:"Mageblood Flip"}}];
+{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"30% 베이스 퀄리티",en:"30% Base Quality"},
+ desc:{ko:"30% 오버퀄리티 베이스 제작 비용 및 마진 계산",en:"Calculates crafting cost and margin for 30% overquality bases"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 if(LANG!=="en")LANG="ko";
@@ -143,10 +144,10 @@ const ICON={sun:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" str
 moon:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'};
 const ART={
 harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--y"],[48,10,26,13,"--b"],[76,2,22,15,"--p"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
-quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><polygon points="30,6 66,6 82,22 14,22" fill="var(--gem)" opacity=".85"/><polygon points="14,22 82,22 48,52" fill="var(--gem)"/><polygon points="30,6 48,22 14,22" fill="#fff" opacity=".18"/><polygon points="66,6 82,22 48,22" fill="#000" opacity=".14"/><polygon points="48,22 82,22 48,52" fill="#000" opacity=".2"/></svg>'};
+quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--gem"],[48,10,26,13,"--b"],[76,2,22,15,"--mod"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>'};
 
 const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
-try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+{let t=null;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"}
 const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
 const gameHref=g=>ROOT+"poetools/"+g.id+"/"+g.id+".html";
 const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/"+s.dir+".html";
@@ -168,8 +169,7 @@ function item(g,s){
   return s.live?`<a class="item live" href="${svcHref(g,s)}">${head}${body}</a>`:`<div class="item soon" aria-disabled="true">${head}${body}</div>`;
 }
 function renderGame(g){
-  const ss=svcsOf(g),n=ss.filter(s=>s.live).length;
-  const lead=n?T(`서비스 ${ss.length}개 중 ${n}개를 쓸 수 있습니다.`,`${n} of ${ss.length} services are available.`):T(`서비스 ${ss.length}개를 준비하고 있습니다.`,`${ss.length} services are in preparation.`);
+  const ss=svcsOf(g),lead="";
   $("main").innerHTML=`<div class="wrap"><div class="ghead"><span class="mini" aria-hidden="true">${g.num}</span><div><h1>${g.short}</h1><p class="lead">${g.name}</p><p class="lead">${lead}</p></div></div><div class="items">${ss.map(s=>item(g,s)).join("")}</div></div>`;
 }
 function render(mode){
@@ -188,6 +188,10 @@ $("topbar").addEventListener("click",e=>{
   if(b.id==="theme"){const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(x){}b.innerHTML=t==="dark"?ICON.sun:ICON.moon}
 });
 $("skip").addEventListener("click",()=>$("main").focus());
+/* 다른 탭/페이지에서 테마를 바꾸면 즉시 반영 (뒤로가기 복원 포함) */
+const syncTheme=()=>{let t=null;try{t=localStorage.getItem("theme")}catch(e){}t=t==="light"?"light":"dark";document.documentElement.dataset.theme=t;const b=$("theme");if(b)b.innerHTML=t==="dark"?ICON.sun:ICON.moon};
+addEventListener("storage",e=>{if(e.key==="theme"||e.key===null)syncTheme()});
+addEventListener("pageshow",e=>{if(e.persisted)syncTheme()});
 render();
 </script>
 </body>

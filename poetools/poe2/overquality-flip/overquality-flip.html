@@ -12,9 +12,7 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
 main{max-width:1180px;margin:0 auto;padding:56px 16px 48px}
-.tools{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:16px}
 button,.btn{background:var(--accent);color:var(--bg);border:0;border-radius:8px;padding:8px 12px;font:inherit;font-weight:600;cursor:pointer;display:inline-block}
-.tools button{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 button.sec{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 .game{color:var(--mute);font-size:.8rem;margin:0 0 2px}
 h1{font-size:1.7rem;margin:0 0 4px;letter-spacing:-.02em}
@@ -57,7 +55,6 @@ td small.lo{color:var(--bad)}
 </head>
 <body>
 <script src="../../style/site-bar.js"></script>
-<div class="tools"><button id="theme" type="button" aria-label="Theme">🌙</button></div>
 <main>
 <div class="game">패스 오브 엑자일 2 (Path of Exile 2)</div>
 <h1>베이스 30% 퀄리티 수익 계산기</h1>
@@ -155,10 +152,6 @@ function render(){
  $("src").textContent=lg.collectedAt?`데이터: ${S.league} · 수집: ${lg.collectedAt}`:`${S.league}: 수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.`}
 async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
 (async()=>{
- try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
- const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
- const mark=()=>{$("theme").textContent=dk()==="dark"?"☀️":"🌙"};mark();
- $("theme").addEventListener("click",()=>{const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}mark()});
  const fb=JSON.parse($("fb").textContent);
  loadSettings();panel();
  BASES=fb.bases;

@@ -389,9 +389,9 @@ def fair_price(rows):
     valid_n = len(valid)
     rel = valid[0] / statistics.median(valid)       # 최저가가 나머지 무리에 얼마나 붙어 있는지 (1에 가까울수록 좋음)
 
-    if valid_n >= 5 and rel >= 0.7:
+    if valid_n >= 5 and rel >= 0.8:
         conf = "high"
-    elif valid_n >= 3 and rel >= 0.5:
+    elif valid_n >= 3 and rel >= 0.6:
         conf = "medium"
     else:
         conf = "low"
