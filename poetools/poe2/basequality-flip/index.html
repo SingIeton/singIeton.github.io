@@ -44,6 +44,7 @@ th{font-size:.76rem;color:var(--mute);font-weight:600}
 tr.g td{background:var(--bg);font-weight:600;color:var(--accent);text-align:left}
 .en{display:block;font-size:.74rem;color:var(--mute);font-weight:400}
 td small{display:block;color:var(--mute);font-size:.72rem}
+td small.lo{color:var(--bad)}
 .pos{color:var(--accent);font-weight:700}.neg{color:var(--bad);font-weight:700}.dim{color:var(--mute)}
 .bar{display:block;height:6px;border-radius:3px;margin-top:3px;margin-left:auto}
 .note{color:var(--mute);font-size:.8rem;max-width:90ch}
@@ -64,11 +65,11 @@ td small{display:block;color:var(--mute);font-size:.72rem}
 <div class="tabs" id="tabs"></div>
 <div class="wrap"><table><thead><tr><th>베이스</th><th>Req</th><th>iLvl</th><th>소켓</th><th>0% 베이스</th><th>30% 판매가</th><th>평균 제작비</th><th>평균 마진</th><th>ROI</th></tr></thead><tbody id="rows"></tbody></table></div>
 <p class="note" id="src"></p>
-<p class="note">가격은 각 리스팅의 호가이며, 하위 N개의 중앙값을 씁니다. 타락 확률은 현재 퀄리티 기준 5%p × (퀄리티 − 20)이고, 20%에서는 타락하지 않습니다. 21~29%에서 멈춘 아이템의 잔존 가치와 판매 수수료는 반영하지 않습니다. 확률은 커뮤니티 실측 기반 추정입니다.</p>
+<p class="note">0% 베이스 가격은 30% 1개를 만드는 데 필요한 베이스 수(위 '30% 1개당 시도 베이스'를 올림한 값)만큼의 최저가 매물 중앙값을 씁니다. 베이스를 여러 개 사면 싼 매물부터 소진되기 때문입니다. 칸 아래 개수는 조건에 맞는 전체 매물 수입니다. 30% 판매가는 Python이 계산한 적정 최저가(중앙값보다 지나치게 싼 고립 매물은 제외, 정상 매물 2개 미만이면 데이터 부족)를 씁니다. 셀에 마우스를 올리면 판정 사유가 보입니다. 타락 확률은 현재 퀄리티 기준 5%p × (퀄리티 − 20)이고, 20%에서는 타락하지 않습니다. 21~29%에서 멈춘 아이템의 잔존 가치와 판매 수수료는 반영하지 않습니다. 확률은 커뮤니티 실측 기반 추정입니다.</p>
 </div>
 </div>
 </main>
-<script type="application/json" id="fb">{"bases": [{"id": "obliterator-bow", "en": "Obliterator Bow", "ko": null, "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "massive-mitts", "en": "Massive Mitts", "ko": null, "cls": "Gloves (STR)", "clsKo": "장갑 (STR)", "cat": "armour", "req": 80, "sockets": null, "infuser": "armourer", "qcur": "scrap", "query": true}, {"id": "vaal-mitts", "en": "Vaal Mitts", "ko": null, "cls": "Gloves (STR)", "clsKo": "장갑 (STR)", "cat": "armour", "req": 75, "sockets": null, "infuser": "armourer", "qcur": "scrap", "query": true}], "prices": {"version": 1, "leagues": {"Forbidden Rites": {"collectedAt": "2026-11-06 (수동 입력 샘플)", "entries": [{"base": "obliterator-bow", "ilvl": 82, "sockets": 3, "buy0": {"total": 1, "listings": [{"a": 9, "c": "divine"}]}, "sell30": {"total": 1, "listings": [{"a": 130, "c": "divine"}]}}, {"base": "obliterator-bow", "ilvl": 81, "sockets": 3, "buy0": {"total": 1, "listings": [{"a": 4, "c": "chaos"}]}, "sell30": {"total": 0, "listings": []}}]}}}}</script>
+<script type="application/json" id="fb">{"bases": [{"id": "obliterator-bow", "en": "Obliterator Bow", "ko": "절멸자 활", "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "warmonger-bow", "en": "Warmonger Bow", "ko": "전쟁광 활", "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "siege-crossbow", "en": "Siege Crossbow", "ko": "공성 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 79, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "gemini-crossbow", "en": "Gemini Crossbow", "ko": "쌍둥이자리 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "desolate-crossbow", "en": "Desolate Crossbow", "ko": "황량한 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "sinister-quarterstaff", "en": "Sinister Quarterstaff", "ko": "험악한 육척봉", "cls": "Quarterstaves", "clsKo": "육척봉", "cat": "weapon", "req": 67, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "bolting-quarterstaff", "en": "Bolting Quarterstaff", "ko": "치직대는 육척봉", "cls": "Quarterstaves", "clsKo": "육척봉", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "soaring-spear", "en": "Soaring Spear", "ko": "솟구치는 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 70, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "akoyan-spear", "en": "Akoyan Spear", "ko": "아코야의 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 78, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "flying-spear", "en": "Flying Spear", "ko": "비행 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 78, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "spiny-talisman", "en": "Spiny Talisman", "ko": "가시투성이 부적", "cls": "Talismans", "clsKo": "부적", "cat": "weapon", "req": 67, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "massive-greathammer", "en": "Massive Greathammer", "ko": "거대한 대망치", "cls": "Two Hand Maces", "clsKo": "양손 철퇴", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "ironwood-greathammer", "en": "Ironwood Greathammer", "ko": "철목 대망치", "cls": "Two Hand Maces", "clsKo": "양손 철퇴", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}], "prices": {"version": 1, "leagues": {"Forbidden Rites": {"collectedAt": "2026-11-06 (수동 입력 샘플)", "entries": [{"base": "obliterator-bow", "ilvl": 82, "sockets": 3, "buy0": {"total": 1, "listings": [{"a": 9, "c": "divine"}]}, "sell30": {"total": 1, "listings": [{"a": 130, "c": "divine"}]}}, {"base": "obliterator-bow", "ilvl": 81, "sockets": 3, "buy0": {"total": 1, "listings": [{"a": 4, "c": "chaos"}]}, "sell30": {"total": 0, "listings": []}}]}}}}</script>
 <script>
 //M
 function model(p){const q=new Array(22).fill(0);for(let i=19;i>=0;i--)q[i]=1+(1-p)*q[i+1]+p*q[Math.min(i+2,20)];
@@ -76,38 +77,44 @@ const P=new Array(31).fill(0),E=new Array(31).fill(0);P[30]=1;
 for(let i=29;i>=20;i--){const s=1-.05*(i-20),a=Math.min(i+2,30);P[i]=s*((1-p)*P[i+1]+p*P[a]);E[i]=1+s*((1-p)*E[i+1]+p*E[a]);}
 return{P:P[20],E:E[20],Q:q[0]}}
 function toEx(l,S){return l.c==="exalted"?l.a:l.c==="chaos"?l.a*S.chaos:l.c==="divine"?l.a*S.div:null}
-function pick(side,S){if(!side)return{n:0};const v=(side.listings||[]).map(l=>toEx(l,S)).filter(x=>x!=null).sort((a,b)=>a-b).slice(0,S.N);
+function pick(side,S,N){if(!side)return{n:0};const v=(side.listings||[]).map(l=>toEx(l,S)).filter(x=>x!=null).sort((a,b)=>a-b).slice(0,N);
 const n=side.total!=null?side.total:v.length;if(!v.length||n<S.minN)return{n};const h=v.length>>1;
 return{n,ex:v.length%2?v[h]:(v[h-1]+v[h])/2}}
 function calc(B,sale,X,W,M){const k=1/M.P,cost=k*(B+M.Q*W+M.E*X);return{cost,margin:sale-cost,roi:(sale-cost)/cost}}
 //M
+function pickFair(side,S,N){const f=side&&side.fair;if(!f)return pick(side,S,N);
+const n=side.total!=null?side.total:((side.listings||[]).length);
+if(f.status==="insufficient"||f.a==null)return{n,insufficient:true,reason:f.reason};
+const ex=toEx({a:f.a,c:f.c},S);if(ex==null)return{n,reason:f.reason};
+return{n,ex,conf:f.confidence,skipped:f.skipped||0,reason:f.reason}}
+const CONF={high:"신뢰 높음",medium:"신뢰 보통",low:"신뢰 낮음"};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const DEF={league:"Forbidden Rites",div:515,chaos:67,unit:"div",N:5,minN:1,p2:20,
+const DEF={league:"Forbidden Rites",div:515,chaos:67,unit:"div",minN:1,p2:20,
 inf:{armourer:60,blacksmith:60,arcanist:60,catalysing:60},q:{scrap:.15,whetstone:.15,etcher:.15}};
-const LEAGUES=["Forbidden Rites","Runes of Aldur","Standard"];
 const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"]};
 const FIELDS=[["환율 / 화폐",[["div","1 Div = ? Ex"],["chaos","1 Chaos = ? Ex"]]],
 ["Vaal Infuser 가격 (Ex)",[["inf.armourer","Armourer's (방어구)"],["inf.blacksmith","Blacksmith's (무기)"],["inf.arcanist","Arcanist's (캐스터)"],["inf.catalysing","Catalysing (장신구)"]]],
 ["퀄리티 화폐 가격 (Ex)",[["q.scrap","Armourer's Scrap"],["q.whetstone","Blacksmith's Whetstone"],["q.etcher","Arcanist's Etcher"]]],
-["집계",[["N","하위 N개 중앙값"],["minN","최소 리스팅 수"],["p2","+2% 확률 (%)"]]]];
+["집계",[["minN","최소 리스팅 수"],["p2","+2% 확률 (%)"]]]];
 const gp=(o,p)=>p.split(".").reduce((a,k)=>a[k],o);
 const sp=(o,p,v)=>{const a=p.split(".");const l=a.pop();a.reduce((x,k)=>x[k],o)[l]=v};
 let S=JSON.parse(JSON.stringify(DEF)),BASES=[],PRICES={leagues:{}},TAB="weapon";
 function loadSettings(){const s=LS.get("poe2bq:settings",{});S=Object.assign({},DEF,s,{inf:Object.assign({},DEF.inf,s.inf),q:Object.assign({},DEF.q,s.q)})}
 function merge(a,b){const o={leagues:Object.assign({},a.leagues)};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||String(y.collectedAt)>=String(x.collectedAt))o.leagues[k]=y}return o}
-function panel(){let h=`<fieldset><legend>리그 / 표시</legend><label>리그<select data-k="league">${LEAGUES.map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label><label>표시 단위<select data-k="unit"><option value="div"${S.unit==="div"?" selected":""}>Divine</option><option value="ex"${S.unit==="ex"?" selected":""}>Exalted</option></select></label></fieldset>`;
+const leagueList=()=>[...new Set([...Object.keys(PRICES.leagues||{}),S.league])];
+function panel(){let h=`<fieldset><legend>리그 / 표시</legend><label>리그<select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label><label>표시 단위<select data-k="unit"><option value="div"${S.unit==="div"?" selected":""}>Divine</option><option value="ex"${S.unit==="ex"?" selected":""}>Exalted</option></select></label></fieldset>`;
 for(const[t,fs]of FIELDS)h+=`<fieldset><legend>${t}</legend>${fs.map(([k,l])=>`<label>${l}<input type="number" step="any" min="0" data-k="${k}" value="${gp(S,k)}"></label>`).join("")}</fieldset>`;
 h+=`<div class="row"><label class="btn">가격 파일 불러오기<input type="file" id="file" accept=".json" hidden></label><button class="sec" id="reset" type="button">설정 초기화</button></div><p class="st">설정은 이 브라우저에만 저장됩니다.</p>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;sp(S,k,e.tagName==="SELECT"?e.value:Math.max(0,parseFloat(e.value)||0));LS.set("poe2bq:settings",S);render()}));
-$("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);render()}catch(x){alert("올바른 prices.json 형식이 아닙니다.")}});
+$("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);panel();render()}catch(x){alert("올바른 prices.json 형식이 아닙니다.")}});
 $("reset").addEventListener("click",()=>{LS.set("poe2bq:settings",null);loadSettings();panel();render()})}
 const fm=ex=>S.unit==="div"?(ex/S.div).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1})+" Div":Math.round(ex).toLocaleString("ko-KR")+" Ex";
 const nm=b=>`${esc(b.ko||b.en)}${b.ko?`<span class="en">${esc(b.en)}</span>`:""}`;
 function render(){
- const M=model(S.p2/100),lg=PRICES.leagues[S.league]||{entries:[]};
+ const M=model(S.p2/100),lg=PRICES.leagues[S.league]||{entries:[]},need=Math.max(1,Math.ceil(1/M.P-1e-9));
  $("stats").innerHTML=[["30% 도달 확률 (베이스당)",(M.P*100).toFixed(1)+"%"],["30% 1개당 시도 베이스",(1/M.P).toFixed(1)+"개"],["30% 1개당 Infuser",(M.E/M.P).toFixed(1)+"개"],["30% 1개당 퀄리티 화폐",(M.Q/M.P).toFixed(0)+"개"]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
  $("tabs").innerHTML=Object.keys(CATS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${CATS[c][0]} <small>${CATS[c][1]}</small></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
@@ -116,7 +123,7 @@ function render(){
   if(b.query===false){g.list.push({b,msg:b.why||"조회 제외"});continue}
   const es=(lg.entries||[]).filter(e=>e.base===b.id).sort((x,y)=>y.ilvl-x.ilvl);
   if(!es.length){g.list.push({b,msg:"수집 데이터 없음"});continue}
-  for(const e of es){const B=pick(e.buy0,S),T=pick(e.sell30,S);
+  for(const e of es){const B=pick(e.buy0,S,need),T=pickFair(e.sell30,S,need);
    const r={b,e,B,T};if(B.ex!=null&&T.ex!=null)Object.assign(r,calc(B.ex,T.ex,S.inf[b.infuser],S.q[b.qcur],M));else r.msg="데이터 부족";g.list.push(r)}}
  let max=1;groups.forEach(g=>g.list.forEach(r=>{if(r.margin!=null)max=Math.max(max,Math.abs(r.margin))}));
  let h="";groups.forEach((g,cls)=>{h+=`<tr class="g"><td colspan="9">${esc(g.ko||cls)} <span class="en" style="display:inline">${esc(cls)}</span></td></tr>`;
@@ -124,8 +131,10 @@ function render(){
   for(const r of g.list){const b=r.b,e=r.e;
    if(!e){h+=`<tr><td>${nm(b)}</td><td>${b.req}</td><td colspan="7" class="dim" style="text-align:left">${esc(r.msg)}</td></tr>`;continue}
    const cell=(p)=>p.ex!=null?`${fm(p.ex)}<small>${p.n}개</small>`:`<span class="dim">없음</span><small>${p.n}개</small>`;
+   const cellT=p=>p.insufficient?`<span class="dim">데이터 부족</span><small>${p.n}개</small>`:p.ex==null?cell(p):
+    `${fm(p.ex)}<small${p.conf==="low"?' class="lo"':""}>${p.n}개${p.conf?" · "+CONF[p.conf]:""}${p.skipped?" · 저가 "+p.skipped+"개 제외":""}</small>`;
    const m=r.margin,w=m==null?0:Math.max(3,Math.abs(m)/max*100);
-   h+=`<tr><td>${nm(b)}</td><td>${b.req}</td><td>${e.ilvl}</td><td>${e.sockets==null?"-":e.sockets}</td><td>${cell(r.B)}</td><td>${cell(r.T)}</td>`+
+   h+=`<tr><td>${nm(b)}</td><td>${b.req}</td><td>${e.ilvl}</td><td>${e.sockets==null?"-":e.sockets}</td><td>${cell(r.B)}</td><td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T)}</td>`+
    (m==null?`<td colspan="3" class="dim">${r.msg}</td>`:`<td>${fm(r.cost)}</td><td class="${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fm(Math.abs(m))}<i class="bar" style="width:${w}%;background:var(--${m>=0?"accent":"bad"})"></i></td><td class="${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
  $("rows").innerHTML=h||`<tr><td colspan="9" class="dim" style="text-align:left">이 카테고리에 베이스가 없습니다.</td></tr>`;
  $("src").textContent=lg.collectedAt?`데이터: ${S.league} · 수집 ${lg.collectedAt}`:`${S.league}: 수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.`}
@@ -137,9 +146,10 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  $("theme").addEventListener("click",()=>{const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}mark()});
  const fb=JSON.parse($("fb").textContent);
  loadSettings();panel();
- BASES=(await jget("../../data/bases.json"))||fb.bases;
- PRICES=merge(LS.get("poe2bq:prices",{leagues:{}}),(await jget("../../data/prices.json"))||fb.prices);
- LS.set("poe2bq:prices",PRICES);render();
+ BASES=fb.bases;
+ PRICES=merge(LS.get("poe2bq:prices",{leagues:{}}),(await jget("out/prices.json"))||fb.prices);
+ if(!PRICES.leagues[S.league]){const ks=Object.keys(PRICES.leagues).sort((a,b)=>String(PRICES.leagues[b].collectedAt).localeCompare(String(PRICES.leagues[a].collectedAt)));if(ks.length)S.league=ks[0]}
+ panel();LS.set("poe2bq:prices",PRICES);render();
 })();
 </script>
 </body>
