@@ -128,7 +128,6 @@ const SERVICES=[
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
  desc:{ko:"맵 한 번에 얻는 생기의 기댓값을 계산하고, 윤작에서 어떤 작물을 수확할지 골라 줍니다.",en:"Calculates the expected lifeforce per map and picks which crops to harvest in Crop Rotation."},
  mods:{ko:["윤작 선택 전략 3가지 비교","시장가와 아틀라스 패시브 반영","수확 중 최적 선택지 안내"],en:["Compares 3 Crop Rotation strategies","Uses market prices and Atlas passives","Suggests the best pick as you harvest"]}},
-{id:"legion",dir:"legion-sim",games:["poe1"],live:true,name:{ko:"군단 시뮬레이터",en:"Legion Simulator"}},
 {id:"basequality",dir:"basequality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플립",en:"Base Quality Flip"}},
 {id:"mageblood",dir:"mageblood-flip",games:["poe2"],live:true,name:{ko:"메이지블러드 플립",en:"Mageblood Flip"}}];
 
@@ -149,13 +148,13 @@ quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><pol
 const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
-const gameHref=g=>ROOT+"poetools/"+g.id+"/";
-const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/";
+const gameHref=g=>ROOT+"poetools/"+g.id+"/index.html";
+const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/index.html";
 const stat=live=>`<span class="st${live?" on":""}">${live?T("사용 가능","Available"):T("준비 중","Coming soon")}</span>`;
 const G=GAMES.find(x=>x.id===PAGE);
 
 function renderTop(){
-  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
+  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}poetools/index.html" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
 }
 let INTRO=true;
 function renderHome(){
