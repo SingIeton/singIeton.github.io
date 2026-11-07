@@ -9,7 +9,9 @@
   var src = (doc.currentScript && doc.currentScript.src) || "";
   /* 스크립트 위치(poetools/style/site-bar.js) 기준으로 poetools 경로와 사이트 루트 계산 */
   var TOOLS = new URL("../", src || location.href).href;
-  var SITE_ROOT = new URL("../", TOOLS).href;
+
+  /* 배경 이미지 (poetools/style/bg.js) */
+  if (!window.__sitebg) { var bgs = doc.createElement("script"); bgs.src = TOOLS + "style/bg.js"; (doc.head || root).appendChild(bgs); }
 
   var GAMES = [
     { id: "poe1", short: "PoE 1" },
@@ -22,7 +24,8 @@
   if (LANG !== "en") LANG = "ko";
 
   /* 테마: 페이지가 그려지기 전에 적용해서 깜빡임 방지 */
-  try { var t0 = localStorage.getItem("theme"); if (t0) root.dataset.theme = t0; } catch (e) {}
+  var t0 = null; try { t0 = localStorage.getItem("theme"); } catch (e) {}
+  root.dataset.theme = t0 === "light" ? "light" : "dark"; /* 기본값: 밤 */
   var dk = function () {
     return root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   };
@@ -72,10 +75,10 @@
   function render() {
     var T = function (ko, en) { return LANG === "en" ? en : ko; };
     bar.innerHTML = '<div class="sb-wrap">'
-      + '<a class="sb-brand" href="' + SITE_ROOT + '" aria-label="' + SITE[LANG] + '">' + MARK + '<span class="sb-bn">' + SITE[LANG] + '</span></a>'
+      + '<a class="sb-brand" href="' + TOOLS + 'poetools.html" aria-label="' + SITE[LANG] + '">' + MARK + '<span class="sb-bn">' + SITE[LANG] + '</span></a>'
       + '<nav class="sb-nav" aria-label="' + T("게임", "Games") + '">'
       + GAMES.map(function (g) {
-          return '<a href="' + TOOLS + g.id + '/" data-game="' + g.id + '"' + (cur === g.id ? ' aria-current="true"' : '') + '><i></i>' + g.short + '</a>';
+          return '<a href="' + TOOLS + g.id + '/' + g.id + '.html" data-game="' + g.id + '"' + (cur === g.id ? ' aria-current="true"' : '') + '><i></i>' + g.short + '</a>';
         }).join("")
       + '</nav>'
       + '<div class="sb-tools"><div class="sb-seg" role="group" aria-label="Language">'
@@ -108,5 +111,15 @@
       }
     });
   }
+  /* 다른 탭/페이지에서 테마를 바꾸면 이 페이지에도 즉시 반영 (뒤로가기 복원 포함) */
+  function syncTheme() {
+    var t = null; try { t = localStorage.getItem("theme"); } catch (e) {}
+    t = t === "light" ? "light" : "dark";
+    root.dataset.theme = t;
+    var b = doc.getElementById("sb-theme"); if (b) b.innerHTML = t === "dark" ? SUN : MOON;
+  }
+  window.addEventListener("storage", function (e) { if (e.key === "theme" || e.key === null) syncTheme(); });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) syncTheme(); });
+
   if (doc.body) mount(); else doc.addEventListener("DOMContentLoaded", mount);
 })();
