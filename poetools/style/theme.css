@@ -1,0 +1,156 @@
+/* =====================================================================
+ * PoE Tools 공용 테마  (poetools/style/theme.css)
+ *
+ * 사이트 전체의 폰트·색·모서리·폭 같은 "컨셉"은 이 파일 한 곳에서 정합니다.
+ * 허브(poetools / poe1 / poe2)와 모든 서비스 페이지가 이 파일을 불러옵니다.
+ *
+ *   1. 폰트 불러오기 + 폰트 토큰 (--serif / --sans / --mono)   ← 폰트는 여기만 수정
+ *   2. 색 토큰 (낮/밤, 게임별 포인트 색)                      ← 색은 여기만 수정
+ *   3. 치수 토큰 (모서리, 최대 폭, 상단 바 높이, 기본 글자 크기)
+ *   4. 공용 컴포넌트 (상단 바, 패널, 버튼, 탭, 표, 푸터 …)
+ *
+ * 페이지에서 쓰는 법  (서비스 페이지 <head> 안, 반드시 자기 <style> 보다 앞에):
+ *   <link rel="stylesheet" href="../../style/theme.css">
+ *   <script src="../../style/site-bar.js"></script>
+ *
+ * 서비스에서 덮어쓰는 법 (자기 <style> 안에서):
+ *   - 페이지 전체:  :root{--sans:"Noto Sans KR",sans-serif}
+ *   - 일부 영역만:  .calc{--sans:var(--mono);font-family:var(--sans)}
+ *   - 포인트 색만:  :root{--g:#c33}
+ * ===================================================================== */
+
+/* ---------- 1. 폰트 ---------- */
+@import url("https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap");
+
+:root{
+--serif:"Hahmlet","Noto Serif KR","Nanum Myeongjo","AppleMyungjo",serif;
+--sans:"IBM Plex Sans KR","Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+--mono:ui-monospace,"SF Mono","Cascadia Mono","Consolas","D2Coding",monospace;
+
+/* ---------- 3. 치수 ---------- */
+--r:3px;              /* 모서리 둥글기 */
+--maxw:1200px;        /* 본문 최대 폭 (상단 바와 동일) */
+--bar-h:56px;         /* 상단 바 높이 */
+--fs:15px;--lh:1.65;  /* 본문 글자 크기 / 줄 간격 */
+
+/* ---------- 2. 색: 낮(light) 기본값 ---------- */
+color-scheme:light;
+--bg0:#e9e6de;--sf0:#f4f2ec;--sf20:#e0dcd0;--ln0:#cdc7b6;--ln20:#b0a891;
+--ink:#1b1913;--mute:#625c4d;--g1:#8f4f14;--g2:#1d6a60;--g0:#575143;--gi:#fff;
+--mod:#3a3aa6;--gem:#1f8a80;--y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;--bad:#a8402f;
+--g:var(--g0);                                   /* 현재 페이지의 포인트 색 */
+--bg:color-mix(in oklab,var(--bg0) 94%,var(--g));
+--sf:color-mix(in oklab,var(--sf0) 95%,var(--g));
+--sf2:color-mix(in oklab,var(--sf20) 93%,var(--g));
+--ln:color-mix(in oklab,var(--ln0) 88%,var(--g));
+--ln2:color-mix(in oklab,var(--ln20) 85%,var(--g));
+--accent:var(--g);                               /* 예전 서비스 CSS 호환용 */
+}
+/* 밤(dark): 아래 두 블록은 값이 같아야 합니다 (OS 설정 따라가기 / 사용자가 직접 고른 경우) */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;--bad:#e0907c;}}
+:root[data-theme="dark"]{color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;--bad:#e0907c;}
+/* 게임별 포인트 색: <html data-game="poe1|poe2"> */
+:root[data-game="poe1"]{--g:var(--g1)}
+:root[data-game="poe2"]{--g:var(--g2)}
+
+/* ---------- 4. 기본 ---------- */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:72px}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:var(--fs)/var(--lh) var(--sans);-webkit-font-smoothing:antialiased}
+main{flex:1;outline:0}
+main.wrap{padding-bottom:24px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+::selection{background:color-mix(in oklab,var(--g) 35%,transparent)}
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font:600 clamp(28px,4vw,38px)/1.2 var(--serif);letter-spacing:-.01em;margin:0;text-wrap:balance}
+h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
+.lead{color:var(--mute);margin:8px 0 0;max-width:68ch}
+.serif{font-family:var(--serif)}.sans{font-family:var(--sans)}.mono{font-family:var(--mono)}
+.skip{position:absolute;left:12px;top:-60px;z-index:50;padding:8px 12px;background:var(--g);color:var(--gi);border:0;border-radius:var(--r)}
+.skip:focus{top:8px}
+
+/* ---------- 상단 바 (허브 + site-bar.js 공용) ---------- */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in oklab,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.top .wrap{display:flex;align-items:center;gap:18px;height:var(--bar-h)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 17px var(--serif);color:var(--ink)}
+.brand svg{color:var(--g)}
+.gnav{display:flex;height:100%}
+.gnav a{display:flex;align-items:center;gap:8px;padding:0 14px;text-decoration:none;font-weight:600;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px}
+.gnav a:hover{color:var(--ink)}
+.gnav a[aria-current]{color:var(--ink);border-bottom-color:var(--gc)}
+.gnav i{width:8px;height:8px;background:var(--gc);transform:rotate(45deg)}
+.gnav [data-game=poe1]{--gc:var(--g1)}.gnav [data-game=poe2]{--gc:var(--g2)}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--ln2);border-radius:var(--r);overflow:hidden}
+.seg button{border:0;background:none;color:var(--mute);padding:5px 10px;font-weight:600;font-size:13px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--g);color:var(--gi)}
+.ibtn{width:34px;height:32px;display:grid;place-items:center;border:1px solid var(--ln2);background:none;border-radius:var(--r);cursor:pointer}
+
+/* ---------- 페이지 머리 (아치 마크 + 제목) ---------- */
+.ghead{display:flex;align-items:center;gap:28px;padding:40px 0 8px}
+.mini{flex:none;width:88px;height:108px;display:grid;place-items:end center;padding-bottom:14px;position:relative;border:1px solid var(--g);border-radius:999px 999px var(--r) var(--r);font:300 56px/1 var(--serif);color:var(--g)}
+.mini::before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in oklab,var(--g) 25%,transparent);border-radius:999px 999px 2px 2px}
+.ghead.sm{gap:24px;padding-top:36px;margin-bottom:20px}            /* 서비스 페이지용 작은 머리 */
+.ghead.sm .mini{width:64px;height:80px;padding-bottom:10px;font-size:40px}
+.ghead.sm h1{font-size:clamp(26px,3.6vw,34px)}
+.game{display:inline-block;color:var(--g);font-size:13px;font-weight:600;text-decoration:none;margin-bottom:2px}
+a.game:hover{text-decoration:underline}
+.sub{color:var(--mute);margin:8px 0 0;max-width:72ch}
+
+/* ---------- 패널 (허브의 아이템 카드와 같은 모양) ---------- */
+.panel{background:var(--sf);border:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));border-radius:var(--r);padding:16px;margin-bottom:20px}
+.panel>h2{display:flex;align-items:center;gap:10px;margin:-16px -16px 16px;padding:10px 16px;font:600 16px/1.4 var(--serif);color:var(--g);border-bottom:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));background:color-mix(in oklab,var(--g) 9%,transparent)}
+.panel>h2::before{content:"";flex:none;width:7px;height:7px;background:var(--g);transform:rotate(45deg)}
+.note{color:var(--mute);font-size:13px}
+.note>b{font-family:var(--serif);color:var(--ink)}
+
+/* ---------- 폼 ---------- */
+fieldset{border:0;border-top:1px solid var(--ln);margin:12px 0 0;padding:10px 0 0;min-width:0}
+.panel>fieldset:first-child{border-top:0;margin-top:0;padding-top:0}
+legend{display:flex;align-items:center;gap:8px;font:600 14px/1.4 var(--serif);color:var(--g);padding-right:8px}
+legend::before{content:"";width:5px;height:5px;background:var(--g);transform:rotate(45deg)}
+label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0;font-size:14px}
+input[type=number],input[type=text],select{width:72px;padding:5px 7px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+select{width:auto;max-width:150px}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--g)}
+input:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- 버튼: .btn / button.sm = 외곽선, button.pri = 채움, button.sec = 보조 ---------- */
+.btn,button.sm,button.pri{display:inline-block;padding:8px 20px;border:1px solid var(--g);background:none;color:var(--g);border-radius:var(--r);font:600 14px/1.2 var(--sans);text-align:center;cursor:pointer;transition:background .15s,color .15s}
+.btn:hover,button.sm:hover:not(:disabled){background:var(--g);color:var(--gi)}
+button.sm{padding:5px 12px;font-size:13px}
+button.sm.on{background:var(--g);color:var(--gi)}
+button.pri{background:var(--g);color:var(--gi)}
+button.pri:hover:not(:disabled){background:color-mix(in oklab,var(--g) 85%,var(--ink))}
+button.sec{border-color:var(--ln2);color:var(--mute)}
+button.sec:hover:not(:disabled){background:none;color:var(--ink);border-color:var(--ink)}
+button:disabled{opacity:.45;cursor:default}
+
+/* ---------- 탭 (상단 게임 메뉴와 같은 밑줄 + 마름모) ---------- */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--ln);margin:0 0 20px;overflow-x:auto}
+.tab{display:flex;align-items:center;gap:8px;padding:8px 16px;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;color:var(--mute);font-weight:600;font-size:15px;border-radius:0;cursor:pointer;white-space:nowrap}
+.tab::before{content:"";width:7px;height:7px;background:var(--g);transform:rotate(45deg);opacity:0}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--ink);border-bottom-color:var(--g)}
+.tab.on::before{opacity:1}
+
+/* ---------- 수치 카드 / 표 ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{border:1px solid var(--ln);border-radius:var(--r);padding:8px 12px;background:var(--sf2)}
+.stat small{color:var(--mute);display:block;font-size:12px}
+.stat b{font:600 17px/1.5 var(--serif);font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:right;border-bottom:1px solid var(--ln)}
+th:first-child,td:first-child{text-align:left}
+th{font-size:12px;color:var(--mute);font-weight:600}
+
+/* ---------- 푸터 ---------- */
+.foot{border-top:1px solid var(--ln);margin-top:48px;padding:20px 0 28px;color:var(--mute);font-size:12.5px}
+
+/* ---------- 좁은 화면 ---------- */
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.bn{display:none}.gnav a{padding:0 10px}.top .wrap{gap:8px}.ghead{gap:16px}.mini{width:72px;height:90px;font-size:44px}.ghead.sm{padding-top:24px}.ghead.sm .mini{width:52px;height:66px;font-size:32px}}

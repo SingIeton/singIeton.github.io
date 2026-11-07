@@ -6,59 +6,11 @@
 <title>PoE Tools</title>
 <meta name="description" content="Path of Exile 1·2 계산기와 서비스 모음">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M3 26V12a9 9 0 0 1 18 0v14z' fill='none' stroke='%23cf8a45' stroke-width='2'/%3E%3Cpath d='M12 9.5l3 4.5-3 6.5-3-6.5z' fill='%23cf8a45'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style/theme.css">
 <script src="style/bg.js"></script>
+<script src="style/site-bar.js" data-nobar></script>
 <style>
-:root{
---serif:"Hahmlet","Noto Serif KR","Nanum Myeongjo","AppleMyungjo",serif;
---sans:"IBM Plex Sans KR","Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
-color-scheme:light;
---bg0:#e9e6de;--sf0:#f4f2ec;--sf20:#e0dcd0;--ln0:#cdc7b6;--ln20:#b0a891;
---ink:#1b1913;--mute:#625c4d;--g1:#8f4f14;--g2:#1d6a60;--g0:#575143;--gi:#fff;
---mod:#3a3aa6;--gem:#1f8a80;--y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;
---g:var(--g0);
---bg:color-mix(in oklab,var(--bg0) 94%,var(--g));
---sf:color-mix(in oklab,var(--sf0) 95%,var(--g));
---sf2:color-mix(in oklab,var(--sf20) 93%,var(--g));
---ln:color-mix(in oklab,var(--ln0) 88%,var(--g));
---ln2:color-mix(in oklab,var(--ln20) 85%,var(--g));
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;}}
-:root[data-theme="dark"]{color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;}
-:root[data-game="poe1"]{--g:var(--g1)}
-:root[data-game="poe2"]{--g:var(--g2)}
-*,*::before,*::after{box-sizing:border-box}
-[hidden]{display:none!important}
-html{scroll-padding-top:72px}
-body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:15px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
-main{flex:1;outline:0}
-a{color:inherit}
-button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--g);outline-offset:2px}
-::selection{background:color-mix(in oklab,var(--g) 35%,transparent)}
-.wrap{width:100%;max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1{font:600 clamp(28px,4vw,38px)/1.2 var(--serif);letter-spacing:-.01em;margin:0;text-wrap:balance}
-h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
-.lead{color:var(--mute);margin:8px 0 0;max-width:68ch}
-.skip{position:absolute;left:12px;top:-60px;z-index:50;padding:8px 12px;background:var(--g);color:var(--gi);border:0;border-radius:3px}
-.skip:focus{top:8px}
-/* 헤더 */
-.top{position:sticky;top:0;z-index:20;background:color-mix(in oklab,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
-.top .wrap{display:flex;align-items:center;gap:18px;height:56px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 17px var(--serif);color:var(--ink)}
-.brand svg{color:var(--g)}
-.gnav{display:flex;height:100%}
-.gnav a{display:flex;align-items:center;gap:8px;padding:0 14px;text-decoration:none;font-weight:600;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px}
-.gnav a:hover{color:var(--ink)}
-.gnav a[aria-current]{color:var(--ink);border-bottom-color:var(--gc)}
-.gnav i{width:8px;height:8px;background:var(--gc);transform:rotate(45deg)}
-.gnav [data-game=poe1]{--gc:var(--g1)}.gnav [data-game=poe2]{--gc:var(--g2)}
-.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
-.seg{display:inline-flex;border:1px solid var(--ln2);border-radius:3px;overflow:hidden}
-.seg button{border:0;background:none;color:var(--mute);padding:5px 10px;font-weight:600;font-size:13px;cursor:pointer}
-.seg button[aria-pressed=true]{background:var(--g);color:var(--gi)}
-.ibtn{width:34px;height:32px;display:grid;place-items:center;border:1px solid var(--ln2);background:none;border-radius:3px;cursor:pointer}
+/* 폰트·색·상단 바·페이지 머리·푸터 등 공통 모양은 style/theme.css. 여기에는 허브 페이지 전용 스타일만 둡니다. */
 /* 홈: 차원문 */
 .hero{text-align:center;padding:48px 0 8px}
 .hero .lead{margin-inline:auto}
@@ -88,9 +40,6 @@ main.home .portals{margin:24px 0}
 .chip{font-size:12px;font-weight:600;padding:0 8px;border:1px solid var(--pg);color:var(--pg);border-radius:3px;line-height:20px}
 .chip[data-game=poe1]{--pg:var(--g1)}.chip[data-game=poe2]{--pg:var(--g2)}
 /* 게임 페이지: 아이템 툴팁 카드 */
-.ghead{display:flex;align-items:center;gap:28px;padding:40px 0 8px}
-.mini{flex:none;width:88px;height:108px;display:grid;place-items:end center;padding-bottom:14px;position:relative;border:1px solid var(--g);border-radius:999px 999px 3px 3px;font:300 56px/1 var(--serif);color:var(--g)}
-.mini::before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in oklab,var(--g) 25%,transparent);border-radius:999px 999px 2px 2px}
 .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;margin:28px 0 8px}
 .item{--pg:var(--g);display:flex;flex-direction:column;background:var(--sf);border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:3px;text-decoration:none;color:inherit}
 .item.soon{--pg:var(--mute)}
@@ -107,9 +56,7 @@ main.home .portals{margin:24px 0}
 .sep::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;border:1px solid var(--ln2);background:var(--sf);transform:translate(-50%,-50%) rotate(45deg)}
 .mods{list-style:none;margin:0;padding:0;color:var(--mod);font-size:14px}.mods li{margin:2px 0}
 .ibody .go,.ibody .st{margin-top:auto}
-.foot{border-top:1px solid var(--ln);margin-top:48px;padding:20px 0 28px;color:var(--mute);font-size:12.5px}
 @media(max-width:760px){.portals{grid-template-columns:minmax(0,360px);gap:28px}}
-@media(max-width:560px){.bn{display:none}.gnav a{padding:0 10px}.top .wrap{gap:8px}.ghead{gap:16px}.mini{width:72px;height:90px;font-size:44px}}
 </style>
 </head>
 <body>
@@ -194,6 +141,8 @@ $("skip").addEventListener("click",()=>$("main").focus());
 const syncTheme=()=>{let t=null;try{t=localStorage.getItem("theme")}catch(e){}t=t==="light"?"light":"dark";document.documentElement.dataset.theme=t;const b=$("theme");if(b)b.innerHTML=t==="dark"?ICON.sun:ICON.moon};
 addEventListener("storage",e=>{if(e.key==="theme"||e.key===null)syncTheme()});
 addEventListener("pageshow",e=>{if(e.persisted)syncTheme()});
+/* 다른 탭/뒤로가기에서 언어가 바뀌면 style/site-bar.js 가 이 이벤트를 보냅니다 */
+addEventListener("sitebar:lang",e=>{if(e.detail!==LANG){LANG=e.detail;render()}});
 render();
 </script>
 </body>

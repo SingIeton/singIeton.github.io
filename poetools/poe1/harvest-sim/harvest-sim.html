@@ -1,94 +1,59 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-game="poe1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터</title>
+<link rel="stylesheet" href="../../style/theme.css">
 <script src="../../style/site-bar.js"></script>
 <style>
-:root{--bg:#f2f4ee;--surface:#fbfcf8;--ink:#1c2a20;--mute:#5d6b60;--line:#cdd6c8;--accent:#2f6b4a;
---y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0c0a;--surface:#141814;--ink:#e6eee6;--mute:#93a496;--line:#2c3b2f;--accent:#6fc194;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0a0c0a;--surface:#141814;--ink:#e6eee6;--mute:#93a496;--line:#2c3b2f;--accent:#6fc194;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;color-scheme:dark}
-*,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
-main{max-width:980px;margin:0 auto;padding:24px 16px 48px}
-.game{color:var(--mute);font-size:.8rem;margin:0 0 2px}
-h1{font-size:1.7rem;margin:0 0 4px;letter-spacing:-.02em}
-h2{font-size:1.05rem;margin:0 0 12px}
-.sub{color:var(--mute);margin:0 0 20px;max-width:64ch}
-.grid{display:grid;grid-template-columns:270px 1fr;gap:16px;align-items:start}
+/* 이 파일에는 수확 시뮬레이터에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
+.grid{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
 @media(max-width:820px){.grid{grid-template-columns:1fr}}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0;font-size:.9rem}
-label span.h{color:var(--mute);font-size:.78rem;display:block}
-input[type=number],input[type=text],select{width:72px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
-select{width:auto;max-width:150px}
-input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
-fieldset{border:0;border-top:1px solid var(--line);margin:10px 0 0;padding:8px 0 0}
-legend{font-weight:600;font-size:.85rem;padding-right:8px;color:var(--accent)}
-button{background:var(--accent);color:var(--bg);border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;width:100%;margin-top:12px}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.big{display:flex;flex-wrap:wrap;gap:20px;align-items:baseline;margin-bottom:14px}
-.big b{font-size:2.3rem;letter-spacing:-.03em;line-height:1}
+label span.h{color:var(--mute);font-size:12px;display:block}
+#run{width:100%;margin:0 0 4px;padding:10px 16px}
+.big{display:flex;flex-wrap:wrap;gap:16px 36px;align-items:baseline;margin-bottom:16px}
+.big b{font:300 clamp(30px,4vw,40px)/1.1 var(--serif);color:var(--g);letter-spacing:-.01em}
 .big small{color:var(--mute)}
 .bar{display:grid;grid-template-columns:70px 1fr 130px;gap:10px;align-items:center;margin:6px 0}
-.bar i{display:block;height:14px;border-radius:7px}
+.bar i{display:block;height:12px;border-radius:2px}
 .bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
-.stat small{color:var(--mute);display:block;font-size:.76rem}
-.stat b{font-variant-numeric:tabular-nums}
-.hist{display:flex;align-items:flex-end;gap:2px;height:130px;margin-top:6px}
-.hist div{flex:1;background:var(--accent);opacity:.75;border-radius:2px 2px 0 0;min-height:1px}
-.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:.76rem}
-.scroll{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
-th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
-th:first-child,td:first-child{text-align:left}
-.note{color:var(--mute);font-size:.8rem}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
-.px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin:10px 0 0;text-align:center;font-size:.9rem}
+.hist{display:flex;align-items:flex-end;gap:2px;height:130px;margin-top:10px}
+.hist div{flex:1;background:var(--g);opacity:.75;border-radius:1px 1px 0 0;min-height:1px}
+.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:12px}
+.panel .stats{margin-bottom:4px}
+table{font-size:14px}
+th,td{padding:6px 8px}
+.dot{display:inline-block;width:9px;height:9px;margin-right:8px;transform:rotate(45deg)}
+.px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin:10px 0 0;text-align:center;font-size:14px}
 .px input{width:100%;text-align:center}
 .rt{display:flex;align-items:center;gap:6px}
-.tabs{display:flex;gap:6px;margin:0 0 12px}
-.tabs .tab{width:auto;margin:0;padding:6px 14px;background:var(--surface);color:var(--ink);border:1px solid var(--line)}
-.tabs .tab.on{background:var(--accent);color:var(--bg)}
 .cy{color:var(--yt);font-weight:600}.cb{color:var(--b);font-weight:600}.cp{color:var(--p);font-weight:600}
 .pl-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:6px 0}
-.pl-row .lb{width:44px;color:var(--mute);font-size:.85rem}
+.pl-row .lb{width:44px;color:var(--mute);font-size:13px}
 .pl-row select{width:auto}
 .opt.c0{--c:var(--y);--t:var(--yt);--on:#1c1c1c}.opt.c1{--c:var(--b);--t:var(--b);--on:var(--bg)}.opt.c2{--c:var(--p);--t:var(--p);--on:var(--bg)}
-button.opt{width:auto;min-width:90px;margin:0;padding:6px 14px;background:var(--surface);background:color-mix(in srgb,var(--c) 10%,var(--surface));color:var(--t);border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));font-weight:600}
+button.opt{min-width:90px;padding:6px 14px;background:color-mix(in srgb,var(--c) 10%,var(--sf));color:var(--t);border:1px solid color-mix(in srgb,var(--c) 45%,var(--ln));border-radius:var(--r);font-weight:600;cursor:pointer;white-space:nowrap}
 button.opt.on{background:var(--c);color:var(--on)}
 button.opt:disabled{opacity:.45;cursor:default}
 .plc option{font-weight:700}
-button.sm{width:auto;margin:0;padding:4px 10px;font-size:.85rem}
-button.sm.on{outline:2px solid var(--accent)}
-.pl-sum{margin:8px 0;font-size:.95rem}
+.pl-sum{margin:8px 0;font-size:15px}
 #plOpts .pl-row{flex-wrap:nowrap;overflow-x:auto}
-button.opt{white-space:nowrap}
 .pl-cols{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
-#plSeq{font-size:.9rem;min-width:220px}
-#plSeq .t{font-weight:700;margin-bottom:4px}
+#plSeq{font-size:14px;min-width:220px}
+#plSeq .t{font:600 14px var(--serif);color:var(--g);margin-bottom:4px}
 #plSeq div{margin:3px 0}
-input:disabled{opacity:.4;cursor:not-allowed}
-.panel>fieldset:first-child{border-top:0;margin-top:0;padding-top:0}
 </style>
 </head>
 <body>
-<main>
+<main class="wrap">
+<div class="ghead sm"><span class="mini" aria-hidden="true">1</span><div><a class="game" href="../poe1.html">패스 오브 엑자일 (Path of Exile)</a><h1>수확(Harvest) 시뮬레이터</h1><p class="sub">Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.</p></div></div>
 <div class="tabs"><button type="button" class="tab on" data-t="sim">기대값 분석</button><button type="button" class="tab" data-t="play">시뮬레이션</button></div>
 <div id="tabSim">
-<div class="game">패스 오브 엑자일 (Path of Exile)</div>
-<h1>수확(Harvest) 시뮬레이터</h1>
-<p class="sub">Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.</p>
 <div class="grid">
 <div>
 <div class="panel">
-<button id="run" type="button" style="margin:0 0 4px">시뮬레이션 실행</button>
+<button id="run" class="pri" type="button">시뮬레이션 실행</button>
 <fieldset><legend>시뮬레이션</legend>
 <label>시뮬레이션 맵 수<select id="n"><option selected>5000</option><option>10000</option><option>20000</option><option>50000</option></select></label>
 </fieldset>
@@ -184,7 +149,7 @@ input:disabled{opacity:.4;cursor:not-allowed}
 <h2>현재 선택지</h2>
 <div class="pl-sum" id="plSum"></div>
 <div class="pl-cols"><div id="plOpts"></div><div id="plSeq"></div></div>
-<div class="pl-row" style="margin-top:8px"><button type="button" class="sm" id="plGo" data-act="h" disabled>수확</button><button type="button" class="sm" id="plUndo" data-act="u" disabled>되돌리기</button></div>
+<div class="pl-row" style="margin-top:8px"><button type="button" class="sm pri" id="plGo" data-act="h" disabled>수확</button><button type="button" class="sm" id="plUndo" data-act="u" disabled>되돌리기</button></div>
 <div id="plDone"></div>
 </div>
 <div class="panel note">
@@ -392,7 +357,7 @@ function applyLang(){
   if(!document.createTreeWalker)return;
   const en=LANG==="en",w=document.createTreeWalker(document.body,4);let n;
   while(n=w.nextNode()){
-    const pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||(n.parentNode.closest&&n.parentNode.closest("#site-bar")))continue;
+    const pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||(n.parentNode.closest&&n.parentNode.closest("#site-bar,#site-foot")))continue;
     if(n.__ko===undefined)n.__ko=n.nodeValue;
     const k=n.__ko.trim(),t=en?tr(k):null;
     n.nodeValue=t?n.__ko.replace(k,()=>t):n.__ko;
