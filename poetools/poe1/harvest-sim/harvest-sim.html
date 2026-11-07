@@ -402,7 +402,7 @@ function applyLang(){
   document.documentElement.lang=LANG;
 }
 window.addEventListener("sitebar:lang",e=>{LANG=e.detail;applyLang()});
-run();
+applyLang();
 const PL={sel:null,n:4,pairs:[[0,2],[1,2],[0,1],[2,2],[1,1]],events:[],surv:{},ovr:{}};
 const DR={n:4,pairs:PL.pairs.map(p=>p.slice())};
 const CLS=["cy","cb","cp"],CN=["노랑","파랑","보라"];
