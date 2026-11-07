@@ -15,7 +15,7 @@
     { id: "poe1", short: "PoE 1" },
     { id: "poe2", short: "PoE 2" }
   ];
-  var SITE = { ko: "PoE 도구함", en: "PoE Toolkit" };
+  var SITE = { ko: "PoE Tools", en: "PoE Tools" };
 
   var LANG = "ko";
   try { LANG = localStorage.getItem("lang") || "ko"; } catch (e) {}
