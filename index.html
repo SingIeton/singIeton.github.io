@@ -71,6 +71,8 @@ h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
 .psub{color:var(--mute);font-size:13px}
 .plist{list-style:none;margin:18px 0;padding:0;width:100%}
 .portal .go{margin-top:18px}
+main.home{display:flex;align-items:center}
+main.home .portals{margin:24px 0}
 .plist li{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-top:1px solid var(--ln);font-size:14px}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mute);white-space:nowrap}
 .st::before{content:"";width:7px;height:7px;border:1px solid currentColor;border-radius:50%}
@@ -159,6 +161,7 @@ function renderTop(){
 }
 let INTRO=true;
 function renderHome(){
+  $("main").className="home";
   $("main").innerHTML=`<div class="wrap"><div class="portals${INTRO?" intro":""}">${GAMES.map(g=>`<a class="portal" data-game="${g.id}" href="${gameHref(g)}"><span class="num" aria-hidden="true">${g.num}</span><span class="ptitle">${g.short}</span><span class="psub">${g.name}</span><span class="go">${T(g.short+" 서비스 보기","View "+g.short+" services")}</span><ul class="plist">${svcsOf(g).map(s=>`<li><span>${esc(L(s.name))}</span>${stat(s.live)}</li>`).join("")}</ul></a>`).join("")}</div></div>`;
   INTRO=false;
 }
