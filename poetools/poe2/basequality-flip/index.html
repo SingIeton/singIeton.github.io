@@ -62,6 +62,8 @@ td small.lo{color:var(--bad)}
 <div class="game">패스 오브 엑자일 2 (Path of Exile 2)</div>
 <h1>베이스 30% 퀄리티 수익 계산기</h1>
 <p class="sub">일반 등급 오버소켓 베이스를 퀄리티 20%까지 올린 뒤 Vaal Infuser로 30% 달성을 시도할 때의 평균 제작비와 평균 마진을 산출합니다. 타락한 베이스는 잔존 가치 없이 실패로 처리합니다.</p>
+<p id="err" class="note" hidden style="color:var(--bad)"></p>
+<noscript><p class="note">이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
 <div class="grid">
 <div>
 <div class="panel" id="set"></div>
@@ -74,8 +76,11 @@ td small.lo{color:var(--bad)}
 </div>
 </div>
 </main>
-<script type="application/json" id="fb">{"bases": [{"id": "obliterator-bow", "en": "Obliterator Bow", "ko": "절멸자 활", "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "warmonger-bow", "en": "Warmonger Bow", "ko": "전쟁광 활", "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "siege-crossbow", "en": "Siege Crossbow", "ko": "공성 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 79, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "gemini-crossbow", "en": "Gemini Crossbow", "ko": "쌍둥이자리 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "desolate-crossbow", "en": "Desolate Crossbow", "ko": "황량한 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "sinister-quarterstaff", "en": "Sinister Quarterstaff", "ko": "험악한 육척봉", "cls": "Quarterstaves", "clsKo": "육척봉", "cat": "weapon", "req": 67, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "bolting-quarterstaff", "en": "Bolting Quarterstaff", "ko": "치직대는 육척봉", "cls": "Quarterstaves", "clsKo": "육척봉", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "soaring-spear", "en": "Soaring Spear", "ko": "솟구치는 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 70, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "akoyan-spear", "en": "Akoyan Spear", "ko": "아코야의 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 78, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "flying-spear", "en": "Flying Spear", "ko": "비행 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 78, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "spiny-talisman", "en": "Spiny Talisman", "ko": "가시투성이 부적", "cls": "Talismans", "clsKo": "부적", "cat": "weapon", "req": 67, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "massive-greathammer", "en": "Massive Greathammer", "ko": "거대한 대망치", "cls": "Two Hand Maces", "clsKo": "양손 철퇴", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}, {"id": "ironwood-greathammer", "en": "Ironwood Greathammer", "ko": "철목 대망치", "cls": "Two Hand Maces", "clsKo": "양손 철퇴", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone", "query": true}], "prices": {"version": 1, "leagues": {"Forbidden Rites": {"collectedAt": "2026-11-06 (수동 입력 샘플)", "entries": [{"base": "obliterator-bow", "ilvl": 82, "sockets": 3, "buy0": {"total": 1, "listings": [{"a": 9, "c": "divine"}]}, "sell30": {"total": 1, "listings": [{"a": 130, "c": "divine"}]}}, {"base": "obliterator-bow", "ilvl": 81, "sockets": 3, "buy0": {"total": 1, "listings": [{"a": 4, "c": "chaos"}]}, "sell30": {"total": 0, "listings": []}}]}}}}</script>
+<script type="application/json" id="fb">{"bases": [{"id": "obliterator-bow", "en": "Obliterator Bow", "ko": "절멸자 활", "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "warmonger-bow", "en": "Warmonger Bow", "ko": "전쟁광 활", "cls": "Bows", "clsKo": "활", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "siege-crossbow", "en": "Siege Crossbow", "ko": "공성 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 79, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "gemini-crossbow", "en": "Gemini Crossbow", "ko": "쌍둥이자리 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "desolate-crossbow", "en": "Desolate Crossbow", "ko": "황량한 석궁", "cls": "Crossbows", "clsKo": "석궁", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "sinister-quarterstaff", "en": "Sinister Quarterstaff", "ko": "험악한 육척봉", "cls": "Quarterstaves", "clsKo": "육척봉", "cat": "weapon", "req": 67, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "bolting-quarterstaff", "en": "Bolting Quarterstaff", "ko": "치직대는 육척봉", "cls": "Quarterstaves", "clsKo": "육척봉", "cat": "weapon", "req": 78, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "soaring-spear", "en": "Soaring Spear", "ko": "솟구치는 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 70, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "akoyan-spear", "en": "Akoyan Spear", "ko": "아코야의 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 78, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "flying-spear", "en": "Flying Spear", "ko": "비행 창", "cls": "Spears", "clsKo": "창", "cat": "weapon", "req": 78, "sockets": 2, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "spiny-talisman", "en": "Spiny Talisman", "ko": "가시투성이 부적", "cls": "Talismans", "clsKo": "부적", "cat": "weapon", "req": 67, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "massive-greathammer", "en": "Massive Greathammer", "ko": "거대한 대망치", "cls": "Two Hand Maces", "clsKo": "양손 철퇴", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}, {"id": "ironwood-greathammer", "en": "Ironwood Greathammer", "ko": "철목 대망치", "cls": "Two Hand Maces", "clsKo": "양손 철퇴", "cat": "weapon", "req": 77, "sockets": 3, "infuser": "blacksmith", "qcur": "whetstone"}]}</script>
 <script>
+(()=>{const show=m=>{const e=document.getElementById("err");if(e){e.hidden=false;e.textContent="오류: "+m}};
+window.addEventListener("error",ev=>show(ev.message));
+window.addEventListener("unhandledrejection",ev=>show(String(ev.reason&&ev.reason.message||ev.reason)))})();
 //M
 function model(p){const q=new Array(22).fill(0);for(let i=19;i>=0;i--)q[i]=1+(1-p)*q[i+1]+p*q[Math.min(i+2,20)];
 const P=new Array(31).fill(0),E=new Array(31).fill(0);P[30]=1;
@@ -87,7 +92,7 @@ const n=side.total!=null?side.total:v.length;if(!v.length||n<MIN_N)return{n};con
 const f=side.fair||{};return{n,ex:v.length%2?v[h]:(v[h-1]+v[h])/2,conf:f.confidence||undefined,reason:f.reason}}
 function calc(B,sale,X,W,M){const k=1/M.P,cost=k*(B+M.Q*W+M.E*X);return{cost,margin:sale-cost,roi:(sale-cost)/cost}}
 //M
-function pickFair(side,S,N){const f=side&&side.fair;if(!f)return pick(side,S,N);
+function pickFair(side,S,N){const f=side&&side.fair;if(!f)return{n:0};
 const n=side.total!=null?side.total:((side.listings||[]).length);
 if(f.status==="insufficient"||f.a==null)return{n,insufficient:true,reason:f.reason};
 const ex=toEx({a:f.a,c:f.c},S);if(ex==null)return{n,reason:f.reason};
@@ -95,7 +100,7 @@ return{n,ex,conf:f.confidence,skipped:f.skipped||0,reason:f.reason}}
 const CONF={high:"신뢰 높음",medium:"신뢰 보통",low:"신뢰 낮음"};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const LS={get(k,d){try{const v=localStorage.getItem(k);const x=v?JSON.parse(v):d;return x==null?d:x}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const P2=20,MIN_N=1;
 const DEF={league:"Forbidden Rites",div:515,chaos:67,
 inf:{armourer:0,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:0,whetstone:.15,etcher:0}};
@@ -117,7 +122,7 @@ h+=`<div class="row"><label class="btn">가격 파일 불러오기<input type="f
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;sp(S,k,e.tagName==="SELECT"?e.value:Math.max(0,parseFloat(e.value)||0));LS.set("poe2bq:settings",S);render()}));
 $("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);panel();render()}catch(x){alert("올바른 prices.json 형식이 아닙니다.")}});
-$("reset").addEventListener("click",()=>{LS.set("poe2bq:settings",null);loadSettings();panel();render()})}
+$("reset").addEventListener("click",()=>{LS.del("poe2bq:settings");loadSettings();panel();render()})}
 const trim=(x,d)=>x.toLocaleString("ko-KR",{minimumFractionDigits:0,maximumFractionDigits:d});
 const fm=(ex,d=1)=>S.div>0?trim(ex/S.div,d)+" D":Math.round(ex).toLocaleString("ko-KR")+" E";
 const nm=b=>`${esc(b.ko||b.en)}${b.ko?`<span class="en">${esc(b.en)}</span>`:""}`;
@@ -128,7 +133,6 @@ function render(){
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
  const groups=new Map();
  for(const b of BASES.filter(b=>b.cat===TAB)){const g=groups.get(b.cls)||{ko:b.clsKo,list:[]};groups.set(b.cls,g);
-  if(b.query===false){g.list.push({b,msg:b.why||"조회 제외"});continue}
   const sm=lg.stopped||{},stp=v=>sm[b.id+":"+v]||sm[b.id];
   const es=(lg.entries||[]).filter(e=>e.base===b.id);
   const lv=[...new Set([...es.map(e=>e.ilvl),...[82,81].filter(stp)])].sort((x,y)=>y-x);
@@ -158,7 +162,7 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  const fb=JSON.parse($("fb").textContent);
  loadSettings();panel();
  BASES=fb.bases;
- PRICES=merge(LS.get("poe2bq:prices",{leagues:{}}),(await jget("out/prices.json"))||fb.prices);
+ PRICES=merge(LS.get("poe2bq:prices",{leagues:{}}),(await jget("out/prices.json"))||{leagues:{}});
  if(!PRICES.leagues[S.league]){const ks=Object.keys(PRICES.leagues).sort((a,b)=>String(PRICES.leagues[b].collectedAt).localeCompare(String(PRICES.leagues[a].collectedAt)));if(ks.length)S.league=ks[0]}
  panel();LS.set("poe2bq:prices",PRICES);render();
 })();
