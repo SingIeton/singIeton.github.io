@@ -1,0 +1,177 @@
+{
+ "version": 1,
+ "leagues": {
+  "Forbidden Rites": {
+   "entries": [
+    {
+     "base": "obliterator-bow",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 5,
+      "listings": [
+       {
+        "a": 130,
+        "c": "divine"
+       },
+       {
+        "a": 130,
+        "c": "divine"
+       },
+       {
+        "a": 175,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 500,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 130,
+       "c": "divine",
+       "n": 5,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 5개, 최저가/중앙값 74%"
+      }
+     },
+     "buy0": {
+      "total": 141,
+      "listings": [
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 3,
+        "c": "divine"
+       },
+       {
+        "a": 5,
+        "c": "divine"
+       },
+       {
+        "a": 5,
+        "c": "divine"
+       },
+       {
+        "a": 5,
+        "c": "divine"
+       },
+       {
+        "a": 5,
+        "c": "divine"
+       },
+       {
+        "a": 65,
+        "c": "chaos"
+       },
+       {
+        "a": 7,
+        "c": "divine"
+       },
+       {
+        "a": 7,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 3,
+       "c": "divine",
+       "n": 8,
+       "confidence": "medium",
+       "skipped": 2,
+       "reason": "매물 8개, 최저가/중앙값 60%; 중앙값의 50% 미만인 저가 2개 제외"
+      }
+     },
+     "collectedAt": "2026-11-07 20:34"
+    },
+    {
+     "base": "obliterator-bow",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": 306,
+      "listings": [
+       {
+        "a": 8,
+        "c": "chaos"
+       },
+       {
+        "a": 8,
+        "c": "chaos"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 1,
+       "c": "divine",
+       "n": 10,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 100%"
+      }
+     },
+     "collectedAt": "2026-11-07 20:34"
+    }
+   ],
+   "collectedAt": "2026-11-07 20:34"
+  }
+ }
+}
