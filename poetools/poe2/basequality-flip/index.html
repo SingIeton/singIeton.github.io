@@ -56,11 +56,12 @@ td small.lo{color:var(--bad)}
 </style>
 </head>
 <body>
+<script src="../../style/site-bar.js"></script>
 <div class="tools"><button id="theme" type="button" aria-label="Theme">🌙</button></div>
 <main>
 <div class="game">패스 오브 엑자일 2 (Path of Exile 2)</div>
 <h1>베이스 30% 퀄리티 수익 계산기</h1>
-<p class="sub">흰색 오버소켓 베이스를 20%까지 올린 뒤 Vaal Infuser로 30%를 노릴 때의 평균 제작비와 마진을 계산합니다. 타락하면 그 베이스는 실패(잔존 가치 0)로 처리합니다.</p>
+<p class="sub">일반 등급 오버소켓 베이스를 퀄리티 20%까지 올린 뒤 Vaal Infuser로 30% 달성을 시도할 때의 평균 제작비와 평균 마진을 산출합니다. 타락한 베이스는 잔존 가치 없이 실패로 처리합니다.</p>
 <div class="grid">
 <div>
 <div class="panel" id="set"></div>
@@ -70,7 +71,6 @@ td small.lo{color:var(--bad)}
 <div class="tabs" id="tabs"></div>
 <div class="wrap"><table><thead><tr><th>베이스</th><th>Req</th><th>iLvl</th><th>소켓</th><th>0% 베이스</th><th>30% 판매가</th><th>평균 제작비</th><th>평균 마진</th><th>ROI</th></tr></thead><tbody id="rows"></tbody></table></div>
 <p class="note" id="src"></p>
-<p class="note">0% 베이스 가격은 30% 1개를 만드는 데 필요한 베이스 수('30% 1개당 평균 필요 베이스'를 올림한 값, 위 카드는 반올림 표시)만큼의 최저가 매물 중앙값을 씁니다. 베이스를 여러 개 사면 싼 매물부터 소진되기 때문입니다. 칸 아래 개수는 조건에 맞는 전체 매물 수입니다. 30% 판매가는 Python이 계산한 적정 최저가(중앙값보다 지나치게 싼 고립 매물은 제외, 정상 매물 2개 미만이면 데이터 부족)를 씁니다. 셀에 마우스를 올리면 판정 사유가 보입니다. 0% 베이스 칸의 신뢰 수준은 최저가 매물 기준입니다. 30% 매물이 부족하면 같은 ilvl의 0% 조회를 생략하고 '-'로 표시하며, ilvl 82·81 모두 30% 매물이 부족한 베이스는 '수집 중지'로 표시합니다. 타락 확률은 현재 퀄리티 기준 5%p × (퀄리티 − 20)이고, 20%에서는 타락하지 않습니다. 21~29%에서 멈춘 아이템의 잔존 가치와 판매 수수료는 반영하지 않습니다. 확률은 커뮤니티 실측 기반 추정입니다.</p>
 </div>
 </div>
 </main>
@@ -119,33 +119,36 @@ $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>
 $("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);panel();render()}catch(x){alert("올바른 prices.json 형식이 아닙니다.")}});
 $("reset").addEventListener("click",()=>{LS.set("poe2bq:settings",null);loadSettings();panel();render()})}
 const trim=(x,d)=>x.toLocaleString("ko-KR",{minimumFractionDigits:0,maximumFractionDigits:d});
-const fm=ex=>S.div>0?trim(ex/S.div,1)+" D":Math.round(ex).toLocaleString("ko-KR")+" E";
+const fm=(ex,d=1)=>S.div>0?trim(ex/S.div,d)+" D":Math.round(ex).toLocaleString("ko-KR")+" E";
 const nm=b=>`${esc(b.ko||b.en)}${b.ko?`<span class="en">${esc(b.en)}</span>`:""}`;
 function render(){
  const M=model(P2/100),lg=PRICES.leagues[S.league]||{entries:[]},need=Math.max(1,Math.ceil(1/M.P-1e-9));
- $("stats").innerHTML=[["30% 도달 확률",trim(M.P*100,1)+"%"],["30% 1개당 평균 필요 베이스",trim(1/M.P,0)+"개"],["30% 1개당 평균 소모 Infuser",trim(M.E/M.P,0)+"개"],["30% 1개당 평균 퀄리티 화폐",trim(M.Q/M.P,0)+"개"]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+ $("stats").innerHTML=[["30% 도달 확률",trim(M.P*100,1)+"%"],["30% 1개당 평균 필요 베이스",trim(1/M.P,1)+"개"],["30% 1개당 평균 소모 Infuser",trim(M.E/M.P,1)+"개"],["30% 1개당 평균 퀄리티 화폐",trim(M.Q/M.P,0)+"개"]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
  $("tabs").innerHTML=Object.keys(CATS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${CATS[c][0]} <small>${CATS[c][1]}</small></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
  const groups=new Map();
  for(const b of BASES.filter(b=>b.cat===TAB)){const g=groups.get(b.cls)||{ko:b.clsKo,list:[]};groups.set(b.cls,g);
   if(b.query===false){g.list.push({b,msg:b.why||"조회 제외"});continue}
-  const st=lg.stopped&&lg.stopped[b.id];if(st){g.list.push({b,msg:"수집 중지",tip:(st.reason||"")+(st.since?" ("+st.since+" 이후)":"")});continue}
+  const sm=lg.stopped||{},stp=v=>sm[b.id+":"+v]||sm[b.id];
   const es=(lg.entries||[]).filter(e=>e.base===b.id);
-  if(!es.length){g.list.push({b,msg:"수집 데이터 없음"});continue}
-  for(const e of es){const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,need),T=pickFair(e.sell30,S,need);
+  const lv=[...new Set([...es.map(e=>e.ilvl),...[82,81].filter(stp)])].sort((x,y)=>y-x);
+  if(!lv.length){g.list.push({b,msg:"수집 데이터 없음"});continue}
+  for(const v of lv){const st=stp(v);
+   if(st){g.list.push({b,ilvl:v,msg:"수집 중지",tip:(st.reason||"")+(st.since?" ("+st.since+" 이후)":"")});continue}
+   const e=es.find(x=>x.ilvl===v);const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,need),T=pickFair(e.sell30,S,need);
    const r={b,e,B,T};if(B.ex!=null&&T.ex!=null)Object.assign(r,calc(B.ex,T.ex,S.inf[b.infuser],S.q[b.qcur],M));else r.msg="데이터 부족";g.list.push(r)}}
  let max=1;groups.forEach(g=>g.list.forEach(r=>{if(r.margin!=null)max=Math.max(max,Math.abs(r.margin))}));
  let h="";groups.forEach((g,cls)=>{h+=`<tr class="g"><td colspan="9">${esc(g.ko||cls)} <span class="en" style="display:inline">${esc(cls)}</span></td></tr>`;
   for(const r of g.list){const b=r.b,e=r.e;
-   if(!e){h+=`<tr><td>${nm(b)}</td><td>${b.req}</td><td colspan="7" class="dim" style="text-align:left"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`;continue}
+   if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td>${b.req}</td><td>${r.ilvl}</td><td>${b.sockets==null?"-":b.sockets}</td><td colspan="5" class="dim" style="text-align:left"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td>${b.req}</td><td colspan="7" class="dim" style="text-align:left">${esc(r.msg)}</td></tr>`;continue}
    const cell=(p)=>p.omitted?`<span class="dim">-</span><small>-개</small>`:p.ex!=null?`${fm(p.ex)}<small${p.conf==="low"?' class="lo"':""}>${p.n}개${p.conf?" · "+CONF[p.conf]:""}</small>`:`<span class="dim">없음</span><small>${p.n}개</small>`;
    const cellT=p=>p.insufficient?`<span class="dim">데이터 부족</span><small>${p.n}개</small>`:p.ex==null?cell(p):
     `${fm(p.ex)}<small${p.conf==="low"?' class="lo"':""}>${p.n}개${p.conf?" · "+CONF[p.conf]:""}${p.skipped?" · 저가 "+p.skipped+"개 제외":""}</small>`;
    const m=r.margin,w=m==null?0:Math.max(3,Math.abs(m)/max*100);
    h+=`<tr><td>${nm(b)}</td><td>${b.req}</td><td>${e.ilvl}</td><td>${e.sockets==null?"-":e.sockets}</td><td${r.B.reason?` title="${esc(r.B.reason)}"`:""}>${cell(r.B)}</td><td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T)}</td>`+
-   (m==null?`<td colspan="3" class="dim">${r.msg}</td>`:`<td>${fm(r.cost)}</td><td class="${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fm(Math.abs(m))}<i class="bar" style="width:${w}%;background:var(--${m>=0?"accent":"bad"})"></i></td><td class="${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
+   (m==null?`<td colspan="3" class="dim">${r.msg}</td>`:`<td>${fm(r.cost,0)}</td><td class="${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fm(Math.abs(m))}<i class="bar" style="width:${w}%;background:var(--${m>=0?"accent":"bad"})"></i></td><td class="${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
  $("rows").innerHTML=h||`<tr><td colspan="9" class="dim" style="text-align:left">이 카테고리에 베이스가 없습니다.</td></tr>`;
- $("src").textContent=lg.collectedAt?`데이터: ${S.league} · 수집 ${lg.collectedAt}`:`${S.league}: 수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.`}
+ $("src").textContent=lg.collectedAt?`데이터: ${S.league} · 수집: ${lg.collectedAt}`:`${S.league}: 수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.`}
 async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
 (async()=>{
  try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
