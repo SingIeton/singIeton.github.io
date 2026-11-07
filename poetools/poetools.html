@@ -8,6 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M3 26V12a9 9 0 0 1 18 0v14z' fill='none' stroke='%23cf8a45' stroke-width='2'/%3E%3Cpath d='M12 9.5l3 4.5-3 6.5-3-6.5z' fill='%23cf8a45'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<script src="style/bg.js"></script>
 <style>
 :root{
 --serif:"Hahmlet","Noto Serif KR","Nanum Myeongjo","AppleMyungjo",serif;
@@ -128,7 +129,7 @@ const SERVICES=[
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
  desc:{ko:"맵 한 번에 얻는 생기의 기댓값을 계산하고, 윤작에서 어떤 작물을 수확할지 골라 줍니다.",en:"Calculates the expected lifeforce per map and picks which crops to harvest in Crop Rotation."},
  mods:{ko:["윤작 선택 전략 3가지 비교","시장가와 아틀라스 패시브 반영","수확 중 최적 선택지 안내"],en:["Compares 3 Crop Rotation strategies","Uses market prices and Atlas passives","Suggests the best pick as you harvest"]}},
-{id:"basequality",dir:"base-quality",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플립",en:"Base Quality Flip"}},
+{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플립",en:"Base Quality Flip"}},
 {id:"mageblood",dir:"mageblood-flip",games:["poe2"],live:true,name:{ko:"메이지블러드 플립",en:"Mageblood Flip"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
@@ -146,7 +147,7 @@ harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[
 quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><polygon points="30,6 66,6 82,22 14,22" fill="var(--gem)" opacity=".85"/><polygon points="14,22 82,22 48,52" fill="var(--gem)"/><polygon points="30,6 48,22 14,22" fill="#fff" opacity=".18"/><polygon points="66,6 82,22 48,22" fill="#000" opacity=".14"/><polygon points="48,22 82,22 48,52" fill="#000" opacity=".2"/></svg>'};
 
 const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
-try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+{let t=null;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"}
 const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
 const gameHref=g=>ROOT+"poetools/"+g.id+"/"+g.id+".html";
 const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/"+s.dir+".html";
@@ -189,6 +190,10 @@ $("topbar").addEventListener("click",e=>{
   if(b.id==="theme"){const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(x){}b.innerHTML=t==="dark"?ICON.sun:ICON.moon}
 });
 $("skip").addEventListener("click",()=>$("main").focus());
+/* 다른 탭/페이지에서 테마를 바꾸면 즉시 반영 (뒤로가기 복원 포함) */
+const syncTheme=()=>{let t=null;try{t=localStorage.getItem("theme")}catch(e){}t=t==="light"?"light":"dark";document.documentElement.dataset.theme=t;const b=$("theme");if(b)b.innerHTML=t==="dark"?ICON.sun:ICON.moon};
+addEventListener("storage",e=>{if(e.key==="theme"||e.key===null)syncTheme()});
+addEventListener("pageshow",e=>{if(e.persisted)syncTheme()});
 render();
 </script>
 </body>
