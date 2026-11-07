@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터</title>
+<script src="../../style/site-bar.js"></script>
 <style>
 :root{--bg:#f2f4ee;--surface:#fbfcf8;--ink:#1c2a20;--mute:#5d6b60;--line:#cdd6c8;--accent:#2f6b4a;
 --y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;
@@ -13,10 +14,7 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
-main{max-width:980px;margin:0 auto;padding:56px 16px 48px}
-.tools{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:16px;display:flex;gap:8px;z-index:5}
-.tools select{width:auto}
-.tools button{width:auto;margin:0;padding:6px 10px;background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+main{max-width:980px;margin:0 auto;padding:24px 16px 48px}
 .game{color:var(--mute);font-size:.8rem;margin:0 0 2px}
 h1{font-size:1.7rem;margin:0 0 4px;letter-spacing:-.02em}
 h2{font-size:1.05rem;margin:0 0 12px}
@@ -81,7 +79,6 @@ input:disabled{opacity:.4;cursor:not-allowed}
 </style>
 </head>
 <body>
-<div class="tools"><select id="lang" aria-label="Language"><option value="ko">한국어</option><option value="en">English</option></select><button id="theme" type="button" aria-label="Theme">🌙</button></div>
 <main>
 <div class="tabs"><button type="button" class="tab on" data-t="sim">기대값 분석</button><button type="button" class="tab" data-t="play">시뮬레이션</button></div>
 <div id="tabSim">
@@ -395,7 +392,7 @@ function applyLang(){
   if(!document.createTreeWalker)return;
   const en=LANG==="en",w=document.createTreeWalker(document.body,4);let n;
   while(n=w.nextNode()){
-    const pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE")continue;
+    const pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||(n.parentNode.closest&&n.parentNode.closest("#site-bar")))continue;
     if(n.__ko===undefined)n.__ko=n.nodeValue;
     const k=n.__ko.trim(),t=en?tr(k):null;
     n.nodeValue=t?n.__ko.replace(k,()=>t):n.__ko;
@@ -404,15 +401,7 @@ function applyLang(){
   document.documentElement.lang=LANG;
   document.documentElement.lang=LANG;
 }
-try{
-  $("lang").value=LANG;
-  $("lang").addEventListener("change",()=>{LANG=$("lang").value;try{localStorage.setItem("lang",LANG)}catch(e){}applyLang()});
-  const dk=()=>document.documentElement.dataset.theme||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
-  const mark=()=>{$("theme").textContent=dk()==="dark"?"☀️":"🌙"};
-  try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
-  mark();
-  $("theme").addEventListener("click",()=>{const t=dk()==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}mark()});
-}catch(e){}
+window.addEventListener("sitebar:lang",e=>{LANG=e.detail;applyLang()});
 run();
 const PL={sel:null,n:4,pairs:[[0,2],[1,2],[0,1],[2,2],[1,1]],events:[],surv:{},ovr:{}};
 const DR={n:4,pairs:PL.pairs.map(p=>p.slice())};
