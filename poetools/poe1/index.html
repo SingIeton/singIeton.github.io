@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PoE 도구함</title>
+<title>PoE Tools</title>
 <meta name="description" content="Path of Exile 1·2 계산기와 서비스 모음">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M3 26V12a9 9 0 0 1 18 0v14z' fill='none' stroke='%23cf8a45' stroke-width='2'/%3E%3Cpath d='M12 9.5l3 4.5-3 6.5-3-6.5z' fill='%23cf8a45'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +70,7 @@ h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
 .ptitle{font:600 22px var(--serif)}
 .psub{color:var(--mute);font-size:13px}
 .plist{list-style:none;margin:18px 0;padding:0;width:100%}
+.portal .go{margin-top:18px}
 .plist li{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-top:1px solid var(--ln);font-size:14px}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mute);white-space:nowrap}
 .st::before{content:"";width:7px;height:7px;border:1px solid currentColor;border-radius:50%}
@@ -120,7 +121,7 @@ h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
 const ROOT="../../",PAGE="poe1";
 
 /* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). 세 index.html의 이 블록을 동일하게 유지하세요. */
-const SITE={ko:"PoE 도구함",en:"PoE Toolkit"};
+const SITE={ko:"PoE Tools",en:"PoE Tools"};
 const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2"}];
 const SERVICES=[
 {id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
@@ -148,20 +149,17 @@ quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><pol
 const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
-const gameHref=g=>ROOT+"poetools/"+g.id+"/index.html";
-const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/index.html";
+const gameHref=g=>ROOT+"poetools/"+g.id+"/";
+const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/";
 const stat=live=>`<span class="st${live?" on":""}">${live?T("사용 가능","Available"):T("준비 중","Coming soon")}</span>`;
 const G=GAMES.find(x=>x.id===PAGE);
 
 function renderTop(){
-  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}index.html" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
+  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
 }
 let INTRO=true;
 function renderHome(){
-  const live=SERVICES.filter(s=>s.live);
-  $("main").innerHTML=`<div class="wrap"><div class="hero"><h1>${T("게임을 고르세요","Choose a game")}</h1><p class="lead">${T("계산기와 서비스를 게임별로 모았습니다.","Calculators and services, grouped by game.")}</p></div>
-<div class="portals${INTRO?" intro":""}">${GAMES.map(g=>`<a class="portal" data-game="${g.id}" href="${gameHref(g)}"><span class="num" aria-hidden="true">${g.num}</span><span class="ptitle">${g.short}</span><span class="psub">${g.name}</span><ul class="plist">${svcsOf(g).map(s=>`<li><span>${esc(L(s.name))}</span>${stat(s.live)}</li>`).join("")}</ul><span class="go">${T(g.short+" 서비스 보기","View "+g.short+" services")}</span></a>`).join("")}</div>
-<section class="quick"><h2>${T("바로 쓸 수 있는 도구","Ready to use")}</h2>${live.map(s=>s.games.map(id=>{const g=GAMES.find(x=>x.id===id);return `<a href="${svcHref(g,s)}"><span class="chip" data-game="${g.id}">${g.short}</span><b>${esc(L(s.name))}</b>${s.desc?`<small>${esc(L(s.desc))}</small>`:""}</a>`}).join("")).join("")}</section></div>`;
+  $("main").innerHTML=`<div class="wrap"><div class="portals${INTRO?" intro":""}">${GAMES.map(g=>`<a class="portal" data-game="${g.id}" href="${gameHref(g)}"><span class="num" aria-hidden="true">${g.num}</span><span class="ptitle">${g.short}</span><span class="psub">${g.name}</span><span class="go">${T(g.short+" 서비스 보기","View "+g.short+" services")}</span><ul class="plist">${svcsOf(g).map(s=>`<li><span>${esc(L(s.name))}</span>${stat(s.live)}</li>`).join("")}</ul></a>`).join("")}</div></div>`;
   INTRO=false;
 }
 function item(g,s){
