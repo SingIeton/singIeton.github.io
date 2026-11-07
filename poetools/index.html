@@ -118,7 +118,7 @@ main.home .portals{margin:24px 0}
 <footer class="foot" id="foot"></footer>
 <script>
 /* 페이지별로 다른 값은 아래 두 줄뿐입니다. ROOT: 레포 루트(github.io 메인)까지의 상대경로, PAGE: "home" | "poe1" | "poe2" */
-const ROOT="./",PAGE="home";
+const ROOT="../",PAGE="home";
 
 /* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). 세 index.html의 이 블록을 동일하게 유지하세요. */
 const SITE={ko:"PoE Tools",en:"PoE Tools"};
@@ -149,13 +149,13 @@ quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><pol
 const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
-const gameHref=g=>ROOT+"poetools/"+g.id+"/";
-const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/";
+const gameHref=g=>ROOT+"poetools/"+g.id+"/index.html";
+const svcHref=(g,s)=>ROOT+"poetools/"+g.id+"/"+s.dir+"/index.html";
 const stat=live=>`<span class="st${live?" on":""}">${live?T("사용 가능","Available"):T("준비 중","Coming soon")}</span>`;
 const G=GAMES.find(x=>x.id===PAGE);
 
 function renderTop(){
-  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
+  $("topbar").innerHTML=`<div class="wrap"><a class="brand" href="${ROOT}poetools/index.html" aria-label="${esc(L(SITE))}">${MARK}<span class="bn">${esc(L(SITE))}</span></a><nav class="gnav" aria-label="${T("게임","Games")}">${GAMES.map(g=>`<a href="${gameHref(g)}" data-game="${g.id}"${G&&G.id===g.id?' aria-current="page"':""}><i></i>${g.short}</a>`).join("")}</nav><div class="tools"><div class="seg" role="group" aria-label="Language"><button type="button" data-lang="ko" aria-pressed="${LANG==="ko"}">한국어</button><button type="button" data-lang="en" aria-pressed="${LANG==="en"}">EN</button></div><button class="ibtn" id="theme" type="button" aria-label="${T("화면 테마 바꾸기","Toggle theme")}">${dk()==="dark"?ICON.sun:ICON.moon}</button></div></div>`;
 }
 let INTRO=true;
 function renderHome(){
