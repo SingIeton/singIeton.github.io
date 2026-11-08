@@ -12,8 +12,6 @@
 <style>
 /* 폰트·색·상단 바·페이지 머리·푸터 등 공통 모양은 style/theme.css. 여기에는 허브 페이지 전용 스타일만 둡니다. */
 /* 홈: 차원문 */
-.hero{text-align:center;padding:48px 0 8px}
-.hero .lead{margin-inline:auto}
 .portals{display:grid;grid-template-columns:repeat(2,minmax(0,360px));justify-content:center;gap:40px;margin:36px 0 8px}
 .portal{--pg:var(--g1);position:relative;display:flex;flex-direction:column;align-items:center;padding:30px 28px 26px;text-decoration:none;border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:999px 999px 4px 4px;background:radial-gradient(90% 38% at 50% 0,color-mix(in oklab,var(--pg) 20%,transparent),transparent 75%),var(--sf);transition:border-color .2s}
 .portal[data-game=poe2]{--pg:var(--g2)}
@@ -22,9 +20,9 @@
 .num{font:200 clamp(120px,15vw,184px)/1 var(--serif);color:var(--pg);margin:34px 0 4px}
 .ptitle{font:600 22px var(--serif)}
 .psub{color:var(--mute);font-size:13px}
-.plist{list-style:none;margin:18px 0;padding:0;width:100%}
-.portal .go{margin-top:18px}
-.plist li{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-top:1px solid var(--ln);font-size:14px}
+.portal .go{margin:32px 0 18px}
+main.home{display:flex;align-items:center}
+main.home .portals{margin:24px 0}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mute);white-space:nowrap}
 .st::before{content:"";width:7px;height:7px;border:1px solid currentColor;border-radius:50%}
 .st.on{color:var(--pg,var(--g))}.st.on::before{background:currentColor}
@@ -32,13 +30,6 @@
 .portal:hover .go,.item.live:hover .go{background:var(--pg,var(--g));color:var(--gi)}
 @media (prefers-reduced-motion:no-preference){.intro .portal{animation:rise .8s cubic-bezier(.2,.8,.2,1) both}.intro .portal+.portal{animation-delay:.12s}}
 @keyframes rise{from{opacity:0;clip-path:inset(35% 0 0 0)}to{opacity:1;clip-path:inset(0)}}
-.quick{max-width:760px;margin:40px auto 0}
-.quick a{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;align-items:baseline;padding:12px 6px;border-top:1px solid var(--ln);text-decoration:none}
-.quick a:last-child{border-bottom:1px solid var(--ln)}
-.quick a:hover{background:color-mix(in oklab,var(--g) 8%,transparent)}
-.quick b{font-weight:600}.quick small{color:var(--mute);grid-column:2;font-size:13px}
-.chip{font-size:12px;font-weight:600;padding:0 8px;border:1px solid var(--pg);color:var(--pg);border-radius:3px;line-height:20px}
-.chip[data-game=poe1]{--pg:var(--g1)}.chip[data-game=poe2]{--pg:var(--g2)}
 /* 게임 페이지: 아이템 툴팁 카드 */
 .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;margin:28px 0 8px}
 .item{--pg:var(--g);display:flex;flex-direction:column;background:var(--sf);border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:3px;text-decoration:none;color:inherit}
@@ -75,8 +66,8 @@ const SERVICES=[
 {id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
  desc:{ko:"맵 1회당 수확 생기 기댓값 계산\n아틀라스 패시브 세팅 추천",en:"Expected lifeforce per map\nAtlas passive setup suggestions"}},
-{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플립",en:"Base Quality Flip"}},
-{id:"mageblood",dir:"mageblood-flip",games:["poe2"],live:true,name:{ko:"메이지블러드 플립",en:"Mageblood Flip"}}];
+{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"30% 베이스 퀄리티",en:"30% Base Quality"},
+ desc:{ko:"30% 오버퀄리티 베이스 플리핑 마진 계산",en:"Calculates flipping margin for 30% overquality bases"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 if(LANG!=="en")LANG="ko";
@@ -90,7 +81,7 @@ const ICON={sun:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" str
 moon:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'};
 const ART={
 harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--y"],[48,10,26,13,"--b"],[76,2,22,15,"--p"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
-quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><polygon points="30,6 66,6 82,22 14,22" fill="var(--gem)" opacity=".85"/><polygon points="14,22 82,22 48,52" fill="var(--gem)"/><polygon points="30,6 48,22 14,22" fill="#fff" opacity=".18"/><polygon points="66,6 82,22 48,22" fill="#000" opacity=".14"/><polygon points="48,22 82,22 48,52" fill="#000" opacity=".2"/></svg>'};
+quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--gem"],[48,10,26,13,"--b"],[76,2,22,15,"--mod"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>'};
 
 const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
 {let t=null;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"}
@@ -105,7 +96,8 @@ function renderTop(){
 }
 let INTRO=true;
 function renderHome(){
-  $("main").innerHTML=`<div class="wrap"><div class="portals${INTRO?" intro":""}">${GAMES.map(g=>`<a class="portal" data-game="${g.id}" href="${gameHref(g)}"><span class="num" aria-hidden="true">${g.num}</span><span class="ptitle">${g.short}</span><span class="psub">${g.name}</span><span class="go">${T(g.short+" 서비스 보기","View "+g.short+" services")}</span><ul class="plist">${svcsOf(g).map(s=>`<li><span>${esc(L(s.name))}</span>${stat(s.live)}</li>`).join("")}</ul></a>`).join("")}</div></div>`;
+  $("main").className="home";
+  $("main").innerHTML=`<div class="wrap"><div class="portals${INTRO?" intro":""}">${GAMES.map(g=>`<a class="portal" data-game="${g.id}" href="${gameHref(g)}"><span class="num" aria-hidden="true">${g.num}</span><span class="ptitle">${g.short}</span><span class="psub">${g.name}</span><span class="go">${T(g.short+" 서비스 보기","View "+g.short+" services")}</span></a>`).join("")}</div></div>`;
   INTRO=false;
 }
 function item(g,s){
@@ -115,8 +107,8 @@ function item(g,s){
   return s.live?`<a class="item live" href="${svcHref(g,s)}">${head}${body}</a>`:`<div class="item soon" aria-disabled="true">${head}${body}</div>`;
 }
 function renderGame(g){
-  const ss=svcsOf(g),lead="";
-  $("main").innerHTML=`<div class="wrap"><div class="ghead"><span class="mini" aria-hidden="true">${g.num}</span><div><h1>${g.short}</h1><p class="lead">${g.name}</p><p class="lead">${lead}</p></div></div><div class="items">${ss.map(s=>item(g,s)).join("")}</div></div>`;
+  const ss=svcsOf(g);
+  $("main").innerHTML=`<div class="wrap"><div class="ghead"><span class="mini" aria-hidden="true">${g.num}</span><div><h1>${g.short}</h1><p class="lead">${g.name}</p></div></div><div class="items">${ss.map(s=>item(g,s)).join("")}</div></div>`;
 }
 function render(mode){
   document.documentElement.dataset.game=G?G.id:"home";
@@ -124,7 +116,7 @@ function render(mode){
   $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
   renderTop();
   if(G)renderGame(G);else renderHome();
-  $("foot").innerHTML=`<div class="wrap">${T("비공식 팬 사이트입니다. Grinding Gear Games와 관련이 없으며, Path of Exile과 관련 명칭은 Grinding Gear Games의 것입니다.","Unofficial fan site, not affiliated with Grinding Gear Games. Path of Exile and related names belong to Grinding Gear Games.")}</div>`;
+  $("foot").innerHTML=`<div class="wrap"><p class="pcnote">${T("이 사이트는 PC 환경에 최적화되어 있습니다.","This site is optimized for desktop.")}</p>${T("비공식 팬 사이트입니다. Grinding Gear Games와 관련이 없으며, Path of Exile과 관련 명칭은 Grinding Gear Games의 것입니다.","Unofficial fan site, not affiliated with Grinding Gear Games. Path of Exile and related names belong to Grinding Gear Games.")}</div>`;
   document.title=[G&&G.short,L(SITE)].filter(Boolean).join(" | ");
   if(mode==="lang"){const b=document.querySelector('#topbar [data-lang="'+LANG+'"]');b&&b.focus()}
 }

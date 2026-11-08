@@ -24,7 +24,7 @@ Arcanist's Etcher 신비학자의 식각기
 5-A. Item Level=81, Quality>=30% 장비 최저가 최대 10개의 가격
 5-B. Item Level=81, Quality=0% 장비 최저가 최대 10개의 가격
 
-[검색할 장비]
+[무기 Weapons]
 Item Category		Korean		Augmentable Socket (exact)	
 Bows			활		=3			[78] Obliterator Bow 절멸자 활		[77] Warmonger Bow 전쟁광 활
 Crossbows		석궁		=3			[79] Siege Crossbow 공성 석궁		[78] Gemini Crossbow 쌍둥이자리 석궁		[77] Desolate Crossbow 황량한 석궁
@@ -38,6 +38,7 @@ Two Hand Axes (N)	양손 도끼		=3			[]
 Two Hand Maces		양손 철퇴		=3			[77] Massive Greathammer 거대한 대망치	[77] Ironwood Greathammer 철목 대망치
 Two Hand Swords (N)	양손 검		=3			[]
 Shields			방패		=2			[80] Tawhoan Tower Shield 타호아의 거대 방패
+
 
 [후처리]
 1. 정상적인 fetch 데이터가 2개 미만일 경우, 관련 데이터를 데이터 부족으로 표시
