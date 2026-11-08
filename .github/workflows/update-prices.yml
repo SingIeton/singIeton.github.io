@@ -1,0 +1,50 @@
+name: Update prices.json
+
+on:
+  schedule:
+    - cron: "17 */4 * * *"      # 4시간마다 (UTC 기준, 정각을 피해 17분에 실행)
+  workflow_dispatch:             # Actions 탭의 "Run workflow" 버튼으로 수동 실행
+
+permissions:
+  contents: write                # prices.json 을 커밋·푸시하기 위해 필요
+
+concurrency:
+  group: update-prices           # 이전 실행이 끝나기 전에는 다음 실행을 시작하지 않음
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 out/prices.json 에 저장됩니다.
+      SCRIPT_DIR: poe2/overquality-flip
+      SCRIPT_NAME: poe2_overquality-flip.py
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Collect prices
+        working-directory: ${{ env.SCRIPT_DIR }}
+        run: python -u "$SCRIPT_NAME"          # 기본값: 최신 리그 + 직전 리그 + Standard
+
+      - name: Validate and commit prices.json
+        if: ${{ !cancelled() }}                # 수집 중 일부 실패해도, 저장된 진행분은 커밋
+        run: |
+          python -c "import json,sys; json.load(open('${SCRIPT_DIR}/out/prices.json', encoding='utf-8'))"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${SCRIPT_DIR}/out/prices.json"
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git commit -m "chore: update prices.json ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
