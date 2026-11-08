@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 180
     env:
       # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 out/prices.json 에 저장됩니다.
-      SCRIPT_DIR: poe2/overquality-flip
+      SCRIPT_DIR: poetools/poe2/overquality-flip
       SCRIPT_NAME: poe2_overquality-flip.py
     steps:
       - uses: actions/checkout@v4
