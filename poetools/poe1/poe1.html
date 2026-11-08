@@ -73,9 +73,8 @@ const SITE={ko:"PoE Tools",en:"PoE Tools"};
 const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile Tools"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2 Tools"}];
 const SERVICES=[
 {id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
- name:{ko:"맵 한 번에 얻는 생기의 기댓값 계산",en:"Expected Lifeforce per Map Calculation"},
- desc:{ko:"맵 한 번에 얻는 생기의 기댓값을 계산하고, 윤작에서 어떤 작물을 수확할지 골라 줍니다.",en:"Calculates the expected lifeforce per map and picks which crops to harvest in Crop Rotation."},
- mods:{ko:["윤작 선택 전략 3가지 비교","시장가와 아틀라스 패시브 반영","수확 중 최적 선택지 안내"],en:["Compares 3 Crop Rotation strategies","Uses market prices and Atlas passives","Suggests the best pick as you harvest"]}},
+ name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
+ desc:{ko:"맵 1회당 수확 생기 기댓값 계산\n아틀라스 패시브 세팅 추천",en:"Expected lifeforce per map\nAtlas passive setup suggestions"}},
 {id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플립",en:"Base Quality Flip"}},
 {id:"mageblood",dir:"mageblood-flip",games:["poe2"],live:true,name:{ko:"메이지블러드 플립",en:"Mageblood Flip"}}];
 
@@ -112,7 +111,7 @@ function renderHome(){
 function item(g,s){
   const head=`<div class="ihead"><h3>${esc(L(s.name))}</h3><p>${esc(s.name[LANG==="en"?"ko":"en"])}</p></div>`;
   const art=s.icon?`<div class="art">${ART[s.icon]}</div>`:"";
-  const body=`${art}<div class="ibody">${s.live?`${s.desc?`<p>${esc(L(s.desc))}</p>`:""}${s.mods?`<hr class="sep"><ul class="mods">${L(s.mods).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>`:""}<span class="go">${T("열기","Open")}</span>`:`<p>${T("곧 열립니다.","Opens soon.")}</p>${stat(false)}`}</div>`;
+  const body=`${art}<div class="ibody">${s.live?`${s.desc?`<p>${esc(L(s.desc)).replace(/\n/g,"<br>")}</p>`:""}${s.desc||s.mods?`<hr class="sep">`:""}${s.mods?`<ul class="mods">${L(s.mods).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>`:""}<span class="go">${T("열기","Open")}</span>`:`<p>${T("곧 열립니다.","Opens soon.")}</p>${stat(false)}`}</div>`;
   return s.live?`<a class="item live" href="${svcHref(g,s)}">${head}${body}</a>`:`<div class="item soon" aria-disabled="true">${head}${body}</div>`;
 }
 function renderGame(g){
