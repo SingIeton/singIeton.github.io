@@ -352,7 +352,7 @@ function show(full){
   const q=p=>L.sorted[Math.min(n-1,Math.floor(p*n))],qv=p=>L.sv[Math.min(n-1,Math.floor(p*n))]*kk;
   const avgVal=L.avgVal*kk,price=L.P.price.map(x=>x*kk);
   $("tot").textContent=fmt(L.total);$("totMed").textContent=fmt(q(.5));
-  $("val").textContent=fmt(avgVal,dec)+" "+unit;$("vlabel").textContent="기대 화폐 획득량";$("net").textContent=fmt(avgVal-cur.cost,dec)+" "+unit;
+  $("val").textContent=fmt(avgVal,dec)+" "+unit;$("vlabel").textContent="기대 화폐 획득량";$("net").textContent=fmt(avgVal-L.P.cost*kk,dec)+" "+unit;
   const em=(m,i)=>fmt(m)+' <span class="note">('+fmt(m/1000*price[i],dec)+' '+unit+')</span>';
   if(full){
     const mx=Math.max(...L.mean,1);
@@ -371,9 +371,9 @@ function show(full){
     .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
 }
 function run(){run0();renderCmp();applyLang()}
-function refresh(){if(!window.LAST){run();return}show(false);renderCmp();applyLang()}
-let timer;
-document.querySelectorAll("#tabSim input,#tabSim select").forEach(e=>e.addEventListener("change",(e.id==="unit"||e.id==="ratio")?refresh:()=>{clearTimeout(timer);timer=setTimeout(run,250)}));
+function refresh(){if(!window.LAST)return;show(false);renderCmp();applyLang()}
+// 시뮬레이션은 "시뮬레이션 실행" 버튼을 눌렀을 때만 돌림. 화폐 단위·환율만 바꾸면 기존 결과의 숫자만 환산.
+["unit","ratio"].forEach(id=>$(id).addEventListener("change",refresh));
 $("run").addEventListener("click",run);
 function syncRot(){const r=$("rot").checked;["t3inc","t4inc"].forEach(id=>{$(id).disabled=r})}
 $("rot").addEventListener("change",syncRot);syncRot();
