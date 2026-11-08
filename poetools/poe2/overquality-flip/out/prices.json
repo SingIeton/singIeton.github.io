@@ -11,7 +11,7 @@
       "total": 5,
       "listings": [
        {
-        "a": 130,
+        "a": 129,
         "c": "divine"
        },
        {
@@ -19,7 +19,7 @@
         "c": "divine"
        },
        {
-        "a": 175,
+        "a": 130,
         "c": "divine"
        },
        {
@@ -33,69 +33,69 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 130,
+       "a": 129,
        "c": "divine",
        "n": 5,
-       "confidence": "medium",
+       "confidence": "high",
        "skipped": 0,
-       "reason": "매물 5개, 최저가/중앙값 74%"
+       "reason": "매물 5개, 최저가/중앙값 99%"
       }
      },
      "buy0": {
-      "total": 114,
+      "total": 70,
       "listings": [
        {
-        "a": 1,
+        "a": 12,
         "c": "divine"
        },
        {
-        "a": 5,
+        "a": 14,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 14,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        },
        {
-        "a": 10,
+        "a": 15,
         "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 5,
+       "a": 12,
        "c": "divine",
-       "n": 9,
-       "confidence": "low",
-       "skipped": 1,
-       "reason": "매물 9개, 최저가/중앙값 50%; 중앙값의 50% 미만인 저가 1개 제외"
+       "n": 10,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 80%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "obliterator-bow",
@@ -135,10 +135,14 @@
      "ilvl": 82,
      "sockets": 3,
      "sell30": {
-      "total": 6,
+      "total": 7,
       "listings": [
        {
-        "a": 386,
+        "a": 384,
+        "c": "divine"
+       },
+       {
+        "a": 388,
         "c": "divine"
        },
        {
@@ -164,35 +168,19 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 386,
+       "a": 384,
        "c": "divine",
-       "n": 6,
+       "n": 7,
        "confidence": "high",
        "skipped": 0,
-       "reason": "매물 6개, 최저가/중앙값 92%"
+       "reason": "매물 7개, 최저가/중앙값 91%"
       }
      },
      "buy0": {
-      "total": 93,
+      "total": 109,
       "listings": [
        {
-        "a": 25,
-        "c": "divine"
-       },
-       {
-        "a": 25,
-        "c": "divine"
-       },
-       {
-        "a": 26,
-        "c": "divine"
-       },
-       {
-        "a": 28,
-        "c": "divine"
-       },
-       {
-        "a": 28,
+        "a": 27,
         "c": "divine"
        },
        {
@@ -212,21 +200,37 @@
         "c": "divine"
        },
        {
-        "a": 29,
+        "a": 30,
+        "c": "divine"
+       },
+       {
+        "a": 30,
+        "c": "divine"
+       },
+       {
+        "a": 30,
+        "c": "divine"
+       },
+       {
+        "a": 30,
+        "c": "divine"
+       },
+       {
+        "a": 30,
         "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 25,
+       "a": 27,
        "c": "divine",
        "n": 10,
        "confidence": "high",
        "skipped": 0,
-       "reason": "매물 10개, 최저가/중앙값 89%"
+       "reason": "매물 10개, 최저가/중앙값 92%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "warmonger-bow",
@@ -477,79 +481,79 @@
       "total": 2,
       "listings": [
        {
-        "a": 340,
+        "a": 200,
         "c": "divine"
        },
        {
-        "a": 350,
+        "a": 388,
         "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 340,
+       "a": 200,
        "c": "divine",
        "n": 2,
        "confidence": "low",
        "skipped": 0,
-       "reason": "매물 2개, 최저가/중앙값 99%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용"
+       "reason": "매물 2개, 최저가/중앙값 68%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용"
       }
      },
      "buy0": {
-      "total": 97,
+      "total": 64,
       "listings": [
        {
-        "a": 24,
+        "a": 29,
         "c": "divine"
        },
        {
-        "a": 24,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 24,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 24,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 24,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 25,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 26,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 27,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 27,
+        "a": 30,
         "c": "divine"
        },
        {
-        "a": 27,
+        "a": 30,
         "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 24,
+       "a": 29,
        "c": "divine",
        "n": 10,
        "confidence": "high",
        "skipped": 0,
-       "reason": "매물 10개, 최저가/중앙값 98%"
+       "reason": "매물 10개, 최저가/중앙값 97%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "sinister-quarterstaff",
@@ -616,18 +620,10 @@
       }
      },
      "buy0": {
-      "total": 297,
+      "total": 296,
       "listings": [
        {
         "a": 4,
-        "c": "chaos"
-       },
-       {
-        "a": 5,
-        "c": "chaos"
-       },
-       {
-        "a": 5,
         "c": "chaos"
        },
        {
@@ -657,6 +653,14 @@
        {
         "a": 7,
         "c": "chaos"
+       },
+       {
+        "a": 7,
+        "c": "chaos"
+       },
+       {
+        "a": 8,
+        "c": "chaos"
        }
       ],
       "fair": {
@@ -664,12 +668,12 @@
        "a": 4,
        "c": "chaos",
        "n": 10,
-       "confidence": "high",
+       "confidence": "medium",
        "skipped": 0,
-       "reason": "매물 10개, 최저가/중앙값 80%"
+       "reason": "매물 10개, 최저가/중앙값 62%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "bolting-quarterstaff",
@@ -780,12 +784,8 @@
      "ilvl": 82,
      "sockets": 2,
      "sell30": {
-      "total": 7,
+      "total": 6,
       "listings": [
-       {
-        "a": 166,
-        "c": "divine"
-       },
        {
         "a": 180,
         "c": "divine"
@@ -813,16 +813,16 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 166,
+       "a": 180,
        "c": "divine",
-       "n": 7,
+       "n": 6,
        "confidence": "high",
        "skipped": 0,
-       "reason": "매물 7개, 최저가/중앙값 83%"
+       "reason": "매물 6개, 최저가/중앙값 90%"
       }
      },
      "buy0": {
-      "total": 110,
+      "total": 93,
       "listings": [
        {
         "a": 4,
@@ -841,7 +841,7 @@
         "c": "divine"
        },
        {
-        "a": 5,
+        "a": 6,
         "c": "divine"
        },
        {
@@ -857,12 +857,12 @@
         "c": "divine"
        },
        {
-        "a": 7,
+        "a": 9,
         "c": "divine"
        },
        {
-        "a": 85,
-        "c": "chaos"
+        "a": 9,
+        "c": "divine"
        }
       ],
       "fair": {
@@ -872,10 +872,10 @@
        "n": 10,
        "confidence": "medium",
        "skipped": 0,
-       "reason": "매물 10개, 최저가/중앙값 67%"
+       "reason": "매물 10개, 최저가/중앙값 62%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "akoyan-spear",
@@ -904,19 +904,19 @@
       }
      },
      "buy0": {
-      "total": 120,
+      "total": 116,
       "listings": [
        {
-        "a": 115,
-        "c": "vaal"
+        "a": 5,
+        "c": "chaos"
        },
        {
-        "a": 125,
-        "c": "vaal"
+        "a": 8,
+        "c": "chaos"
        },
        {
-        "a": 1,
-        "c": "divine"
+        "a": 9,
+        "c": "chaos"
        },
        {
         "a": 1,
@@ -949,15 +949,15 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 1,
-       "c": "divine",
-       "n": 8,
-       "confidence": "high",
+       "a": 5,
+       "c": "chaos",
+       "n": 10,
+       "confidence": "medium",
        "skipped": 0,
-       "reason": "매물 8개, 최저가/중앙값 100%"
+       "reason": "매물 10개, 최저가/중앙값 65%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "flying-spear",
@@ -1023,60 +1023,60 @@
       }
      },
      "buy0": {
-      "total": 203,
+      "total": 191,
       "listings": [
        {
-        "a": 1,
-        "c": "chaos"
-       },
-       {
-        "a": 25,
-        "c": "exalted"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
-       {
-        "a": 3,
-        "c": "chaos"
-       },
-       {
         "a": 4,
         "c": "chaos"
        },
        {
-        "a": 4,
+        "a": 5,
         "c": "chaos"
        },
        {
-        "a": 4,
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 6,
+        "c": "chaos"
+       },
+       {
+        "a": 6,
         "c": "chaos"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 1,
+       "a": 4,
        "c": "chaos",
-       "n": 9,
-       "confidence": "low",
-       "skipped": 1,
-       "reason": "매물 9개, 최저가/중앙값 50%; 중앙값의 50% 미만인 저가 1개 제외"
+       "n": 10,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 80%"
       }
      },
-     "collectedAt": "2026-11-07 23:50"
+     "collectedAt": "2026-11-08 19:21"
     },
     {
      "base": "spiny-talisman",
@@ -1282,7 +1282,7 @@
      "collectedAt": "2026-11-07 21:55"
     }
    ],
-   "collectedAt": "2026-11-07 23:50",
+   "collectedAt": "2026-11-08 19:21",
    "stopped": {
     "siege-crossbow:82": {
      "since": "2026-11-07 21:35",
@@ -1358,6 +1358,1387 @@
     },
     "ironwood-greathammer:81": {
      "since": "2026-11-07 21:55",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    }
+   }
+  },
+  "Standard": {
+   "entries": [
+    {
+     "base": "obliterator-bow",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 2,
+      "listings": [
+       {
+        "a": 4000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 4000,
+       "c": "divine",
+       "n": 2,
+       "confidence": "low",
+       "skipped": 0,
+       "reason": "매물 2개, 최저가/중앙값 89%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용"
+      }
+     },
+     "buy0": {
+      "total": 43,
+      "listings": [
+       {
+        "a": 99,
+        "c": "divine"
+       },
+       {
+        "a": 99,
+        "c": "divine"
+       },
+       {
+        "a": 100,
+        "c": "divine"
+       },
+       {
+        "a": 100,
+        "c": "divine"
+       },
+       {
+        "a": 120,
+        "c": "divine"
+       },
+       {
+        "a": 124,
+        "c": "divine"
+       },
+       {
+        "a": 130,
+        "c": "divine"
+       },
+       {
+        "a": 150,
+        "c": "divine"
+       },
+       {
+        "a": 157,
+        "c": "divine"
+       },
+       {
+        "a": 158,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 99,
+       "c": "divine",
+       "n": 10,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 81%"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "obliterator-bow",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "warmonger-bow",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 11,
+      "listings": [
+       {
+        "a": 4000,
+        "c": "divine"
+       },
+       {
+        "a": 4500,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "mirror"
+       },
+       {
+        "a": 1,
+        "c": "mirror"
+       },
+       {
+        "a": 1,
+        "c": "mirror"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 4000,
+       "c": "divine",
+       "n": 7,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 7개, 최저가/중앙값 80%"
+      }
+     },
+     "buy0": {
+      "total": 26,
+      "listings": [
+       {
+        "a": 149,
+        "c": "divine"
+       },
+       {
+        "a": 159,
+        "c": "divine"
+       },
+       {
+        "a": 160,
+        "c": "divine"
+       },
+       {
+        "a": 170,
+        "c": "divine"
+       },
+       {
+        "a": 180,
+        "c": "divine"
+       },
+       {
+        "a": 188,
+        "c": "divine"
+       },
+       {
+        "a": 199,
+        "c": "divine"
+       },
+       {
+        "a": 199,
+        "c": "divine"
+       },
+       {
+        "a": 230,
+        "c": "divine"
+       },
+       {
+        "a": 300,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 149,
+       "c": "divine",
+       "n": 10,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 81%"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "warmonger-bow",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 1,
+      "listings": [
+       {
+        "a": 777,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 1,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 1개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "siege-crossbow",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "siege-crossbow",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 1,
+      "listings": [
+       {
+        "a": 5000,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 1,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 1개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "gemini-crossbow",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "gemini-crossbow",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "desolate-crossbow",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "desolate-crossbow",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:22"
+    },
+    {
+     "base": "sinister-quarterstaff",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 3,
+      "listings": [
+       {
+        "a": 4000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 4000,
+       "c": "divine",
+       "n": 3,
+       "confidence": "medium",
+       "skipped": 0,
+       "reason": "매물 3개, 최저가/중앙값 80%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용"
+      }
+     },
+     "buy0": {
+      "total": 39,
+      "listings": [
+       {
+        "a": 5,
+        "c": "divine"
+       },
+       {
+        "a": 20,
+        "c": "chaos"
+       },
+       {
+        "a": 30,
+        "c": "divine"
+       },
+       {
+        "a": 58,
+        "c": "divine"
+       },
+       {
+        "a": 60,
+        "c": "divine"
+       },
+       {
+        "a": 75,
+        "c": "divine"
+       },
+       {
+        "a": 90,
+        "c": "divine"
+       },
+       {
+        "a": 90,
+        "c": "divine"
+       },
+       {
+        "a": 95,
+        "c": "divine"
+       },
+       {
+        "a": 100,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 20,
+       "c": "chaos",
+       "n": 10,
+       "confidence": "low",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 4%; 저가 3개가 몰려 있어 실제 시세로 간주"
+      }
+     },
+     "collectedAt": "2026-11-08 19:23"
+    },
+    {
+     "base": "sinister-quarterstaff",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:23"
+    },
+    {
+     "base": "bolting-quarterstaff",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 2,
+      "listings": [
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "mirror"
+       }
+      ],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 1,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 1개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "bolting-quarterstaff",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 1,
+      "listings": [
+       {
+        "a": 5000,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 1,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 1개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "soaring-spear",
+     "ilvl": 82,
+     "sockets": 2,
+     "sell30": {
+      "total": 5,
+      "listings": [
+       {
+        "a": 1400,
+        "c": "divine"
+       },
+       {
+        "a": 1490,
+        "c": "divine"
+       },
+       {
+        "a": 1499,
+        "c": "divine"
+       },
+       {
+        "a": 1499,
+        "c": "divine"
+       },
+       {
+        "a": 1899,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 1400,
+       "c": "divine",
+       "n": 5,
+       "confidence": "high",
+       "skipped": 0,
+       "reason": "매물 5개, 최저가/중앙값 93%"
+      }
+     },
+     "buy0": {
+      "total": 20,
+      "listings": [
+       {
+        "a": 180,
+        "c": "divine"
+       },
+       {
+        "a": 188,
+        "c": "divine"
+       },
+       {
+        "a": 190,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 400,
+        "c": "divine"
+       },
+       {
+        "a": 440,
+        "c": "divine"
+       },
+       {
+        "a": 440,
+        "c": "divine"
+       },
+       {
+        "a": 450,
+        "c": "divine"
+       },
+       {
+        "a": 500,
+        "c": "divine"
+       },
+       {
+        "a": 500,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 180,
+       "c": "divine",
+       "n": 10,
+       "confidence": "low",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 43%; 저가 4개가 몰려 있어 실제 시세로 간주"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "soaring-spear",
+     "ilvl": 81,
+     "sockets": 2,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "akoyan-spear",
+     "ilvl": 82,
+     "sockets": 2,
+     "sell30": {
+      "total": 6,
+      "listings": [
+       {
+        "a": 4000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       },
+       {
+        "a": 1,
+        "c": "mirror"
+       },
+       {
+        "a": 1,
+        "c": "mirror"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 4000,
+       "c": "divine",
+       "n": 4,
+       "confidence": "medium",
+       "skipped": 0,
+       "reason": "매물 4개, 최저가/중앙값 80%"
+      }
+     },
+     "buy0": {
+      "total": 52,
+      "listings": [
+       {
+        "a": 149,
+        "c": "divine"
+       },
+       {
+        "a": 150,
+        "c": "divine"
+       },
+       {
+        "a": 155,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       },
+       {
+        "a": 200,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 149,
+       "c": "divine",
+       "n": 10,
+       "confidence": "medium",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 74%"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "akoyan-spear",
+     "ilvl": 81,
+     "sockets": 2,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "flying-spear",
+     "ilvl": 82,
+     "sockets": 2,
+     "sell30": {
+      "total": 3,
+      "listings": [
+       {
+        "a": 2850,
+        "c": "divine"
+       },
+       {
+        "a": 2850,
+        "c": "divine"
+       },
+       {
+        "a": 5000,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 2850,
+       "c": "divine",
+       "n": 3,
+       "confidence": "medium",
+       "skipped": 0,
+       "reason": "매물 3개, 최저가/중앙값 100%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용"
+      }
+     },
+     "buy0": {
+      "total": 38,
+      "listings": [
+       {
+        "a": 65,
+        "c": "divine"
+       },
+       {
+        "a": 75,
+        "c": "divine"
+       },
+       {
+        "a": 90,
+        "c": "divine"
+       },
+       {
+        "a": 90,
+        "c": "divine"
+       },
+       {
+        "a": 100,
+        "c": "divine"
+       },
+       {
+        "a": 100,
+        "c": "divine"
+       },
+       {
+        "a": 120,
+        "c": "divine"
+       },
+       {
+        "a": 140,
+        "c": "divine"
+       },
+       {
+        "a": 150,
+        "c": "divine"
+       },
+       {
+        "a": 178,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 65,
+       "c": "divine",
+       "n": 10,
+       "confidence": "medium",
+       "skipped": 0,
+       "reason": "매물 10개, 최저가/중앙값 65%"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "flying-spear",
+     "ilvl": 81,
+     "sockets": 2,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "spiny-talisman",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "spiny-talisman",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:26"
+    },
+    {
+     "base": "massive-greathammer",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 2,
+      "listings": [
+       {
+        "a": 2111,
+        "c": "divine"
+       },
+       {
+        "a": 2250,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 2111,
+       "c": "divine",
+       "n": 2,
+       "confidence": "low",
+       "skipped": 0,
+       "reason": "매물 2개, 최저가/중앙값 97%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용"
+      }
+     },
+     "buy0": {
+      "total": 50,
+      "listings": [
+       {
+        "a": 3,
+        "c": "divine"
+       },
+       {
+        "a": 4,
+        "c": "divine"
+       },
+       {
+        "a": 5,
+        "c": "divine"
+       },
+       {
+        "a": 9,
+        "c": "divine"
+       },
+       {
+        "a": 10,
+        "c": "divine"
+       },
+       {
+        "a": 10,
+        "c": "divine"
+       },
+       {
+        "a": 10,
+        "c": "divine"
+       },
+       {
+        "a": 10,
+        "c": "divine"
+       },
+       {
+        "a": 20,
+        "c": "divine"
+       },
+       {
+        "a": 20,
+        "c": "divine"
+       }
+      ],
+      "fair": {
+       "status": "ok",
+       "a": 5,
+       "c": "divine",
+       "n": 8,
+       "confidence": "low",
+       "skipped": 2,
+       "reason": "매물 8개, 최저가/중앙값 50%; 중앙값의 50% 미만인 저가 2개 제외"
+      }
+     },
+     "collectedAt": "2026-11-08 19:27"
+    },
+    {
+     "base": "massive-greathammer",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:27"
+    },
+    {
+     "base": "ironwood-greathammer",
+     "ilvl": 82,
+     "sockets": 3,
+     "sell30": {
+      "total": 1,
+      "listings": [
+       {
+        "a": 4,
+        "c": "mirror"
+       }
+      ],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:27"
+    },
+    {
+     "base": "ironwood-greathammer",
+     "ilvl": 81,
+     "sockets": 3,
+     "sell30": {
+      "total": 0,
+      "listings": [],
+      "fair": {
+       "status": "insufficient",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "정상 매물 0개 < 최소 2개"
+      }
+     },
+     "buy0": {
+      "total": null,
+      "listings": [],
+      "omitted": true,
+      "fair": {
+       "status": "omitted",
+       "a": null,
+       "c": null,
+       "n": 0,
+       "confidence": null,
+       "skipped": 0,
+       "reason": "30% 매물 데이터 부족으로 0% 조회 생략"
+      }
+     },
+     "collectedAt": "2026-11-08 19:27"
+    }
+   ],
+   "collectedAt": "2026-11-08 19:27",
+   "stopped": {
+    "obliterator-bow:81": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "warmonger-bow:81": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "siege-crossbow:82": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "siege-crossbow:81": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "gemini-crossbow:82": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "gemini-crossbow:81": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "desolate-crossbow:82": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "desolate-crossbow:81": {
+     "since": "2026-11-08 19:22",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "sinister-quarterstaff:81": {
+     "since": "2026-11-08 19:23",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "bolting-quarterstaff:82": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "bolting-quarterstaff:81": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "soaring-spear:81": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "akoyan-spear:81": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "flying-spear:81": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "spiny-talisman:82": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "spiny-talisman:81": {
+     "since": "2026-11-08 19:26",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "massive-greathammer:81": {
+     "since": "2026-11-08 19:27",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "ironwood-greathammer:82": {
+     "since": "2026-11-08 19:27",
+     "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
+    },
+    "ironwood-greathammer:81": {
+     "since": "2026-11-08 19:27",
      "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"
     }
    }

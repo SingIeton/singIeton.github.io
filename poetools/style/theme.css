@@ -29,26 +29,28 @@
 
 /* ---------- 3. 치수 ---------- */
 --r:3px;              /* 모서리 둥글기 */
---maxw:1200px;        /* 본문 최대 폭 (상단 바와 동일) */
+--maxw:1200px;        /* 허브 본문·상단 바 최대 폭 */
+--maxw-svc:1040px;    /* 서비스 페이지(<main class="wrap">) 본문 최대 폭 */
 --bar-h:56px;         /* 상단 바 높이 */
---fs:15px;--lh:1.65;  /* 본문 글자 크기 / 줄 간격 */
+--fs:16px;--lh:1.65;  /* 본문 글자 크기 / 줄 간격 (label·입력·표는 -1px, 표 헤더·수치 카드 라벨·주석은 -2px) */
 
 /* ---------- 2. 색: 낮(light) 기본값 ---------- */
 color-scheme:light;
---bg0:#e9e6de;--sf0:#f4f2ec;--sf20:#e0dcd0;--ln0:#cdc7b6;--ln20:#b0a891;
+--bg0:#e9e6de;--sf0:#f4f2ec;--sf20:#ebe8df;--ln0:#cdc7b6;--ln20:#b0a891;
 --ink:#1b1913;--mute:#625c4d;--g1:#8f4f14;--g2:#1d6a60;--g0:#575143;--gi:#fff;
---mod:#3a3aa6;--gem:#1f8a80;--y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;--bad:#a8402f;
+--mod:#3a3aa6;--gem:#1f8a80;--y:#b7832f;--yt:#8f6516;--b:#44709f;--p:#75599f;--bad:#a8402f;--pos:#2e7d3f;       /* 이익(+) / 손실(--bad) 전용 색: 게임 포인트색과 별개 */
 --g:var(--g0);                                   /* 현재 페이지의 포인트 색 */
 --bg:color-mix(in oklab,var(--bg0) 94%,var(--g));
 --sf:color-mix(in oklab,var(--sf0) 95%,var(--g));
 --sf2:color-mix(in oklab,var(--sf20) 93%,var(--g));
 --ln:color-mix(in oklab,var(--ln0) 88%,var(--g));
 --ln2:color-mix(in oklab,var(--ln20) 85%,var(--g));
+--fld:color-mix(in oklab,var(--sf) 55%,#fff);     /* 입력창·드롭다운 배경 */
 --accent:var(--g);                               /* 예전 서비스 CSS 호환용 */
 }
 /* 밤(dark): 아래 두 블록은 값이 같아야 합니다 (OS 설정 따라가기 / 사용자가 직접 고른 경우) */
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;--bad:#e0907c;}}
-:root[data-theme="dark"]{color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#d38d49;--g2:#6cb2a6;--g0:#b8b19d;--gi:#14100a;--mod:#8c8cf2;--gem:#46c4b6;--y:#d6b062;--yt:#d6b062;--b:#7aa6d6;--p:#a890d4;--bad:#e0907c;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#eaa766;--g2:#9fe0d4;--g0:#b8b19d;--gi:#14100a;--mod:#a9a9ff;--gem:#74e6d8;--y:#ecc77a;--yt:#ecc77a;--b:#96c0f0;--p:#c3acee;--bad:#f0a692;--fld:var(--bg);--pos:#86dc96;}}
+:root[data-theme="dark"]{color-scheme:dark;--bg0:#0c0b0a;--sf0:#151310;--sf20:#1d1a15;--ln0:#2f2a21;--ln20:#453d2e;--ink:#ebe5d4;--mute:#a69e89;--g1:#eaa766;--g2:#9fe0d4;--g0:#b8b19d;--gi:#14100a;--mod:#a9a9ff;--gem:#74e6d8;--y:#ecc77a;--yt:#ecc77a;--b:#96c0f0;--p:#c3acee;--bad:#f0a692;--fld:var(--bg);--pos:#86dc96;}
 /* 게임별 포인트 색: <html data-game="poe1|poe2"> */
 :root[data-game="poe1"]{--g:var(--g1)}
 :root[data-game="poe2"]{--g:var(--g2)}
@@ -59,7 +61,7 @@ color-scheme:light;
 html{scroll-padding-top:72px}
 body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:var(--fs)/var(--lh) var(--sans);-webkit-font-smoothing:antialiased}
 main{flex:1;outline:0}
-main.wrap{padding-bottom:24px}
+main.wrap{max-width:var(--maxw-svc);padding-bottom:24px}
 a{color:inherit}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--g);outline-offset:2px}
@@ -104,16 +106,16 @@ a.game:hover{text-decoration:underline}
 .panel{background:var(--sf);border:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));border-radius:var(--r);padding:16px;margin-bottom:20px}
 .panel>h2{display:flex;align-items:center;gap:10px;margin:-16px -16px 16px;padding:10px 16px;font:600 16px/1.4 var(--serif);color:var(--g);border-bottom:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));background:color-mix(in oklab,var(--g) 9%,transparent)}
 .panel>h2::before{content:"";flex:none;width:7px;height:7px;background:var(--g);transform:rotate(45deg)}
-.note{color:var(--mute);font-size:13px}
+.note{color:var(--mute);font-size:calc(var(--fs) - 2px)}
 .note>b{font-family:var(--serif);color:var(--ink)}
 
 /* ---------- 폼 ---------- */
 fieldset{border:0;border-top:1px solid var(--ln);margin:12px 0 0;padding:10px 0 0;min-width:0}
 .panel>fieldset:first-child{border-top:0;margin-top:0;padding-top:0}
-legend{display:flex;align-items:center;gap:8px;font:600 14px/1.4 var(--serif);color:var(--g);padding-right:8px}
+legend{display:flex;align-items:center;gap:8px;font:600 calc(var(--fs) - 1px)/1.4 var(--serif);color:var(--g);padding-right:8px}
 legend::before{content:"";width:5px;height:5px;background:var(--g);transform:rotate(45deg)}
-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0;font-size:14px}
-input[type=number],input[type=text],select{width:72px;padding:5px 7px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0;font-size:calc(var(--fs) - 1px)}
+input[type=number],input[type=text],select{width:72px;padding:5px 7px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--fld);color:var(--ink);font:inherit;font-size:calc(var(--fs) - 1px)}
 select{width:auto;max-width:150px}
 input[type=checkbox]{width:18px;height:18px;accent-color:var(--g)}
 input:disabled{opacity:.4;cursor:not-allowed}
@@ -125,7 +127,7 @@ button.sm{padding:5px 12px;font-size:13px}
 button.sm.on{background:var(--g);color:var(--gi)}
 button.pri{background:var(--g);color:var(--gi)}
 button.pri:hover:not(:disabled){background:color-mix(in oklab,var(--g) 85%,var(--ink))}
-button.sec{border-color:var(--ln2);color:var(--mute)}
+button.sec{display:inline-block;padding:8px 20px;background:none;border:1px solid var(--ln2);border-radius:var(--r);font:600 14px/1.2 var(--sans);color:var(--mute);cursor:pointer}
 button.sec:hover:not(:disabled){background:none;color:var(--ink);border-color:var(--ink)}
 button:disabled{opacity:.45;cursor:default}
 
@@ -140,13 +142,13 @@ button:disabled{opacity:.45;cursor:default}
 /* ---------- 수치 카드 / 표 ---------- */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stat{border:1px solid var(--ln);border-radius:var(--r);padding:8px 12px;background:var(--sf2)}
-.stat small{color:var(--mute);display:block;font-size:12px}
+.stat small{color:var(--mute);display:block;font-size:calc(var(--fs) - 2px)}
 .stat b{font:600 17px/1.5 var(--serif);font-variant-numeric:tabular-nums}
 .scroll{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
-th,td{text-align:right;border-bottom:1px solid var(--ln)}
+table{border-collapse:collapse;width:100%;font-size:calc(var(--fs) - 1px);font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--ln)}
 th:first-child,td:first-child{text-align:left}
-th{font-size:12px;color:var(--mute);font-weight:600}
+th{font-size:calc(var(--fs) - 2px);color:var(--mute);font-weight:500}
 
 /* ---------- 푸터 ---------- */
 .foot{border-top:1px solid var(--ln);margin-top:48px;padding:20px 0 28px;color:var(--mute);font-size:12.5px}

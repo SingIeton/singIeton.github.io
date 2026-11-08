@@ -3,37 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PoE 2 베이스 30% 퀄리티 수익 계산기</title>
+<title>PoE 2 오버소켓 베이스 오버퀄리티 플리핑 수익 계산</title>
 <link rel="stylesheet" href="../../style/theme.css">
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 이 파일에는 베이스 퀄리티 계산기에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
+main.wrap{max-width:1100px}  /* 표(약 720px) + 설정 패널(300px)이 딱 맞는 폭. 서비스 공용 폭(1040px)보다 약간 넓게 */
 .grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .row .btn,.row button{margin:0;font-size:13.5px;line-height:1.2;min-height:38px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
-.st{color:var(--mute);font-size:12.5px;margin:8px 0 0}
+select:disabled{opacity:.4;cursor:not-allowed}
 label>span:first-child{white-space:nowrap}
 .in{display:flex;align-items:center;gap:6px}.in em{font-style:normal;color:var(--mute);font-size:12.5px}
 .stats{margin-bottom:20px}
+#src{margin:6px 0 0}
 .tab small{font-weight:400;opacity:.8}
+.tabs{overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}  /* 탭 줄 우측 끝 스크롤바(화살표) 숨김 — 좁은 화면에서는 스크롤 자체는 유지 */
+.tabs::-webkit-scrollbar{display:none;width:0;height:0}
 .tbl{overflow-x:auto;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));border-radius:var(--r);margin-bottom:16px}
-table{min-width:760px}
+table{min-width:640px}  /* 컬럼 7개 기준 */
+thead th:nth-child(-n+2){width:1%}  /* 베이스·iLvl 열은 내용 폭만 차지, 남는 폭은 오른쪽 숫자 열들이 나눠 가짐 */
+.sz{height:0;overflow:hidden;visibility:hidden;font:400 calc(var(--fs) - 1px)/var(--lh) var(--sans);white-space:nowrap}  /* 머리글 안의 보이지 않는 요소: 모든 탭의 베이스 이름 중 가장 넓은 것이 열 폭을 정함 */
+.sz .en{font-size:13px;font-weight:400;font-family:var(--sans)}
+.il{text-align:left}  /* iLvl: 베이스 옆에 기본 여백으로 */
 th,td{padding:8px 12px;white-space:nowrap}
 thead th{background:var(--sf2);border-bottom-color:var(--ln2)}
 tbody tr:not(.g):hover td{background:color-mix(in oklab,var(--g) 6%,transparent)}
-tr.g td{background:color-mix(in oklab,var(--g) 9%,transparent);font:600 14px var(--serif);color:var(--g);text-align:left}
+tr.g td{padding-top:9.5px;padding-bottom:9.5px;background:var(--sf2);font:600 15px var(--serif);color:var(--g);text-align:left;cursor:pointer;user-select:none}  /* 배경: 포인트 색을 섞지 않고 표의 다른 바탕색(헤더)과 같은 계열로 */
+.ge{font:400 13px var(--sans);margin-left:4px;color:color-mix(in oklab,var(--mute) 75%,var(--ink))}  /* 카테고리 보조 이름(영문): 대문자·자간 없이, 표 안 영문 장비명과 같은 글꼴·크기·색 */
+tr.g:focus-visible{outline-offset:-2px}
 tr.g td::before{content:"";display:inline-block;width:6px;height:6px;margin-right:10px;background:var(--g);transform:rotate(45deg);vertical-align:2px}
+tr.g.col td::before{background:none;border:1px solid var(--g)}  /* 접힘 표시: 속 빈 마름모 */
 .en{display:block;font-size:12px;color:var(--mute);font-weight:400;font-family:var(--sans)}
+tbody tr:not(.g) .en{font-size:13px;color:color-mix(in oklab,var(--mute) 75%,var(--ink))}  /* 표 안 영문 장비명: overquality-flip_new 스타일 (카테고리·설정 패널의 영문은 12px 그대로) */
+.cnt{float:right;font:400 12px/1.8 var(--sans);color:var(--mute)}  /* 접힌 카테고리의 행 수 */
 td small{display:block;color:var(--mute);font-size:12px}
-td small.lo{color:var(--bad)}
-.pos{color:var(--g);font-weight:700}.neg{color:var(--bad);font-weight:700}.dim{color:var(--mute)}
-.bar{display:block;height:5px;border-radius:2px;margin-top:3px;margin-left:auto}
+.tl{margin-left:6px;color:var(--mute);text-decoration:none;font-size:12px}  /* 거래소 링크 */
+.tl:hover{color:var(--g)}
+.pos{color:var(--pos)}.neg{color:var(--bad)}.dim{color:var(--mute)}
+td.mg.pos,td.roi.pos{color:color-mix(in oklab,var(--pos) 60%,var(--mute));text-shadow:none}  /* 형광 느낌 제거: 초록/빨강을 회색과 섞어 채도만 낮춤 (비율 60%를 올리면 진해짐) */
+td.mg.neg,td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute));text-shadow:none}
+/* 예상 마진: 설정 패널 제목(화폐 환율)과 같은 글꼴·굵기(명조 600). ROI는 다른 숫자와 똑같이 두고 색으로만 구분 */
+.mg{font:600 16px/1.3 var(--serif)}
 </style>
 </head>
 <body>
 <main class="wrap">
-<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Base 30% Quality Profit Calculator">베이스 30% 퀄리티 수익 계산기</h1><p class="sub" data-en="Estimates the average crafting cost and average margin of raising over-socketed normal-rarity bases to 20% quality and then trying for 30% with a Vaal Infuser. Corrupted bases are treated as failures with no residual value.">일반 등급 오버소켓 베이스를 퀄리티 20%까지 올린 뒤 Vaal Infuser로 30% 달성을 시도할 때의 평균 제작비와 평균 마진을 산출합니다. 타락한 베이스는 잔존 가치 없이 실패로 처리합니다.</p></div></div>
+<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑 수익 계산</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocketed bases to maximum quality and reselling them. Data is updated manually and may differ from the current market. Data with insufficient information is not collected.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 데이터는 수동으로 업데이트되며, 현재 시장과 다를 수 있음에 유의. 정보가 부족한 데이터는 수집하지 않음.</p><p class="note" id="src"></p></div></div>
 <p id="err" class="note" hidden style="color:var(--bad)"></p>
 <noscript><p class="note">(JavaScript required) 이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
 <div class="grid">
@@ -43,8 +60,7 @@ td small.lo{color:var(--bad)}
 <div>
 <div class="stats" id="stats"></div>
 <div class="tabs" id="tabs"></div>
-<div class="tbl"><table><thead><tr><th data-en="Base">베이스</th><th>Req</th><th>iLvl</th><th data-en="Sockets">소켓</th><th data-en="0% base">0% 베이스</th><th data-en="30% sell price">30% 판매가</th><th data-en="Avg. cost">평균 제작비</th><th data-en="Avg. margin">평균 마진</th><th>ROI</th></tr></thead><tbody id="rows"></tbody></table></div>
-<p class="note" id="src"></p>
+<div class="tbl"><table><thead><tr><th><span data-en="Base">베이스</span><div class="sz" id="sz" aria-hidden="true"></div></th><th class="il">iLvl</th><th data-en="0% Base">0% 베이스</th><th data-en="Crafting cost">제작비</th><th data-en="Market price">시장가</th><th data-en="Est. margin">예상 마진</th><th data-en="ROI">수익률</th></tr></thead><tbody id="rows"></tbody></table></div>
 </div>
 </div>
 </main>
@@ -57,7 +73,7 @@ window.addEventListener("unhandledrejection",ev=>show(String(ev.reason&&ev.reaso
 let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||(document.documentElement.lang==="en"?"en":"ko");
 const tt=(ko,en)=>LANG==="en"?en:ko;
 function applyStatic(){document.querySelectorAll("[data-en]").forEach(e=>{if(e.dataset.ko===undefined)e.dataset.ko=e.textContent;e.textContent=LANG==="en"?e.dataset.en:e.dataset.ko});
-document.title=tt("PoE 2 베이스 30% 퀄리티 수익 계산기","PoE 2 Base 30% Quality Profit Calculator")}
+document.title=tt("PoE 2 오버소켓 베이스 오버퀄리티 플리핑 수익 계산","PoE 2 Oversocket Base Overquality Flipping Profit Calculator")}
 window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyStatic();panel();render()});
 //M
 function model(p){const q=new Array(22).fill(0);for(let i=19;i>=0;i--)q[i]=1+(1-p)*q[i+1]+p*q[Math.min(i+2,20)];
@@ -80,64 +96,107 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem(k);const x=v?JSON.parse(v):d;return x==null?d:x}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const P2=20,MIN_N=1;
-const DEF={league:"Forbidden Rites",div:515,chaos:67,
-inf:{armourer:0,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:0,whetstone:.15,etcher:0}};
+const BASEDEF={div:515,chaos:67,inf:{armourer:0,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:0,whetstone:.15,etcher:0}};
+/* 리그별 기본값: 여기에 없는 리그(시즌 리그)는 BASEDEF. 값은 Ex 기준 (Divine = 200 Ex 처럼) */
+const LGDEF={Standard:{div:200,chaos:80,inf:{blacksmith:500}}};
+const defFor=l=>{const o=LGDEF[l]||{};return{div:o.div??BASEDEF.div,chaos:o.chaos??BASEDEF.chaos,inf:Object.assign({},BASEDEF.inf,o.inf),q:Object.assign({},BASEDEF.q,o.q)}};
 const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"]};
+const TABS=Object.assign({rec:["추천","Recommended"]},CATS),REC_N=8;  /* 추천 탭: 전체 장비 중 종합 점수 상위 REC_N개 */
+const REC_W=.5;  /* 추천 정렬 가중치: 점수 = 예상 마진^W × 수익률^(1-W). 0.5면 둘을 동일 비중(기하평균)으로, 1에 가까울수록 마진, 0에 가까울수록 수익률 중시 */
 const L2=(ko,en)=>LANG==="en"?`${en}<span class="en">${ko}</span>`:`${ko}<span class="en">${en}</span>`;
-const FIELDS=()=>[[tt("환율 / 화폐","Exchange rates"),[["div","Divine =","ex"],["chaos","Chaos =","ex"]]],
-[tt("Vaal Infuser 가격 (Ex)","Vaal Infuser prices (Ex)"),[["inf.blacksmith",L2("바알 대장장이의 주입기","Vaal Blacksmith's Infuser")],["inf.armourer",L2("바알 방어구 장인의 주입기","Vaal Armourer's Infuser")],["inf.arcanist",L2("바알 신비학자의 주입기","Vaal Arcanist's Infuser")],["inf.catalysing",L2("바알 촉진시키는 주입기","Vaal Catalysing Infuser")]]],
+const FIELDS=()=>[[tt("화폐 환율","Currency exchange rates"),[["div","Divine =","ex"],["chaos","Chaos =","ex"]]],
+[tt("바알 주입기 가격 (Ex)","Vaal Infuser prices (Ex)"),[["inf.blacksmith",L2("바알 대장장이의 주입기","Vaal Blacksmith's Infuser")],["inf.armourer",L2("바알 방어구 장인의 주입기","Vaal Armourer's Infuser")],["inf.arcanist",L2("바알 신비학자의 주입기","Vaal Arcanist's Infuser")],["inf.catalysing",L2("바알 촉진시키는 주입기","Vaal Catalysing Infuser")]]],
 [tt("퀄리티 화폐 가격 (Ex)","Quality currency prices (Ex)"),[["q.whetstone",L2("대장장이의 숫돌","Blacksmith's Whetstone")],["q.scrap",L2("방어구 장인의 고철","Armourer's Scrap")],["q.etcher",L2("신비학자의 식각기","Arcanist's Etcher")]]]];
 const OFF=["inf.armourer","inf.arcanist","inf.catalysing","q.scrap","q.etcher"];
 const gp=(o,p)=>p.split(".").reduce((a,k)=>a[k],o);
 const sp=(o,p,v)=>{const a=p.split(".");const l=a.pop();a.reduce((x,k)=>x[k],o)[l]=v};
-let S=JSON.parse(JSON.stringify(DEF)),BASES=[],PRICES={leagues:{}},TAB="weapon";
-function loadSettings(){const s=LS.get("poe2bq:settings",{});S=Object.assign({},DEF,s,{inf:Object.assign({},DEF.inf,s.inf),q:Object.assign({},DEF.q,s.q)});OFF.forEach(k=>sp(S,k,0))}
-function merge(a,b){const o={leagues:Object.assign({},a.leagues)};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||String(y.collectedAt)>=String(x.collectedAt))o.leagues[k]=y}return o}
-const leagueList=()=>[...new Set([...Object.keys(PRICES.leagues||{}),S.league])];
+let S={league:"",...defFor("")},SAVED={league:"",by:{}},BASES=[],PRICES={leagues:{}},TAB="rec",COL=new Set();
+/* 설정 저장 형식: {league: 직접 고른 리그("" = 항상 최신), by: {리그 이름: {div, chaos, inf, q}}}. 리그마다 값이 따로 저장됨 */
+function useLeague(l){const d=defFor(l),v=SAVED.by[l]||{};S={league:l,div:v.div??d.div,chaos:v.chaos??d.chaos,inf:Object.assign({},d.inf,v.inf),q:Object.assign({},d.q,v.q)};OFF.forEach(k=>sp(S,k,0))}
+function loadSettings(){const s=LS.get("poe2bq:settings",{});
+ SAVED={league:typeof s.league==="string"?s.league:"",by:s.by&&typeof s.by==="object"?s.by:{}};
+ if(!s.by&&s.league&&s.div!=null)SAVED.by[s.league]={div:s.div,chaos:s.chaos,inf:s.inf,q:s.q};  /* 이전 형식(리그 하나) 이전 */
+ useLeague(SAVED.league)}
+const saveSettings=()=>{SAVED.by[S.league]={div:S.div,chaos:S.chaos,inf:S.inf,q:S.q};LS.set("poe2bq:settings",SAVED)};
+function merge(a,b){const o={leagues:Object.assign({},a.leagues),order:b.order||a.order};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||String(y.collectedAt)>=String(x.collectedAt))o.leagues[k]=y}return o}
+const STD="Standard";
+/* 시즌 리그: 최근 2개(최신, 직전). 수집기가 prices.json 의 order 에 순서를 기록하며, 없으면 수집 시각이 최근인 순 */
+const seasonLeagues=()=>{const L=PRICES.leagues||{},ok=k=>k!==STD&&L[k];
+ const o=(PRICES.order||[]).filter(ok);
+ const rest=Object.keys(L).filter(k=>ok(k)&&!o.includes(k)).sort((a,b)=>String(L[b].collectedAt).localeCompare(String(L[a].collectedAt)));
+ return[...o,...rest].slice(0,2)};
+const latestLeague=()=>seasonLeagues()[0]||"";
+const leagueList=()=>[...seasonLeagues(),STD];
+/* 선택된 리그가 목록에 없으면(미설정·리그 교체) 최신 리그로 */
+const fixLeague=()=>{if(!leagueList().includes(S.league))useLeague(latestLeague()||STD)};
+/* 모든 항목이 수집 중지인 카테고리는 접어 둠 (페이지 오픈·리그 변경 시) */
+function autoCollapse(){COL.clear();const lg=PRICES.leagues[S.league]||{},sm=lg.stopped||{};
+ const allStopped=b=>{const stp=v=>sm[b.id+":"+v]||sm[b.id];const lv=[...new Set([...(lg.entries||[]).filter(e=>e.base===b.id).map(e=>e.ilvl),...[82,81].filter(stp)])];return lv.length>0&&lv.every(stp)};
+ const byCls=new Map();BASES.forEach(b=>byCls.set(b.cls,(byCls.get(b.cls)||[]).concat(b)));
+ byCls.forEach((bs,c)=>{if(bs.every(allStopped))COL.add(c)})}
 function panel(){let h=`<fieldset><legend>${tt("리그","League")}</legend><label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label></fieldset>`;
 for(const[t,fs]of FIELDS())h+=`<fieldset><legend>${t}</legend>${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${gp(S,k)}"${OFF.includes(k)?" disabled":""}>${u?`<em>${u}</em>`:""}</span></label>`).join("")}</fieldset>`;
-h+=`<div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div><p class="st">${tt("설정은 이 브라우저에만 저장됩니다.","Settings are saved in this browser only.")}</p>`;
+h+=`<div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div>`;
 $("set").innerHTML=h;
-$("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;sp(S,k,e.tagName==="SELECT"?e.value:Math.max(0,parseFloat(e.value)||0));LS.set("poe2bq:settings",S);render()}));
-$("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);panel();render()}catch(x){alert(tt("올바른 prices.json 형식이 아닙니다.","Not a valid prices.json file."))}});
-$("reset").addEventListener("click",()=>{LS.del("poe2bq:settings");loadSettings();panel();render()})}
+$("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
+ if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;LS.set("poe2bq:settings",SAVED);useLeague(e.value);autoCollapse();  /* 리그 전환: 그 리그의 설정값으로 바꾸고 전체 다시 계산 */
+  $("set").querySelectorAll("input[data-k]").forEach(i=>i.value=gp(S,i.dataset.k));render();return}
+ sp(S,k,Math.max(0,parseFloat(e.value)||0));saveSettings();render()}));
+$("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);fixLeague();autoCollapse();panel();render()}catch(x){alert(tt("올바른 prices.json 형식이 아닙니다.","Not a valid prices.json file."))}});
+$("reset").addEventListener("click",()=>{LS.del("poe2bq:settings");loadSettings();fixLeague();autoCollapse();panel();render()})}
 const trim=(x,d)=>x.toLocaleString(LANG==="en"?"en-US":"ko-KR",{minimumFractionDigits:0,maximumFractionDigits:d});
-const fm=(ex,d=1)=>S.div>0?trim(ex/S.div,d)+" D":Math.round(ex).toLocaleString(LANG==="en"?"en-US":"ko-KR")+" E";
+const fm=(ex,d=1)=>S.div>0?trim(ex/S.div,ex/S.div>=1?0:d)+" D":Math.round(ex).toLocaleString(LANG==="en"?"en-US":"ko-KR")+" E";
+const fmM=ex=>{const u=S.div>0?ex/S.div:ex;return trim(u,u>=1?0:1)+(S.div>0?" D":" E")};  /* 예상 마진: 1 이상이면 정수, 0~1이면 소수 한 자리 */
+/* 거래소 링크: 수집기(build_query)와 같은 조건. 30% 판매가 = 퀄리티 30 이상, 0% 베이스 = 퀄리티 0. ilvl 82 는 82 이상, 81 은 정확히 81 */
+const tradeUrl=(b,v,side)=>{const q=side==="buy0"?{min:0,max:0}:{min:30},il=v===81?{min:81,max:81}:{min:v};
+ const body={query:{status:{option:"securable"},type:b.en,filters:{type_filters:{filters:{rarity:{option:"normal"}}},misc_filters:{filters:{ilvl:il,quality:q,corrupted:{option:"false"},mirrored:{option:"false"},fractured_item:{option:"false"}}},equipment_filters:{filters:{rune_sockets:{min:b.sockets,max:b.sockets}}}}},sort:{price:"asc"}};
+ return"https://www.pathofexile.com/trade2/search/poe2/"+encodeURIComponent(S.league)+"?q="+encodeURIComponent(JSON.stringify(body))};
 const nm=b=>LANG==="en"?`${esc(b.en)}${b.ko?`<span class="en">${esc(b.ko)}</span>`:""}`:`${esc(b.ko||b.en)}${b.ko?`<span class="en">${esc(b.en)}</span>`:""}`;
 function render(){
  const M=model(P2/100),lg=PRICES.leagues[S.league]||{entries:[]},need=Math.max(1,Math.ceil(1/M.P-1e-9));
- $("stats").innerHTML=[[tt("30% 도달 확률","Chance to reach 30%"),trim(M.P*100,1)+"%"],[tt("30% 1개당 평균 필요 베이스","Avg. bases needed per 30%"),trim(1/M.P,1)+tt("개","")],[tt("30% 1개당 평균 소모 Infuser","Avg. Infusers used per 30%"),trim(M.E/M.P,1)+tt("개","")],[tt("30% 1개당 평균 퀄리티 화폐","Avg. quality currency per 30%"),trim(M.Q/M.P,0)+tt("개","")]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
- $("tabs").innerHTML=Object.keys(CATS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${LANG==="en"?CATS[c][1]:CATS[c][0]} <small>${LANG==="en"?CATS[c][0]:CATS[c][1]}</small></button>`).join("");
+ $("sz").innerHTML=BASES.map(nm).join("");
+ $("stats").innerHTML=[[tt("최대 퀄리티 도달 확률","Chance to reach max quality"),trim(M.P*100,1)+"%"],[tt("평균 필요 베이스 수","Avg. bases needed"),trim(1/M.P,1)+tt("개","")],[tt("평균 필요 바알 화폐","Avg. Vaal currency needed"),trim(M.E/M.P,1)+tt("개","")],[tt("평균 필요 퀄리티 화폐","Avg. quality currency needed"),trim(M.Q/M.P,0)+tt("개","")]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+ $("tabs").innerHTML=Object.keys(TABS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${LANG==="en"?TABS[c][1]:TABS[c][0]} <small>${LANG==="en"?TABS[c][0]:TABS[c][1]}</small></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
  const groups=new Map();
- for(const b of BASES.filter(b=>b.cat===TAB)){const g=groups.get(b.cls)||{ko:b.clsKo,list:[]};groups.set(b.cls,g);
+ for(const b of TAB==="rec"?BASES:BASES.filter(b=>b.cat===TAB)){const gk=TAB==="rec"?"":b.cls;const g=groups.get(gk)||{ko:b.clsKo,list:[]};groups.set(gk,g);
   const sm=lg.stopped||{},stp=v=>sm[b.id+":"+v]||sm[b.id];
   const es=(lg.entries||[]).filter(e=>e.base===b.id);
   const lv=[...new Set([...es.map(e=>e.ilvl),...[82,81].filter(stp)])].sort((x,y)=>y-x);
   if(!lv.length){g.list.push({b,msg:tt("수집 데이터 없음","No data collected")});continue}
   for(const v of lv){const st=stp(v);
-   if(st){g.list.push({b,ilvl:v,msg:tt("수집 중지","Collection stopped"),tip:(st.reason||"")+(st.since?tt(" ("+st.since+" 이후)"," (since "+st.since+")"):"")});continue}
+   if(st){if(v===81)continue;g.list.push({b,ilvl:v,msg:tt("데이터 부족으로 수집 중지","Collection stopped (insufficient data)"),tip:(st.reason||"")+(st.since?tt(" ("+st.since+" 이후)"," (since "+st.since+")"):"")});continue}
    const e=es.find(x=>x.ilvl===v);const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,need),T=pickFair(e.sell30,S,need);
    const r={b,e,B,T};if(B.ex!=null&&T.ex!=null)Object.assign(r,calc(B.ex,T.ex,S.inf[b.infuser],S.q[b.qcur],M));else r.msg=tt("데이터 부족","Insufficient data");g.list.push(r)}}
- let max=1;groups.forEach(g=>g.list.forEach(r=>{if(r.margin!=null)max=Math.max(max,Math.abs(r.margin))}));
- let h="";groups.forEach((g,cls)=>{h+=`<tr class="g"><td colspan="9">${LANG==="en"?esc(cls):esc(g.ko||cls)} <span class="en" style="display:inline">${LANG==="en"?esc(g.ko||cls):esc(cls)}</span></td></tr>`;
+ if(TAB==="rec"){const g=groups.get("");if(g){const sc=r=>Math.pow(r.margin,REC_W)*Math.pow(r.roi,1-REC_W);  /* 마진·수익률이 모두 양수인 행만 대상 */
+  g.list=g.list.filter(r=>r.margin>0&&r.B.conf!=="low"&&r.T.conf!=="low").sort((a,b)=>sc(b)-sc(a)).slice(0,REC_N)}}  /* 0% 베이스·시장가 중 하나라도 신뢰 낮음이면 제외 */
+ let h="";groups.forEach((g,cls)=>{const isOpen=!COL.has(cls);
+  if(TAB!=="rec")h+=`<tr class="g${isOpen?"":" col"}" data-cls="${esc(cls)}" tabindex="0" role="button" aria-expanded="${isOpen}" title="${tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand")}"><td colspan="7">${LANG==="en"?`${esc(cls)} <span class="ge">${esc(g.ko||cls)}</span>`:`${esc(g.ko||cls)} <span class="ge">${esc(cls)}</span>`}${isOpen?"":`<span class="cnt">${tt(g.list.length+"행 접힘",g.list.length+" rows hidden")}</span>`}</td></tr>`;
+  if(TAB!=="rec"&&!isOpen)return;
   for(const r of g.list){const b=r.b,e=r.e;
-   if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td>${b.req}</td><td>${r.ilvl}</td><td>${b.sockets==null?"-":b.sockets}</td><td colspan="5" class="dim" style="text-align:left"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td>${b.req}</td><td colspan="7" class="dim" style="text-align:left">${esc(r.msg)}</td></tr>`;continue}
-   const cell=(p)=>p.omitted?`<span class="dim">-</span><small>-${tt("개","")}</small>`:p.ex!=null?`${fm(p.ex)}<small${p.conf==="low"?' class="lo"':""}>${p.n}${tt("개"," listed")}${p.conf?" · "+CONF[p.conf]:""}</small>`:`<span class="dim">${tt("없음","None")}</span><small>${p.n}${tt("개"," listed")}</small>`;
-   const cellT=p=>p.insufficient?`<span class="dim">${tt("데이터 부족","Insufficient data")}</span><small>${p.n}${tt("개"," listed")}</small>`:p.ex==null?cell(p):
-    `${fm(p.ex)}<small${p.conf==="low"?' class="lo"':""}>${p.n}${tt("개"," listed")}${p.conf?" · "+CONF[p.conf]:""}${p.skipped?" · "+tt("저가 "+p.skipped+"개 제외",p.skipped+" low-priced excluded"):""}</small>`;
-   const m=r.margin,w=m==null?0:Math.max(3,Math.abs(m)/max*100);
-   h+=`<tr><td>${nm(b)}</td><td>${b.req}</td><td>${e.ilvl}</td><td>${e.sockets==null?"-":e.sockets}</td><td${r.B.reason?` title="${esc(r.B.reason)}"`:""}>${cell(r.B)}</td><td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T)}</td>`+
-   (m==null?`<td colspan="3" class="dim">${r.msg}</td>`:`<td>${fm(r.cost,0)}</td><td class="${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fm(Math.abs(m))}<i class="bar" style="width:${w}%;background:var(--${m>=0?"accent":"bad"})"></i></td><td class="${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
- $("rows").innerHTML=h||`<tr><td colspan="9" class="dim" style="text-align:left">${tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
- $("src").textContent=lg.collectedAt?tt(`데이터: ${S.league} · 수집: ${lg.collectedAt}`,`Data: ${S.league} · Collected: ${lg.collectedAt}`):tt(`${S.league}: 수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.`,`${S.league}: No price data collected. Load a price file.`)}
+   if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td class="il">${r.ilvl}</td><td colspan="5" class="dim" style="text-align:center"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td colspan="6" class="dim" style="text-align:center">${esc(r.msg)}</td></tr>`;continue}
+   const cs=p=>[p.n>=1&&p.n<=9?tt(p.n+"개",p.n+(p.n===1?" listing":" listings")):"",p.conf?CONF[p.conf]:"",p.skipped?tt("저가 "+p.skipped+"개 제외",p.skipped+" low-priced excluded"):""].filter(Boolean).join(" · ");
+   const sm=p=>{const t=cs(p);return t?`<small>${t}</small>`:""};
+   const lk=side=>`<a class="tl" href="${esc(tradeUrl(b,e.ilvl,side))}" target="_blank" rel="noopener" title="${tt("거래소에서 보기","Open in trade site")}" aria-label="${tt("거래소에서 보기","Open in trade site")}">↗</a>`;
+   const cell=(p,side)=>p.omitted?`<span class="dim">-</span>`:p.ex!=null?`${fm(p.ex)}${lk(side)}${sm(p)}`:`<span class="dim">${tt("없음","None")}</span>${lk(side)}`;
+   const cellT=(p,side)=>p.insufficient?`<span class="dim">${tt("데이터 부족","Insufficient data")}</span>${lk(side)}`:p.ex==null?cell(p,side):`${fm(p.ex)}${lk(side)}${sm(p)}`;
+   const m=r.margin;
+   h+=`<tr><td>${nm(b)}</td><td class="il">${e.ilvl}</td><td${r.B.reason?` title="${esc(r.B.reason)}"`:""}>${cell(r.B,"buy0")}</td>`+
+   (m==null?`<td class="dim">-</td>`:`<td>${fm(r.cost,0)}</td>`)+
+   `<td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T,"sell30")}</td>`+
+   (m==null?`<td colspan="2" class="dim">${r.msg}</td>`:`<td class="mg ${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fmM(Math.abs(m))}</td><td class="roi ${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
+ $("rows").innerHTML=h||`<tr><td colspan="7" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
+ $("src").textContent=lg.collectedAt?tt(`마지막 데이터 수집: ${lg.collectedAt}`,`Last data collection: ${lg.collectedAt}`):tt("수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.","No price data collected. Load a price file.")}
 async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
 (async()=>{
  const fb=JSON.parse($("fb").textContent);
+ const tg=tr=>{const c=tr.dataset.cls;COL.has(c)?COL.delete(c):COL.add(c);render()};
+ $("rows").addEventListener("dblclick",e=>{const tr=e.target.closest("tr.g");if(tr)tg(tr)});
+ $("rows").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr.g");if(!tr)return;e.preventDefault();const c=tr.dataset.cls;tg(tr);const n=[...$("rows").querySelectorAll("tr.g")].find(x=>x.dataset.cls===c);if(n)n.focus()});
  applyStatic();loadSettings();panel();
  BASES=fb.bases;
  PRICES=merge(LS.get("poe2bq:prices",{leagues:{}}),(await jget("out/prices.json"))||{leagues:{}});
- if(!PRICES.leagues[S.league]){const ks=Object.keys(PRICES.leagues).sort((a,b)=>String(PRICES.leagues[b].collectedAt).localeCompare(String(PRICES.leagues[a].collectedAt)));if(ks.length)S.league=ks[0]}
+ fixLeague();autoCollapse();
  panel();LS.set("poe2bq:prices",PRICES);render();
 })();
 </script>

@@ -45,6 +45,7 @@
     { id: "poe2", short: "PoE 2" }
   ];
   var SITE = { ko: "PoE Tools", en: "PoE Tools" };
+  var PCNOTE = { ko: "이 사이트는 PC 환경에 최적화되어 있습니다.", en: "This site is optimized for desktop." };
   var FOOT = {
     ko: "비공식 팬 사이트입니다. Grinding Gear Games와 관련이 없으며, Path of Exile과 관련 명칭은 Grinding Gear Games의 것입니다.",
     en: "Unofficial fan site, not affiliated with Grinding Gear Games. Path of Exile and related names belong to Grinding Gear Games."
@@ -86,7 +87,7 @@
       + '</div>';
   }
   function renderFoot() {
-    foot.innerHTML = '<div class="wrap">' + FOOT[LANG] + '</div>';
+    foot.innerHTML = '<div class="wrap"><p class="pcnote">' + PCNOTE[LANG] + '</p>' + FOOT[LANG] + '</div>';
   }
 
   /* 언어/테마 변경 (이 함수들만 저장과 알림을 담당) */

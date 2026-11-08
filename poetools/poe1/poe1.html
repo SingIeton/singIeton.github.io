@@ -65,9 +65,9 @@ const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile Tools"},{id:"p
 const SERVICES=[
 {id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
- desc:{ko:"맵 1회당 수확 생기 기댓값 계산\n아틀라스 패시브 세팅 추천",en:"Expected lifeforce per map\nAtlas passive setup suggestions"}},
-{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"30% 베이스 퀄리티",en:"30% Base Quality"},
- desc:{ko:"30% 오버퀄리티 베이스 플리핑 마진 계산",en:"Calculates flipping margin for 30% overquality bases"}}];
+ desc:{ko:"수확 생기 기댓값 계산\n아틀라스 작물 패시브 세팅 추천",en:"Expected lifeforce calculation\nAtlas crop passive setup suggestions"}},
+{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플리핑",en:"Base Quality Flipping"},
+ desc:{ko:"오버소켓 베이스 오버퀄리티 플리핑 수익 계산",en:"Calculates profit from flipping oversocketed bases with overquality"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 if(LANG!=="en")LANG="ko";
