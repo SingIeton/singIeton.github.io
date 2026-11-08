@@ -12,6 +12,9 @@
   2) 매물 수와 가격 분포로 신뢰도를 매기고 적정 최저가를 고른다.
      Instant Buyout은 허위 매물이 드물어 최저가가 시장 최저가에 가깝다고 보되,
      중앙값보다 지나치게 싼 고립 매물(시세를 모르거나 급처)은 제외한다.
+     단, 제외 대상은 '최근 등록된' 매물뿐이다. 싸게 나온 매물은 금방 팔려야 정상이므로, 오래 안 팔리고
+     남아 있는 저가 매물은 '급처'가 아니라 그 가격이 실제로는 거래되지 않는다(허위·비활성 판매자·시세 오기 등)는
+     증거다. 이런 매물은 제외하지 않고 최저가로 남겨, 아래 3)의 경과일 규칙으로 신뢰도를 깎는다.
   3) 고른 최저가 매물이 오래됐으면(listing.indexed 기준 STALE_DAYS 이상 한 단계, OLD_DAYS 이상 두 단계) 신뢰도를 낮춘다.
      오래된 최저가는 이미 시세와 어긋났을 가능성이 크기 때문이다. 등록 시각을 알 수 없으면 보정하지 않는다.
 
@@ -29,19 +32,26 @@
     한도 직전까지 몰아 보내고 기간 전체(301초)를 쉬던 이전 방식보다 짧고, 한도 초과로 인한 차단이 걸리지 않는다.
     규칙은 응답 헤더로 매번 갱신하고, 서버가 센 횟수가 더 많으면(브라우저·다른 프로그램 사용분) 그만큼 더 기다린다.
 
+화폐 환율 (poe.ninja):
+  - 실행할 때마다 리그별로 Divine, Chaos, 바알 대장장이의 주입기, 대장장이의 숫돌 가격을 poe.ninja 의 PoE2 화폐 거래소
+    집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 prices.json 의 리그 항목 "rates" 에 저장한다.
+    overquality-flip.html 이 이 값을 리그별 기본 환율로 쓴다. 모든 리그는 소프트코어(하드코어 제외)다.
+  - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
+  - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
+
 결과는 이 스크립트 옆의 out/prices.json 에 저장된다 (index.html 이 같은 out/ 에서 읽음, 기존 파일이 있으면 병합).
 
 실행:
-  python poe2_basequality.py                          # 기본: 전체 13종 (QUERY_BASES = BASES), 최근 2개 리그 + Standard, 수집 중지 항목 제외
+  python poe2_basequality.py                          # 기본: 전체 13종 (QUERY_BASES = BASES), 최신 리그만, 수집 중지 항목 제외
   python poe2_basequality.py "Warmonger Bow"          # 지정한 베이스 하나 (수집 중지여도 조회)
   python poe2_basequality.py all                      # 전체 13종 (베이스당 요청 최대 8회)
   python poe2_basequality.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
-  python poe2_basequality.py all --league latest      # 최신 리그만
-  python poe2_basequality.py all --league standard    # 스탠다드만
-  python poe2_basequality.py all --league previous    # 직전 리그만
+  python poe2_basequality.py all --league latest      # 최신 리그만 (기본값)
   python poe2_basequality.py all --league "이름"       # 리그 이름 직접 지정
-  python poe2_basequality.py all --league latest,previous,standard   # 쉼표로 여러 리그 (기본값)
+  # standard 와 previous(직전 리그)는 수집하지 않도록 막혀 있다 (BLOCKED_CHOICES)
   python poe2_basequality.py all --out other/prices.json   # 저장 위치 지정 (기본: out/prices.json)
+  python poe2_basequality.py --rates-only             # poe.ninja 환율만 갱신 (GGG 검색 없음)
+  python poe2_basequality.py all --no-rates           # poe.ninja 환율 갱신 생략
 """
 import argparse
 import json
@@ -58,10 +68,19 @@ BASE = "https://www.pathofexile.com"
 POESESSID = ""                        # 선택
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")   # index.html 과 같은 위치의 ./out
 DEFAULT_OUT = os.path.join(OUT_DIR, "prices.json")
-KEEP_LEAGUES = 2               # 수집·표시할 시즌 리그 수 (최신 + 직전). Standard 는 별도
+KEEP_LEAGUES = 1               # 수집·표시할 시즌 리그 수 (최신만)
+# 수집하지 않는 리그 선택값. Standard 와 직전(second latest) 리그는 막아 두었다.
+# 다시 수집하려면 여기서 해당 값을 지우고 --league 기본값과 KEEP_LEAGUES 를 함께 바꾼다.
+BLOCKED_CHOICES = {"standard", "previous"}
 UA = "poe2-price-test/0.1 (contact: augustusminu@hotmail.com)"
 
 TOP_N = 10                     # fetch 한 번에 최대 10개
+
+
+def utc_stamp():
+    """수집 시각: 실행 환경(PC=KST, Actions=UTC)과 무관하게 항상 UTC ISO 형식 (예: 2026-11-08T12:21:00Z).
+    index.html 이 시간대가 붙은 값을 Date 로 비교하고 사용자 로컬 시간으로 보여준다."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 # ---- 적정 최저가 판정 파라미터 -------------------------------------------
 MIN_LISTINGS = 2               # 정상 매물이 이보다 적으면 '데이터 부족'
@@ -70,6 +89,7 @@ OUTLIER_RATIO = 0.5            # 중앙값의 이 비율 미만이면 '너무 �
 STALE_DAYS = 7                 # 적정 최저가로 고른 매물이 이 일수 이상 오래되면 신뢰도를 한 단계 낮춘다
 OLD_DAYS = 30                  # 이 일수 이상이면 두 단계 낮춘다 (시세와 어긋났을 가능성이 큼)
 MAX_SKIP = 2                   # 고립된 저가 매물로 보고 제외할 최대 개수 (그 이상 몰려 있으면 실제 시세)
+OUTLIER_MAX_AGE_DAYS = 2            # 이상치로 제외할 수 있는 저가 매물의 최대 경과 일수. 이보다 오래된 저가 매물은 '안 팔리는 가격'이라 제외하지 않는다
 # 서로 다른 통화의 매물을 비교하기 위한 대략적 환율(Exalted 기준). 이상치 판정에만 쓰이고,
 # 저장되는 가격은 매물 원래의 (금액, 통화)다. index.html 의 기본 환율과 같은 값.
 CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
@@ -248,6 +268,186 @@ def call(method, url, **kw):
         return r.json()
 
 
+# ---------------------------------------------------------------- poe.ninja 환율 (Exalted 기준)
+# 오버퀄리티 계산에 쓰는 가격을 리그별로 poe.ninja 의 PoE2 화폐 거래소 집계(exchange overview, 약 1시간 단위 갱신)에서 읽어
+# prices.json 의 리그 항목 "rates" 에 저장한다. 값은 모두 '해당 화폐 1개 = Exalted 몇 개'이고,
+# overquality-flip.html 이 같은 키(div, chaos, inf.blacksmith, q.whetstone)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
+#   "rates": {"div": 515.0, "chaos": 67.0, "inf": {"blacksmith": 60.0}, "q": {"whetstone": 0.15},
+#             "source": "poe.ninja", "updatedAt": "2026-11-08T12:30:00Z"}
+NINJA = "https://poe.ninja/poe2/api/economy"
+# rates 키 -> (표시 이름, 매칭 후보). id·이름·detailsId 에서 영숫자만 남겨 소문자로 만든 값과 비교하므로
+# "vaal-blacksmith-s-infuser", "Vaal Blacksmith's Infuser" 같은 표기 차이는 문제되지 않는다.
+RATE_ITEMS = {
+    "div": ("Divine Orb", ("divine", "divineorb")),
+    "chaos": ("Chaos Orb", ("chaos", "chaosorb")),
+    "inf.blacksmith": ("Vaal Blacksmith's Infuser", ("vaalblacksmithsinfuser", "vaalblacksmithinfuser")),
+    "q.whetstone": ("Blacksmith's Whetstone", ("blacksmithswhetstone", "blacksmithwhetstone", "whetstone")),
+}
+EXALTED_KEYS = ("exalted", "exaltedorb")
+# Currency 에서 못 찾은 항목을 찾아볼 다른 카테고리 (poe.ninja 문서의 PoE2 type 값)
+NINJA_TYPES = ["Currency", "Fragments", "Abyss", "Essences", "SoulCores", "Runes", "Ritual", "Expedition",
+               "Delirium", "Breach", "Verisium", "UncutGems", "Idols", "LineageSupportGems"]
+
+ninja_session = requests.Session()
+ninja_session.headers.update({"User-Agent": UA, "Accept": "application/json"})
+
+
+def _norm(s):
+    return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
+
+
+def ninja_get(path, params=None):
+    """poe.ninja 경제 API GET. 429/503 이면 잠깐 기다렸다 최대 3번 시도한다 (응답은 HTTP 캐시되고 PoE2는 1시간 단위 갱신)."""
+    url = f"{NINJA}/{path}"
+    for attempt in range(3):
+        r = ninja_session.get(url, params=params, timeout=30)
+        if r.status_code in (429, 503) and attempt < 2:
+            try:
+                wait = int(r.headers.get("Retry-After", 10))
+            except ValueError:
+                wait = 10
+            time.sleep(min(max(wait, 1), 60))
+            continue
+        r.raise_for_status()
+        return r.json()
+
+
+def _meta_list(src):
+    """items 메타데이터(목록 또는 id->정보 딕셔너리)를 [{id, name, ...}] 로 통일."""
+    if isinstance(src, dict):
+        src = [dict(v, id=v.get("id", k)) if isinstance(v, dict) else {"id": k, "name": v} for k, v in src.items()]
+    return [x for x in (src or []) if isinstance(x, dict) and x.get("id") is not None]
+
+
+def ninja_exalted_values(resp):
+    """exchange overview 응답 -> {정규화한 id/이름/detailsId: '1개 = Exalted 몇 개'}.
+    lines[].primaryValue 는 기준 화폐(core.primary) 단위 가격이므로 Exalted 의 primaryValue 로 나눠 환산한다
+    (기준 화폐가 Exalted 이면 그대로). Exalted 를 찾지 못하면 {} 를 반환한다."""
+    core = resp.get("core") or {}
+    meta = {}
+    for src in (resp.get("items"), core.get("items")):
+        for it in _meta_list(src):
+            meta.setdefault(str(it["id"]), {}).update({k: it[k] for k in ("name", "detailsId") if it.get(k)})
+    value = {}
+    for ln in resp.get("lines") or []:
+        v = ln.get("primaryValue") if isinstance(ln, dict) else None
+        if isinstance(v, (int, float)) and v > 0 and ln.get("id") is not None:
+            value[str(ln["id"])] = float(v)
+    primary = str(core.get("primary") or "")
+    if primary and primary not in value:
+        value[primary] = 1.0                       # 기준 화폐 자신은 정의상 1
+    keys = {}
+    for cid in set(value) | set(meta):
+        for k in (cid, meta.get(cid, {}).get("name"), meta.get(cid, {}).get("detailsId")):
+            if k:
+                keys.setdefault(_norm(k), cid)
+    ex_id = next((keys[k] for k in EXALTED_KEYS if k in keys), None)
+    ex = value.get(ex_id) if ex_id else None
+    if not ex:
+        return {}
+    return {k: value[cid] / ex for k, cid in keys.items() if cid in value}
+
+
+def ninja_league_id(league, ninja_leagues):
+    """우리 리그 이름(trade2 기준)에 해당하는 poe.ninja 리그 id. 정규화한 id/이름이 정확히 같은 것만 인정하므로
+    'Hardcore ...' 같은 다른 리그와 섞이지 않는다 (소프트코어만 사용)."""
+    key = _norm(league)
+    for lg in ninja_leagues:
+        if key in (_norm(lg.get("id")), _norm(lg.get("name"))):
+            return lg.get("id")
+    return None
+
+
+def fetch_ninja_rates(league, ninja_leagues):
+    """리그 하나의 환율을 읽어 {"div": .., "chaos": .., "inf.blacksmith": .., "q.whetstone": ..} 로 반환 (찾은 것만).
+    아무것도 못 얻거나 값이 비정상이면 None."""
+    lid = ninja_league_id(league, ninja_leagues)
+    if lid is None:
+        names = ", ".join(str(x.get("id")) for x in ninja_leagues) or "없음"
+        print(f"  [{league}] poe.ninja 에서 같은 이름의 리그를 찾지 못함 (poe.ninja 리그: {names})")
+        return None
+    found, sample = {}, []
+    for typ in NINJA_TYPES:
+        want = [k for k in RATE_ITEMS if k not in found]
+        if not want:
+            break
+        try:
+            vals = ninja_exalted_values(ninja_get("exchange/current/overview", {"league": lid, "type": typ}))
+        except (requests.RequestException, ValueError, AttributeError) as e:
+            print(f"  [{league}] poe.ninja {typ} 조회 실패 ({str(e)[:200]})")
+            if typ == "Currency":
+                return None                         # 첫 요청부터 실패하면 나머지 카테고리도 소용없다
+            continue
+        if not sample:
+            sample = sorted(vals)[:25]
+        for k in want:
+            for cand in RATE_ITEMS[k][1]:
+                if cand in vals:
+                    found[k] = vals[cand]
+                    break
+        time.sleep(0.5)
+    missing = [RATE_ITEMS[k][0] for k in RATE_ITEMS if k not in found]
+    if "div" in found and "chaos" in found and found["div"] <= found["chaos"]:
+        print(f"  [{league}] 값이 비정상(Divine {found['div']:.1f} <= Chaos {found['chaos']:.1f} Ex)이라 저장하지 않음")
+        return None
+    shown = ", ".join(f"{RATE_ITEMS[k][0]} {found[k]:.4g} Ex" for k in RATE_ITEMS if k in found)
+    print(f"  [{league}] {shown or '찾은 항목 없음'}")
+    if missing:
+        print(f"    찾지 못함 (이전 값 유지): {', '.join(missing)}")
+        print(f"    poe.ninja Currency 응답의 키 예시: {', '.join(sample) or '(비어 있음 - Exalted 를 찾지 못함)'}")
+    return found or None
+
+
+def save_rates(path, league, found, order=None):
+    """found 를 prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
+    data = {"version": 1, "leagues": {}}
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                loaded = json.load(f)
+            if isinstance(loaded.get("leagues"), dict):
+                data = loaded
+        except (OSError, ValueError):
+            print(f"  ⚠ 기존 {path} 를 읽지 못해 새로 만듭니다")
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    if order:
+        data["order"] = list(order)
+    lg = data["leagues"].setdefault(league, {"entries": []})
+    rates = lg.setdefault("rates", {})
+    for key, v in found.items():
+        parts = key.split(".")
+        t = rates
+        for p in parts[:-1]:
+            t = t.setdefault(p, {})
+        t[parts[-1]] = round(v, 2) if v >= 1 else round(v, 4)
+    rates["source"] = "poe.ninja"
+    rates["updatedAt"] = utc_stamp()
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=1)
+
+
+def update_rates(leagues, out, order=None):
+    """모든 리그의 환율을 poe.ninja 에서 읽어 저장한다. 실패해도 예외를 내지 않는다 (GGG 가격 수집은 계속)."""
+    print("\n== poe.ninja 환율 (Exalted 기준) ==")
+    try:
+        nl = ninja_get("leagues")
+        if isinstance(nl, dict):
+            nl = nl.get("leagues") or []
+        nl = [x for x in nl if isinstance(x, dict)]
+    except (requests.RequestException, ValueError) as e:
+        print(f"  poe.ninja 리그 목록 조회 실패 ({str(e)[:200]}) -> 환율은 이전 값 그대로")
+        return
+    for league in leagues:
+        try:
+            found = fetch_ninja_rates(league, nl)
+        except Exception as e:                      # poe.ninja 문제로 전체 수집이 멈추지 않도록
+            print(f"  [{league}] 환율 처리 중 오류 ({str(e)[:200]})")
+            continue
+        if found:
+            save_rates(out, league, found, order)
+            print(f"  -> {out} 저장 ({league} / rates)")
+
+
 # ---------------------------------------------------------------- 리그 선택
 _EXCLUDE = re.compile(r"\b(hc|ssf|hardcore|ruthless|solo)\b", re.IGNORECASE)
 
@@ -277,11 +477,12 @@ def known_latest(path):
 
 
 def resolve_league(choice, out_path):
-    """choice: latest | previous | standard | 리그 이름 직접 지정. 확인하지 못하면 None."""
+    """choice: latest | 리그 이름 직접 지정 (standard, previous 는 BLOCKED_CHOICES 로 막혀 None). 확인하지 못하면 None."""
     key = choice.strip().lower()
-    if key == "standard":
-        return "Standard"
-    if key not in ("latest", "previous"):
+    if key in BLOCKED_CHOICES:
+        print(f"  '{choice.strip()}' 리그는 수집하지 않습니다 (BLOCKED_CHOICES)")
+        return None
+    if key != "latest":
         return choice.strip()
 
     names = None
@@ -294,16 +495,14 @@ def resolve_league(choice, out_path):
         # 일반 소프트코어 시즌 리그만 (Standard / Hardcore / SSF / Ruthless 제외)
         current = [n for n in names if n.lower() != "standard" and not _EXCLUDE.search(n)]
         print(f"  감지된 리그(API 순서): {current}  (첫 번째를 latest로 간주)")
-        idx = 0 if key == "latest" else 1
-        if len(current) > idx:
-            return current[idx]
+        if current:
+            return current[0]
         print(f"  '{choice}' 리그를 찾지 못함")
 
-    if key == "latest":
-        saved = known_latest(out_path)
-        if saved:
-            print(f"  -> 저장된 데이터의 가장 최근 리그 '{saved}' 사용")
-            return saved
+    saved = known_latest(out_path)
+    if saved:
+        print(f"  -> 저장된 데이터의 가장 최근 리그 '{saved}' 사용")
+        return saved
     return None
 
 
@@ -416,15 +615,21 @@ def fair_price(rows):
 
     if n >= OUTLIER_MIN_N:
         med = statistics.median(vals)
-        cheap = 0                                   # 중앙값 대비 너무 싼 매물이 앞에서부터 몇 개인지
+        cheap = 0                                   # 중앙값 대비 너무 싸고 '최근 등록된' 매물이 앞에서부터 몇 개인지
         while cheap < n and vals[cheap] < med * OUTLIER_RATIO:
-            cheap += 1
+            a = age_days(usable[cheap])
+            if a is not None and a >= OUTLIER_MAX_AGE_DAYS:
+                break                               # 오래 안 팔린 저가: 급처가 아니라 신뢰할 수 없는 가격 -> 제외하지 않는다
+            cheap += 1                              # (등록 시각을 모르면 예전처럼 제외 후보로 본다)
         limit = min(MAX_SKIP, n // 3)               # 소수일 때만 '고립된 이상치'로 본다
         if 0 < cheap <= limit:
             skipped = cheap
-            notes.append(f"중앙값의 {OUTLIER_RATIO:.0%} 미만인 저가 {cheap}개 제외")
+            notes.append(f"중앙값의 {OUTLIER_RATIO:.0%} 미만인 최근 저가 {cheap}개 제외")
         elif cheap > limit:
             notes.append(f"저가 {cheap}개가 몰려 있어 실제 시세로 간주")
+        if cheap < n and vals[cheap] < med * OUTLIER_RATIO:
+            notes.append(f"중앙값의 {OUTLIER_RATIO:.0%} 미만이지만 {age_days(usable[cheap]):.0f}일째 안 팔린 매물이라 "
+                         f"제외하지 않음(그 가격에 거래되지 않는다는 뜻)")
     else:
         notes.append(f"매물 {n}개뿐이라 이상치 판정 불가, 최저가 사용")
 
@@ -549,7 +754,7 @@ def save_prices(path, league, entries, stopped=None, order=None):
                 data = loaded
         except (OSError, ValueError):
             print(f"  ⚠ 기존 {path} 를 읽지 못해 새로 만듭니다")
-    now = time.strftime("%Y-%m-%d %H:%M")
+    now = utc_stamp()
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     if order:
         data["order"] = list(order)
@@ -627,7 +832,7 @@ def collect(league, stopped, active, todo, out, order):
             print(f"  ✗ {name} 조회 실패: {str(e)[:300]}")
             failed.append(name)
             continue
-        now = time.strftime("%Y-%m-%d %H:%M")
+        now = utc_stamp()
         for e in entries:                       # 수집 중지는 베이스+ilvl 별로 각각 관리
             key = f"{sl}:{e['ilvl']}"
             if e["sell30"]["fair"]["status"] == "insufficient":
@@ -645,12 +850,14 @@ def main():
     ap = argparse.ArgumentParser(description="PoE2 trade2 베이스별 최저가 조회")
     ap.add_argument("target", nargs="?", default="all",
                     help='베이스 이름 또는 "all" = 전체 13종 (기본: %(default)s)')
-    ap.add_argument("--league", default="latest,previous,standard",
-                    help="latest | previous | standard | 리그 이름 직접 지정. 쉼표로 여러 개 (기본: %(default)s)")
+    ap.add_argument("--league", default="latest",
+                    help="latest | 리그 이름 직접 지정. 쉼표로 여러 개. standard, previous 는 수집하지 않음 (기본: %(default)s)")
     ap.add_argument("--out", default=DEFAULT_OUT,
                     help="결과 저장 경로 (기본: 스크립트 옆 out/prices.json, 기존 파일이 있으면 병합)")
     ap.add_argument("--retry-stopped", action="store_true",
                     help="all 실행에서도 '수집 중지'된 항목(베이스+ilvl)을 다시 조회")
+    ap.add_argument("--no-rates", action="store_true", help="poe.ninja 환율 갱신을 건너뜀")
+    ap.add_argument("--rates-only", action="store_true", help="poe.ninja 환율만 갱신하고 끝냄 (GGG 검색 없음)")
     args = ap.parse_args()
 
     explicit = args.target.lower() != "all"
@@ -676,6 +883,10 @@ def main():
 
     seasonal = [l for l in leagues if l.lower() != "standard"]
     order = merge_order(args.out, seasonal, "latest" in choices)
+    if not args.no_rates:
+        update_rates(leagues, args.out, order)
+        if args.rates_only:
+            return
     force = explicit or args.retry_stopped
     plans, n_search, n_fetch = [], 0, 0
     print(f"리그: {', '.join(leagues)}")

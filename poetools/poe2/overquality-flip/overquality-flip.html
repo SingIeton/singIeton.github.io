@@ -16,6 +16,7 @@ main.wrap{max-width:1100px}  /* 표(약 720px) + 설정 패널(300px)이 딱 맞
 select:disabled{opacity:.4;cursor:not-allowed}
 label>span:first-child{white-space:nowrap}
 .in{display:flex;align-items:center;gap:6px}.in em{font-style:normal;color:var(--mute);font-size:12.5px}
+.in input.ov{border-color:var(--g)}  /* 직접 수정한 값: poe.ninja 자동값 대신 이 값을 사용 중 */
 .stats{margin-bottom:20px}
 #src{margin:6px 0 0}
 .tab small{font-weight:400;opacity:.8}
@@ -99,7 +100,9 @@ const P2=20,MIN_N=1;
 const BASEDEF={div:515,chaos:67,inf:{armourer:0,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:0,whetstone:.15,etcher:0}};
 /* 리그별 기본값: 여기에 없는 리그(시즌 리그)는 BASEDEF. 값은 Ex 기준 (Divine = 200 Ex 처럼) */
 const LGDEF={Standard:{div:200,chaos:80,inf:{blacksmith:500}}};
-const defFor=l=>{const o=LGDEF[l]||{};return{div:o.div??BASEDEF.div,chaos:o.chaos??BASEDEF.chaos,inf:Object.assign({},BASEDEF.inf,o.inf),q:Object.assign({},BASEDEF.q,o.q)}};
+/* 기본값 우선순위: prices.json 의 리그별 rates (수집기가 poe.ninja 에서 읽어 저장, 모두 Exalted 기준) > LGDEF > BASEDEF.
+   수집기가 못 찾은 항목은 rates 에 없으므로 자동으로 다음 순위 값을 쓴다 */
+const defFor=l=>{const o=LGDEF[l]||{},r=((PRICES.leagues||{})[l]||{}).rates||{};return{div:r.div??o.div??BASEDEF.div,chaos:r.chaos??o.chaos??BASEDEF.chaos,inf:Object.assign({},BASEDEF.inf,o.inf,r.inf),q:Object.assign({},BASEDEF.q,o.q,r.q)}};
 const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"]};
 const TABS=Object.assign({rec:["추천","Recommended"]},CATS),REC_N=8;  /* 추천 탭: 전체 장비 중 종합 점수 상위 REC_N개 */
 const REC_W=.5;  /* 추천 정렬 가중치: 점수 = 예상 마진^W × 수익률^(1-W). 0.5면 둘을 동일 비중(기하평균)으로, 1에 가까울수록 마진, 0에 가까울수록 수익률 중시 */
@@ -109,41 +112,59 @@ const FIELDS=()=>[[tt("화폐 환율","Currency exchange rates"),[["div","Divine
 [tt("퀄리티 화폐 가격 (Ex)","Quality currency prices (Ex)"),[["q.whetstone",L2("대장장이의 숫돌","Blacksmith's Whetstone")],["q.scrap",L2("방어구 장인의 고철","Armourer's Scrap")],["q.etcher",L2("신비학자의 식각기","Arcanist's Etcher")]]]];
 const OFF=["inf.armourer","inf.arcanist","inf.catalysing","q.scrap","q.etcher"];
 const gp=(o,p)=>p.split(".").reduce((a,k)=>a[k],o);
+const gq=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);  /* gp 와 같지만 없으면 undefined */
+/* poe.ninja 에서 받아온 값의 표시: 10 이상이면 소수점 없이, 10 미만이면 소수점 한 자리까지. 표시만 바꾸고 계산에는 원래 값(S)을 그대로 쓴다.
+   직접 수정한 값과 poe.ninja 가 아닌 기본값(LGDEF/BASEDEF)은 입력한 그대로 보여준다 */
+const rnd=v=>v>=10?Math.round(v):Math.round(v*10)/10;
+const ninja=k=>gq(((PRICES.leagues||{})[S.league]||{}).rates||{},k)!=null;
+const inShow=k=>{const v=gp(S,k);return typeof v==="number"&&gq(SAVED.by[S.league]||{},k)===undefined&&ninja(k)?rnd(v):v};
 const sp=(o,p,v)=>{const a=p.split(".");const l=a.pop();a.reduce((x,k)=>x[k],o)[l]=v};
-let S={league:"",...defFor("")},SAVED={league:"",by:{}},BASES=[],PRICES={leagues:{}},TAB="rec",COL=new Set();
-/* 설정 저장 형식: {league: 직접 고른 리그("" = 항상 최신), by: {리그 이름: {div, chaos, inf, q}}}. 리그마다 값이 따로 저장됨 */
+let PRICES={leagues:{}},S={league:"",...defFor("")},SAVED={league:"",by:{}},BASES=[],TAB="rec",COL=new Set();  /* PRICES 를 먼저 선언: defFor 가 읽는다 */
+/* 설정 저장 형식(poe2bq:settings2): {league: 직접 고른 리그("" = 항상 최신), by: {리그 이름: {직접 수정한 항목만: div, chaos, inf:{..}, q:{..}}}}.
+   수정하지 않은 항목은 저장하지 않으므로 prices.json 의 poe.ninja 환율이 갱신되면 자동으로 따라간다. 수정한 항목은 그 값이 우선 */
 function useLeague(l){const d=defFor(l),v=SAVED.by[l]||{};S={league:l,div:v.div??d.div,chaos:v.chaos??d.chaos,inf:Object.assign({},d.inf,v.inf),q:Object.assign({},d.q,v.q)};OFF.forEach(k=>sp(S,k,0))}
-function loadSettings(){const s=LS.get("poe2bq:settings",{});
+function loadSettings(){const s=LS.get("poe2bq:settings2",null)||{league:(LS.get("poe2bq:settings",{})||{}).league};  /* 이전 형식은 리그 선택만 가져옴 (이전 값은 전부 직접 수정으로 굳어 있어 버림) */
  SAVED={league:typeof s.league==="string"?s.league:"",by:s.by&&typeof s.by==="object"?s.by:{}};
- if(!s.by&&s.league&&s.div!=null)SAVED.by[s.league]={div:s.div,chaos:s.chaos,inf:s.inf,q:s.q};  /* 이전 형식(리그 하나) 이전 */
  useLeague(SAVED.league)}
-const saveSettings=()=>{SAVED.by[S.league]={div:S.div,chaos:S.chaos,inf:S.inf,q:S.q};LS.set("poe2bq:settings",SAVED)};
-function merge(a,b){const o={leagues:Object.assign({},a.leagues),order:b.order||a.order};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||String(y.collectedAt)>=String(x.collectedAt))o.leagues[k]=y}return o}
+const saveSettings=()=>LS.set("poe2bq:settings2",SAVED);
+function setOv(l,k,v,del){const o=SAVED.by[l]=SAVED.by[l]||{};const a=k.split(".");const last=a.pop();let t=o;for(const x of a)t=t[x]=t[x]||{};if(del)delete t[last];else t[last]=v}  /* del: 자동값과 같아지면 수정 표시를 지움 */
+const autoShow=k=>{const v=gp(defFor(S.league),k);return typeof v==="number"&&ninja(k)?rnd(v):v};
+function markOv(){$("set").querySelectorAll("input[data-k]").forEach(i=>{const k=i.dataset.k,v=gq(SAVED.by[S.league]||{},k),on=v!==undefined;i.classList.toggle("ov",on);
+ i.title=on?tt("직접 수정한 값 (자동값: "+autoShow(k)+")","Edited by you (auto: "+autoShow(k)+")"):""})}
+/* 시각: 수집기는 UTC ISO(2026-11-08T12:21:00Z)로 저장한다. 시간대가 없는 이전 형식은 PC(KST)/Actions(UTC) 어느 쪽인지 알 수 없어
+   비교에서 항상 더 오래된 값으로 취급하고, 화면에는 사용자 로컬 시간으로 바꿔 보여준다 */
+const tsOf=s=>/(Z|[+-]\d\d:?\d\d)$/.test(String(s||""))?(Date.parse(s)||0):0;
+const newer=(y,x)=>{const a=tsOf(y),b=tsOf(x);return a!==b?a>b:String(y)>=String(x)};
+const fmT=s=>{const t=tsOf(s);if(!t)return s;const d=new Date(t),p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
+function merge(a,b){const o={leagues:Object.assign({},a.leagues),order:b.order||a.order};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||newer(y.collectedAt,x.collectedAt))o.leagues[k]=y}return o}
 const STD="Standard";
 /* 시즌 리그: 최근 2개(최신, 직전). 수집기가 prices.json 의 order 에 순서를 기록하며, 없으면 수집 시각이 최근인 순 */
-const seasonLeagues=()=>{const L=PRICES.leagues||{},ok=k=>k!==STD&&L[k];
+const hasData=k=>{const l=(PRICES.leagues||{})[k];return!!(l&&(l.entries||[]).length)};  /* 가격 항목이 하나라도 있는 리그 (환율만 있는 리그는 제외) */
+const seasonLeagues=()=>{const L=PRICES.leagues||{},ok=k=>k!==STD&&hasData(k);
  const o=(PRICES.order||[]).filter(ok);
- const rest=Object.keys(L).filter(k=>ok(k)&&!o.includes(k)).sort((a,b)=>String(L[b].collectedAt).localeCompare(String(L[a].collectedAt)));
+ const rest=Object.keys(L).filter(k=>ok(k)&&!o.includes(k)).sort((a,b)=>(tsOf(L[b].collectedAt)-tsOf(L[a].collectedAt))||String(L[b].collectedAt).localeCompare(String(L[a].collectedAt)));
  return[...o,...rest].slice(0,2)};
 const latestLeague=()=>seasonLeagues()[0]||"";
-const leagueList=()=>[...seasonLeagues(),STD];
-/* 선택된 리그가 목록에 없으면(미설정·리그 교체) 최신 리그로 */
-const fixLeague=()=>{if(!leagueList().includes(S.league))useLeague(latestLeague()||STD)};
+const leagueList=()=>[...seasonLeagues(),...(hasData(STD)?[STD]:[])];  /* 드롭다운: prices.json 에 데이터가 있는 리그만 */
+/* 선택된 리그가 목록에 없으면(미설정·리그 교체) 목록의 첫 리그(최신)로, 데이터가 전혀 없으면 빈 리그로 */
+/* 가격 파일을 읽은 뒤에는 항상 다시 계산해 새로 읽은 poe.ninja 환율을 반영 */
+const fixLeague=()=>useLeague(leagueList().includes(S.league)?S.league:(leagueList()[0]||""));
 /* 모든 항목이 수집 중지인 카테고리는 접어 둠 (페이지 오픈·리그 변경 시) */
 function autoCollapse(){COL.clear();const lg=PRICES.leagues[S.league]||{},sm=lg.stopped||{};
  const allStopped=b=>{const stp=v=>sm[b.id+":"+v]||sm[b.id];const lv=[...new Set([...(lg.entries||[]).filter(e=>e.base===b.id).map(e=>e.ilvl),...[82,81].filter(stp)])];return lv.length>0&&lv.every(stp)};
  const byCls=new Map();BASES.forEach(b=>byCls.set(b.cls,(byCls.get(b.cls)||[]).concat(b)));
  byCls.forEach((bs,c)=>{if(bs.every(allStopped))COL.add(c)})}
 function panel(){let h=`<fieldset><legend>${tt("리그","League")}</legend><label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label></fieldset>`;
-for(const[t,fs]of FIELDS())h+=`<fieldset><legend>${t}</legend>${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${gp(S,k)}"${OFF.includes(k)?" disabled":""}>${u?`<em>${u}</em>`:""}</span></label>`).join("")}</fieldset>`;
+for(const[t,fs]of FIELDS())h+=`<fieldset><legend>${t}</legend>${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"${OFF.includes(k)?" disabled":""}>${u?`<em>${u}</em>`:""}</span></label>`).join("")}</fieldset>`;
 h+=`<div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
- if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;LS.set("poe2bq:settings",SAVED);useLeague(e.value);autoCollapse();  /* 리그 전환: 그 리그의 설정값으로 바꾸고 전체 다시 계산 */
-  $("set").querySelectorAll("input[data-k]").forEach(i=>i.value=gp(S,i.dataset.k));render();return}
- sp(S,k,Math.max(0,parseFloat(e.value)||0));saveSettings();render()}));
+ if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;saveSettings();useLeague(e.value);autoCollapse();  /* 리그 전환: 그 리그의 설정값으로 바꾸고 전체 다시 계산 */
+  $("set").querySelectorAll("input[data-k]").forEach(i=>i.value=inShow(i.dataset.k));markOv();render();return}
+ const v=Math.max(0,parseFloat(e.value)||0);setOv(S.league,k,v,v===gp(defFor(S.league),k));sp(S,k,v);saveSettings();markOv();render()}));  /* 자동값과 같으면 수정 표시 해제 */
 $("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);fixLeague();autoCollapse();panel();render()}catch(x){alert(tt("올바른 prices.json 형식이 아닙니다.","Not a valid prices.json file."))}});
-$("reset").addEventListener("click",()=>{LS.del("poe2bq:settings");loadSettings();fixLeague();autoCollapse();panel();render()})}
+$("reset").addEventListener("click",()=>{LS.del("poe2bq:settings");LS.del("poe2bq:settings2");loadSettings();fixLeague();autoCollapse();panel();render()});
+markOv()}
 const trim=(x,d)=>x.toLocaleString(LANG==="en"?"en-US":"ko-KR",{minimumFractionDigits:0,maximumFractionDigits:d});
 const fm=(ex,d=1)=>S.div>0?trim(ex/S.div,ex/S.div>=1?0:d)+" D":Math.round(ex).toLocaleString(LANG==="en"?"en-US":"ko-KR")+" E";
 const fmM=ex=>{const u=S.div>0?ex/S.div:ex;return trim(u,u>=1?0:1)+(S.div>0?" D":" E")};  /* 예상 마진: 1 이상이면 정수, 0~1이면 소수 한 자리 */
@@ -165,7 +186,7 @@ function render(){
   const lv=[...new Set([...es.map(e=>e.ilvl),...[82,81].filter(stp)])].sort((x,y)=>y-x);
   if(!lv.length){g.list.push({b,msg:tt("수집 데이터 없음","No data collected")});continue}
   for(const v of lv){const st=stp(v);
-   if(st){if(v===81)continue;g.list.push({b,ilvl:v,msg:tt("데이터 부족으로 수집 중지","Collection stopped (insufficient data)"),tip:(st.reason||"")+(st.since?tt(" ("+st.since+" 이후)"," (since "+st.since+")"):"")});continue}
+   if(st){if(v===81)continue;g.list.push({b,ilvl:v,msg:tt("데이터 부족으로 수집 중지","Collection stopped (insufficient data)"),tip:(st.reason||"")+(st.since?tt(" ("+fmT(st.since)+" 이후)"," (since "+fmT(st.since)+")"):"")});continue}
    const e=es.find(x=>x.ilvl===v);const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,need),T=pickFair(e.sell30,S,need);
    const r={b,e,B,T};if(B.ex!=null&&T.ex!=null)Object.assign(r,calc(B.ex,T.ex,S.inf[b.infuser],S.q[b.qcur],M));else r.msg=tt("데이터 부족","Insufficient data");g.list.push(r)}}
  if(TAB==="rec"){const g=groups.get("");if(g){const sc=r=>Math.pow(r.margin,REC_W)*Math.pow(r.roi,1-REC_W);  /* 마진·수익률이 모두 양수인 행만 대상 */
@@ -186,7 +207,10 @@ function render(){
    `<td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T,"sell30")}</td>`+
    (m==null?`<td colspan="2" class="dim">${r.msg}</td>`:`<td class="mg ${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fmM(Math.abs(m))}</td><td class="roi ${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
  $("rows").innerHTML=h||`<tr><td colspan="7" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
- $("src").textContent=lg.collectedAt?tt(`마지막 데이터 수집: ${lg.collectedAt}`,`Last data collection: ${lg.collectedAt}`):tt("수집된 가격 데이터가 없습니다. 가격 파일을 불러오세요.","No price data collected. Load a price file.")}
+ /* 수집 로그: 경매장(GGG 거래소) 가격과 환율(poe.ninja)은 수집 시각이 서로 달라 두 줄로 구분해 표시 */
+ const aT=lg.collectedAt?tt(`경매장 가격 마지막 수집: ${fmT(lg.collectedAt)}`,`Trade-site prices last collected: ${fmT(lg.collectedAt)}`):tt("수집된 경매장 가격 데이터가 없습니다. 가격 파일을 불러오세요.","No trade-site price data collected. Load a price file."),
+  rT=lg.rates&&lg.rates.updatedAt?tt(`환율 마지막 수집(poe.ninja): ${fmT(lg.rates.updatedAt)}`,`Rates last collected (poe.ninja): ${fmT(lg.rates.updatedAt)}`):tt("환율(poe.ninja) 수집 기록 없음 (기본값 사용)","No rates collected from poe.ninja (using defaults)");
+ $("src").innerHTML=esc(aT)+"<br>"+esc(rT)}
 async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
 (async()=>{
  const fb=JSON.parse($("fb").textContent);
@@ -195,7 +219,9 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  $("rows").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr.g");if(!tr)return;e.preventDefault();const c=tr.dataset.cls;tg(tr);const n=[...$("rows").querySelectorAll("tr.g")].find(x=>x.dataset.cls===c);if(n)n.focus()});
  applyStatic();loadSettings();panel();
  BASES=fb.bases;
- PRICES=merge(LS.get("poe2bq:prices",{leagues:{}}),(await jget("out/prices.json"))||{leagues:{}});
+ const cached=LS.get("poe2bq:prices",{leagues:{}}),fresh=await jget("out/prices.json");
+ if(fresh&&fresh.leagues)for(const k of Object.keys(cached.leagues||{}))if(!fresh.leagues[k])delete cached.leagues[k];  /* 서버의 prices.json 이 있으면 그 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
+ PRICES=merge(cached,fresh||{leagues:{}});
  fixLeague();autoCollapse();
  panel();LS.set("poe2bq:prices",PRICES);render();
 })();
