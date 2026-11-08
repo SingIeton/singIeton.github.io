@@ -51,7 +51,7 @@ td.mg.neg,td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute));text-s
 </head>
 <body>
 <main class="wrap">
-<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑 수익 계산</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocketed bases to maximum quality and reselling them. Data is updated manually and may differ from the current market. Data with insufficient information is not collected.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 데이터는 수동으로 업데이트되며, 현재 시장과 다를 수 있음에 유의. 정보가 부족한 데이터는 수집하지 않음.</p><p class="note" id="src"></p></div></div>
+<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑 수익 계산</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocketed bases to maximum quality and reselling them. Data is updated periodically but may differ from the current market. Data with uncertain information is not collected.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 데이터는 일정 주기로 업데이트되지만, 현재 시장과 다를 수 있음에 유의. 정보가 불확실한 데이터는 수집하지 않음.</p><p class="note" id="src"></p></div></div>
 <p id="err" class="note" hidden style="color:var(--bad)"></p>
 <noscript><p class="note">(JavaScript required) 이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
 <div class="grid">
@@ -207,10 +207,10 @@ function render(){
    `<td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T,"sell30")}</td>`+
    (m==null?`<td colspan="2" class="dim">${r.msg}</td>`:`<td class="mg ${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fmM(Math.abs(m))}</td><td class="roi ${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
  $("rows").innerHTML=h||`<tr><td colspan="7" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
- /* 수집 로그: 경매장(GGG 거래소) 가격과 환율(poe.ninja)은 수집 시각이 서로 달라 두 줄로 구분해 표시 */
- const aT=lg.collectedAt?tt(`경매장 가격 마지막 수집: ${fmT(lg.collectedAt)}`,`Trade-site prices last collected: ${fmT(lg.collectedAt)}`):tt("수집된 경매장 가격 데이터가 없습니다. 가격 파일을 불러오세요.","No trade-site price data collected. Load a price file."),
-  rT=lg.rates&&lg.rates.updatedAt?tt(`환율 마지막 수집(poe.ninja): ${fmT(lg.rates.updatedAt)}`,`Rates last collected (poe.ninja): ${fmT(lg.rates.updatedAt)}`):tt("환율(poe.ninja) 수집 기록 없음 (기본값 사용)","No rates collected from poe.ninja (using defaults)");
- $("src").innerHTML=esc(aT)+"<br>"+esc(rT)}
+ /* 수집 로그: 경매장(GGG 거래소) 데이터와 환율(poe.ninja) 데이터는 수집 시각이 서로 달라 한 줄에 구분해 표시 */
+ const aT=tt("경매장 데이터: ","Trade-site data: ")+(lg.collectedAt?fmT(lg.collectedAt):tt("없음 (가격 파일을 불러오세요)","none (load a price file)")),
+  rT=tt("환율 데이터: ","Rates data: ")+(lg.rates&&lg.rates.updatedAt?fmT(lg.rates.updatedAt):tt("없음 (기본값 사용)","none (using defaults)"));
+ $("src").textContent=aT+" · "+rT}
 async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
 (async()=>{
  const fb=JSON.parse($("fb").textContent);
