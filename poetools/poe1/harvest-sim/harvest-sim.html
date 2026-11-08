@@ -8,26 +8,34 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 이 파일에는 수확 시뮬레이터에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
+main.wrap{max-width:1040px;margin-left:auto;margin-right:auto}
 .grid{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
 @media(max-width:820px){.grid{grid-template-columns:1fr}}
 label span.h{color:var(--mute);font-size:12px;display:block}
 #run{width:100%;margin:0 0 4px;padding:10px 16px}
 .big{display:flex;flex-wrap:wrap;gap:16px 36px;align-items:baseline;margin-bottom:16px}
-.big b{font:300 clamp(30px,4vw,40px)/1.1 var(--serif);color:var(--g);letter-spacing:-.01em}
-.big small{color:var(--mute)}
-.bar{display:grid;grid-template-columns:70px 1fr 130px;gap:10px;align-items:center;margin:6px 0}
-.bar i{display:block;height:12px;border-radius:2px}
-.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+.big .grp{display:flex;flex-wrap:wrap;gap:16px 18px;align-items:baseline}
+.big b{font:600 clamp(30px,4vw,40px)/1.1 var(--serif);color:var(--g);letter-spacing:-.01em}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}}
+:root[data-theme="dark"] .big b,.dark .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}
+.big small{color:var(--mute);font-size:13.5px}
+.bar{display:grid;grid-template-columns:70px 1fr 190px;gap:10px;align-items:center;margin:6px 0}
+.bar i{display:block;height:12px;border-radius:2px;transition:width .9s cubic-bezier(.22,1,.36,1)}
+.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .hist{display:flex;align-items:flex-end;gap:2px;height:130px;margin-top:10px}
 .hist div{flex:1;background:var(--g);opacity:.75;border-radius:1px 1px 0 0;min-height:1px}
-.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:12px}
+.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:13px}
 .panel .stats{margin-bottom:4px}
 table{font-size:14px}
 th,td{padding:6px 8px}
+th{font-size:13px;font-weight:500}
+.stat small{font-size:13px}
 .dot{display:inline-block;width:9px;height:9px;margin-right:8px;transform:rotate(45deg)}
 .px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin:10px 0 0;text-align:center;font-size:14px}
 .px input{width:100%;text-align:center}
 .rt{display:flex;align-items:center;gap:6px}
+label span.en{display:block;color:var(--mute);font-size:9.5px;line-height:1.3;white-space:nowrap;letter-spacing:-.01em}
+:root[lang="en"] label span.en{display:none}
 .cy{color:var(--yt);font-weight:600}.cb{color:var(--b);font-weight:600}.cp{color:var(--p);font-weight:600}
 .pl-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:6px 0}
 .pl-row .lb{width:44px;color:var(--mute);font-size:13px}
@@ -43,12 +51,19 @@ button.opt:disabled{opacity:.45;cursor:default}
 #plSeq{font-size:14px;min-width:220px}
 #plSeq .t{font:600 14px var(--serif);color:var(--g);margin-bottom:4px}
 #plSeq div{margin:3px 0}
+.tri{display:inline-grid;grid-template-columns:2.4em .9em 2.4em .9em 2.4em;align-items:baseline;font-variant-numeric:tabular-nums}
+.tri span{text-align:right}.tri i{font-style:normal;text-align:center;color:var(--mute)}
+details.note>summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;user-select:none}
+details.note>summary::-webkit-details-marker{display:none}
+details.note>summary::after{content:"▼";font-size:11px;color:var(--mute);transition:transform .15s}
+details.note[open]>summary::after{transform:rotate(180deg)}
+details.note .dbody{margin-top:8px}
 </style>
 </head>
 <body>
 <main class="wrap">
 <div class="ghead sm"><span class="mini" aria-hidden="true">1</span><div><a class="game" href="../poe1.html">패스 오브 엑자일 (Path of Exile)</a><h1>수확(Harvest) 시뮬레이터</h1><p class="sub">Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.</p></div></div>
-<div class="tabs"><button type="button" class="tab on" data-t="sim">기대값 분석</button><button type="button" class="tab" data-t="play">시뮬레이션</button></div>
+<div class="tabs"><button type="button" class="tab on" data-t="sim">시뮬레이션</button><button type="button" class="tab" data-t="play">에뮬레이션</button></div>
 <div id="tabSim">
 <div class="grid">
 <div>
@@ -59,14 +74,20 @@ button.opt:disabled{opacity:.45;cursor:default}
 </fieldset>
 <fieldset><legend>맵 (T16 기준)</legend>
 <label><div>맵 IIQ (%)<span class="h">효과의 절반만 반영</span></div><input type="number" id="iiq" value="200" min="0" max="500"></label>
-<label>무리 크기 (%)<input type="number" id="pack" value="60" min="0" max="300"></label>
+<label>무리 규모 (%)<input type="number" id="pack" value="60" min="0" max="300"></label>
 <label><div>작물 쌍 수<span class="h">4, 5: 3쌍은 수확 안 함</span></div><select id="pairs"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="3,4">3, 4</option><option value="4,4,5" selected>4, 5</option><option value="3,4,4,5">3, 4, 5</option></select></label>
 </fieldset>
-<fieldset><legend>시장가 (1카오스당 생기)</legend>
-<label>표시 화폐 단위<select id="unit"><option value="카오스">카오스</option><option value="디바인">디바인</option></select></label>
-<label>1디바인 =<span class="rt"><input type="number" id="ratio" value="300" min="1" step="1" disabled>카오스</span></label>
+<fieldset><legend>화폐</legend>
+<label>화폐 단위<select id="unit"><option value="카오스">카오스</option><option value="디바인">디바인</option></select></label>
+<label>디바인<span class="rt"><input type="number" id="ratio" value="300" min="1" step="1" disabled>카오스</span></label>
+</fieldset>
+<fieldset><legend>생기 가격 (카오스)</legend>
 <div class="px"><span><i class="dot" style="background:var(--y)"></i>노랑</span><span><i class="dot" style="background:var(--b)"></i>파랑</span><span><i class="dot" style="background:var(--p)"></i>보라</span>
 <input type="number" id="py" value="6" min="0" step="1"><input type="number" id="pb" value="16" min="0" step="1"><input type="number" id="pp" value="40" min="0" step="1"></div>
+</fieldset>
+<fieldset><legend>갑충석 가격 (카오스)</legend>
+<label><span>복제의 수확 갑충석<span class="en">Harvest Scarab of Doubling</span></span><span class="rt"><input type="number" id="scdp" value="100" min="0" step="0.1"><input type="checkbox" id="scd" checked></span></label>
+<label><span>기괴한 혈통의 갑충석<span class="en">Scarab of Monstrous Lineage</span></span><span class="rt"><input type="number" id="sclp" value="0" min="0" step="0.1" disabled><input type="checkbox" id="scl" disabled></span></label>
 </fieldset>
 <fieldset><legend>윤작 (Crop Rotation)</legend>
 <label>윤작(Crop Rotation)<input type="checkbox" id="rot" checked></label>
@@ -86,21 +107,13 @@ button.opt:disabled{opacity:.45;cursor:default}
 <label>복제 몬스터 확률 (%)<input type="number" id="dupm" value="6" min="0" max="100"></label>
 <label><div>복제 철: 생기 복제 10%<span class="h">Doubling Season</span></div><input type="checkbox" id="dupl" checked></label>
 </fieldset>
-<fieldset><legend>갑충석 (시장가: 카오스)</legend>
-<label><span>복제의 수확 갑충석</span><span class="rt"><input type="number" id="scdp" value="100" min="0" step="0.1"><input type="checkbox" id="scd" checked></span></label>
-<label><span>기괴한 혈통의 갑충석</span><span class="rt"><input type="number" id="sclp" value="0" min="0" step="0.1" disabled><input type="checkbox" id="scl" disabled></span></label>
-</fieldset>
 </div>
 </div>
 <div>
 <div class="panel" aria-live="polite">
-<h2>맵 한 번당 결과</h2>
-<div class="big"><div><b id="tot">-</b><br><small>평균 총 생기</small></div><div><b id="val">-</b><br><small id="vlabel">맵 당 기대 화폐 획득량</small></div><div><b id="net">-</b><br><small>갑충석 비용 차감</small></div></div>
+<h2>맵 1회당 예상 획득량</h2>
+<div class="big"><div class="grp"><div><b id="tot">-</b><br><small>생기 (평균)</small></div><div><b id="totMed">-</b><br><small>생기 (중앙값)</small></div></div><div class="grp"><div><b id="val">-</b><br><small id="vlabel">기대 화폐 획득량</small></div><div><b id="net">-</b><br><small>갑충석 비용 제외</small></div></div></div>
 <div id="bars"></div>
-</div>
-<div class="panel" id="cmpPanel">
-<h2>윤작 선택 전략 비교</h2>
-<div class="scroll"><table id="cmp"></table></div>
 </div>
 <div class="panel">
 <h2>분포</h2>
@@ -109,21 +122,21 @@ button.opt:disabled{opacity:.45;cursor:default}
 <div class="axis"><span id="a0"></span><span>총 생기</span><span id="a1"></span></div>
 </div>
 <div class="panel" id="redPanel">
-<h2>색 감소 패시브 비교</h2>
+<h2>작물 감소 아틀라스 추천 세팅</h2>
 <div class="scroll"><table>
-<tr><th>노랑 / 파랑 / 보라 감소 (%)</th><th>맵당 기대 가치 (C)</th><th>균등 대비</th><th>0 / 45 / 0 대비</th></tr>
-<tr><td>0 / 45 / 25</td><td>498</td><td>+2%</td><td>+1%</td></tr>
-<tr><td>10 / 45 / 10</td><td>495</td><td>+1%</td><td>0%</td></tr>
-<tr><td>0 / 45 / 0</td><td>494</td><td>+1%</td><td>기준</td></tr>
-<tr><td>25 / 45 / 25</td><td>493</td><td>+1%</td><td>0%</td></tr>
+<tr><th>노랑 / 파랑 / 보라 감소 (%)</th><th>맵당 기대 가치 (C)</th><th>균등 대비</th></tr>
+<tr><td><span class="tri"><span class="cy">0</span><i>/</i><span class="cb">45</span><i>/</i><span class="cp">25</span></span></td><td>498</td><td>+2%</td></tr>
+<tr><td><span class="tri"><span class="cy">10</span><i>/</i><span class="cb">45</span><i>/</i><span class="cp">10</span></span></td><td>495</td><td>+1%</td></tr>
+<tr><td><span class="tri"><span class="cy">0</span><i>/</i><span class="cb">45</span><i>/</i><span class="cp">0</span></span></td><td>494</td><td>+1%</td></tr>
 </table></div>
-<p class="note">고정값. 기본 설정(윤작, 4쌍 : 5쌍 = 2 : 1, 비시듦 10%, 시장가 6/16/40)에서 같은 작물 배치 20,000맵으로 짝지어 비교. 입력을 바꾸면 달라질 수 있음.</p>
+<p class="note">생기 가격 등 설정 값에 따라 추천 세팅이 달라질 수 있음.</p>
 </div>
-<div class="panel note">
-<b>모델 가정.</b> 작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.
+<div class="panel" id="cmpPanel">
+<h2>윤작 선택 전략 비교</h2>
+<div class="scroll"><table id="cmp"></table></div>
 </div>
-<div class="panel note">
-<b>오차가 생길 수 있는 부분 (영향이 큰 순서)</b>
+<details class="panel note"><summary><b>모델 가정</b></summary><div class="dbody">작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.</div></details>
+<details class="panel note"><summary><b>오차가 생길 수 있는 부분</b></summary><div class="dbody">
 <p style="margin:6px 0">같은 작물 배치 20,000개로 가정을 바꿔 잰 영향. 기본 설정, 수확한 맵 기준.</p>
 <ol style="margin:6px 0;padding-left:20px">
 <li>업그레이드 확률: T2→T3가 20% 대신 25%면 +17%, T1→T2 24%·T2→T3 19%면 -7%. 원문은 20%, 다른 연구는 약 25%로 서로 다름.</li>
@@ -132,9 +145,11 @@ button.opt:disabled{opacity:.45;cursor:default}
 <li>T3→T4 확률: 2%면 -2%, 5.5%면 +2%.</li>
 <li>선택 알고리즘: 씨앗 구성을 기댓값으로 근사. 비시듦 없는 모델에서 약 1% 낮음을 확인했고, 비시듦을 켠 모델은 재지 못함.</li>
 <li>수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.</li>
+<li>기괴한 혈통의 갑충석 효과는 몬스터 희귀도에 대한 정보 부족으로 시뮬레이션 미적용</li>
+<li>주어진 정보만 시뮬레이션 되며, 따라서 누락된 정보는 적용되지 않음<ul style="margin:4px 0;padding-left:20px"><li>예를 들어 총주교와 세계포식자 제단과 같은 모드는 랜덤성으로 인해 데이터에서 누락</li></ul></li>
 </ol>
 <p style="margin:6px 0 0">위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.</p>
-</div>
+</div></details>
 </div>
 </div>
 </div>
@@ -152,10 +167,9 @@ button.opt:disabled{opacity:.45;cursor:default}
 <div class="pl-row" style="margin-top:8px"><button type="button" class="sm pri" id="plGo" data-act="h" disabled>수확</button><button type="button" class="sm" id="plUndo" data-act="u" disabled>되돌리기</button></div>
 <div id="plDone"></div>
 </div>
-<div class="panel note">
-<b>모델 가정</b>
-<p style="margin:6px 0 0">윤작 기준. 모든 작물은 T1 씨앗 23개로 시작하는 것으로 가정하며, 기대값 분석 탭의 설정(시장가, 업그레이드 확률, 비시듦 확률 등)을 동일하게 적용함. 쌍 입력은 적용 시점에 현재 선택지로 반영되고 기존 진행 기록은 초기화됨. 최적 선택지 예상은 비시듦이 발생하지 않는 경우의 기대값 기준이며, 수확 진행 및 비시듦 확인과 무관하게 입력된 쌍 전체에 대해 산출함. 씨앗 구성은 업그레이드 확률에 따른 기대값으로 근사함.</p>
-</div>
+<details class="panel note"><summary><b>모델 가정</b></summary><div class="dbody">
+<p style="margin:6px 0 0">윤작 기준. 모든 작물은 T1 씨앗 23개로 시작하는 것으로 가정하며, 시뮬레이션 탭의 설정(시장가, 업그레이드 확률, 비시듦 확률 등)을 동일하게 적용함. 쌍 입력은 적용 시점에 현재 선택지로 반영되고 기존 진행 기록은 초기화됨. 최적 선택지 예상은 비시듦이 발생하지 않는 경우의 기대값 기준이며, 수확 진행 및 비시듦 확인과 무관하게 입력된 쌍 전체에 대해 산출함. 씨앗 구성은 업그레이드 확률에 따른 기대값으로 근사함.</p>
+</div></details>
 </div>
 </main>
 <script>
@@ -167,7 +181,7 @@ function binom(n,p){let k=0;for(let i=0;i<n;i++)if(R()<p)k++;return k}
 function fmt(x,d=0){return x.toLocaleString("ko-KR",{maximumFractionDigits:d,minimumFractionDigits:d})}
 function params(){
   const g=id=>{const v=parseFloat($(id).value);return isNaN(v)?0:v};
-  return {pack:g("pack"),iiq:g("iiq"),inc:g("inc"),mx:$("scd").checked?2:1,nw:g("nw")/100,cost:($("scd").checked?g("scdp"):0)*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1),pairs:$("pairs").value.split(",").map(Number),
+  return {fac:$("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1,pack:g("pack"),iiq:g("iiq"),inc:g("inc"),mx:$("scd").checked?2:1,nw:g("nw")/100,cost:($("scd").checked?g("scdp"):0)*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1),pairs:$("pairs").value.split(",").map(Number),
     t3:g("t3inc"),t4:g("t4inc"),guar:-1,
     w:[1-g("ry")/100,1-g("rb")/100,1-g("rp")/100].map(x=>Math.max(0,x)),
     rot:$("rot").checked,u:[g("u1")/100,g("u2")/100,g("u3")/100],bount:$("bount").checked,dupm:g("dupm")/100,dupl:$("dupl").checked,
@@ -293,13 +307,15 @@ function playRot(P,pairs0,strat,out){
   }
   return tot;
 }
-function renderCmp(P){
-  const el=$("cmpPanel");el.style.display=P.rot?"":"none";
-  if(!P.rot)return;
-  const n=P.n,names=["최적","탐욕 (현재 가치가 높은 쪽)","무작위"],m0=P.cmp[0].s/n;
-  $("cmp").innerHTML="<tr><th>전략</th><th>맵당 기대 가치 ("+P.unit+")</th><th>최적 대비</th></tr>"+P.cmp.map((c,k)=>{
-    const m=c.s/n,dm=c.d/n,se=Math.sqrt(Math.max(0,c.d2/n-dm*dm)/n);
-    return "<tr><td>"+names[k]+"</td><td>"+fmt(m)+"</td><td>"+(k?fmt((m/m0-1)*100)+"%":"기준")+"</td></tr>";
+function renderCmp(){
+  const L=window.LAST;if(!L)return;
+  const cur=params(),kk=cur.fac/L.fac,dec=cur.unit==="D"?2:0;
+  $("cmpPanel").style.display=L.rot?"":"none";
+  if(!L.rot)return;
+  const n=L.n,names=["최적","탐욕 (현재 가치가 높은 쪽)","무작위"],m0=L.cmp[0].s/n;
+  $("cmp").innerHTML="<tr><th>전략</th><th>맵당 기대 가치 ("+cur.unit+")</th><th>최적 대비</th></tr>"+L.cmp.map((c,k)=>{
+    const m=c.s/n;
+    return "<tr><td>"+names[k]+"</td><td>"+fmt(m*kk,dec)+"</td><td>"+(k?fmt((m/m0-1)*100)+"%":"기준")+"</td></tr>";
   }).join("");
 }
 function runMap(P){
@@ -318,38 +334,52 @@ function runMap(P){
 }
 function run0(){
   const P=window.PP=params(),n=P.n;P.cmp=[0,1,2].map(()=>({s:0,d:0,d2:0}));
-  const sum=[0,0,0],tots=new Float64Array(n),vals=new Float64Array(n);let t3=0,t4=0,hasT4=0;
+  const sum=[0,0,0],tots=new Float64Array(n),vals=new Float64Array(n);let hasT4=0;
   for(let i=0;i<n;i++){
     const o=runMap(P);let tot=0,v=0;
     for(let k=0;k<3;k++){sum[k]+=o.lf[k];tot+=o.lf[k];v+=o.lf[k]/1000*P.price[k]}
-    tots[i]=tot;vals[i]=v;t3+=o.big[0];t4+=o.big[1];if(o.big[1])hasT4++;
+    tots[i]=tot;vals[i]=v;if(o.big[1])hasT4++;
   }
   const mean=sum.map(x=>x/n),total=mean[0]+mean[1]+mean[2];
-  const sorted=Float64Array.from(tots).sort();
-  const q=p=>sorted[Math.min(n-1,Math.floor(p*n))];const sv=Float64Array.from(vals).sort();const qv=p=>sv[Math.min(n-1,Math.floor(p*n))];
-  const sd=Math.sqrt(tots.reduce((s,x)=>s+(x-total)**2,0)/n);
-  const avgVal=vals.reduce((s,x)=>s+x,0)/n;
-  $("tot").textContent=fmt(total);
-  $("val").textContent=fmt(avgVal)+" "+P.unit;$("vlabel").textContent="맵 당 기대 화폐 획득량";$("net").textContent=fmt(avgVal-P.cost)+" "+P.unit;
-  const mx=Math.max(...mean,1);
-  $("bars").innerHTML=mean.map((m,i)=>`<div class="bar"><span>${NAMES[i]}</span><i style="width:${m/mx*100}%;background:${COL[i]}"></i><em>${fmt(m)}<br><span class="note">${fmt(m/1000*P.price[i])} ${P.unit}</span></em></div>`).join("");
-  $("stats").innerHTML=[["중앙값",fmt(q(.5))],["하위 10%",fmt(q(.1))],["상위 10%",fmt(q(.9))],["평균 오차(±1σ)",fmt(sd/Math.sqrt(n)/Math.max(total,1e-9)*100)+"%"],["화폐 중앙값",fmt(qv(.5))+" "+P.unit],["화폐 하위 10%",fmt(qv(.1))+" "+P.unit],["화폐 상위 10%",fmt(qv(.9))+" "+P.unit],["T4가 나온 맵 비율",fmt(hasT4/n*100)+"%"]]
-    .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
-  const lo=q(.01),hi=q(.99),bins=28,h=new Array(bins).fill(0),w=(hi-lo)/bins||1;
-  for(const x of tots){let k=Math.floor((x-lo)/w);if(k<0)k=0;if(k>=bins)k=bins-1;h[k]++}
-  const hm=Math.max(...h);
-  $("hist").innerHTML=h.map(c=>`<div style="height:${c/hm*100}%"></div>`).join("");
-  $("a0").textContent="≤ "+fmt(lo);$("a1").textContent="≥ "+fmt(hi);
+  window.LAST={P,n,mean,total,tots,hasT4,rot:P.rot,cmp:P.cmp,fac:P.fac,
+    sorted:Float64Array.from(tots).sort(),sv:Float64Array.from(vals).sort(),
+    sd:Math.sqrt(tots.reduce((s,x)=>s+(x-total)**2,0)/n),avgVal:vals.reduce((s,x)=>s+x,0)/n};
+  show(true);
 }
-function run(){run0();renderCmp(window.PP);applyLang()}
+// 시뮬레이션 결과(LAST)를 현재 화폐 단위로 다시 그림. full=false면 숫자만 바꿈(막대·분포 그래프는 그대로)
+function show(full){
+  const L=window.LAST,cur=params(),kk=cur.fac/L.fac,unit=cur.unit,n=L.n,dec=unit==="D"?2:0;
+  const q=p=>L.sorted[Math.min(n-1,Math.floor(p*n))],qv=p=>L.sv[Math.min(n-1,Math.floor(p*n))]*kk;
+  const avgVal=L.avgVal*kk,price=L.P.price.map(x=>x*kk);
+  $("tot").textContent=fmt(L.total);$("totMed").textContent=fmt(q(.5));
+  $("val").textContent=fmt(avgVal,dec)+" "+unit;$("vlabel").textContent="기대 화폐 획득량";$("net").textContent=fmt(avgVal-cur.cost,dec)+" "+unit;
+  const em=(m,i)=>fmt(m)+' <span class="note">('+fmt(m/1000*price[i],dec)+' '+unit+')</span>';
+  if(full){
+    const mx=Math.max(...L.mean,1);
+    $("bars").innerHTML=L.mean.map((m,i)=>`<div class="bar"><span>${NAMES[i]}</span><i data-w="${m/mx*100}" style="width:0;background:${COL[i]};transition-delay:${i*90}ms"></i><em>${em(m,i)}</em></div>`).join("");
+    const bi=$("bars").querySelectorAll("i[data-w]");bi.forEach(el=>el.getBoundingClientRect());
+    requestAnimationFrame(()=>bi.forEach(el=>{el.style.width=el.dataset.w+"%"}));
+    const lo=q(.01),hi=q(.99),bins=28,h=new Array(bins).fill(0),w=(hi-lo)/bins||1;
+    for(const x of L.tots){let k=Math.floor((x-lo)/w);if(k<0)k=0;if(k>=bins)k=bins-1;h[k]++}
+    const hm=Math.max(...h);
+    $("hist").innerHTML=h.map(c=>`<div style="height:${c/hm*100}%"></div>`).join("");
+    $("a0").textContent="≤ "+fmt(lo);$("a1").textContent="≥ "+fmt(hi);
+  }else{
+    $("bars").querySelectorAll("em").forEach((e,i)=>{e.innerHTML=em(L.mean[i],i)});
+  }
+  $("stats").innerHTML=[["생기 중앙값",fmt(q(.5))],["화폐 중앙값",fmt(qv(.5),dec)+" "+unit],["생기 하위 10%",fmt(q(.1))],["생기 상위 10%",fmt(q(.9))],["평균 오차(±1σ)",fmt(L.sd/Math.sqrt(n)/Math.max(L.total,1e-9)*100)+"%"],["T4가 나온 맵 비율",fmt(L.hasT4/n*100)+"%"],["화폐 하위 10%",fmt(qv(.1),dec)+" "+unit],["화폐 상위 10%",fmt(qv(.9),dec)+" "+unit]]
+    .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+}
+function run(){run0();renderCmp();applyLang()}
+function refresh(){if(!window.LAST){run();return}show(false);renderCmp();applyLang()}
 let timer;
-document.querySelectorAll("#tabSim input,#tabSim select").forEach(e=>e.addEventListener("change",()=>{clearTimeout(timer);timer=setTimeout(run,250)}));
+document.querySelectorAll("#tabSim input,#tabSim select").forEach(e=>e.addEventListener("change",(e.id==="unit"||e.id==="ratio")?refresh:()=>{clearTimeout(timer);timer=setTimeout(run,250)}));
 $("run").addEventListener("click",run);
 function syncRot(){const r=$("rot").checked;["t3inc","t4inc"].forEach(id=>{$(id).disabled=r})}
 $("rot").addEventListener("change",syncRot);syncRot();
 function syncUnit(){$("ratio").disabled=$("unit").value!=="디바인"}
 $("unit").addEventListener("change",syncUnit);syncUnit();
-const EN={"모델 가정": "Model assumptions", "최적 선택지 예상 (비시듦 제외)": "Expected optimal choices (excluding no-wilt)", "안내": "Notes", "작물을 선택한 뒤 수확을 누름": "Select a crop, then press Harvest", "기대값 분석": "Expected value analysis", "현재 예상 수확량": "Expected harvest so far", "기대 최적 수확량": "Expected optimal harvest", "플레이 도우미": "Play assistant", "쌍 입력": "Enter pairs", "시작 / 초기화": "Start / Reset", "윤작 기준. 모든 작물은 T1 씨앗 23개로 시작하는 것으로 가정하며, 기대값 분석 탭의 설정(시장가, 업그레이드 확률, 비시듦 확률 등)을 동일하게 적용함. 쌍 입력은 적용 시점에 현재 선택지로 반영되고 기존 진행 기록은 초기화됨. 최적 선택지 예상은 비시듦이 발생하지 않는 경우의 기대값 기준이며, 수확 진행 및 비시듦 확인과 무관하게 입력된 쌍 전체에 대해 산출함. 씨앗 구성은 업그레이드 확률에 따른 기대값으로 근사함.": "Crop Rotation only. All crops are assumed to start with 23 T1 seeds, and the settings of the Expected value analysis tab (prices, upgrade chances, no-wilt chance, etc.) are applied unchanged. Pair input takes effect when applied, and the existing progress is reset. The expected optimal choices assume that no crop remains unwilted and are computed for all entered pairs, independent of harvest progress and no-wilt confirmations. Seed composition is approximated by expected values based on the upgrade chances.", "현재 선택지": "Current options", "작물": "Crop", "씨앗 기대 (T1 / T2 / T3 / T4)": "Expected seeds (T1 / T2 / T3 / T4)", "이번 수확 가치": "Value of this harvest", "선택 후 예상 총 가치": "Expected total after choosing", "비시듦": "Not wilted", "수확": "Harvest", "수확한 기대 가치": "Harvested so far", "남은 최적 기대 가치": "Remaining (optimal)", "예상 총 가치": "Expected total", "기록": "History", "반대쪽 비시듦 확인": "Opposite crop did not wilt", "비시듦 수확": "Harvested after no-wilt", "되돌리기": "Undo", "씨앗 직접 입력 (선택)": "Enter seeds manually (optional)", "적용": "Apply", "모든 작물을 수확함": "All crops harvested", "기록 없음": "No harvests yet", "씨앗을 입력하지 않으면 업그레이드 확률로 계산한 기대값을 사용함. 인게임에서 실제 씨앗 개수를 보고 입력하면 조언이 더 정확해짐.": "If seeds are not entered, expected values from the upgrade chances are used. Entering the actual seed counts from the game makes the advice more accurate.", "노랑 생기": "Yellow lifeforce", "파랑 생기": "Blue lifeforce", "보라 생기": "Purple lifeforce", "오차가 생길 수 있는 부분 (영향이 큰 순서)": "Possible sources of error (largest first)", "같은 작물 배치 20,000개로 가정을 바꿔 잰 영향. 기본 설정, 수확한 맵 기준.": "Effect of changing each assumption, measured on the same 20,000 crop layouts. Default settings, harvested groves only.", "위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.": "These figures come from changing assumptions inside the model and are not verified in the actual game.", "업그레이드 확률: T2→T3가 20% 대신 25%면 +17%, T1→T2 24%·T2→T3 19%면 -7%. 원문은 20%, 다른 연구는 약 25%로 서로 다름.": "Upgrade chances: if T2→T3 is 25% instead of 20%, +17%; if T1→T2 is 24% and T2→T3 is 19%, -7%. The article says 20%, other research about 25%.", "작물 쌍 수 분포: 5쌍 비중이 1/3 대신 1/2이면 +11%. 원문 관찰은 28~34%라 약 ±9%p 흔들릴 수 있음.": "Crop pair distribution: if the share of 5-pair groves is 1/2 instead of 1/3, +11%. The article observed 28–34%, so about ±9 percentage points of uncertainty.", "시들지 않은 작물의 업그레이드: 직전 수확의 업그레이드를 받는다고 가정. 받지 않으면 최대 -5%(계획을 다시 짜지 않은 상한). 인게임 확인 필요.": "Upgrades for a crop that did not wilt: assumed to receive the upgrade from the harvest just before. If not, up to -5% (an upper bound, without replanning). Needs an in-game check.", "T3→T4 확률: 2%면 -2%, 5.5%면 +2%.": "T3→T4 chance: -2% at 2%, +2% at 5.5%.", "선택 알고리즘: 씨앗 구성을 기댓값으로 근사. 비시듦 없는 모델에서 약 1% 낮음을 확인했고, 비시듦을 켠 모델은 재지 못함.": "Choice algorithm: seed composition is approximated by expectation. About 1% below the true optimum was measured without no-wilt; not measured with no-wilt on.", "수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.": "Not quantified: exact behavior of duplicated monsters and Doubling Season (simplified), the effect of magic/rare monsters, Sacred Blossom, Einhar memories, and the uniform drop-amount assumption.", "패스 오브 엑자일 (Path of Exile)": "Path of Exile", "수확(Harvest) 시뮬레이터": "Harvest Simulator", "패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터": "Path of Exile Harvest Simulator", "Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.": "A probability model estimated from Forgotten Arbiter's analysis (patch 3.19–3.22 data). Expected lifeforce per map is computed by Monte Carlo simulation. All figures are the article's estimates and may have changed in later patches.", "시뮬레이션 실행": "Run simulation", "시뮬레이션": "Simulation", "시뮬레이션 맵 수": "Maps to simulate", "맵 (T16 기준)": "Map (T16)", "맵 IIQ (%)": "Map IIQ (%)", "효과의 절반만 반영": "Only half of the effect counts", "무리 크기 (%)": "Pack size (%)", "작물 쌍 수": "Crop pairs", "4, 5: 3쌍은 수확 안 함": "4, 5: 3-pair groves are skipped", "시장가 (1카오스당 생기)": "Market price (lifeforce per 1 Chaos)", "표시 화폐 단위": "Display currency", "카오스": "Chaos", "디바인": "Divine", "1디바인 =": "1 Divine =", "노랑": "Yellow", "파랑": "Blue", "보라": "Purple", "윤작 (Crop Rotation)": "Crop Rotation", "윤작(Crop Rotation)": "Crop Rotation", "T1→T2 확률 (%)": "T1→T2 chance (%)", "T2→T3 확률 (%)": "T2→T3 chance (%)", "T3→T4 확률 (%)": "T3→T4 chance (%)", "글의 측정 20%, 다른 연구는 약 25%": "Article measured 20%, other research ~25%", "글의 추정은 약 2~5.5%": "Article estimate ~2–5.5%", "아틀라스 패시브": "Atlas passives", "생기의 수량 증가 (%)": "Increased quantity of lifeforce (%)", "T3 씨앗 확률 증가 (%)": "Increased chance of Tier 3 seeds (%)", "숲의 중심: T4 씨앗 확률 증가 (%)": "Heart of the Grove: increased chance of Tier 4 seeds (%)", "숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)": "Heart of the Grove: chance the unchosen crop does not wilt (%)", "노랑 작물 확률 감소 (%)": "Yellow crop chance reduction (%)", "파랑 작물 확률 감소 (%)": "Blue crop chance reduction (%)", "보라 작물 확률 감소 (%)": "Purple crop chance reduction (%)", "풍성한 수확: 추가 몬스터 10%": "Bountiful Harvest: 10% extra monster", "복제 몬스터 확률 (%)": "Duplicated monster chance (%)", "복제 철: 생기 복제 10%": "Doubling Season: 10% duplicated lifeforce", "갑충석 (시장가: 카오스)": "Scarabs (price in Chaos)", "복제의 수확 갑충석": "Harvest Scarab of Doubling", "기괴한 혈통의 갑충석": "Scarab of Monstrous Lineage", "맵 한 번당 결과": "Result per map", "평균 총 생기": "Average total lifeforce", "맵 당 기대 화폐 획득량": "Expected currency per map", "갑충석 비용 차감": "After scarab cost", "윤작 선택 전략 비교": "Crop Rotation strategy comparison", "분포": "Distribution", "총 생기": "Total lifeforce", "색 감소 패시브 비교": "Color reduction passive comparison", "노랑 / 파랑 / 보라 감소 (%)": "Yellow / Blue / Purple reduction (%)", "맵당 기대 가치 (C)": "Expected value per map (C)", "맵당 기대 가치 (D)": "Expected value per map (D)", "균등 대비": "vs even", "0 / 45 / 0 대비": "vs 0 / 45 / 0", "0 / 0 / 0 (균등)": "0 / 0 / 0 (even)", "기준": "Baseline", "고정값. 기본 설정(윤작, 4쌍 : 5쌍 = 2 : 1, 비시듦 10%, 시장가 6/16/40)에서 같은 작물 배치 20,000맵으로 짝지어 비교. 입력을 바꾸면 달라질 수 있음.": "Fixed values. Default settings (Crop Rotation, 4-pair : 5-pair = 2 : 1, 10% no-wilt, prices 6/16/40), compared on identical crop layouts over 20,000 maps. Values may differ if inputs change.", "모델 가정.": "Model assumptions.", "작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.": "The number of crop pairs is drawn uniformly from the selected values; in each pair the crop with the higher expected value is harvested. Each crop has 23 seeds: T4 about 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), the rest T1. Drop chance: T1 2%, T2 10%, T3·T4 100%; base drop amount T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (assumed uniform). The article does not give the exact interaction of duplicated monsters, so it is simplified as each monster independently adding one more. Einhar memories and Sacred Blossom are not included. Crop Rotation mode assumes each harvest can raise seeds in crops of other colors by at most one tier. The near-optimal strategy computes, at each choice, the harvest order of the remaining pairs and the colors from the actual seed state, approximates later upgrades by expectation, and replans after every harvest. If the unchosen crop does not wilt (Heart of the Grove), it can also be harvested and keeps being upgraded by later harvests of other colors; whether a surviving crop also receives the upgrade from the harvest just before it is unconfirmed and assumed to be yes.", "최적": "Optimal", "탐욕 (현재 가치가 높은 쪽)": "Greedy (higher current value)", "무작위": "Random", "전략": "Strategy", "최적 대비": "vs Optimal", "중앙값": "Median", "하위 10%": "Bottom 10%", "상위 10%": "Top 10%", "평균 오차(±1σ)": "Mean error (±1σ)", "화폐 중앙값": "Currency median", "화폐 하위 10%": "Currency bottom 10%", "화폐 상위 10%": "Currency top 10%", "T4가 나온 맵 비율": "Maps with a T4 seed"};
+const EN={"모델 가정": "Model assumptions", "최적 선택지 예상 (비시듦 제외)": "Expected optimal choices (excluding no-wilt)", "안내": "Notes", "작물을 선택한 뒤 수확을 누름": "Select a crop, then press Harvest", "에뮬레이션": "Emulation", "현재 예상 수확량": "Expected harvest so far", "기대 최적 수확량": "Expected optimal harvest", "플레이 도우미": "Play assistant", "쌍 입력": "Enter pairs", "시작 / 초기화": "Start / Reset", "윤작 기준. 모든 작물은 T1 씨앗 23개로 시작하는 것으로 가정하며, 시뮬레이션 탭의 설정(시장가, 업그레이드 확률, 비시듦 확률 등)을 동일하게 적용함. 쌍 입력은 적용 시점에 현재 선택지로 반영되고 기존 진행 기록은 초기화됨. 최적 선택지 예상은 비시듦이 발생하지 않는 경우의 기대값 기준이며, 수확 진행 및 비시듦 확인과 무관하게 입력된 쌍 전체에 대해 산출함. 씨앗 구성은 업그레이드 확률에 따른 기대값으로 근사함.": "Crop Rotation only. All crops are assumed to start with 23 T1 seeds, and the settings of the Simulation tab (prices, upgrade chances, no-wilt chance, etc.) are applied unchanged. Pair input takes effect when applied, and the existing progress is reset. The expected optimal choices assume that no crop remains unwilted and are computed for all entered pairs, independent of harvest progress and no-wilt confirmations. Seed composition is approximated by expected values based on the upgrade chances.", "현재 선택지": "Current options", "작물": "Crop", "씨앗 기대 (T1 / T2 / T3 / T4)": "Expected seeds (T1 / T2 / T3 / T4)", "이번 수확 가치": "Value of this harvest", "선택 후 예상 총 가치": "Expected total after choosing", "비시듦": "Not wilted", "수확": "Harvest", "수확한 기대 가치": "Harvested so far", "남은 최적 기대 가치": "Remaining (optimal)", "예상 총 가치": "Expected total", "기록": "History", "반대쪽 비시듦 확인": "Opposite crop did not wilt", "비시듦 수확": "Harvested after no-wilt", "되돌리기": "Undo", "씨앗 직접 입력 (선택)": "Enter seeds manually (optional)", "적용": "Apply", "모든 작물을 수확함": "All crops harvested", "기록 없음": "No harvests yet", "씨앗을 입력하지 않으면 업그레이드 확률로 계산한 기대값을 사용함. 인게임에서 실제 씨앗 개수를 보고 입력하면 조언이 더 정확해짐.": "If seeds are not entered, expected values from the upgrade chances are used. Entering the actual seed counts from the game makes the advice more accurate.", "노랑 생기": "Yellow lifeforce", "파랑 생기": "Blue lifeforce", "보라 생기": "Purple lifeforce", "오차가 생길 수 있는 부분": "Possible sources of error", "같은 작물 배치 20,000개로 가정을 바꿔 잰 영향. 기본 설정, 수확한 맵 기준.": "Effect of changing each assumption, measured on the same 20,000 crop layouts. Default settings, harvested groves only.", "위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.": "These figures come from changing assumptions inside the model and are not verified in the actual game.", "업그레이드 확률: T2→T3가 20% 대신 25%면 +17%, T1→T2 24%·T2→T3 19%면 -7%. 원문은 20%, 다른 연구는 약 25%로 서로 다름.": "Upgrade chances: if T2→T3 is 25% instead of 20%, +17%; if T1→T2 is 24% and T2→T3 is 19%, -7%. The article says 20%, other research about 25%.", "작물 쌍 수 분포: 5쌍 비중이 1/3 대신 1/2이면 +11%. 원문 관찰은 28~34%라 약 ±9%p 흔들릴 수 있음.": "Crop pair distribution: if the share of 5-pair groves is 1/2 instead of 1/3, +11%. The article observed 28–34%, so about ±9 percentage points of uncertainty.", "시들지 않은 작물의 업그레이드: 직전 수확의 업그레이드를 받는다고 가정. 받지 않으면 최대 -5%(계획을 다시 짜지 않은 상한). 인게임 확인 필요.": "Upgrades for a crop that did not wilt: assumed to receive the upgrade from the harvest just before. If not, up to -5% (an upper bound, without replanning). Needs an in-game check.", "T3→T4 확률: 2%면 -2%, 5.5%면 +2%.": "T3→T4 chance: -2% at 2%, +2% at 5.5%.", "선택 알고리즘: 씨앗 구성을 기댓값으로 근사. 비시듦 없는 모델에서 약 1% 낮음을 확인했고, 비시듦을 켠 모델은 재지 못함.": "Choice algorithm: seed composition is approximated by expectation. About 1% below the true optimum was measured without no-wilt; not measured with no-wilt on.", "수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.": "Not quantified: exact behavior of duplicated monsters and Doubling Season (simplified), the effect of magic/rare monsters, Sacred Blossom, Einhar memories, and the uniform drop-amount assumption.", "기괴한 혈통의 갑충석 효과는 몬스터 희귀도에 대한 정보 부족으로 시뮬레이션 미적용": "The effect of Scarab of Monstrous Lineage is not simulated because there is not enough information about monster rarity.", "주어진 정보만 시뮬레이션 되며, 따라서 누락된 정보는 적용되지 않음": "Only the given information is simulated, so missing information is not applied.", "예를 들어 총주교와 세계포식자 제단과 같은 모드는 랜덤성으로 인해 데이터에서 누락": "For example, mods such as the Searing Exarch and Eater of Worlds altars are missing from the data because of their randomness.", "패스 오브 엑자일 (Path of Exile)": "Path of Exile", "수확(Harvest) 시뮬레이터": "Harvest Simulator", "패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터": "Path of Exile Harvest Simulator", "Forgotten Arbiter의 분석(3.19~3.22 데이터)에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.": "A probability model estimated from Forgotten Arbiter's analysis (patch 3.19–3.22 data). Expected lifeforce per map is computed by Monte Carlo simulation. All figures are the article's estimates and may have changed in later patches.", "시뮬레이션 실행": "Run simulation", "시뮬레이션": "Simulation", "시뮬레이션 맵 수": "Maps to simulate", "맵 (T16 기준)": "Map (T16)", "맵 IIQ (%)": "Map IIQ (%)", "효과의 절반만 반영": "Only half of the effect counts", "무리 규모 (%)": "Pack size (%)", "작물 쌍 수": "Crop pairs", "4, 5: 3쌍은 수확 안 함": "4, 5: 3-pair groves are skipped", "화폐": "Currency", "생기 가격 (카오스)": "Lifeforce price (Chaos)", "화폐 단위": "Currency", "카오스": "Chaos", "디바인": "Divine", "노랑": "Yellow", "파랑": "Blue", "보라": "Purple", "윤작 (Crop Rotation)": "Crop Rotation", "윤작(Crop Rotation)": "Crop Rotation", "T1→T2 확률 (%)": "T1→T2 chance (%)", "T2→T3 확률 (%)": "T2→T3 chance (%)", "T3→T4 확률 (%)": "T3→T4 chance (%)", "글의 측정 20%, 다른 연구는 약 25%": "Article measured 20%, other research ~25%", "글의 추정은 약 2~5.5%": "Article estimate ~2–5.5%", "아틀라스 패시브": "Atlas passives", "생기의 수량 증가 (%)": "Increased quantity of lifeforce (%)", "T3 씨앗 확률 증가 (%)": "Increased chance of Tier 3 seeds (%)", "숲의 중심: T4 씨앗 확률 증가 (%)": "Heart of the Grove: increased chance of Tier 4 seeds (%)", "숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)": "Heart of the Grove: chance the unchosen crop does not wilt (%)", "노랑 작물 확률 감소 (%)": "Yellow crop chance reduction (%)", "파랑 작물 확률 감소 (%)": "Blue crop chance reduction (%)", "보라 작물 확률 감소 (%)": "Purple crop chance reduction (%)", "풍성한 수확: 추가 몬스터 10%": "Bountiful Harvest: 10% extra monster", "복제 몬스터 확률 (%)": "Duplicated monster chance (%)", "복제 철: 생기 복제 10%": "Doubling Season: 10% duplicated lifeforce", "갑충석 가격 (카오스)": "Scarab price (Chaos)", "복제의 수확 갑충석": "Harvest Scarab of Doubling", "기괴한 혈통의 갑충석": "Scarab of Monstrous Lineage", "맵 1회당 예상 획득량": "Expected yield per map", "생기 (평균)": "Lifeforce (average)", "생기 (중앙값)": "Lifeforce (median)", "기대 화폐 획득량": "Expected currency", "갑충석 비용 제외": "Excluding scarab cost", "윤작 선택 전략 비교": "Crop Rotation strategy comparison", "분포": "Distribution", "총 생기": "Total lifeforce", "작물 감소 아틀라스 추천 세팅": "Recommended crop reduction Atlas setup", "노랑 / 파랑 / 보라 감소 (%)": "Yellow / Blue / Purple reduction (%)", "맵당 기대 가치 (C)": "Expected value per map (C)", "맵당 기대 가치 (D)": "Expected value per map (D)", "균등 대비": "vs even", "0 / 45 / 0 대비": "vs 0 / 45 / 0", "0 / 0 / 0 (균등)": "0 / 0 / 0 (even)", "기준": "Baseline", "생기 가격 등 설정 값에 따라 추천 세팅이 달라질 수 있음.": "The recommended setup may vary depending on settings such as lifeforce prices.", "작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.": "The number of crop pairs is drawn uniformly from the selected values; in each pair the crop with the higher expected value is harvested. Each crop has 23 seeds: T4 about 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), the rest T1. Drop chance: T1 2%, T2 10%, T3·T4 100%; base drop amount T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (assumed uniform). The article does not give the exact interaction of duplicated monsters, so it is simplified as each monster independently adding one more. Einhar memories and Sacred Blossom are not included. Crop Rotation mode assumes each harvest can raise seeds in crops of other colors by at most one tier. The near-optimal strategy computes, at each choice, the harvest order of the remaining pairs and the colors from the actual seed state, approximates later upgrades by expectation, and replans after every harvest. If the unchosen crop does not wilt (Heart of the Grove), it can also be harvested and keeps being upgraded by later harvests of other colors; whether a surviving crop also receives the upgrade from the harvest just before it is unconfirmed and assumed to be yes.", "최적": "Optimal", "탐욕 (현재 가치가 높은 쪽)": "Greedy (higher current value)", "무작위": "Random", "전략": "Strategy", "최적 대비": "vs Optimal", "생기 중앙값": "Lifeforce median", "생기 상위 10%": "Lifeforce top 10%", "생기 하위 10%": "Lifeforce bottom 10%", "평균 오차(±1σ)": "Mean error (±1σ)", "화폐 중앙값": "Currency median", "화폐 하위 10%": "Currency bottom 10%", "화폐 상위 10%": "Currency top 10%", "T4가 나온 맵 비율": "Maps with a T4 seed"};
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 const RX=[[/^쌍 (\d+)$/,"Pair $1"],[/^단계 (\d+)$/,"Step $1"],[/^쌍 (\d+) 노랑$/,"Pair $1 Yellow"],[/^쌍 (\d+) 파랑$/,"Pair $1 Blue"],[/^쌍 (\d+) 보라$/,"Pair $1 Purple"]];
 const tr=k=>{if(EN[k])return EN[k];for(const [r,v] of RX)if(r.test(k))return k.replace(r,v);return null};
