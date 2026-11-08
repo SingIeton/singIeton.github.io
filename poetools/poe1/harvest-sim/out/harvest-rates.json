@@ -1,0 +1,36 @@
+{
+ "version": 2,
+ "source": "poe.ninja",
+ "updatedAt": "2026-11-08T13:59:20Z",
+ "order": [
+  "Allflame"
+ ],
+ "leagues": {
+  "Allflame": {
+   "ratio": 462.9,
+   "lifeforce": {
+    "yellow": 3.49,
+    "blue": 24.5,
+    "purple": 39.6
+   },
+   "scarab": {
+    "doubling": 60.4,
+    "lineage": 3.1
+   },
+   "updatedAt": "2026-11-08T13:59:20Z"
+  },
+  "Standard": {
+   "ratio": 686.2,
+   "lifeforce": {
+    "yellow": 1.97,
+    "blue": 17.68,
+    "purple": 23.82
+   },
+   "scarab": {
+    "doubling": 18.4,
+    "lineage": 8.6
+   },
+   "updatedAt": "2026-11-08T13:59:20Z"
+  }
+ }
+}

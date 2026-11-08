@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko" data-game="poe1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터</title>
+<link rel="stylesheet" href="../../style/theme.css">
+<script src="../../style/site-bar.js"></script>
+<style>
+/* 이 파일에는 수확 시뮬레이터에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
+main.wrap{max-width:920px;margin-left:auto;margin-right:auto}
+.grid{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+label span.h{color:var(--mute);font-size:12px;display:block}
+#run{width:100%;margin:0 0 4px;padding:10px 16px}
+.big{display:flex;flex-wrap:wrap;gap:16px 36px;align-items:baseline;margin-bottom:16px}
+.big .grp{display:flex;flex-wrap:wrap;gap:16px 20px;align-items:baseline}
+.big b{font:600 clamp(26px,3.4vw,34px)/1.1 var(--serif);color:var(--g);letter-spacing:-.01em}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}}
+:root[data-theme="dark"] .big b,.dark .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}
+.big small{color:var(--mute);font-size:13.5px}
+.bar{display:grid;grid-template-columns:70px var(--bw,1fr) minmax(190px,1fr);gap:10px;align-items:center;margin:6px 0}
+.bar i{display:block;height:12px;border-radius:2px}
+.bar em{font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap;display:grid;grid-template-columns:7ch var(--cvw,10ch);column-gap:8px;justify-content:end}
+.bar em .lf,.bar em .cv{text-align:right}  /* 화폐 열은 우측 정렬, 생기 열은 화폐 열 바로 왼쪽에서 우측 정렬 */
+.hist{display:flex;align-items:flex-end;gap:2px;height:130px;margin-top:10px}
+.hist div{flex:1;background:var(--g);opacity:.75;border-radius:1px 1px 0 0;min-height:1px}
+.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:13px}
+.panel .stats{margin-bottom:4px}
+table{font-size:14px}
+th,td{padding:6px 8px}
+th{font-size:13px;font-weight:500}
+.stat small{font-size:13px}
+.dot{display:inline-block;width:9px;height:9px;margin-right:8px;transform:rotate(45deg)}
+.px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin:10px 0 0;text-align:center;font-size:14px}
+.px input{width:100%;text-align:center}
+.rt{display:flex;align-items:center;gap:6px}
+label span.en{display:block;color:var(--mute);font-size:9.5px;line-height:1.3;white-space:nowrap;letter-spacing:-.01em}
+:root[lang="en"] label span.en{display:none}
+.cy{color:var(--yt);font-weight:600}.cb{color:var(--b);font-weight:600}.cp{color:var(--p);font-weight:600}
+.pl-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:6px 0}
+.pl-row .lb{width:44px;color:var(--mute);font-size:13px}
+.pl-row select{width:auto}
+.opt.c0{--c:var(--y);--t:var(--yt);--on:#1c1c1c}.opt.c1{--c:var(--b);--t:var(--b);--on:var(--bg)}.opt.c2{--c:var(--p);--t:var(--p);--on:var(--bg)}
+button.opt{min-width:90px;padding:6px 14px;background:color-mix(in srgb,var(--c) 10%,var(--sf));color:var(--t);border:1px solid color-mix(in srgb,var(--c) 45%,var(--ln));border-radius:var(--r);font-weight:600;cursor:pointer;white-space:nowrap}
+button.opt.on{background:var(--c);color:var(--on)}
+button.opt:disabled{opacity:.45;cursor:default}
+.plc option{font-weight:700}
+.pl-sum{margin:8px 0;font-size:15px}
+#plOpts .pl-row{flex-wrap:nowrap;overflow-x:auto}
+.pl-cols{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+#plSeq{font-size:14px;min-width:220px}
+#plSeq .t{font:600 14px var(--serif);color:var(--g);margin-bottom:4px}
+#plSeq div{margin:3px 0}
+.tri{display:inline-grid;grid-template-columns:2.4em .9em 2.4em .9em 2.4em;align-items:baseline;font-variant-numeric:tabular-nums}
+.tri span{text-align:right}.tri i{font-style:normal;text-align:center;color:var(--mute)}
+details.note>summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;user-select:none}
+details.note>summary::-webkit-details-marker{display:none}
+details.note>summary::after{content:"▼";font-size:11px;color:var(--mute);transition:transform .15s}
+details.note[open]>summary::after{transform:rotate(180deg)}
+details.note .dbody{margin-top:8px}
+.tabs{overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}  /* 탭 줄 우측 끝 스크롤바(화살표) 숨김 — 좁은 화면에서는 스크롤 자체는 유지 */
+.tabs::-webkit-scrollbar{display:none;width:0;height:0}
+#lgInfo{margin:6px 0 0}
+.lgrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.lgrow .btn{margin:0;font-size:13px;padding:6px 14px}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="ghead sm"><span class="mini" aria-hidden="true">1</span><div><a class="game" href="../poe1.html">패스 오브 엑자일 (Path of Exile)</a><h1>수확(Harvest) 시뮬레이터</h1><p class="sub">Forgotten Arbiter의 분석에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.</p></div></div>
+<div class="tabs"><button type="button" class="tab on" data-t="sim">시뮬레이션</button><button type="button" class="tab" data-t="play">에뮬레이션</button></div>
+<div id="tabSim">
+<div class="grid">
+<div>
+<div class="panel">
+<button id="run" class="pri" type="button">시뮬레이션 실행</button>
+<fieldset><legend>시뮬레이션</legend>
+<label>시뮬레이션 맵 수<select id="n"><option>2000</option><option selected>5000</option><option>10000</option><option>50000</option></select></label>
+<label>아틀라스 패시브 시뮬레이션<input type="checkbox" id="recOn" checked></label>
+</fieldset>
+<fieldset><legend>리그</legend>
+<label><select id="league" disabled></select></label>
+<p class="note" id="lgInfo"></p>
+<div class="lgrow"><label class="btn">시세 파일 불러오기<input type="file" id="rfile" accept=".json" hidden></label><button type="button" class="btn" id="rreset">시세 재설정</button></div>
+</fieldset>
+<fieldset><legend>맵 (T16 기준)</legend>
+<label><div>맵 IIQ (%)<span class="h">효과의 절반만 반영</span></div><input type="number" id="iiq" value="200" min="0" max="500"></label>
+<label>무리 규모 (%)<input type="number" id="pack" value="60" min="0" max="300"></label>
+<label><div>작물 쌍 수<span class="h">4, 5: 3쌍은 수확 안 함</span></div><select id="pairs"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="3,4">3, 4</option><option value="4,4,5" selected>4, 5</option><option value="3,4,4,5">3, 4, 5</option></select></label>
+</fieldset>
+<fieldset><legend>생기 가격 (카오스)</legend>
+<div class="px"><span><i class="dot" style="background:var(--y)"></i>노랑</span><span><i class="dot" style="background:var(--b)"></i>파랑</span><span><i class="dot" style="background:var(--p)"></i>보라</span>
+<input type="number" id="py" value="6" min="0" step="any"><input type="number" id="pb" value="16" min="0" step="any"><input type="number" id="pp" value="40" min="0" step="any"></div>
+</fieldset>
+<fieldset><legend>화폐</legend>
+<label>화폐 단위<select id="unit"><option value="카오스">카오스</option><option value="디바인">디바인</option></select></label>
+<label>디바인<span class="rt"><input type="number" id="ratio" value="300" min="1" step="any" disabled>카오스</span></label>
+</fieldset>
+<fieldset><legend>갑충석 가격 (카오스)</legend>
+<label><span>복제의 수확 갑충석<span class="en">Harvest Scarab of Doubling</span></span><span class="rt"><input type="number" id="scdp" value="100" min="0" step="0.1"><input type="checkbox" id="scd" checked></span></label>
+<label><span>기괴한 혈통의 갑충석<span class="en">Scarab of Monstrous Lineage</span></span><span class="rt"><input type="number" id="sclp" value="0" min="0" step="0.1" disabled><input type="checkbox" id="scl" disabled></span></label>
+</fieldset>
+<fieldset><legend>윤작 (Crop Rotation)</legend>
+<label>윤작(Crop Rotation)<input type="checkbox" id="rot" checked></label>
+<label>T1→T2 확률 (%)<input type="number" id="u1" value="25" min="0" max="100" step="0.5"></label>
+<label><div>T2→T3 확률 (%)<span class="h">글의 측정 20%, 다른 연구는 약 25%</span></div><input type="number" id="u2" value="20" min="0" max="100" step="0.5"></label>
+<label><div>T3→T4 확률 (%)<span class="h">글의 추정은 약 2~5.5%</span></div><input type="number" id="u3" value="3.5" min="0" max="100" step="0.1"></label>
+</fieldset>
+<fieldset><legend>아틀라스 패시브</legend>
+<label>생기의 수량 증가 (%)<input type="number" id="inc" value="18" min="0" max="500"></label>
+<label>T3 씨앗 확률 증가 (%)<input type="number" id="t3inc" value="30" min="0" max="300"></label>
+<label><div>숲의 중심: T4 씨앗 확률 증가 (%)<span class="h">Heart of the Grove</span></div><input type="number" id="t4inc" value="60" min="0" max="300"></label>
+<label><div>숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)<span class="h">Heart of the Grove</span></div><input type="number" id="nw" value="10" min="0" max="100"></label>
+<label>노랑 작물 확률 감소 (%)<input type="number" id="ry" value="0" min="0" max="100"></label>
+<label>파랑 작물 확률 감소 (%)<input type="number" id="rb" value="45" min="0" max="100"></label>
+<label>보라 작물 확률 감소 (%)<input type="number" id="rp" value="25" min="0" max="100"></label>
+<label><div>풍성한 수확: 추가 몬스터 10%<span class="h">Bountiful Harvest</span></div><input type="checkbox" id="bount" checked></label>
+<label>복제 몬스터 확률 (%)<input type="number" id="dupm" value="6" min="0" max="100"></label>
+<label><div>복제 철: 생기 복제 10%<span class="h">Doubling Season</span></div><input type="checkbox" id="dupl" checked></label>
+</fieldset>
+</div>
+</div>
+<div>
+<div class="panel" aria-live="polite">
+<h2>맵 1회당 예상 획득량</h2>
+<div class="big"><div class="grp"><div><b id="tot">-</b><br><small>생기 (평균)</small></div><div><b id="totMed">-</b><br><small>생기 (중앙값)</small></div></div><div class="grp"><div><b id="val">-</b><br><small id="vlabel">기대 화폐 획득량</small></div><div><b id="net">-</b><br><small>갑충석 비용 제외</small></div></div></div>
+<div id="bars"></div>
+</div>
+<div class="panel" id="redPanel">
+<h2>작물 감소 아틀라스 추천 세팅</h2>
+<div class="scroll"><table id="redTbl"><tr><td class="note">시뮬레이션을 실행하면 계산됨</td></tr></table></div>
+<p class="note">시뮬레이션을 실행할 시 다시 계산됨. -45% 단일 색상 패시브만 찍은 세팅 중 가장 우수한 값을 기준으로 모든 시뮬레이션 결과를 비교.</p>
+<p class="note" id="recInfo"></p>
+</div>
+<div class="panel">
+<h2>분포</h2>
+<div class="stats" id="stats"></div>
+<div class="hist" id="hist"></div>
+<div class="axis"><span id="a0"></span><span>총 생기</span><span id="a1"></span></div>
+</div>
+<div class="panel" id="cmpPanel">
+<h2>윤작 선택 전략 비교</h2>
+<div class="scroll"><table id="cmp"></table></div>
+</div>
+<details class="panel note"><summary><b>모델 가정</b></summary><div class="dbody">작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.</div></details>
+<details class="panel note"><summary><b>오차가 생길 수 있는 부분</b></summary><div class="dbody">
+<p style="margin:6px 0">같은 작물 배치 20,000개로 가정을 바꿔 잰 영향. 기본 설정, 수확한 맵 기준.</p>
+<ol style="margin:6px 0;padding-left:20px">
+<li>업그레이드 확률: T2→T3가 20% 대신 25%면 +17%, T1→T2 24%·T2→T3 19%면 -7%. 원문은 20%, 다른 연구는 약 25%로 서로 다름.</li>
+<li>작물 쌍 수 분포: 5쌍 비중이 1/3 대신 1/2이면 +11%. 원문 관찰은 28~34%라 약 ±9%p 흔들릴 수 있음.</li>
+<li>시들지 않은 작물의 업그레이드: 직전 수확의 업그레이드를 받는다고 가정. 받지 않으면 최대 -5%(계획을 다시 짜지 않은 상한). 인게임 확인 필요.</li>
+<li>T3→T4 확률: 2%면 -2%, 5.5%면 +2%.</li>
+<li>선택 알고리즘: 씨앗 구성을 기댓값으로 근사. 비시듦 없는 모델에서 약 1% 낮음을 확인했고, 비시듦을 켠 모델은 재지 못함.</li>
+<li>수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.</li>
+<li>기괴한 혈통의 갑충석 효과는 몬스터 희귀도에 대한 정보 부족으로 시뮬레이션 미적용</li>
+<li>주어진 정보만 시뮬레이션 되며, 따라서 누락된 정보는 적용되지 않음<ul style="margin:4px 0;padding-left:20px"><li>예를 들어 총주교와 세계포식자 제단과 같은 모드는 랜덤성으로 인해 데이터에서 누락</li></ul></li>
+<li>추천 세팅 탐색: 후보마다 맵을 따로 돌리지 않고, 작물 배치(몇 쌍, 각 쌍의 색 조합)별 기대 가치를 한 번만 구해 모든 후보가 공유함. 후보의 값은 색 감소율로 정해지는 배치 확률(다항분포)로 가중 평균해 계산하므로 맵마다 달라지는 배치 운이 들어가지 않음. 모든 후보가 1위보다 0.3% 넘게 좋지 않다는 것이 신뢰수준 99%로 확인될 때까지 구분이 어려운 배치에 표본을 추가하며, 1위와 0.3% 이내 차이는 동률로 봄(구분 불가 후보 수는 표 아래에 표시). 맵당 가치 열에는 모든 후보에 공통인 표집 오차가 있으나(중앙값 약 0.4%, 95% 구간 약 1%) 후보 간 비교와 '기준 대비'에는 거의 영향이 없음(오차 중앙값 약 0.1%). 저장해 둔 표본을 재추출해 가격·쌍 수·시듦 설정이 다른 4가지 조건에서 각 300회 반복한 결과, 선택된 세팅의 손실은 모두 0.2% 이하였음.</li>
+</ol>
+<p style="margin:6px 0 0">위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.</p>
+</div></details>
+</div>
+</div>
+</div>
+<div id="tabPlay" hidden>
+<div class="panel">
+<h2>쌍 입력</h2>
+<label style="justify-content:flex-start;gap:12px">작물 쌍 수<select id="plN"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label>
+<div id="plPairs"></div>
+<button type="button" class="sm" data-act="r" style="margin-top:8px">적용</button>
+</div>
+<div class="panel">
+<h2>현재 선택지</h2>
+<div class="pl-sum" id="plSum"></div>
+<div class="pl-cols"><div id="plOpts"></div><div id="plSeq"></div></div>
+<div class="pl-row" style="margin-top:8px"><button type="button" class="sm pri" id="plGo" data-act="h" disabled>수확</button><button type="button" class="sm" id="plUndo" data-act="u" disabled>되돌리기</button></div>
+<div id="plDone"></div>
+</div>
+<details class="panel note"><summary><b>모델 가정</b></summary><div class="dbody">
+<p style="margin:6px 0 0">윤작 기준. 모든 작물은 T1 씨앗 23개로 시작하는 것으로 가정하며, 시뮬레이션 탭의 설정(시장가, 업그레이드 확률, 비시듦 확률 등)을 동일하게 적용함. 쌍 입력은 적용 시점에 현재 선택지로 반영되고 기존 진행 기록은 초기화됨. 최적 선택지 예상은 비시듦이 발생하지 않는 경우의 기대값 기준이며, 수확 진행 및 비시듦 확인과 무관하게 입력된 쌍 전체에 대해 산출함. 씨앗 구성은 업그레이드 확률에 따른 기대값으로 근사함.</p>
+</div></details>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const R_DEF=()=>Math.random();let R=R_DEF;   /* 추천 세팅 계산에서만 일시적으로 시드 난수로 바꿔 씀 */
+const RANGE=[[4.5,10],[12,25],[37,57],[190,280]],DROP=[.02,.1,1,1],MEAN=[7.25,18.5,47,235];
+const NAMES=["노랑","파랑","보라"],COL=["var(--y)","var(--b)","var(--p)"];
+function binom(n,p){let k=0;for(let i=0;i<n;i++)if(R()<p)k++;return k}
+function fmt(x,d=0){return x.toLocaleString("ko-KR",{maximumFractionDigits:d,minimumFractionDigits:d})}
+/* 가격(화폐 금액) 표시: 10 이상이면 소수점 없이, 10 미만이면 소수점 한 자리까지 반올림. 생기 개수 같은 수량에는 쓰지 않음 */
+const fmtP=x=>Math.round(Math.abs(x)*10)/10>=10?fmt(x,0):x.toLocaleString("ko-KR",{maximumFractionDigits:1});
+const rnd=v=>v>=10?Math.round(v):Math.round(v*10)/10;
+function params(){
+  const g=id=>{const e=$(id),v=parseFloat(e.dataset.raw!==undefined?e.dataset.raw:e.value);return isNaN(v)?0:v};
+  return {fac:$("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1,pack:g("pack"),iiq:g("iiq"),inc:g("inc"),mx:$("scd").checked?2:1,nw:g("nw")/100,cost:($("scd").checked?g("scdp"):0)*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1),pairs:$("pairs").value.split(",").map(Number),
+    t3:g("t3inc"),t4:g("t4inc"),guar:-1,
+    w:[1-g("ry")/100,1-g("rb")/100,1-g("rp")/100].map(x=>Math.max(0,x)),
+    rot:$("rot").checked,u:[g("u1")/100,g("u2")/100,g("u3")/100],bount:$("bount").checked,dupm:g("dupm")/100,dupl:$("dupl").checked,
+    price:[g("py"),g("pb"),g("pp")].map(r=>r>0?1000/r*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1):0),unit:$("unit").value==="디바인"?"D":"C",n:+$("n").value};
+}
+function pickType(w){const s=w[0]+w[1]+w[2];if(s<=0)return Math.floor(R()*3);let r=R()*s;for(let i=0;i<3;i++){r-=w[i];if(r<0)return i}return 2}
+function extra(p){return p<=1?(R()<p?1:0):1+(R()<p-1?1:0)}
+function genCrop(P,type){
+  if(P.rot)return {type,c:[23,0,0,0]};
+  const t4=R()<Math.min(1,.01*(1+P.t4/100))?1:0;
+  const t3=binom(3,Math.min(1,.25*(1+P.t3/100)));
+  const t2=binom(8,.75);
+  return {type,c:[23-t4-t3-t2,t2,t3,t4]};
+}
+// 씨앗당 평균 몬스터 수 (T1~T3)
+function monMean(P){return (1+P.pack/100+(P.bount?.1:0))*(1+P.dupm)}
+function amtMult(P){return P.mx*(1+P.iiq/200+P.inc/100)*(P.dupl?1.1:1)}
+function cropEV(P,crop){
+  const m=monMean(P),M=amtMult(P),c=crop.c;
+  const lf=M*(c[0]*m*DROP[0]*MEAN[0]+c[1]*m*DROP[1]*MEAN[1]+c[2]*m*DROP[2]*MEAN[2]+c[3]*(1+P.dupm)*MEAN[3]);
+  return lf*P.price[crop.type];
+}
+function simCrop(P,crop,out){
+  const scale=1+P.iiq/200+P.inc/100,mult=P.mx;
+  for(let t=0;t<4;t++){
+    const dropP=DROP[t];
+    for(let s=0;s<crop.c[t];s++){
+      let mon;
+      if(t===3){mon=1}
+      else{mon=1+extra(P.pack/100);if(P.bount&&R()<.1)mon++}
+      let tot=mon;for(let k=0;k<mon;k++)if(R()<P.dupm)tot++;
+      for(let k=0;k<tot;k++){
+        if(R()<dropP){
+          let a=Math.round((RANGE[t][0]+R()*(RANGE[t][1]-RANGE[t][0]))*scale)*mult;
+          if(P.dupl&&R()<.1)a*=2;
+          out.lf[crop.type]+=a;
+        }
+      }
+      if(t>=2)out.big[t-2]++;
+    }
+  }
+}
+function upgrade(P,crop){
+  const c=crop.c;
+  let u=binom(c[2],P.u[2]);c[2]-=u;c[3]+=u;
+  u=binom(c[1],P.u[1]);c[1]-=u;c[2]+=u;
+  u=binom(c[0],P.u[0]);c[0]-=u;c[1]+=u;
+}
+let LASTV=[];
+const MEMO=new Float64Array(1400000),STAMP=new Int32Array(1400000);let CALL=0;
+function planOpt(P,pairs,st,cand){
+  const N=pairs.length,q=P.nw,u=P.u;
+  const V=pairs.map(pr=>pr.map(cr=>{
+    const e=cr.c.slice(),arr=[];
+    for(let k=0;k<2*N;k++){
+      arr.push(cropEV(P,{type:cr.type,c:e}));
+      const n4=e[3]+u[2]*e[2],n3=e[2]*(1-u[2])+u[1]*e[1],n2=e[1]*(1-u[1])+u[0]*e[0],n1=e[0]*(1-u[0]);
+      e[0]=n1;e[1]=n2;e[2]=n3;e[3]=n4;
+    }
+    return arr;
+  }));
+  const call=++CALL;
+  const act=(code,a,b,c,i,s,j)=>{
+    const t=pairs[i][j].type,hc=t===0?a:t===1?b:c,H=a+b+c;
+    const na=a+(t===0),nb=b+(t===1),nc=c+(t===2),base=code&~(3<<(2*i));
+    let v=V[i][j][H-hc];
+    if(s===0){
+      v+=(1-q)*f(base|(1<<(2*i)),na,nb,nc);
+      if(q>0)v+=q*f(base|((3-j)<<(2*i)),na,nb,nc);
+    }else v+=f(base|(1<<(2*i)),na,nb,nc);
+    return v;
+  };
+  const f=(code,a,b,c)=>{
+    const key=((code*11+a)*11+b)*11+c;
+    if(STAMP[key]===call)return MEMO[key];
+    let best=0;
+    for(let i=0;i<N;i++){
+      const s=(code>>(2*i))&3;
+      if(s===1)continue;
+      if(s===0){for(let j=0;j<2;j++){const v=act(code,a,b,c,i,0,j);if(v>best)best=v}}
+      else{const v=act(code,a,b,c,i,s,s-2);if(v>best)best=v}
+    }
+    STAMP[key]=call;return MEMO[key]=best;
+  };
+  let code=0;for(let i=0;i<N;i++)code|=st[i]<<(2*i);
+  let bv=-1,pick=cand[0];
+  const vs=[];for(const [i,j] of cand){const v=act(code,0,0,0,i,st[i],j);vs.push([i,j,v]);if(v>bv){bv=v;pick=[i,j]}}LASTV=vs;
+  return pick;
+}
+function choose(P,pairs,st,cand,strat){
+  const ev=c=>cropEV(P,c),fresh=cand.filter(([i])=>st[i]===0),surv=cand.filter(([i])=>st[i]>=2);
+  if(strat==="random")return cand[Math.floor(R()*cand.length)];
+  if(strat!=="opt"&&surv.length){
+    let b=surv[0];for(const x of surv)if(ev(pairs[x[0]][x[1]])>ev(pairs[b[0]][b[1]]))b=x;return b;
+  }
+  if(strat==="greedy"){
+    let bi=-1,bv=Infinity;
+    for(const [i] of fresh){const v=Math.max(ev(pairs[i][0]),ev(pairs[i][1]));if(v<bv&&!(bi===i)){bv=v;bi=i}}
+    return [bi,ev(pairs[bi][0])>=ev(pairs[bi][1])?0:1];
+  }
+  return planOpt(P,pairs,st,cand);
+}
+function playRot(P,pairs0,strat,out){
+  const pairs=pairs0.map(pr=>pr.map(c=>({type:c.type,c:c.c.slice()})));
+  const N=pairs.length,st=new Array(N).fill(0);
+  let tot=0;
+  for(;;){
+    const cand=[];
+    for(let i=0;i<N;i++){if(st[i]===0)cand.push([i,0],[i,1]);else if(st[i]>=2)cand.push([i,st[i]-2])}
+    if(!cand.length)break;
+    const [i,j]=choose(P,pairs,st,cand,strat),pick=pairs[i][j],first=st[i]===0;
+    tot+=cropEV(P,pick);
+    if(out)simCrop(P,pick,out);
+    st[i]=1;
+    for(let k=0;k<N;k++){
+      if(k===i||st[k]===1)continue;
+      for(let jj=0;jj<2;jj++){
+        if(st[k]>=2&&jj!==st[k]-2)continue;
+        const c=pairs[k][jj];if(c.type!==pick.type)upgrade(P,c);
+      }
+    }
+    if(first&&R()<P.nw){const tw=pairs[i][1-j];st[i]=3-j;if(tw.type!==pick.type)upgrade(P,tw)}
+  }
+  return tot;
+}
+/* ---------- 작물 감소 아틀라스 추천 세팅: 시뮬레이션을 실행할 때 현재 가격·설정으로 후보를 다시 계산 ----------
+   아틀라스 구조: 시작 지점에서 색마다 -10% → -10% → -25% 로 이어지고, 세 색의 -25% 노드가 윤작(Crop Rotation)에서 만남.
+   - 윤작을 켠 경우: 윤작에 닿으려면 한 색은 경로 전체(10+10+25=45%)여야 함. 윤작을 찍으면 나머지 색의 -25% 노드는 윤작 쪽에서 바로 이어서 찍을 수 있으므로
+     나머지 색이 가질 수 있는 값은 0·10·20(앞의 -10% 노드만) / 25·35·45(-25% 노드 포함) 여섯 가지. 45%인 색이 하나 이상인 모든 조합을 후보로 함 (91개).
+   - 윤작을 끈 경우: 색마다 경로를 앞에서부터만 찍을 수 있어 0·10·20·45% 네 가지 (64개).
+   선택 노드 수(포인트) 제한은 두지 않음.
+
+   탐색 방법 (맵을 후보마다 따로 돌리지 않음)
+   1) 색 감소율은 "작물 색이 어떻게 뽑히는가"에만 영향을 줌. 작물 배치(몇 쌍, 각 쌍이 어떤 색 조합인가)가 정해지면 그 뒤의 진행(업그레이드·시듦·최적 선택)은 후보와 무관함.
+      그래서 배치별 기대 가치 V(배치)를 한 번만 구해 모든 후보가 공유하고, 후보의 기대 가치는 E = Σ P후보(배치)·V(배치) 로 계산 (배치 확률은 다항분포로 정확히 계산 → 배치 추첨의 무작위성이 사라짐).
+   2) 후보 간 차이의 표준오차는 SE² = Σ (P후보 − P1위)²·Var(V̂)  로 정확히 구함. 맵을 후보별로 돌려 비교하는 방식보다 오차가 훨씬 작음.
+   3) 표본은 "아직 구분이 안 되는 후보 쌍"의 차이에 가장 크게 기여하는 배치에 몰아서 추가 (네이만 배분). 구분이 끝난 후보에는 더 쓰지 않음.
+   4) 모든 후보가 "1위보다 REC_EPS 이상 좋을 수 없음"이 신뢰수준 1−REC_ALPHA 로 확인되면 종료 (조회 횟수·후보 수에 대한 본페로니 보정 포함).
+      종료 조건은 1위와 REC_EPS 이내 차이는 사실상 동률로 본다는 뜻. 상한(REC_CAP)에 닿으면 확인하지 못한 채 현재 1위를 보여줌.
+   무거운 계산이라 화면이 멈추지 않도록 조금씩 나눠서 실행하고, 새로 실행하면 이전 계산은 취소함 */
+const REC_ROT_OTHER=[0,10,20,25,35,45],REC_FREE=[0,10,20,45];
+function recSets(rot){
+  const ch=rot?REC_ROT_OTHER:REC_FREE,out=[];
+  for(const y of ch)for(const b of ch)for(const p of ch){
+    if(rot&&y!==45&&b!==45&&p!==45)continue;   // 윤작을 찍으려면 한 색은 반드시 45%
+    out.push([y,b,p]);
+  }
+  return out;
+}
+function seedRng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const REC_EPS=.003,REC_ALPHA=.01,REC_DISP=.004,REC_CAP_ROT=200000,REC_CAP_FREE=3e6,REC_NU0=8,REC_N0=4;   // NU0: 분산 추정 사전 자유도, N0: 처음에 배치마다 뽑는 표본 수   // CAP: 쌍 4개짜리 맵 표본 1개를 1로 센 계산량 상한
+const PT=[[0,0],[0,1],[0,2],[1,1],[1,2],[2,2]],FACT=[1,1,2,6,24,120,720,5040,40320];   // 쌍의 색 조합 6가지(순서 무관)
+function zq(p){const t=Math.sqrt(-2*Math.log(p));return t-(2.515517+.802853*t+.010328*t*t)/(1+1.432788*t+.189269*t*t+.001308*t*t*t)}   // 정규분포 상측 꼬리 p의 분위수
+function comps(n,t){if(t===1)return[[n]];const o=[];for(let c=n;c>=0;c--)for(const r of comps(n-c,t-1))o.push([c,...r]);return o}
+function pairProbs(w){const s=w[0]+w[1]+w[2],p=s>0?w.map(x=>x/s):[1/3,1/3,1/3];return PT.map(([a,b])=>a===b?p[a]*p[a]:2*p[a]*p[b])}
+function hs(a,b,c){let x=Math.imul(a^0x9E3779B9,0x85EBCA6B);x^=x>>>13;x=Math.imul(x^b,0xC2B2AE35);x^=x>>>16;x=Math.imul(x^c,0x27D4EB2F);x^=x>>>15;return x>>>0}
+/* 모델: U = 표본을 뽑는 단위. 윤작 ON이면 (쌍 수, 색 조합별 쌍 개수) 배치, OFF면 쌍 하나의 색 조합(쌍끼리 독립이라 6가지). */
+function recModel(P){
+  const dist={};for(const n of P.pairs)dist[n]=(dist[n]||0)+1/P.pairs.length;
+  const U=[],nbar=P.pairs.reduce((s,x)=>s+x,0)/P.pairs.length;
+  if(P.rot){for(const n in dist)for(const k of comps(+n,6))U.push({n:+n,k,pw:dist[n]})}
+  else for(let t=0;t<6;t++)U.push({t});
+  const coef=w=>{const q=pairProbs(w);return Float64Array.from(U,u=>{
+    if(!P.rot)return nbar*q[u.t];
+    let pr=FACT[u.n];for(let t=0;t<6;t++)pr*=Math.pow(q[t],u.k[t])/FACT[u.k[t]];return pr*u.pw})};
+  return{U,coef};
+}
+function sampleUnit(P,u,seed){   // 단위 하나의 가치 표본 1개 (화폐 단위). 드랍 난수는 쓰지 않고 업그레이드·시듦만 무작위
+  R=seedRng(seed);
+  try{
+    if(P.rot){
+      const pairs=[];for(let t=0;t<6;t++)for(let c=0;c<u.k[t];c++)pairs.push([{type:PT[t][0],c:[23,0,0,0]},{type:PT[t][1],c:[23,0,0,0]}]);
+      return playRot(P,pairs,"opt",null)/1000;
+    }
+    const x=cropEV(P,genCrop(P,PT[u.t][0])),y=cropEV(P,genCrop(P,PT[u.t][1]));
+    return(Math.max(x,y)+P.nw*Math.min(x,y))/1000;
+  }finally{R=R_DEF}
+}
+function* recGen(P,out){
+  const SETS=recSets(P.rot),K=SETS.length,M=recModel(P),U=M.U,nU=U.length,cap=P.rot?REC_CAP_ROT:REC_CAP_FREE;
+  const A=SETS.map(c=>M.coef(c.map(x=>Math.max(0,1-x/100))));
+  const SING=[[45,0,0],[0,45,0],[0,0,45]].map(s=>SETS.findIndex(c=>c.join()===s.join()));   // 기준(-45% 단일 색상) 후보 번호
+  const cnt=new Float64Array(nU),sum=new Float64Array(nU),sum2=new Float64Array(nU),MS=((P.recSeed|0)*7919+12345)|0;
+  const cst=Float64Array.from(U,u=>P.rot&&u.n>=5?6.3:1);   // 표본 1개의 계산 비용(쌍 5개는 약 6배 무거움) — 같은 정밀도를 더 싸게 얻도록 배분에 반영
+  const mean=new Float64Array(nU),vr=new Float64Array(nU),sig=new Float64Array(nU),E=new Float64Array(K);
+  let done=0,spent=0,look=0,prog=0,proj=nU*REC_N0*6,L=0;
+  function* draw(add){
+    for(let k=0;k<nU;k++)for(let j=0;j<add[k];j++){
+      const v=sampleUnit(P,U[k],hs(MS,k,cnt[k]));cnt[k]++;sum[k]+=v;sum2[k]+=v*v;done++;spent+=cst[k];
+      if((done&7)===0){prog=Math.max(prog,Math.min(.99,spent/proj));yield prog}
+    }
+  }
+  function analyse(){
+    let ss=0,m2=0;
+    for(let k=0;k<nU;k++){mean[k]=cnt[k]?sum[k]/cnt[k]:0;if(cnt[k]>1){const s2=Math.max(0,(sum2[k]-cnt[k]*mean[k]*mean[k])/(cnt[k]-1));ss+=(cnt[k]-1)*s2;m2+=(cnt[k]-1)*mean[k]*mean[k]}}
+    const cv2=m2>0?ss/m2:0;   // 배치 전체에서 풀링한 변동계수² — 표본이 적은 배치의 분산 추정을 안정화
+    for(let k=0;k<nU;k++){
+      const s2=cnt[k]>1?Math.max(0,(sum2[k]-cnt[k]*mean[k]*mean[k])/(cnt[k]-1)):0,v=(REC_NU0*cv2*mean[k]*mean[k]+(cnt[k]-1)*s2)/(REC_NU0+cnt[k]-1);
+      sig[k]=Math.sqrt(v);vr[k]=v/cnt[k];   // 표본 표준편차, 평균의 분산
+    }
+    L=0;for(let c=0;c<K;c++){let s=0;const a=A[c];for(let k=0;k<nU;k++)s+=a[k]*mean[k];E[c]=s;if(s>E[L])L=c}
+  }
+  const dse=(c,r)=>{let s=0;const a=A[c],b=A[r];for(let k=0;k<nU;k++){const d=a[k]-b[k];s+=d*d*vr[k]}return Math.sqrt(s)};
+  // 한 번의 조회: 아직 확인되지 않은 조건들을 모아 (표본 배분 가중치, 필요한 표본 증가 배율)을 반환
+  function check(){
+    look++;
+    const z=zq(REC_ALPHA*6/(Math.PI*Math.PI*look*look)/K),EL=E[L],eps=REC_EPS*EL,cons=[];
+    let tied=0;
+    if(EL<=1e-12)return{ok:true,maxf:1,w:null,z,tied:K};
+    for(let c=0;c<K;c++){   // (1) 후보 c가 1위보다 eps 넘게 좋을 수 없음을 확인
+      if(c===L)continue;
+      const d=E[c]-EL,se=dse(c,L);if(d+z*se>=0)tied++;
+      const req=(eps-d)/z;if(se>=req)cons.push({c,r:L,req,f:(se/req)**2});   // 필요한 표준오차 req = (eps − 차이)/z
+    }
+    // (2) 표에 보여 줄 상위 4개와 기준(단일 색상 중 최고)의 차이를 소수 둘째 자리 % 수준으로 확정
+    const base=SING.reduce((b,c)=>E[c]>E[b]?c:b,SING[0]),top=[...Array(K).keys()].sort((a,b)=>E[b]-E[a]).slice(0,4);
+    for(const c of top.concat(SING)){
+      if(c===base)continue;
+      const se=dse(c,base),req=REC_DISP*EL;if(se>req)cons.push({c,r:base,req,f:(se/req)**2});   // 표시되는 '기준 대비'의 표준오차 ≤ REC_DISP·E1
+    }
+    if(!cons.length)return{ok:true,maxf:1,w:null,z,tied};
+    const w2=new Float64Array(nU);let maxf=1;
+    for(const t of cons){const a=A[t.c],b=A[t.r],g=1/(t.req*t.req);if(t.f>maxf)maxf=t.f;for(let k=0;k<nU;k++){const d=a[k]-b[k];w2[k]+=g*d*d}}
+    const w=new Float64Array(nU);for(let k=0;k<nU;k++)w[k]=sig[k]*Math.sqrt(w2[k]);
+    return{ok:false,maxf,w,z,tied};
+  }
+  // 1) 모든 배치를 REC_N0개씩 먼저 뽑음
+  yield* draw(new Float64Array(nU).fill(REC_N0));
+  let r;
+  for(;;){
+    analyse();r=check();
+    proj=Math.min(cap,Math.max(spent*Math.max(1,r.maxf)*1.1,spent+1));   // 진행률 표시용: 지금 상태에서 끝나기까지 필요한 표본 수 추정
+    if(r.ok||spent>=cap)break;
+    // 2) 증가 배율에 맞춰(1.25~2배) 이번 조회에서 늘릴 표본 수를 정하고, 가중치에 비례해 배분
+    const g=Math.min(2,Math.max(1.25,r.maxf*1.15)),Bc=Math.min(cap-spent,spent*(g-1));
+    let ws=0;for(let k=0;k<nU;k++){r.w[k]/=Math.sqrt(cst[k]);ws+=cst[k]*r.w[k]}   // 비용 가중 네이만 배분: n_k ∝ σ_k·√(Σ g·a² / c_k)
+    const lam=ws>0?(spent+Bc)/ws:0,add=new Float64Array(nU);let carry=0,tot=0;
+    for(let k=0;k<nU;k++){add[k]=Math.max(0,lam*r.w[k]-cnt[k]);tot+=cst[k]*add[k]}
+    const sc=tot>0?Bc/tot:0;
+    for(let k=0;k<nU;k++){const x=add[k]*sc+carry,a=Math.floor(x);carry=x-a;add[k]=a}
+    if(!add.some(x=>x>0))add[0]=1;
+    yield* draw(add);
+  }
+  const base=SING.reduce((b,c)=>E[c]>E[b]?c:b,SING[0]);
+  const order=[...Array(K).keys()].sort((a,b)=>E[b]-E[a]);
+  out.base=E[base];out.rows=order.slice(0,4).map(c=>({c:SETS[c],v:E[c]}));out.fac=P.fac;
+  out.info={maps:done,cost:spent,K,looks:look,certified:r.ok,tied:r.tied,eps:REC_EPS,conf:1-REC_ALPHA,leader:SETS[L]};
+  out.all=order.map(c=>({c:SETS[c],v:E[c]}));
+}
+let RECJOB=0,REC=null;
+const recOn=()=>$("recOn").checked;
+function recMsg(t){$("redTbl").innerHTML='<tr><td class="note">'+t+'</td></tr>';$("recInfo").textContent="";applyLang()}
+function recCancel(){RECJOB++;REC=null}
+function recStart(){
+  recCancel();
+  const job=RECJOB,out={},g=recGen(params(),out);let last=-1;
+  recMsg("계산 중... 0%");
+  const step=()=>{
+    if(job!==RECJOB)return;
+    const t0=performance.now();let r;
+    try{do{r=g.next()}while(!r.done&&performance.now()-t0<30)}
+    catch(e){R=R_DEF;recMsg("-");return}
+    if(!r.done){
+      const pc=Math.floor(r.value*100);
+      if(pc!==last){last=pc;recMsg("계산 중... "+pc+"%")}
+      setTimeout(step,0);return;
+    }
+    REC=out;renderRec();
+  };
+  setTimeout(step,0);
+}
+function renderRec(){
+  if(!REC)return;
+  const cur=params(),kk=cur.fac/REC.fac;
+  const rows=REC.rows.map(r=>{
+    const d=REC.base>0?(Math.round((r.v/REC.base-1)*1000)/10||0):0;   // 개선 폭이 작아서 소수 첫째 자리까지 표시
+    return '<tr><td><span class="tri"><span class="cy">'+r.c[0]+'</span><i>/</i><span class="cb">'+r.c[1]+'</span><i>/</i><span class="cp">'+r.c[2]+'</span></span></td><td>'+fmtP(r.v*kk)+'</td><td>'+(d>0?"+":"")+fmt(d,1)+'%</td></tr>';
+  });
+  $("redTbl").innerHTML='<tr><th>노랑 / 파랑 / 보라 감소 (%)</th><th>맵당 기대 가치 ('+cur.unit+')</th><th>기준 대비</th></tr>'+rows.join("");
+  const I=REC.info,parts=["<span>비교한 후보 "+I.K+"개</span>","<span>표본 "+fmt(I.maps)+"회</span>"];
+  parts.push(I.certified?"<span>신뢰도 "+fmt(I.conf*100)+"%, 허용 오차 "+fmt(I.eps*100,1)+"%</span>":"<span>계산 상한에 닿아 1위를 확정하지 못함</span>");
+  if(I.tied>0)parts.push("<span>1위와 구분 불가 후보 "+I.tied+"개</span>");
+  $("recInfo").innerHTML=parts.join(" · ");
+  applyLang();
+}
+function renderCmp(){
+  const L=window.LAST;if(!L)return;
+  const cur=params(),kk=cur.fac/L.fac;
+  $("cmpPanel").style.display=L.rot?"":"none";
+  if(!L.rot)return;
+  const n=L.n,names=["최적","탐욕 (현재 가치가 높은 쪽)","무작위"],RB=2,m0=L.cmp[RB].s/n;   /* 기준 = 무작위(RB) */
+  $("cmp").innerHTML="<tr><th>전략</th><th>맵당 기대 가치 ("+cur.unit+")</th><th>무작위 대비</th></tr>"+L.cmp.map((c,k)=>{
+    const m=c.s/n,d=m0>0?(m/m0-1)*100:0;
+    return "<tr><td>"+names[k]+"</td><td>"+fmtP(m*kk)+"</td><td>"+(k===RB?"기준":(d>0?"+":"")+fmt(d)+"%")+"</td></tr>";
+  }).join("");
+}
+function genPairs(P){
+  const pc=P.pairs;let n=pc[Math.floor(R()*pc.length)];
+  const pairs=[];
+  for(let i=0;i<n;i++)pairs.push([genCrop(P,P.guar>=0?P.guar:pickType(P.w)),genCrop(P,pickType(P.w))]);
+  return pairs;
+}
+function runMap(P){
+  const out={lf:[0,0,0],big:[0,0]};
+  const pairs=genPairs(P);
+  if(!P.rot){
+    for(const [a,b] of pairs){const x=cropEV(P,a)>=cropEV(P,b),w=x?a:b,l=x?b:a;simCrop(P,w,out);if(R()<P.nw)simCrop(P,l,out)}
+    return out;
+  }
+  const S=["opt","greedy","random"];
+  const vs=S.map((st,k)=>playRot(P,pairs,st,k===0?out:null)/1000);
+  vs.forEach((v,k)=>{const c=P.cmp[k],d=v-vs[0];c.s+=v;c.d+=d;c.d2+=d*d});
+  return out;
+}
+function run0(){
+  const P=window.PP=params(),n=P.n;P.cmp=[0,1,2].map(()=>({s:0,d:0,d2:0}));
+  const sum=[0,0,0],tots=new Float64Array(n),vals=new Float64Array(n);let hasT4=0;
+  for(let i=0;i<n;i++){
+    const o=runMap(P);let tot=0,v=0;
+    for(let k=0;k<3;k++){sum[k]+=o.lf[k];tot+=o.lf[k];v+=o.lf[k]/1000*P.price[k]}
+    tots[i]=tot;vals[i]=v;if(o.big[1])hasT4++;
+  }
+  const mean=sum.map(x=>x/n),total=mean[0]+mean[1]+mean[2];
+  window.LAST={P,n,mean,total,tots,hasT4,rot:P.rot,cmp:P.cmp,fac:P.fac,
+    sorted:Float64Array.from(tots).sort(),sv:Float64Array.from(vals).sort(),
+    sd:Math.sqrt(tots.reduce((s,x)=>s+(x-total)**2,0)/n),avgVal:vals.reduce((s,x)=>s+x,0)/n};
+  show(true);
+}
+// 시뮬레이션 결과(LAST)를 현재 화폐 단위로 다시 그림. full=false면 숫자만 바꿈(막대·분포 그래프는 그대로)
+function show(full){
+  const L=window.LAST,cur=params(),kk=cur.fac/L.fac,unit=cur.unit,n=L.n;
+  const q=p=>L.sorted[Math.min(n-1,Math.floor(p*n))],qv=p=>L.sv[Math.min(n-1,Math.floor(p*n))]*kk;
+  const avgVal=L.avgVal*kk,price=L.P.price.map(x=>x*kk);
+  $("tot").textContent=fmt(L.total);$("totMed").textContent=fmt(q(.5));
+  $("val").textContent=fmtP(avgVal)+" "+unit;$("vlabel").textContent="기대 화폐 획득량";$("net").textContent=fmtP(avgVal-L.P.cost*kk)+" "+unit;
+  const em=(m,i)=>'<span class="lf">'+fmt(m)+'</span><span class="note cv">('+fmtP(m/1000*price[i])+' '+unit+')</span>';
+  if(full){
+    const mx=Math.max(...L.mean,1);
+    $("bars").innerHTML=L.mean.map((m,i)=>`<div class="bar"><span>${NAMES[i]}</span><i data-w="${m/mx*100}" style="width:${m/mx*100}%;background:${COL[i]}"></i><em>${em(m,i)}</em></div>`).join("");
+    const lo=q(.01),hi=q(.99),bins=28,h=new Array(bins).fill(0),w=(hi-lo)/bins||1;
+    for(const x of L.tots){let k=Math.floor((x-lo)/w);if(k<0)k=0;if(k>=bins)k=bins-1;h[k]++}
+    const hm=Math.max(...h);
+    $("hist").innerHTML=h.map(c=>`<div data-h="${c/hm*100}" style="height:${c/hm*100}%"></div>`).join("");
+    $("a0").textContent="≤ "+fmt(lo);$("a1").textContent="≥ "+fmt(hi);
+  }else{
+    $("bars").querySelectorAll("em").forEach((e,i)=>{e.innerHTML=em(L.mean[i],i)});
+  }
+  const st=[["생기 중앙값",fmt(q(.5))],["화폐 중앙값",fmtP(qv(.5))+" "+unit],["생기 하위 10%",fmt(q(.1))],["생기 상위 10%",fmt(q(.9))],["평균 오차(±1σ)",fmt(L.sd/Math.sqrt(n)/Math.max(L.total,1e-9)*100)+"%"],["T4가 나온 맵 비율",fmt(L.hasT4/n*100)+"%"],["화폐 하위 10%",fmtP(qv(.1))+" "+unit],["화폐 상위 10%",fmtP(qv(.9))+" "+unit]]
+    
+  const sb=$("stats").querySelectorAll(".stat b");
+  if(sb.length===st.length){sb.forEach((b,i)=>{b.textContent=st[i][1]})}   // 박스는 유지, 숫자만 갱신
+  else $("stats").innerHTML=st.map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+  fitBars();
+}
+// 노랑/파랑/보라 막대의 최대 길이를 위쪽 "갑충석 비용 제외" 블록의 오른쪽 끝에 맞춤
+function fitBars(){
+  const bars=$("bars"),net=$("net").parentNode;
+  if(!bars||!net||!bars.firstElementChild)return;
+  bars.style.removeProperty("--bw");
+  /* 화폐 열 너비를 가장 긴 값에 맞춤: 화폐는 우측 정렬을 유지하면서 생기 숫자가 그 열 바로 왼쪽에 붙도록 */
+  let cw=0;bars.querySelectorAll(".cv").forEach(el=>{const r=document.createRange();r.selectNodeContents(el);cw=Math.max(cw,r.getBoundingClientRect().width)});
+  if(cw>0)bars.style.setProperty("--cvw",Math.ceil(cw)+1+"px");else bars.style.removeProperty("--cvw");
+  const br=bars.getBoundingClientRect(),nr=net.getBoundingClientRect();
+  const left=70+10;                                   // 라벨 열 + 간격
+  const maxW=br.width-left-10-190;                    // 오른쪽 수치 열(190px)은 남겨 둠
+  const bw=Math.min(nr.right-br.left-left,maxW);
+  if(bw>=160)bars.style.setProperty("--bw",bw+"px");  // 너무 좁은 화면(세로 배치)에서는 기본 1fr
+}
+window.addEventListener("resize",fitBars);
+// 막대 애니메이션: 항상 0%에서 시작. 무거운 계산이 모두 끝난 뒤 시작하므로 프레임이 막혀 애니메이션이 사라지지 않음
+function resetBars(){
+  $("bars").querySelectorAll("i").forEach(el=>{
+    if(el._anim){el._anim.cancel();el._anim=null}
+    el.style.width="0";
+  });
+  // 막대 옆 수치, 요약 수치, 분포, 윤작 전략 비교도 함께 비움
+  $("bars").querySelectorAll("em").forEach(e=>{e.textContent=""});
+  ["tot","totMed","val","net"].forEach(id=>{$(id).textContent="-"});
+  $("stats").querySelectorAll("b").forEach(b=>{b.textContent="-"});
+  $("hist").querySelectorAll("div").forEach(d=>{if(d._anim){d._anim.cancel();d._anim=null}});
+  $("hist").innerHTML="";
+  $("a0").textContent="";$("a1").textContent="";
+  $("cmp").innerHTML="";
+  recCancel();recMsg(recOn()?"계산 중...":"아틀라스 패시브 시뮬레이션이 꺼져 있음");
+}
+function animateBars(){
+  fitBars();                                          // 수치·언어가 모두 확정된 뒤 길이 계산
+  const bi=[...$("bars").querySelectorAll("i[data-w]")];
+  const hi=[...$("hist").querySelectorAll("div[data-h]")];
+  if(!bi.length&&!hi.length)return;
+  bi.forEach(el=>{el.style.width="0"});
+  hi.forEach(el=>{el.style.height="0"});
+  // 0 상태가 한 번 실제로 그려진 뒤 시작
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    bi.forEach((el,i)=>{
+      const w=el.dataset.w+"%";
+      el.style.width=w;
+      if(el.animate){
+        el._anim=el.animate([{width:"0%"},{width:w}],{duration:1200,delay:i*120,easing:"cubic-bezier(.22,1,.36,1)",fill:"backwards"});
+      }
+    });
+    hi.forEach((el,i)=>{
+      const h=el.dataset.h+"%";
+      el.style.height=h;
+      if(el.animate){
+        el._anim=el.animate([{height:"0%"},{height:h}],{duration:900,delay:300+i*22,easing:"cubic-bezier(.22,1,.36,1)",fill:"backwards"});
+      }
+    });
+  }));
+}
+let running=false;
+function run(){
+  if(running)return;running=true;
+  const btn=$("run");btn.textContent="실행 중...";btn.disabled=true;applyLang();   // 실행하는 동안 버튼 문구 변경
+  resetBars();                       // 기존 결과가 있어도 먼저 0으로 되돌림
+  setTimeout(()=>{                   // 0 상태가 화면에 반영된 뒤 계산 시작
+    try{run0();renderCmp()}finally{running=false;btn.disabled=false;btn.textContent="시뮬레이션 실행";applyLang()}
+    animateBars();
+    if(recOn())recStart();           // 추천 세팅은 메인 결과가 나온 뒤 백그라운드에서 계산 (체크박스로 끌 수 있음)
+  },30);
+}
+function refresh(){if(!window.LAST)return;show(false);renderCmp();renderRec();applyLang()}
+// 시뮬레이션은 "시뮬레이션 실행" 버튼을 눌렀을 때만 돌림. 화폐 단위·환율만 바꾸면 기존 결과의 숫자만 환산.
+["unit","ratio"].forEach(id=>$(id).addEventListener("change",refresh));
+$("run").addEventListener("click",run);
+$("recOn").addEventListener("change",()=>{
+  recCancel();   // 진행 중인 계산과 이전 결과는 버림
+  recMsg(recOn()?"시뮬레이션을 실행하면 계산됨":"아틀라스 패시브 시뮬레이션이 꺼져 있음");
+});
+function syncRot(){const r=$("rot").checked;["t3inc","t4inc"].forEach(id=>{$(id).disabled=r})}
+$("rot").addEventListener("change",syncRot);syncRot();
+function syncUnit(){$("ratio").disabled=$("unit").value!=="디바인"}
+$("unit").addEventListener("change",syncUnit);syncUnit();
+const EN={"모델 가정": "Model assumptions", "최적 선택지 예상 (비시듦 제외)": "Expected optimal choices (excluding no-wilt)", "안내": "Notes", "작물을 선택한 뒤 수확을 누름": "Select a crop, then press Harvest", "에뮬레이션": "Emulation", "현재 예상 수확량": "Expected harvest so far", "기대 최적 수확량": "Expected optimal harvest", "플레이 도우미": "Play assistant", "쌍 입력": "Enter pairs", "시작 / 초기화": "Start / Reset", "윤작 기준. 모든 작물은 T1 씨앗 23개로 시작하는 것으로 가정하며, 시뮬레이션 탭의 설정(시장가, 업그레이드 확률, 비시듦 확률 등)을 동일하게 적용함. 쌍 입력은 적용 시점에 현재 선택지로 반영되고 기존 진행 기록은 초기화됨. 최적 선택지 예상은 비시듦이 발생하지 않는 경우의 기대값 기준이며, 수확 진행 및 비시듦 확인과 무관하게 입력된 쌍 전체에 대해 산출함. 씨앗 구성은 업그레이드 확률에 따른 기대값으로 근사함.": "Crop Rotation only. All crops are assumed to start with 23 T1 seeds, and the settings of the Simulation tab (prices, upgrade chances, no-wilt chance, etc.) are applied unchanged. Pair input takes effect when applied, and the existing progress is reset. The expected optimal choices assume that no crop remains unwilted and are computed for all entered pairs, independent of harvest progress and no-wilt confirmations. Seed composition is approximated by expected values based on the upgrade chances.", "현재 선택지": "Current options", "작물": "Crop", "씨앗 기대 (T1 / T2 / T3 / T4)": "Expected seeds (T1 / T2 / T3 / T4)", "이번 수확 가치": "Value of this harvest", "선택 후 예상 총 가치": "Expected total after choosing", "비시듦": "Not wilted", "수확": "Harvest", "수확한 기대 가치": "Harvested so far", "남은 최적 기대 가치": "Remaining (optimal)", "예상 총 가치": "Expected total", "기록": "History", "반대쪽 비시듦 확인": "Opposite crop did not wilt", "비시듦 수확": "Harvested after no-wilt", "되돌리기": "Undo", "씨앗 직접 입력 (선택)": "Enter seeds manually (optional)", "적용": "Apply", "모든 작물을 수확함": "All crops harvested", "기록 없음": "No harvests yet", "씨앗을 입력하지 않으면 업그레이드 확률로 계산한 기대값을 사용함. 인게임에서 실제 씨앗 개수를 보고 입력하면 조언이 더 정확해짐.": "If seeds are not entered, expected values from the upgrade chances are used. Entering the actual seed counts from the game makes the advice more accurate.", "노랑 생기": "Yellow lifeforce", "파랑 생기": "Blue lifeforce", "보라 생기": "Purple lifeforce", "오차가 생길 수 있는 부분": "Possible sources of error", "같은 작물 배치 20,000개로 가정을 바꿔 잰 영향. 기본 설정, 수확한 맵 기준.": "Effect of changing each assumption, measured on the same 20,000 crop layouts. Default settings, harvested groves only.", "위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.": "These figures come from changing assumptions inside the model and are not verified in the actual game.", "업그레이드 확률: T2→T3가 20% 대신 25%면 +17%, T1→T2 24%·T2→T3 19%면 -7%. 원문은 20%, 다른 연구는 약 25%로 서로 다름.": "Upgrade chances: if T2→T3 is 25% instead of 20%, +17%; if T1→T2 is 24% and T2→T3 is 19%, -7%. The article says 20%, other research about 25%.", "작물 쌍 수 분포: 5쌍 비중이 1/3 대신 1/2이면 +11%. 원문 관찰은 28~34%라 약 ±9%p 흔들릴 수 있음.": "Crop pair distribution: if the share of 5-pair groves is 1/2 instead of 1/3, +11%. The article observed 28–34%, so about ±9 percentage points of uncertainty.", "시들지 않은 작물의 업그레이드: 직전 수확의 업그레이드를 받는다고 가정. 받지 않으면 최대 -5%(계획을 다시 짜지 않은 상한). 인게임 확인 필요.": "Upgrades for a crop that did not wilt: assumed to receive the upgrade from the harvest just before. If not, up to -5% (an upper bound, without replanning). Needs an in-game check.", "T3→T4 확률: 2%면 -2%, 5.5%면 +2%.": "T3→T4 chance: -2% at 2%, +2% at 5.5%.", "선택 알고리즘: 씨앗 구성을 기댓값으로 근사. 비시듦 없는 모델에서 약 1% 낮음을 확인했고, 비시듦을 켠 모델은 재지 못함.": "Choice algorithm: seed composition is approximated by expectation. About 1% below the true optimum was measured without no-wilt; not measured with no-wilt on.", "수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.": "Not quantified: exact behavior of duplicated monsters and Doubling Season (simplified), the effect of magic/rare monsters, Sacred Blossom, Einhar memories, and the uniform drop-amount assumption.", "기괴한 혈통의 갑충석 효과는 몬스터 희귀도에 대한 정보 부족으로 시뮬레이션 미적용": "The effect of Scarab of Monstrous Lineage is not simulated because there is not enough information about monster rarity.", "주어진 정보만 시뮬레이션 되며, 따라서 누락된 정보는 적용되지 않음": "Only the given information is simulated, so missing information is not applied.", "예를 들어 총주교와 세계포식자 제단과 같은 모드는 랜덤성으로 인해 데이터에서 누락": "For example, mods such as the Searing Exarch and Eater of Worlds altars are missing from the data because of their randomness.", "패스 오브 엑자일 (Path of Exile)": "Path of Exile", "수확(Harvest) 시뮬레이터": "Harvest Simulator", "패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터": "Path of Exile Harvest Simulator", "Forgotten Arbiter의 분석에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 글의 추정치이며 이후 패치에서 달라졌을 수 있음.": "A probability model estimated from Forgotten Arbiter's analysis. Expected lifeforce per map is computed by Monte Carlo simulation. All figures are the article's estimates and may have changed in later patches.", "시뮬레이션 실행": "Run simulation", "시뮬레이션": "Simulation", "시뮬레이션 맵 수": "Maps to simulate", "맵 (T16 기준)": "Map (T16)", "맵 IIQ (%)": "Map IIQ (%)", "효과의 절반만 반영": "Only half of the effect counts", "무리 규모 (%)": "Pack size (%)", "작물 쌍 수": "Crop pairs", "4, 5: 3쌍은 수확 안 함": "4, 5: 3-pair groves are skipped", "화폐": "Currency", "생기 가격 (카오스)": "Lifeforce price (Chaos)", "화폐 단위": "Currency", "카오스": "Chaos", "디바인": "Divine", "노랑": "Yellow", "파랑": "Blue", "보라": "Purple", "윤작 (Crop Rotation)": "Crop Rotation", "윤작(Crop Rotation)": "Crop Rotation", "T1→T2 확률 (%)": "T1→T2 chance (%)", "T2→T3 확률 (%)": "T2→T3 chance (%)", "T3→T4 확률 (%)": "T3→T4 chance (%)", "글의 측정 20%, 다른 연구는 약 25%": "Article measured 20%, other research ~25%", "글의 추정은 약 2~5.5%": "Article estimate ~2–5.5%", "아틀라스 패시브": "Atlas passives", "생기의 수량 증가 (%)": "Increased quantity of lifeforce (%)", "T3 씨앗 확률 증가 (%)": "Increased chance of Tier 3 seeds (%)", "숲의 중심: T4 씨앗 확률 증가 (%)": "Heart of the Grove: increased chance of Tier 4 seeds (%)", "숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)": "Heart of the Grove: chance the unchosen crop does not wilt (%)", "노랑 작물 확률 감소 (%)": "Yellow crop chance reduction (%)", "파랑 작물 확률 감소 (%)": "Blue crop chance reduction (%)", "보라 작물 확률 감소 (%)": "Purple crop chance reduction (%)", "풍성한 수확: 추가 몬스터 10%": "Bountiful Harvest: 10% extra monster", "복제 몬스터 확률 (%)": "Duplicated monster chance (%)", "복제 철: 생기 복제 10%": "Doubling Season: 10% duplicated lifeforce", "갑충석 가격 (카오스)": "Scarab price (Chaos)", "복제의 수확 갑충석": "Harvest Scarab of Doubling", "기괴한 혈통의 갑충석": "Scarab of Monstrous Lineage", "맵 1회당 예상 획득량": "Expected yield per map", "생기 (평균)": "Lifeforce (average)", "생기 (중앙값)": "Lifeforce (median)", "기대 화폐 획득량": "Expected currency", "갑충석 비용 제외": "Excluding scarab cost", "윤작 선택 전략 비교": "Crop Rotation strategy comparison", "분포": "Distribution", "총 생기": "Total lifeforce", "작물 감소 아틀라스 추천 세팅": "Recommended crop reduction Atlas setup", "노랑 / 파랑 / 보라 감소 (%)": "Yellow / Blue / Purple reduction (%)", "맵당 기대 가치 (C)": "Expected value per map (C)", "맵당 기대 가치 (D)": "Expected value per map (D)", "기준 대비": "vs baseline", "균등 대비": "vs even", "0 / 45 / 0 대비": "vs 0 / 45 / 0", "0 / 0 / 0 (균등)": "0 / 0 / 0 (even)", "기준": "Baseline", "시뮬레이션을 실행할 시 다시 계산됨. -45% 단일 색상 패시브만 찍은 세팅 중 가장 우수한 값을 기준으로 모든 시뮬레이션 결과를 비교.": "Recalculated each time the simulation runs. All simulation results are compared against the best result among setups that take only a single -45% color passive.", "작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.": "The number of crop pairs is drawn uniformly from the selected values; in each pair the crop with the higher expected value is harvested. Each crop has 23 seeds: T4 about 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), the rest T1. Drop chance: T1 2%, T2 10%, T3·T4 100%; base drop amount T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (assumed uniform). The article does not give the exact interaction of duplicated monsters, so it is simplified as each monster independently adding one more. Einhar memories and Sacred Blossom are not included. Crop Rotation mode assumes each harvest can raise seeds in crops of other colors by at most one tier. The near-optimal strategy computes, at each choice, the harvest order of the remaining pairs and the colors from the actual seed state, approximates later upgrades by expectation, and replans after every harvest. If the unchosen crop does not wilt (Heart of the Grove), it can also be harvested and keeps being upgraded by later harvests of other colors; whether a surviving crop also receives the upgrade from the harvest just before it is unconfirmed and assumed to be yes.", "최적": "Optimal", "탐욕 (현재 가치가 높은 쪽)": "Greedy (higher current value)", "무작위": "Random", "전략": "Strategy", "무작위 대비": "vs Random", "생기 중앙값": "Lifeforce median", "생기 상위 10%": "Lifeforce top 10%", "생기 하위 10%": "Lifeforce bottom 10%", "평균 오차(±1σ)": "Mean error (±1σ)", "화폐 중앙값": "Currency median", "화폐 하위 10%": "Currency bottom 10%", "화폐 상위 10%": "Currency top 10%", "T4가 나온 맵 비율": "Maps with a T4 seed"};
+let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
+const RX=[[/^쌍 (\d+)$/,"Pair $1"],[/^단계 (\d+)$/,"Step $1"],[/^쌍 (\d+) 노랑$/,"Pair $1 Yellow"],[/^쌍 (\d+) 파랑$/,"Pair $1 Blue"],[/^쌍 (\d+) 보라$/,"Pair $1 Purple"]];
+const tr=k=>{if(EN[k])return EN[k];for(const [r,v] of RX)if(r.test(k))return k.replace(r,v);return null};
+function applyLang(){
+  if(!document.createTreeWalker)return;
+  const en=LANG==="en",w=document.createTreeWalker(document.body,4);let n;
+  while(n=w.nextNode()){
+    const pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||(n.parentNode.closest&&n.parentNode.closest("#site-bar,#site-foot")))continue;
+    if(n.__ko===undefined)n.__ko=n.nodeValue;
+    const k=n.__ko.trim(),t=en?tr(k):null;
+    n.nodeValue=t?n.__ko.replace(k,()=>t):n.__ko;
+  }
+  try{plSize()}catch(e){}
+  document.documentElement.lang=LANG;
+  document.documentElement.lang=LANG;
+}
+window.addEventListener("sitebar:lang",e=>{LANG=e.detail;applyLang()});
+applyLang();
+/* ---------- 리그별 시세: harvest_rates.py 가 poe.ninja 에서 받아 out/harvest-rates.json 에 저장 ----------
+   형식 v2: {order:[최신 시즌 리그, 직전 시즌 리그], leagues:{리그 이름:{ratio, lifeforce:{yellow,blue,purple}, scarab:{doubling,lineage}, updatedAt}}}
+   이전 형식 v1(단일 리그: league + ratio/lifeforce/scarab)도 그대로 읽음. 드롭다운에는 파일에 있는 리그(시즌 최근 2개 + Standard)만 표시 */
+Object.assign(EN,{"시뮬레이션을 실행하면 계산됨":"Calculated when the simulation runs","계산 중...":"Calculating...","리그":"League","시세 파일 불러오기":"Load rates file","실행 중...":"Running...","시세 파일 없음 (입력창의 기본값 사용)":"No rates file (using the default inputs)","시세 재설정":"Reset rates","아틀라스 패시브 시뮬레이션":"Atlas passive simulation","아틀라스 패시브 시뮬레이션이 꺼져 있음":"Atlas passive simulation is off"});
+RX.push([/^시세 기준: (.+)$/,"Rates as of: $1"],[/^계산 중\.\.\. (\d+)%$/,"Calculating... $1%"]);
+RX.push([/^비교한 후보 (\d+)개$/,"Candidates compared: $1"],[/^표본 ([\d,]+)회$/,"$1 samples"],[/^신뢰도 ([\d,.]+)%, 허용 오차 ([\d,.]+)%$/,"Confidence $1%, tolerance $2%"],[/^1위와 구분 불가 후보 (\d+)개$/,"$1 candidates indistinguishable from #1"]);
+Object.assign(EN,{"계산 상한에 닿아 1위를 확정하지 못함":"Hit the compute cap; #1 not confirmed"});
+const STD="Standard",RK="harvest:rates",LK="harvest:league";
+const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let RATES={order:[],leagues:{}};
+function normRates(d){
+  if(!d||typeof d!=="object")return null;
+  if(d.leagues&&typeof d.leagues==="object")return{order:Array.isArray(d.order)?d.order.filter(k=>typeof k==="string"):[],leagues:d.leagues};
+  if(typeof d.league==="string"&&d.league)return{order:d.league===STD?[]:[d.league],leagues:{[d.league]:{ratio:d.ratio,lifeforce:d.lifeforce,scarab:d.scarab,updatedAt:d.updatedAt}}};
+  return null;
+}
+const tsOf=s=>Date.parse(s)||0;
+const fmT=s=>{const t=tsOf(s);if(!t)return s||"";const d=new Date(t),p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};  /* UTC 저장 시각을 사용자 로컬 시간으로 */
+function mergeRates(a,b){   /* 리그마다 더 최근에 수집한 쪽을 사용 */
+  const o={order:b.order.length?b.order:a.order,leagues:Object.assign({},a.leagues)};
+  for(const k in b.leagues){const x=o.leagues[k],y=b.leagues[k];if(!x||tsOf(y.updatedAt)>=tsOf(x.updatedAt))o.leagues[k]=y}
+  return o;
+}
+const hasRates=k=>!!(RATES.leagues[k]&&typeof RATES.leagues[k]==="object");
+const seasonLeagues=()=>{const L=RATES.leagues,o=RATES.order.filter(k=>k!==STD&&hasRates(k));
+  const rest=Object.keys(L).filter(k=>k!==STD&&hasRates(k)&&!o.includes(k)).sort((a,b)=>tsOf(L[b].updatedAt)-tsOf(L[a].updatedAt));
+  return[...o,...rest].slice(0,2)};
+const leagueList=()=>[...seasonLeagues(),...(hasRates(STD)?[STD]:[])];
+function applyRates(name){
+  const r=RATES.leagues[name]||{},lf=r.lifeforce||{},sc=r.scarab||{};
+  const set=(id,v)=>{if(typeof v==="number"&&isFinite(v)&&v>0){const e=$(id);e.value=rnd(v);e.dataset.raw=v}};   /* 화면에는 반올림해 표시하고 계산에는 원래 값(raw)을 사용. 파일에 없는 항목은 입력창의 현재 값을 유지 */
+  set("ratio",r.ratio);set("py",lf.yellow);set("pb",lf.blue);set("pp",lf.purple);set("scdp",sc.doubling);set("sclp",sc.lineage);
+  refresh();   /* 환율이 바뀌면 이미 나온 결과의 화폐 환산만 다시 그림 (시세 변경은 다시 실행해야 반영) */
+}
+function renderLeague(name){
+  const L=leagueList(),sel=$("league");
+  sel.replaceChildren(...L.map(l=>new Option(l,l)));
+  sel.disabled=!L.length;if(name)sel.value=name;
+  const u=name&&RATES.leagues[name]&&RATES.leagues[name].updatedAt;
+  $("lgInfo").textContent=u?"시세 기준: "+fmT(u):"시세 파일 없음 (입력창의 기본값 사용)";
+  applyLang();
+}
+/* 저장된 선택(""=항상 최신)이 목록에 없으면 목록의 첫 리그(최신)로 */
+function fixLeague(){const L=leagueList(),s=lsGet(LK,""),l=L.includes(s)?s:(L[0]||"");renderLeague(l);if(l)applyRates(l)}
+["ratio","py","pb","pp","scdp","sclp"].forEach(id=>$(id).addEventListener("input",()=>{delete $(id).dataset.raw}));   /* 직접 수정하면 입력한 값을 그대로 사용 */
+$("league").addEventListener("change",e=>{const l=e.target.value;lsSet(LK,l===leagueList()[0]?"":l);renderLeague(l);applyRates(l)});
+$("rfile").addEventListener("change",async e=>{
+  try{const d=normRates(JSON.parse(await e.target.files[0].text()));if(!d)throw 0;RATES=mergeRates(RATES,d);lsSet(RK,RATES);fixLeague()}
+  catch(x){alert(LANG==="en"?"Not a valid harvest-rates.json file.":"올바른 harvest-rates.json 형식이 아닙니다.")}
+  e.target.value="";
+});
+async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
+async function loadRates(){
+  let fresh=null;
+  for(const u of ["out/harvest-rates.json","harvest-rates.json"]){fresh=normRates(await jget(u));if(fresh)break}
+  const cached=normRates(lsGet(RK,null))||{order:[],leagues:{}};
+  if(fresh)for(const k of Object.keys(cached.leagues))if(!fresh.leagues[k])delete cached.leagues[k];   /* 서버의 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
+  RATES=fresh?mergeRates(cached,fresh):cached;
+  if(fresh)lsSet(RK,RATES);
+  fixLeague();
+}
+loadRates();
+/* 시세 재설정: 직접 불러온 시세 파일·저장된 리그 선택·직접 고친 값을 모두 버리고 처음 열었을 때 상태로 되돌림 (서버에 시세 파일이 있으면 그 값을 다시 적용) */
+$("rreset").addEventListener("click",async()=>{
+  try{localStorage.removeItem(RK);localStorage.removeItem(LK)}catch(e){}
+  ["ratio","py","pb","pp","scdp","sclp"].forEach(id=>{const e=$(id);delete e.dataset.raw;e.value=e.defaultValue});
+  RATES={order:[],leagues:{}};
+  await loadRates();
+  refresh();
+});
+const PL={sel:null,n:4,pairs:[[0,2],[1,2],[0,1],[2,2],[1,1]],events:[],surv:{},ovr:{}};
+const DR={n:4,pairs:PL.pairs.map(p=>p.slice())};
+const CLS=["cy","cb","cp"],CN=["노랑","파랑","보라"];
+const cs=t=>`<span class="${CLS[t]}">${CN[t]} 생기</span>`;
+const upE=(c,u)=>{const n4=c[3]+u[2]*c[2],n3=c[2]*(1-u[2])+u[1]*c[1],n2=c[1]*(1-u[1])+u[0]*c[0],n1=c[0]*(1-u[0]);c[0]=n1;c[1]=n2;c[2]=n3;c[3]=n4};
+function buildState(P){
+  const N=PL.n,crops=PL.pairs.slice(0,N).map(pr=>pr.map(t=>({type:t,c:[23,0,0,0]}))),st=new Array(N).fill(0);
+  let spent=0;
+  const setO=t=>{for(const k in PL.ovr){const o=PL.ovr[k];if(o.at===t){const [i,j]=k.split("-").map(Number);if(crops[i])crops[i][j].c=o.c.slice()}}};
+  PL.events.forEach(([i,j],t)=>{
+    setO(t);
+    const pick=crops[i][j],first=st[i]===0;
+    spent+=cropEV(P,pick);st[i]=1;
+    for(let k=0;k<N;k++){
+      if(k===i||st[k]===1)continue;
+      for(let jj=0;jj<2;jj++){if(st[k]>=2&&jj!==st[k]-2)continue;const c=crops[k][jj];if(c.type!==pick.type)upE(c.c,P.u)}
+    }
+    if(first&&PL.surv[i]){const tw=crops[i][1-j];st[i]=3-j;if(tw.type!==pick.type)upE(tw.c,P.u)}
+  });
+  setO(PL.events.length);
+  return {crops,st,spent};
+}
+function plInputs(){
+  $("plPairs").innerHTML=DR.pairs.slice(0,DR.n).map((pr,i)=>`<div class="pl-row"><span class="lb">쌍 ${i+1}</span>`+pr.map((t,j)=>`<select class="plc ${CLS[t]}" data-i="${i}" data-j="${j}">${CN.map((nm,v)=>`<option class="${CLS[v]}" value="${v}"${v===t?" selected":""}>${nm}</option>`).join("")}</select>`).join("")+`</div>`).join("");
+}
+function seqPlans(P,S){
+  const N=S.crops.length,u=P.u,items=[];
+  for(let i=0;i<N;i++){if(S.st[i]===0)items.push([[i,0],[i,1]]);else if(S.st[i]>=2)items.push([[i,S.st[i]-2]])}
+  const m=items.length,V={},best={};
+  items.forEach(it=>it.forEach(([i,j])=>{const cr=S.crops[i][j],e=cr.c.slice(),arr=[];for(let k=0;k<m;k++){arr.push(cropEV(P,{type:cr.type,c:e}));upE(e,u)}V[i+"-"+j]=arr}));
+  const rec=(used,h,seq,val)=>{
+    if(seq.length===m){const k=seq.join("");if(best[k]===undefined||val>best[k])best[k]=val;return}
+    const H=seq.length;
+    for(let a=0;a<m;a++){if(used>>a&1)continue;for(const [i,j] of items[a]){const t=S.crops[i][j].type,h2=h.slice();h2[t]++;rec(used|1<<a,h2,seq.concat(t),val+V[i+"-"+j][H-h[t]])}}
+  };
+  if(m)rec(0,[0,0,0],[],0);
+  return best;
+}
+function plReset(){PL.events=[];PL.surv={};PL.ovr={};PL.sel=null;plInputs();plRender()}
+function plRender(){
+  const P=params();P.rot=true;
+  const S=buildState(P),N=PL.n;
+  const cand=[];for(let i=0;i<N;i++){if(S.st[i]===0)cand.push([i,0],[i,1]);else if(S.st[i]>=2)cand.push([i,S.st[i]-2])}
+  let best=0;const loss={};
+  if(cand.length){planOpt(P,S.crops,S.st,cand);best=Math.max(...LASTV.map(x=>x[2]));LASTV.forEach(([i,j,v])=>{loss[i+"-"+j]=v>=best-1e-9?"★":(Math.round((v/best-1)*100)||0)+"%"})}
+  if(PL.sel&&loss[PL.sel[0]+"-"+PL.sel[1]]===undefined)PL.sel=null;
+  const hv={},ord={};PL.events.forEach(([i,j],t)=>{(hv[i]=hv[i]||[]).push(j);ord[i+"-"+j]=t+1});
+  $("plOpts").innerHTML=PL.pairs.slice(0,N).map((pr,i)=>`<div class="pl-row"><span class="lb">쌍 ${i+1}</span>`+pr.map((t,j)=>{
+    const k=i+"-"+j,av=loss[k]!==undefined,on=PL.sel&&PL.sel[0]===i&&PL.sel[1]===j;
+    const tag=av?` <small>${loss[k]}</small>`:(ord[k]?` <b>${ord[k]}</b>`:"");
+    return `<button type="button" class="opt c${t}${on?" on":""}" data-act="p" data-i="${i}" data-j="${j}"${av?"":" disabled"}>${CN[t]}${tag}</button>`}).join("")+(hv[i]&&hv[i].length===1?`<button type="button" class="sm${PL.surv[i]?" on":""}" data-act="s" data-i="${i}">비시듦</button>`:"")+`</div>`).join("");
+  $("plGo").disabled=!PL.sel;$("plUndo").disabled=!PL.events.length;
+  $("plDone").innerHTML=cand.length?"":"<p>모든 작물을 수확함</p>";
+  const f=fmtP;
+  $("plSum").innerHTML=`<span>현재 예상 수확량</span> <b>${f(S.spent/1000)} ${P.unit}</b> · <span>기대 최적 수확량</span> <b>${f((S.spent+best)/1000)} ${P.unit}</b>`;
+  const S0={crops:PL.pairs.slice(0,N).map(pr=>pr.map(t=>({type:t,c:[23,0,0,0]}))),st:new Array(N).fill(0)};
+  const sq=seqPlans(P,S0),ks=Object.keys(sq).sort((a,b)=>sq[b]-sq[a]).slice(0,4);
+  $("plSeq").innerHTML=ks.length?`<div class="t">최적 선택지 예상 (비시듦 제외)</div>`+ks.map((k,x)=>`<div>${k.split("").map(c=>`<span class="${CLS[+c]}">${CN[+c]}</span>`).join(", ")}: <span>${x?(Math.round((sq[k]/sq[ks[0]]-1)*100)||0)+"%":"기준"}</span></div>`).join(""):"";
+  applyLang();
+}
+function plSize(){
+  const os=Array.from(document.querySelectorAll("#plOpts .opt,#plPairs .opt"));
+  os.forEach(b=>{b.style.width=""});
+  const w=Math.max(0,...os.map(b=>b.offsetWidth));
+  if(w>0)os.forEach(b=>{b.style.width=w+"px"});
+}
+$("tabPlay").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const a=b.dataset.act,i=+b.dataset.i,j=+b.dataset.j;
+  if(a==="r"){PL.n=DR.n;PL.pairs=DR.pairs.map(x=>x.slice());PL.events=[];PL.surv={};PL.ovr={};PL.sel=null;plRender();return}
+  if(a==="p"){PL.sel=[i,j];plRender();return}
+  if(a==="h"){if(!PL.sel)return;PL.events.push(PL.sel);PL.sel=null}
+  else if(a==="u"){const e0=PL.events.pop();if(e0&&!PL.events.some(x=>x[0]===e0[0]))delete PL.surv[e0[0]];for(const k in PL.ovr)if(PL.ovr[k].at>PL.events.length)delete PL.ovr[k]}
+  else if(a==="s"){if(PL.surv[i]){if(PL.events.filter(x=>x[0]===i).length>1)return;delete PL.surv[i]}else PL.surv[i]=true}
+  plRender();
+});
+$("plPairs").addEventListener("change",e=>{const t=e.target;if(t.classList.contains("plc")){DR.pairs[+t.dataset.i][+t.dataset.j]=+t.value;t.className="plc "+CLS[+t.value]}});
+$("plN").addEventListener("change",()=>{DR.n=+$("plN").value;plInputs()});
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));
+  $("tabSim").hidden=b.dataset.t!=="sim";$("tabPlay").hidden=b.dataset.t!=="play";
+  if(b.dataset.t==="play"){plInputs();plRender()}
+}));
+
+</script>
+</body>
+</html>
