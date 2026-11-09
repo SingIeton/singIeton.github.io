@@ -32,12 +32,13 @@ poe.ninja 규칙 (https://poe.ninja/docs/api):
   - 리그 목록(/leagues)은 '진행 중인' 리그만 알려 준다. 첫 번째 소프트코어 챌린지 리그가 최신 시즌 리그다.
     종료된 직전 리그는 목록에서 사라지므로, 파일에 저장해 둔 order 에서 이어받아 마지막 값을 그대로 보관한다
     (종료된 리그는 값이 더 바뀌지 않으므로 다시 요청하지 않는다). 새 리그가 시작되면 order 가 한 칸씩 밀리고 가장 오래된 리그는 파일에서 빠진다.
-  - Standard 는 항상 함께 갱신한다.
+  - 리그별 갱신 간격: 최신 시즌 1시간, 직전 시즌 6시간, Standard 12시간 (updatedAt 기준, 간격 이내면 요청 생략).
   - 일부 항목을 못 찾으면 그 항목은 같은 리그의 이전 값을 유지한다. 어느 리그에서도 값을 하나도 못 읽으면 종료 코드 1 (GitHub Actions 에서 실패로 보이도록).
   - 수집 시각은 항상 UTC ISO 형식이라 PC(KST)와 Actions(UTC) 어디서 돌려도 같다.
   - 의존성은 requests 하나뿐이고 입력·키 설정이 필요 없어 그대로 Actions 에 올릴 수 있다.
 
 실행:
+  python harvest_rates.py --force                          # 갱신 간격(최신 1h / 직전 6h / Standard 12h) 무시하고 전부 요청
   python harvest_rates.py                                  # 최신 시즌 리그 2개 + Standard -> out/harvest-rates.json
   python harvest_rates.py --league latest "Mirage"         # 직전 리그를 이름으로 직접 채워 넣기 (파일에 아직 없을 때, 처음 한 번)
   python harvest_rates.py --out other/rates.json
@@ -90,12 +91,29 @@ _EXCLUDE = re.compile(r"\b(hc|ssf|hardcore|ruthless|solo|standard|eternal)\b", r
 STANDARD = "Standard"
 N_SEASON = 2          # 파일에 담는 시즌 리그 수 (최신, 직전). Standard 는 별도로 항상 포함
 
+# 리그별 최소 갱신 간격(시간). 워크플로우는 1시간마다 돌지만, 마지막 갱신(updatedAt)이 이 간격보다
+# 최근이면 해당 리그는 poe.ninja 에 요청하지 않고 저장된 값을 유지한다.
+INTERVAL_LATEST_H = 1     # 최신 시즌 리그: 실행할 때마다
+INTERVAL_PREVIOUS_H = 6   # 직전 시즌 리그
+INTERVAL_STANDARD_H = 12  # Standard
+# cron 지연/실행 시간 때문에 간격이 몇 분 모자라게 측정되어도 한 번 건너뛰지 않도록 주는 여유
+INTERVAL_SLACK_MIN = 20
+
 session = requests.Session()
 session.headers.update({"User-Agent": UA, "Accept": "application/json"})
 
 
 def utc_stamp():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def hours_since(stamp):
+    """updatedAt 문자열(UTC) 이후 경과 시간(시간 단위). 값이 없거나 읽을 수 없으면 None."""
+    try:
+        t = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return None
+    return (datetime.now(timezone.utc) - t).total_seconds() / 3600
 
 
 def _norm(s):
@@ -383,6 +401,19 @@ def show(league_id, chaos, rates):
             print(f"  {label:14}: {rates['fragment'][k]:g} 카오스  ({rates['fragment'].get(k + 'Item', '?')})")
 
 
+def skipped_only(leagues, store, intervals, force, active_ids):
+    """요청 대상이 없어서(모두 간격 이내이거나 종료된 리그) 결과가 비었는지 판단."""
+    if force:
+        return False
+    for lid in leagues:
+        if active_ids and lid not in active_ids and lid in store["leagues"]:
+            continue
+        age_h = hours_since(store["leagues"].get(lid, {}).get("updatedAt"))
+        if age_h is None or age_h * 60 >= intervals[lid] * 60 - INTERVAL_SLACK_MIN:
+            return False      # 요청했어야 했는데 값을 못 읽은 경우 -> 실패로 취급
+    return True
+
+
 def main():
     ap = argparse.ArgumentParser(description="poe.ninja 에서 수확 시뮬레이터용 시세 수집 (PoE1)")
     ap.add_argument("--league", nargs="+", default=["latest"], metavar="LEAGUE",
@@ -390,6 +421,7 @@ def main():
                          "시즌 리그는 최대 %d개, Standard 는 항상 함께 수집" % N_SEASON)
     ap.add_argument("--out", default=DEFAULT_OUT, help="저장 경로 (기본: 스크립트 옆 out/harvest-rates.json)")
     ap.add_argument("--dry-run", action="store_true", help="저장하지 않고 결과만 출력")
+    ap.add_argument("--force", action="store_true", help="갱신 간격을 무시하고 모든 리그를 요청")
     args = ap.parse_args()
 
     print("== poe.ninja 시세 (PoE1) ==")
@@ -400,10 +432,20 @@ def main():
         print("  시즌 리그를 확인하지 못했습니다 (--league \"이름\" 으로 직접 지정할 수 있음). Standard 만 수집합니다.")
     active_ids = {lg["id"] for lg in active or []}
 
+    # 리그별 갱신 간격: 최신 1시간, 직전 6시간, Standard 12시간
+    intervals = {std: INTERVAL_STANDARD_H}
+    for i, lid in enumerate(season):
+        intervals[lid] = INTERVAL_LATEST_H if i == 0 else INTERVAL_PREVIOUS_H
+
     results = {}
     for lid in season + [std]:
         if active_ids and lid not in active_ids and lid in store["leagues"]:
             print(f"\n[{lid}] 종료된 리그: 저장된 값을 유지하고 다시 요청하지 않습니다")
+            continue
+        need_h = intervals[lid]
+        age_h = hours_since(store["leagues"].get(lid, {}).get("updatedAt"))
+        if not args.force and age_h is not None and age_h * 60 < need_h * 60 - INTERVAL_SLACK_MIN:
+            print(f"\n[{lid}] 건너뜀: {age_h:.1f}시간 전에 갱신됨 (간격 {need_h}시간)")
             continue
         chaos = fetch_chaos_prices(lid)
         rates = build_rates(chaos)
@@ -412,6 +454,9 @@ def main():
             results[lid] = rates
         time.sleep(0.5)
     if not results:
+        if skipped_only(season + [std], store, intervals, args.force, active_ids):
+            print("\n이번 실행에서 갱신할 리그가 없습니다 (모두 갱신 간격 이내).")
+            return
         sys.exit("poe.ninja 에서 읽은 값이 없어 저장하지 않습니다.")
     if args.dry_run:
         print("\n(--dry-run: 저장하지 않음)")
