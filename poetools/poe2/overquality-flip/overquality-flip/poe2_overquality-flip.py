@@ -2,9 +2,9 @@
 
 공통 조건 : Instant Buyout(securable), Rarity=Normal, NOT corrupted/mirrored/fractured
 4-A : ilvl >= 82, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 82 행의 30% 판매가)
-4-B : ilvl >= 82, Quality = 0    -> 최저가 TOP_N   (index.html: ilvl 82 행의 0% 베이스)
+4-B : ilvl >= 82, Quality = 0    -> 최저가 TOP_N_BUY0 (index.html: ilvl 82 행의 0% 베이스)
 5-A : ilvl  = 81, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 81 행의 30% 판매가)
-5-B : ilvl  = 81, Quality = 0    -> 최저가 TOP_N   (index.html: ilvl 81 행의 0% 베이스)
+5-B : ilvl  = 81, Quality = 0    -> 최저가 TOP_N_BUY0 (index.html: ilvl 81 행의 0% 베이스)
 소켓 수는 베이스별로 다르다 (BASES 참고).
 
 후처리:
@@ -12,6 +12,9 @@
   2) 매물 수와 가격 분포로 신뢰도를 매기고 적정 최저가를 고른다.
      Instant Buyout은 허위 매물이 드물어 최저가가 시장 최저가에 가깝다고 보되,
      중앙값보다 지나치게 싼 고립 매물(시세를 모르거나 급처)은 제외한다.
+     단, 제외 대상은 '최근 등록된' 매물뿐이다. 싸게 나온 매물은 금방 팔려야 정상이므로, 오래 안 팔리고
+     남아 있는 저가 매물은 '급처'가 아니라 그 가격이 실제로는 거래되지 않는다(허위·비활성 판매자·시세 오기 등)는
+     증거다. 이런 매물은 제외하지 않고 최저가로 남겨, 아래 3)의 경과일 규칙으로 신뢰도를 깎는다.
   3) 고른 최저가 매물이 오래됐으면(listing.indexed 기준 STALE_DAYS 이상 한 단계, OLD_DAYS 이상 두 단계) 신뢰도를 낮춘다.
      오래된 최저가는 이미 시세와 어긋났을 가능성이 크기 때문이다. 등록 시각을 알 수 없으면 보정하지 않는다.
 
@@ -20,8 +23,9 @@
     생략된 항목은 prices.json 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
   - 30% 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
     기록하고, 이후 실행에서는 그 항목만 건너뛴다 (예: Siege Crossbow ilvl 82 만 중지, 81 은 계속 조회).
-    index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을
-    직접 지정한다. 조회 결과 30% 매물이 생기면 자동으로 해제된다.
+    index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 마지막 확인(checkedAt) 후 STOPPED_RETRY_DAYS(3일)가 지나면
+    다음 실행에서 자동으로 다시 조회한다. 그 전에 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을 직접 지정한다.
+    조회 결과 30% 매물이 생기면 자동으로 해제되고, 여전히 부족하면 중지가 유지되며 마지막 확인 시각만 갱신된다.
 
 레이트리밋:
   - 실행 전에 조회할 항목으로 최대 요청 수와 최단 소요 시간을 계산해 출력한다.
@@ -71,7 +75,10 @@ KEEP_LEAGUES = 1               # 수집·표시할 시즌 리그 수 (최신만)
 BLOCKED_CHOICES = {"standard", "previous"}
 UA = "poe2-price-test/0.1 (contact: augustusminu@hotmail.com)"
 
-TOP_N = 10                     # fetch 한 번에 최대 10개
+FETCH_MAX = 10                 # fetch 한 번에 가져올 수 있는 최대 개수 (GGG API 한계). 그보다 많이 보려면 나눠서 여러 번 fetch 한다
+TOP_N = 10                     # 30% 판매가(4-A/5-A) 검색에서 보는 최저가 매물 수 (fetch 1회)
+TOP_N_BUY0 = 15                # 0% 베이스(4-B/5-B) 검색에서 보는 최저가 매물 수 (fetch 2회: 10 + 5)
+                               # index.html 은 '필요 베이스 수(약 9.1 -> 10개)'만큼 싼 순으로 평균을 내므로, 이상치 제외 후에도 10개가 남도록 여유를 둔다
 
 
 def utc_stamp():
@@ -86,9 +93,13 @@ OUTLIER_RATIO = 0.5            # 중앙값의 이 비율 미만이면 '너무 �
 STALE_DAYS = 7                 # 적정 최저가로 고른 매물이 이 일수 이상 오래되면 신뢰도를 한 단계 낮춘다
 OLD_DAYS = 30                  # 이 일수 이상이면 두 단계 낮춘다 (시세와 어긋났을 가능성이 큼)
 MAX_SKIP = 2                   # 고립된 저가 매물로 보고 제외할 최대 개수 (그 이상 몰려 있으면 실제 시세)
-# 서로 다른 통화의 매물을 비교하기 위한 대략적 환율(Exalted 기준). 이상치 판정에만 쓰이고,
-# 저장되는 가격은 매물 원래의 (금액, 통화)다. index.html 의 기본 환율과 같은 값.
-CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
+OUTLIER_MAX_AGE_DAYS = 2            # 이상치로 제외할 수 있는 저가 매물의 최대 경과 일수. 이보다 오래된 저가 매물은 '안 팔리는 가격'이라 제외하지 않는다
+STOPPED_RETRY_DAYS = 3             # 수집 중지 항목을 이 일수마다 자동으로 다시 조회한다 (마지막 확인 시각 기준, 0 이하면 자동 재조회 안 함)
+# 서로 다른 통화의 매물을 비교하기 위한 환율(Exalted 기준). 이상치 판정과 정렬에만 쓰이고, 저장되는 가격은 매물 원래의 (금액, 통화)다.
+# 실제 값은 리그 수집을 시작할 때 prices.json 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
+# 아래 기본값은 poe.ninja 환율이 없을 때(--no-rates 이고 저장된 값도 없음, 조회 실패)만 쓰인다.
+DEFAULT_CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
+CMP_RATES = dict(DEFAULT_CMP_RATES)
 
 # 검색 조건 (basequality.txt 4-A, 4-B, 5-A, 5-B)
 # ilvl_max / q_max 가 None 이면 "이상(>=)", 값이 있으면 min~max 범위(같으면 정확히 일치)
@@ -444,6 +455,25 @@ def update_rates(leagues, out, order=None):
             print(f"  -> {out} 저장 ({league} / rates)")
 
 
+def use_cmp_rates(path, league):
+    """이 리그의 poe.ninja 환율(prices.json 의 rates.chaos / rates.div)을 CMP_RATES 에 반영한다.
+    값이 없거나 비정상(숫자가 아니거나 0 이하, Divine <= Chaos)이면 기본값을 쓴다. 리그마다 호출해 다른 리그 값이 섞이지 않게 한다.
+    index.html 이 같은 rates 를 읽어 정렬·계산하므로, 이상치 판정(몇 개를 제외할지)이 화면의 기준과 일치한다."""
+    CMP_RATES.clear()
+    CMP_RATES.update(DEFAULT_CMP_RATES)
+    try:
+        with open(path, encoding="utf-8") as f:
+            rates = (json.load(f).get("leagues", {}).get(league) or {}).get("rates") or {}
+    except (OSError, ValueError, AttributeError):
+        rates = {}
+    chaos, div = rates.get("chaos"), rates.get("div")
+    ok = all(isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0 for v in (chaos, div)) and div > chaos
+    if ok:
+        CMP_RATES["chaos"], CMP_RATES["divine"] = float(chaos), float(div)
+    src = f"poe.ninja {rates.get('updatedAt', '')}".strip() if ok else "기본값 (poe.ninja 환율 없음)"
+    print(f"  이상치 판정 환율: Chaos = {CMP_RATES['chaos']:g} Ex, Divine = {CMP_RATES['divine']:g} Ex  [{src}]")
+
+
 # ---------------------------------------------------------------- 리그 선택
 _EXCLUDE = re.compile(r"\b(hc|ssf|hardcore|ruthless|solo)\b", re.IGNORECASE)
 
@@ -535,17 +565,31 @@ def build_query(base_name, spec, sockets):
     }
 
 
+def top_n_for(spec):
+    """검색 종류별로 볼 최저가 매물 수: 0% 베이스는 TOP_N_BUY0, 30% 판매가는 TOP_N."""
+    return TOP_N_BUY0 if spec["side"] == "buy0" else TOP_N
+
+
+def fetch_calls(top_n):
+    """top_n 개를 가져오는 데 필요한 fetch 요청 수 (FETCH_MAX 개씩 나눠서)."""
+    return -(-top_n // FETCH_MAX)
+
+
 def cheapest(league, base_name, spec, sockets):
-    """(총 매물 수, 최저가 행 리스트) 반환. 요청 2회(검색+fetch)."""
+    """(총 매물 수, 최저가 행 리스트) 반환. 요청 = 검색 1회 + fetch fetch_calls(top_n)회."""
     s = call("POST", f"{BASE}/api/trade2/search/poe2/{league}",
              json=build_query(base_name, spec, sockets))
     total = s.get("total", 0)
-    ids = s.get("result", [])[:TOP_N]
+    ids = s.get("result", [])[:top_n_for(spec)]
     if not ids:
         return total, []
-    f = call("GET", f"{BASE}/api/trade2/fetch/{','.join(ids)}", params={"query": s["id"]})
+    results = []
+    for i in range(0, len(ids), FETCH_MAX):          # fetch 는 한 번에 최대 FETCH_MAX 개 -> 가격순 그대로 나눠서 가져온다
+        chunk = ids[i:i + FETCH_MAX]
+        f = call("GET", f"{BASE}/api/trade2/fetch/{','.join(chunk)}", params={"query": s["id"]})
+        results.extend(f.get("result", []))
     rows = []
-    for e in f.get("result", []):
+    for e in results:
         listing = e.get("listing") or {}
         price = listing.get("price") or {}
         item = e.get("item") or {}
@@ -611,22 +655,28 @@ def fair_price(rows):
 
     if n >= OUTLIER_MIN_N:
         med = statistics.median(vals)
-        cheap = 0                                   # 중앙값 대비 너무 싼 매물이 앞에서부터 몇 개인지
+        cheap = 0                                   # 중앙값 대비 너무 싸고 '최근 등록된' 매물이 앞에서부터 몇 개인지
         while cheap < n and vals[cheap] < med * OUTLIER_RATIO:
-            cheap += 1
+            a = age_days(usable[cheap])
+            if a is not None and a >= OUTLIER_MAX_AGE_DAYS:
+                break                               # 오래 안 팔린 저가: 급처가 아니라 신뢰할 수 없는 가격 -> 제외하지 않는다
+            cheap += 1                              # (등록 시각을 모르면 예전처럼 제외 후보로 본다)
         limit = min(MAX_SKIP, n // 3)               # 소수일 때만 '고립된 이상치'로 본다
         if 0 < cheap <= limit:
             skipped = cheap
-            notes.append(f"중앙값의 {OUTLIER_RATIO:.0%} 미만인 저가 {cheap}개 제외")
+            notes.append(f"중앙값의 {OUTLIER_RATIO:.0%} 미만인 최근 저가 {cheap}개 제외")
         elif cheap > limit:
             notes.append(f"저가 {cheap}개가 몰려 있어 실제 시세로 간주")
+        if cheap < n and vals[cheap] < med * OUTLIER_RATIO:
+            notes.append(f"중앙값의 {OUTLIER_RATIO:.0%} 미만이지만 {age_days(usable[cheap]):.0f}일째 안 팔린 매물이라 "
+                         f"제외하지 않음(그 가격에 거래되지 않는다는 뜻)")
     else:
         notes.append(f"매물 {n}개뿐이라 이상치 판정 불가, 최저가 사용")
 
     chosen = usable[skipped]
     valid = vals[skipped:]
     valid_n = len(valid)
-    rel = valid[0] / statistics.median(valid)       # 최저가가 나머지 무리에 얼마나 붙어 있는지 (1에 가까울수록 좋음)
+    rel = round(valid[0] / statistics.median(valid), 6)   # 최저가가 나머지 무리에 얼마나 붙어 있는지 (1에 가까울수록 좋음). 반올림: 정확히 0.8 같은 경계값이 환율 곱셈의 부동소수점 오차로 갈리지 않게
 
     if valid_n >= 5 and rel >= 0.8:
         conf = "high"
@@ -696,8 +746,32 @@ def side_payload(total, rows, fair):
     }
 
 
+def _parse_ts(t):
+    """수집기가 저장한 시각(UTC ISO '...Z') 또는 이전 형식('2026-11-08 21:50', 시간대 없음 -> UTC 로 간주)을 datetime 으로. 해석 못 하면 None."""
+    if not t:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(t).strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def retry_due(info, now=None):
+    """수집 중지 항목을 자동으로 다시 조회할 때가 됐는지. 마지막 확인(checkedAt) 없으면 중지 시작(since) 기준.
+    둘 다 없거나 해석하지 못하면 확인 기록이 없는 것이므로 다시 조회한다."""
+    if STOPPED_RETRY_DAYS <= 0:
+        return False
+    info = info if isinstance(info, dict) else {}
+    last = _parse_ts(info.get("checkedAt")) or _parse_ts(info.get("since"))
+    if last is None:
+        return True
+    now = now or datetime.now(timezone.utc)
+    return (now - last).total_seconds() >= STOPPED_RETRY_DAYS * 86400
+
+
 def load_stopped(path, league):
-    """prices.json 에 기록된 '수집 중지' 항목 {"베이스slug:ilvl": {since, reason}}."""
+    """prices.json 에 기록된 '수집 중지' 항목 {"베이스slug:ilvl": {since(중지 시작), checkedAt(마지막 확인), reason}}."""
     try:
         with open(path, encoding="utf-8") as f:
             raw = json.load(f)["leagues"].get(league, {}).get("stopped", {})
@@ -797,23 +871,33 @@ def run(league, base_name, sockets, ilvls):
 
 def plan_requests(targets, stopped, force):
     """실행 전에 조회할 (베이스, ilvl)과 최대 요청 수를 계산한다.
-    반환: ({베이스: [ilvl...]}, 건너뛴 수집 중지 항목 이름들, 최대 검색 수, 최대 fetch 수)"""
-    active, held = {}, []
+    수집 중지 항목은 건너뛰되, 마지막 확인 후 STOPPED_RETRY_DAYS 일이 지났으면 다시 조회한다 (force 면 전부 조회).
+    반환: ({베이스: [ilvl...]}, 건너뛴 수집 중지 항목 이름들, 최대 검색 수, 최대 fetch 수, 기간이 지나 다시 조회하는 항목 이름들)"""
+    active, held, due = {}, [], []
+    now = datetime.now(timezone.utc)
     for name, _ in targets:
         keep = []
         for v in ILVLS:
-            if not force and f"{slug(name)}:{v}" in stopped:
-                held.append(f"{name} ilvl {v}")
+            key = f"{slug(name)}:{v}"
+            if not force and key in stopped:
+                if retry_due(stopped[key], now):
+                    due.append(f"{name} ilvl {v}")
+                    keep.append(v)
+                else:
+                    held.append(f"{name} ilvl {v}")
             else:
                 keep.append(v)
         active[name] = keep
-    searches = 2 * sum(len(v) for v in active.values())      # ilvl 마다 30% + 0% (30% 부족이면 0% 생략으로 줄어듦)
-    return active, held, searches, searches                  # fetch 는 검색마다 최대 1회
+    n_ilvl = sum(len(v) for v in active.values())
+    searches = 2 * n_ilvl                                    # ilvl 마다 30% + 0% (30% 부족이면 0% 생략으로 줄어듦)
+    fetches = n_ilvl * (fetch_calls(TOP_N) + fetch_calls(TOP_N_BUY0))   # 30% 는 TOP_N, 0% 는 TOP_N_BUY0 개를 FETCH_MAX 개씩
+    return active, held, searches, fetches, due
 
 
 def collect(league, stopped, active, todo, out, order):
     """리그 하나를 수집해 저장하고 실패한 베이스 이름 목록을 반환."""
     failed = []
+    use_cmp_rates(out, league)                  # 이 리그의 poe.ninja 환율로 이상치 판정 (환율 갱신은 main 에서 먼저 끝난 상태)
     for name, sockets in todo:
         sl = slug(name)
         try:
@@ -826,7 +910,8 @@ def collect(league, stopped, active, todo, out, order):
         for e in entries:                       # 수집 중지는 베이스+ilvl 별로 각각 관리
             key = f"{sl}:{e['ilvl']}"
             if e["sell30"]["fair"]["status"] == "insufficient":
-                stopped[key] = {"since": stopped.get(key, {}).get("since", now),
+                stopped[key] = {"since": stopped.get(key, {}).get("since", now),     # 처음 중지된 시각 (재확인해도 유지)
+                                "checkedAt": now,                                       # 마지막으로 다시 확인한 시각 (자동 재조회 주기의 기준)
                                 "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"}
             else:
                 stopped.pop(key, None)
@@ -882,11 +967,13 @@ def main():
     print(f"리그: {', '.join(leagues)}")
     for league in leagues:
         stopped = load_stopped(args.out, league)
-        active, held, ns, nf = plan_requests(targets, stopped, force)
+        active, held, ns, nf, due = plan_requests(targets, stopped, force)
         todo = [(n, k) for n, k in targets if active[n]]
         print(f"[{league}] 조회 대상 {len(todo)}종 / {sum(len(active[n]) for n, _ in todo)}개 항목")
+        if due:
+            print(f"  수집 중지 {len(due)}건은 마지막 확인 후 {STOPPED_RETRY_DAYS}일이 지나 다시 조회: {', '.join(due)}")
         if held:
-            print(f"  수집 중지 {len(held)}건 건너뜀: {', '.join(held)}  (다시 조회: --retry-stopped)")
+            print(f"  수집 중지 {len(held)}건 건너뜀 ({STOPPED_RETRY_DAYS}일마다 자동 재조회, 지금 전부 다시 조회: --retry-stopped): {', '.join(held)}")
         if todo:
             plans.append((league, stopped, active, todo))
             n_search += ns
