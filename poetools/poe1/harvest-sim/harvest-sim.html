@@ -19,7 +19,7 @@ label span.h{color:var(--mute);font-size:12px;display:block}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}}
 :root[data-theme="dark"] .big b,.dark .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}
 .big small{color:var(--mute);font-size:13.5px}
-.bar{display:grid;grid-template-columns:70px var(--bw,1fr) minmax(190px,1fr);gap:10px;align-items:center;margin:6px 0}
+.bar{display:grid;grid-template-columns:70px var(--bw,1fr) minmax(var(--emw,190px),1fr);gap:10px;align-items:center;margin:6px 0}
 .bar i{display:block;height:12px;border-radius:2px}
 .bar em{font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap;display:grid;grid-template-columns:7ch var(--cvw,10ch);column-gap:8px;justify-content:end}
 .bar em .lf,.bar em .cv{text-align:right}  /* 화폐 열은 우측 정렬, 생기 열은 화폐 열 바로 왼쪽에서 우측 정렬 */
@@ -62,6 +62,8 @@ details.note .dbody{margin-top:8px}
 .tabs{overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}  /* 탭 줄 우측 끝 스크롤바(화살표) 숨김 — 좁은 화면에서는 스크롤 자체는 유지 */
 .tabs::-webkit-scrollbar{display:none;width:0;height:0}
 #lgInfo{margin:6px 0 0}
+label.ctr{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center}
+label.ctr input[type=checkbox]{margin:0;flex:none;vertical-align:middle}
 .lgrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .lgrow .btn{margin:0;font-size:13px;padding:6px 14px}
 </style>
@@ -77,21 +79,21 @@ details.note .dbody{margin-top:8px}
 <button id="run" class="pri" type="button">시뮬레이션 실행</button>
 <fieldset><legend>시뮬레이션</legend>
 <label>시뮬레이션 맵 수<select id="n"><option>2000</option><option selected>5000</option><option>10000</option><option>50000</option></select></label>
-<label>아틀라스 패시브 시뮬레이션<input type="checkbox" id="recOn" checked></label>
+<label class="ctr">아틀라스 패시브 시뮬레이션<input type="checkbox" id="recOn" checked></label>
 </fieldset>
 <fieldset><legend>리그</legend>
 <label><select id="league" disabled></select></label>
 <p class="note" id="lgInfo"></p>
 <div class="lgrow"><label class="btn">시세 파일 불러오기<input type="file" id="rfile" accept=".json" hidden></label><button type="button" class="btn" id="rreset">시세 재설정</button></div>
 </fieldset>
+<fieldset><legend>생기 가격 (카오스)</legend>
+<div class="px"><span><i class="dot" style="background:var(--y)"></i>노랑</span><span><i class="dot" style="background:var(--b)"></i>파랑</span><span><i class="dot" style="background:var(--p)"></i>보라</span>
+<input type="number" id="py" value="6" min="0" step="any"><input type="number" id="pb" value="16" min="0" step="any"><input type="number" id="pp" value="40" min="0" step="any"></div>
+</fieldset>
 <fieldset><legend>맵 (T16 기준)</legend>
 <label><div>맵 IIQ (%)<span class="h">효과의 절반만 반영</span></div><input type="number" id="iiq" value="200" min="0" max="500"></label>
 <label>무리 규모 (%)<input type="number" id="pack" value="60" min="0" max="300"></label>
 <label><div>작물 쌍 수<span class="h">4, 5: 3쌍은 수확 안 함</span></div><select id="pairs"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="3,4">3, 4</option><option value="4,4,5" selected>4, 5</option><option value="3,4,4,5">3, 4, 5</option></select></label>
-</fieldset>
-<fieldset><legend>생기 가격 (카오스)</legend>
-<div class="px"><span><i class="dot" style="background:var(--y)"></i>노랑</span><span><i class="dot" style="background:var(--b)"></i>파랑</span><span><i class="dot" style="background:var(--p)"></i>보라</span>
-<input type="number" id="py" value="6" min="0" step="any"><input type="number" id="pb" value="16" min="0" step="any"><input type="number" id="pp" value="40" min="0" step="any"></div>
 </fieldset>
 <fieldset><legend>화폐</legend>
 <label>화폐 단위<select id="unit"><option value="카오스">카오스</option><option value="디바인">디바인</option></select></label>
@@ -142,6 +144,7 @@ details.note .dbody{margin-top:8px}
 <div class="panel" id="cmpPanel">
 <h2>윤작 선택 전략 비교</h2>
 <div class="scroll"><table id="cmp"></table></div>
+<p class="note">마지막 1개 집중: 마지막에 먹을 작물 하나를 정하고, 나머지 쌍에서는 그 작물과 다른 색을 먼저 수확해 마지막 작물의 씨앗을 최대한 키운 뒤 수확.</p>
 </div>
 <details class="panel note"><summary><b>모델 가정</b></summary><div class="dbody">작물 쌍 수는 선택한 값 중 균등 추첨, 각 쌍에서는 기댓값이 높은 작물 수확. 작물당 씨앗 23개: T4 약 1%, T3 Binom(3, 0.25), T2 Binom(8, 0.75), 나머지 T1. 드랍 확률 T1 2%, T2 10%, T3·T4 100%, 기본 드랍량 T1 4.5–10, T2 12–25, T3 37–57, T4 190–280 (균등분포 가정). 복제 몬스터는 글에서도 정확한 상호작용이 불명이라 몬스터마다 독립적으로 한 마리를 더하는 방식으로 단순화. 아인하르 기억, Sacred Blossom 미포함. 윤작 모드는 수확 한 번마다 다른 색 작물의 씨앗이 한 단계씩만 오를 수 있다고 가정. 근사 최적 전략은 매 선택 시점의 실제 씨앗 구성에서 남은 쌍의 수확 순서와 색을 모두 계산하고, 이후의 업그레이드는 기댓값으로 근사한 뒤 매 수확마다 다시 계획. 선택하지 않은 작물이 시들지 않으면(숲의 중심) 그 작물도 추가로 수확할 수 있고 이후 다른 색 수확으로 계속 업그레이드된다고 가정하며, 시들지 않은 작물이 직전 수확의 업그레이드도 받는지는 확인되지 않아 받는다고 가정.</div></details>
 <details class="panel note"><summary><b>추천 세팅 탐색 방법</b></summary><div class="dbody">맵 한 개의 가치는 작물 배치(노랑노랑·노랑파랑·노랑보라·파랑파랑·파랑보라·보라보라 쌍이 각각 몇 개인가)와 업그레이드 운으로 정해지고, 감소 패시브는 어떤 배치가 나올 확률만 바꿈. 그래서 후보마다 맵을 따로 돌리지 않고 배치별 기대 가치표를 한 번만 만든 뒤, 후보 전부를 배치가 나올 확률(다항분포)로 가중 평균해 점수를 냄. 이렇게 하면 배치를 뽑는 오차가 없어지고 모든 후보가 같은 표를 쓰므로 후보끼리 비교하는 오차도 크게 줄어듦. 표본은 1위와 다른 후보를 가르는 데 가장 도움이 되는 배치에 몰아서 쓰고, 1위보다 확실히 낮은 후보(차이가 표준오차의 4배 이상)는 계산에서 빼며, 남은 후보가 모두 1위보다 0.25% 넘게 좋을 수 없다고 판정되면 멈춤. 같은 입력이면 항상 같은 결과가 나옴. 표의 ±는 95% 신뢰구간(%p)이고, 모델 안의 계산 오차만 나타내며 가정 자체의 오차는 포함하지 않음.</div></details>
@@ -283,9 +286,37 @@ function planOpt(P,pairs,st,cand){
   const vs=[];for(const [i,j] of cand){const v=act(code,0,0,0,i,st[i],j);vs.push([i,j,v]);if(v>bv){bv=v;pick=[i,j]}}LASTV=vs;
   return pick;
 }
+/* 마지막 1개 집중: 맨 마지막에 먹을 작물(목표)을 하나 정하고, 나머지 쌍은 목표와 "다른 색" 작물을 먼저 수확해
+   목표 작물의 씨앗을 최대한 업그레이드시킨 뒤 마지막에 목표를 수확. 목표는 첫 선택 때 정하고, 이후엔 (수확할 수 있는 한) 유지 */
+function lastValue(P,pairs,cand,t){   // 목표가 t일 때 예상 총 가치 (목표는 다른 색 수확마다 씨앗이 한 단계씩 오른다고 기댓값으로 근사)
+  const [ti,tj]=t,tcr=pairs[ti][tj],tc=tcr.type,e=tcr.c.slice(),seen=new Set();let sum=0;
+  for(const [i] of cand){
+    if(i===ti||seen.has(i))continue;seen.add(i);
+    const opts=cand.filter(x=>x[0]===i),dif=opts.filter(x=>pairs[i][x[1]].type!==tc),pool=dif.length?dif:opts;
+    let b=pool[0];for(const x of pool)if(cropEV(P,pairs[i][x[1]])>cropEV(P,pairs[i][b[1]]))b=x;
+    sum+=cropEV(P,pairs[i][b[1]]);
+    if(pairs[i][b[1]].type!==tc)upE(e,P.u);
+  }
+  return sum+cropEV(P,{type:tc,c:e});
+}
+function chooseLast(P,pairs,st,cand){
+  const ev=([i,j])=>cropEV(P,pairs[i][j]);
+  if(!st.tg||!cand.some(x=>x[0]===st.tg[0]&&x[1]===st.tg[1])){
+    let bt=cand[0],bv=-1;
+    for(const t of cand){const v=lastValue(P,pairs,cand,t);if(v>bv){bv=v;bt=t}}
+    st.tg=bt;
+  }
+  const [ti,tj]=st.tg,tc=pairs[ti][tj].type;
+  const others=cand.filter(x=>x[0]!==ti);
+  if(!others.length)return st.tg;
+  const dif=others.filter(x=>pairs[x[0]][x[1]].type!==tc),pool=dif.length?dif:others;
+  let b=pool[0];for(const x of pool)if(ev(x)>ev(b))b=x;
+  return b;
+}
 function choose(P,pairs,st,cand,strat){
   const ev=c=>cropEV(P,c),fresh=cand.filter(([i])=>st[i]===0),surv=cand.filter(([i])=>st[i]>=2);
   if(strat==="random")return cand[Math.floor(R()*cand.length)];
+  if(strat==="last")return chooseLast(P,pairs,st,cand);
   if(strat!=="opt"&&surv.length){
     let b=surv[0];for(const x of surv)if(ev(pairs[x[0]][x[1]])>ev(pairs[b[0]][b[1]]))b=x;return b;
   }
@@ -511,7 +542,7 @@ function renderCmp(){
   const cur=params(),kk=cur.fac/L.fac;
   $("cmpPanel").style.display=L.rot?"":"none";
   if(!L.rot)return;
-  const n=L.n,names=["최적","탐욕 (현재 가치가 높은 쪽)","무작위"],RB=2,m0=L.cmp[RB].s/n;   /* 기준 = 무작위(RB) */
+  const n=L.n,names=["최적","탐욕 (현재 가치가 높은 쪽)","마지막 1개 집중","무작위"],RB=3,m0=L.cmp[RB].s/n;   /* 기준 = 무작위(RB) */
   $("cmp").innerHTML="<tr><th>전략</th><th>맵당 기대 가치 ("+cur.unit+")</th><th>무작위 대비</th></tr>"+L.cmp.map((c,k)=>{
     const m=c.s/n,d=m0>0?(m/m0-1)*100:0;
     return "<tr><td>"+names[k]+"</td><td>"+fmtP(m*kk)+"</td><td>"+(k===RB?"기준":(d>0?"+":"")+fmt(d)+"%")+"</td></tr>";
@@ -530,13 +561,13 @@ function runMap(P){
     for(const [a,b] of pairs){const x=cropEV(P,a)>=cropEV(P,b),w=x?a:b,l=x?b:a;simCrop(P,w,out);if(R()<P.nw)simCrop(P,l,out)}
     return out;
   }
-  const S=["opt","greedy","random"];
+  const S=["opt","greedy","last","random"];
   const vs=S.map((st,k)=>playRot(P,pairs,st,k===0?out:null)/1000);
   vs.forEach((v,k)=>{const c=P.cmp[k],d=v-vs[0];c.s+=v;c.d+=d;c.d2+=d*d});
   return out;
 }
 function run0(){
-  const P=window.PP=params(),n=P.n;P.cmp=[0,1,2].map(()=>({s:0,d:0,d2:0}));
+  const P=window.PP=params(),n=P.n;P.cmp=[0,1,2,3].map(()=>({s:0,d:0,d2:0}));
   const sum=[0,0,0],tots=new Float64Array(n),vals=new Float64Array(n);let hasT4=0;
   for(let i=0;i<n;i++){
     const o=runMap(P);let tot=0,v=0;
@@ -575,18 +606,22 @@ function show(full){
   else $("stats").innerHTML=st.map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
   fitBars();
 }
-// 노랑/파랑/보라 막대의 최대 길이를 위쪽 "갑충석 비용 제외" 블록의 오른쪽 끝에 맞춤
+// 노랑/파랑/보라 막대의 최대 길이를 오른쪽 수치 열 바로 앞까지 늘림
 function fitBars(){
-  const bars=$("bars"),net=$("net").parentNode;
-  if(!bars||!net||!bars.firstElementChild)return;
-  bars.style.removeProperty("--bw");
+  const bars=$("bars");
+  if(!bars||!bars.firstElementChild)return;
+  bars.style.removeProperty("--bw");bars.style.removeProperty("--emw");
   /* 화폐 열 너비를 가장 긴 값에 맞춤: 화폐는 우측 정렬을 유지하면서 생기 숫자가 그 열 바로 왼쪽에 붙도록 */
   let cw=0;bars.querySelectorAll(".cv").forEach(el=>{const r=document.createRange();r.selectNodeContents(el);cw=Math.max(cw,r.getBoundingClientRect().width)});
   if(cw>0)bars.style.setProperty("--cvw",Math.ceil(cw)+1+"px");else bars.style.removeProperty("--cvw");
-  const br=bars.getBoundingClientRect(),nr=net.getBoundingClientRect();
+  /* 오른쪽 수치 열은 실제 필요한 너비만 남기고(고정 190px 대신), 나머지는 전부 막대 최대 길이로 사용 */
+  const em0=bars.querySelector("em");let emW=0;
+  if(em0){const cs=getComputedStyle(em0);emW=cs.gridTemplateColumns.split(" ").reduce((a,x)=>a+(parseFloat(x)||0),0)+(parseFloat(cs.columnGap)||0)}   // 렌더된 수치 열의 실제 너비
+  emW=Math.max(120,Math.ceil(emW)+2);
+  bars.style.setProperty("--emw",emW+"px");
+  const br=bars.getBoundingClientRect();
   const left=70+10;                                   // 라벨 열 + 간격
-  const maxW=br.width-left-10-190;                    // 오른쪽 수치 열(190px)은 남겨 둠
-  const bw=Math.min(nr.right-br.left-left,maxW);
+  const bw=Math.floor(br.width-left-10-emW-1);        // 가장 긴 막대가 수치 열 바로 앞까지 오도록
   if(bw>=160)bars.style.setProperty("--bw",bw+"px");  // 너무 좁은 화면(세로 배치)에서는 기본 1fr
 }
 window.addEventListener("resize",fitBars);
@@ -676,7 +711,7 @@ applyLang();
 /* ---------- 리그별 시세: harvest_rates.py 가 poe.ninja 에서 받아 out/harvest-rates.json 에 저장 ----------
    형식 v2: {order:[최신 시즌 리그, 직전 시즌 리그], leagues:{리그 이름:{ratio, lifeforce:{yellow,blue,purple}, scarab:{doubling,lineage}, updatedAt}}}
    이전 형식 v1(단일 리그: league + ratio/lifeforce/scarab)도 그대로 읽음. 드롭다운에는 파일에 있는 리그(시즌 최근 2개 + Standard)만 표시 */
-Object.assign(EN,{"시뮬레이션을 실행하면 계산됨":"Calculated when the simulation runs","계산 중...":"Calculating...","리그":"League","시세 파일 불러오기":"Load rates file","실행 중...":"Running...","시세 파일 없음 (입력창의 기본값 사용)":"No rates file (using the default inputs)","시세 재설정":"Reset rates","아틀라스 패시브 시뮬레이션":"Atlas passive simulation","아틀라스 패시브 시뮬레이션이 꺼져 있음":"Atlas passive simulation is off"});
+Object.assign(EN,{"마지막 1개 집중":"Last-crop focus","마지막 1개 집중: 마지막에 먹을 작물 하나를 정하고, 나머지 쌍에서는 그 작물과 다른 색을 먼저 수확해 마지막 작물의 씨앗을 최대한 키운 뒤 수확.":"Last-crop focus: pick one crop to harvest last, and in every other pair harvest a crop of a different color first so the last crop's seeds are upgraded as much as possible before it is harvested.","시뮬레이션을 실행하면 계산됨":"Calculated when the simulation runs","계산 중...":"Calculating...","리그":"League","시세 파일 불러오기":"Load rates file","실행 중...":"Running...","시세 파일 없음 (입력창의 기본값 사용)":"No rates file (using the default inputs)","시세 재설정":"Reset rates","아틀라스 패시브 시뮬레이션":"Atlas passive simulation","아틀라스 패시브 시뮬레이션이 꺼져 있음":"Atlas passive simulation is off"});
 RX.push([/^시세 기준: (.+)$/,"Rates as of: $1"],[/^계산 중\.\.\. (\d+)%$/,"Calculating... $1%"]);
 Object.assign(EN,{"추천 세팅 탐색 방법":"How the recommended setup is searched","맵 한 개의 가치는 작물 배치(노랑노랑·노랑파랑·노랑보라·파랑파랑·파랑보라·보라보라 쌍이 각각 몇 개인가)와 업그레이드 운으로 정해지고, 감소 패시브는 어떤 배치가 나올 확률만 바꿈. 그래서 후보마다 맵을 따로 돌리지 않고 배치별 기대 가치표를 한 번만 만든 뒤, 후보 전부를 배치가 나올 확률(다항분포)로 가중 평균해 점수를 냄. 이렇게 하면 배치를 뽑는 오차가 없어지고 모든 후보가 같은 표를 쓰므로 후보끼리 비교하는 오차도 크게 줄어듦. 표본은 1위와 다른 후보를 가르는 데 가장 도움이 되는 배치에 몰아서 쓰고, 1위보다 확실히 낮은 후보(차이가 표준오차의 4배 이상)는 계산에서 빼며, 남은 후보가 모두 1위보다 0.25% 넘게 좋을 수 없다고 판정되면 멈춤. 같은 입력이면 항상 같은 결과가 나옴. 표의 ±는 95% 신뢰구간(%p)이고, 모델 안의 계산 오차만 나타내며 가정 자체의 오차는 포함하지 않음.":"The value of one map is determined by the crop layout (how many Yellow-Yellow, Yellow-Blue, Yellow-Purple, Blue-Blue, Blue-Purple and Purple-Purple pairs there are) and by upgrade luck, and the reduction passives only change how likely each layout is. So instead of running separate maps for every candidate, a table of expected value per layout is built once, and every candidate is scored as the average of that table weighted by how likely each layout is (multinomial). This removes the error of drawing layouts, and because all candidates share the same table, the error when comparing candidates also shrinks a lot. Samples are spent on the layouts that help most to separate the leader from the other candidates, candidates that are clearly below the leader (a gap of at least 4 standard errors) are dropped, and the search stops once none of the remaining candidates can be better than the leader by more than 0.25%. The same input always gives the same result. The ± in the table is a 95% confidence interval (in percentage points); it covers calculation error inside the model only, not error in the assumptions themselves.","1위 대비":"vs best","1위":"Best"});
 RX.push([/^윤작이 꺼져 있어 난수 없이 정확히 계산 · 후보 (\d+)개 전부 평가$/,"Crop Rotation is off, so values are computed exactly with no randomness · all $1 candidates evaluated"],
