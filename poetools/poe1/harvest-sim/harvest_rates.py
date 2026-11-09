@@ -50,7 +50,7 @@ from datetime import datetime, timezone
 import requests
 
 NINJA = "https://poe.ninja/poe1/api/economy"
-UA = "poe1-harvest-sim/0.1 (contact: augustusminu@hotmail.com)"
+UA = "poe1-harvest-sim/0.1 (contact: augustusminu@gmail.com)"
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")
 DEFAULT_OUT = os.path.join(OUT_DIR, "harvest-rates.json")
 
