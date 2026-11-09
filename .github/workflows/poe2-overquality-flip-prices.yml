@@ -2,7 +2,8 @@ name: PoE2 / overquality-flip prices
 
 on:
   schedule:
-    - cron: "17 * * * *"        # 1시간마다 (UTC 기준, 정각을 피해 17분에 실행)
+    - cron: "17 */2 * * *"       # 2시간마다 (UTC 기준, 정각을 피해 17분에 실행). 최신 리그는 매번 수집하고,
+                                 # 직전 리그(6시간)·Standard(24시간)는 아래 --league 의 ':시간' 간격이 지났을 때만 수집
   workflow_dispatch:             # Actions 탭의 "Run workflow" 버튼으로 수동 실행
 
 permissions:
@@ -32,7 +33,9 @@ jobs:
 
       - name: Collect prices
         working-directory: ${{ env.SCRIPT_DIR }}
-        run: python -u "$SCRIPT_NAME"          # 기본값: 최신 리그 + 직전 리그 + Standard
+        # 최신 리그: 2시간마다(매 실행) / 직전(second latest) 리그: 6시간마다 / Standard: 24시간마다
+        # ':N' 은 마지막 수집 후 최소 N시간 간격 (실행 소요 시간·크론 지연을 감안해 1.5시간 일찍 도래한 것으로 봄)
+        run: python -u "$SCRIPT_NAME" all --league "latest,previous:6,standard:24"
 
       - name: Validate and commit prices.json
         if: ${{ !cancelled() }}                # 수집 중 일부 실패해도, 저장된 진행분은 커밋
