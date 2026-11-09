@@ -90,9 +90,11 @@ STALE_DAYS = 7                 # 적정 최저가로 고른 매물이 이 일수
 OLD_DAYS = 30                  # 이 일수 이상이면 두 단계 낮춘다 (시세와 어긋났을 가능성이 큼)
 MAX_SKIP = 2                   # 고립된 저가 매물로 보고 제외할 최대 개수 (그 이상 몰려 있으면 실제 시세)
 OUTLIER_MAX_AGE_DAYS = 2            # 이상치로 제외할 수 있는 저가 매물의 최대 경과 일수. 이보다 오래된 저가 매물은 '안 팔리는 가격'이라 제외하지 않는다
-# 서로 다른 통화의 매물을 비교하기 위한 대략적 환율(Exalted 기준). 이상치 판정에만 쓰이고,
-# 저장되는 가격은 매물 원래의 (금액, 통화)다. index.html 의 기본 환율과 같은 값.
-CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
+# 서로 다른 통화의 매물을 비교하기 위한 환율(Exalted 기준). 이상치 판정과 정렬에만 쓰이고, 저장되는 가격은 매물 원래의 (금액, 통화)다.
+# 실제 값은 리그 수집을 시작할 때 prices.json 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
+# 아래 기본값은 poe.ninja 환율이 없을 때(--no-rates 이고 저장된 값도 없음, 조회 실패)만 쓰인다.
+DEFAULT_CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
+CMP_RATES = dict(DEFAULT_CMP_RATES)
 
 # 검색 조건 (basequality.txt 4-A, 4-B, 5-A, 5-B)
 # ilvl_max / q_max 가 None 이면 "이상(>=)", 값이 있으면 min~max 범위(같으면 정확히 일치)
@@ -448,6 +450,25 @@ def update_rates(leagues, out, order=None):
             print(f"  -> {out} 저장 ({league} / rates)")
 
 
+def use_cmp_rates(path, league):
+    """이 리그의 poe.ninja 환율(prices.json 의 rates.chaos / rates.div)을 CMP_RATES 에 반영한다.
+    값이 없거나 비정상(숫자가 아니거나 0 이하, Divine <= Chaos)이면 기본값을 쓴다. 리그마다 호출해 다른 리그 값이 섞이지 않게 한다.
+    index.html 이 같은 rates 를 읽어 정렬·계산하므로, 이상치 판정(몇 개를 제외할지)이 화면의 기준과 일치한다."""
+    CMP_RATES.clear()
+    CMP_RATES.update(DEFAULT_CMP_RATES)
+    try:
+        with open(path, encoding="utf-8") as f:
+            rates = (json.load(f).get("leagues", {}).get(league) or {}).get("rates") or {}
+    except (OSError, ValueError, AttributeError):
+        rates = {}
+    chaos, div = rates.get("chaos"), rates.get("div")
+    ok = all(isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0 for v in (chaos, div)) and div > chaos
+    if ok:
+        CMP_RATES["chaos"], CMP_RATES["divine"] = float(chaos), float(div)
+    src = f"poe.ninja {rates.get('updatedAt', '')}".strip() if ok else "기본값 (poe.ninja 환율 없음)"
+    print(f"  이상치 판정 환율: Chaos = {CMP_RATES['chaos']:g} Ex, Divine = {CMP_RATES['divine']:g} Ex  [{src}]")
+
+
 # ---------------------------------------------------------------- 리그 선택
 _EXCLUDE = re.compile(r"\b(hc|ssf|hardcore|ruthless|solo)\b", re.IGNORECASE)
 
@@ -636,7 +657,7 @@ def fair_price(rows):
     chosen = usable[skipped]
     valid = vals[skipped:]
     valid_n = len(valid)
-    rel = valid[0] / statistics.median(valid)       # 최저가가 나머지 무리에 얼마나 붙어 있는지 (1에 가까울수록 좋음)
+    rel = round(valid[0] / statistics.median(valid), 6)   # 최저가가 나머지 무리에 얼마나 붙어 있는지 (1에 가까울수록 좋음). 반올림: 정확히 0.8 같은 경계값이 환율 곱셈의 부동소수점 오차로 갈리지 않게
 
     if valid_n >= 5 and rel >= 0.8:
         conf = "high"
@@ -824,6 +845,7 @@ def plan_requests(targets, stopped, force):
 def collect(league, stopped, active, todo, out, order):
     """리그 하나를 수집해 저장하고 실패한 베이스 이름 목록을 반환."""
     failed = []
+    use_cmp_rates(out, league)                  # 이 리그의 poe.ninja 환율로 이상치 판정 (환율 갱신은 main 에서 먼저 끝난 상태)
     for name, sockets in todo:
         sl = slug(name)
         try:

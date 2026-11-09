@@ -98,10 +98,25 @@ function model(p){const q=new Array(22).fill(0);for(let i=19;i>=0;i--)q[i]=1+(1-
 const P=new Array(31).fill(0),E=new Array(31).fill(0);P[30]=1;
 for(let i=29;i>=20;i--){const s=1-.05*(i-20),a=Math.min(i+2,30);P[i]=s*((1-p)*P[i+1]+p*P[a]);E[i]=1+s*((1-p)*E[i+1]+p*E[a]);}
 return{P:P[20],E:E[20],Q:q[0]}}
-function toEx(l,S){return l.c==="exalted"?l.a:l.c==="chaos"?l.a*S.chaos:l.c==="divine"?l.a*S.div:null}
-function pick(side,S,N){if(!side)return{n:0};const v=(side.listings||[]).map(l=>toEx(l,S)).filter(x=>x!=null).sort((a,b)=>a-b).slice(0,N);
-const n=side.total!=null?side.total:v.length;if(!v.length||n<MIN_N)return{n};const h=v.length>>1;
-const f=side.fair||{};return{n,ex:v.length%2?v[h]:(v[h-1]+v[h])/2,conf:f.confidence||undefined,reason:f.reason}}
+function toEx(l,S){return l.c==="exalted"?l.a:l.c==="chaos"?(S.chaos>0?l.a*S.chaos:null):l.c==="divine"?(S.div>0?l.a*S.div:null):null}  /* 환율이 0 이면 0 Ex 가 아니라 환산 불가(null)로 취급 */
+/* 0% 베이스 단가: '가장 싼 1개'가 아니라 필요 수량(k = 1/성공확률)을 싼 순서로 실제로 샀을 때의 평균 단가.
+   1) 수집기(fair)가 '고립된 저가 이상치'로 제외한 매물은 똑같이 제외 (30% 판매가와 같은 기준, 표시되는 신뢰도·사유와 일치)
+   2) 남은 매물을 싼 순서로 k개 채워 평균 (k 가 소수면 마지막 매물은 비율만큼)
+   3) 매물이 k개보다 적으면 부족분은 가장 비싼 매물 가격으로 채움 (실제로는 그보다 비싸므로 하한치) + 신뢰도 하향 */
+const CL=["low","medium","high"];
+function pick(side,S,k){if(!side)return{n:0};const f=side.fair||{};
+const n=side.total!=null?side.total:((side.listings||[]).length);
+if(f.status==="insufficient")return{n,insufficient:true,reason:f.reason};
+let v=(side.listings||[]).map(l=>toEx(l,S)).filter(x=>x!=null).sort((a,b)=>a-b);
+v=v.slice(Math.min(f.skipped||0,Math.max(0,v.length-1)));
+if(!v.length||n<MIN_N)return{n};
+const kk=Math.max(1,k),need=Math.ceil(kk-1e-9);
+let sum=0,left=kk;for(let i=0;left>1e-9;i++){const w=Math.min(1,left);sum+=w*v[Math.min(i,v.length-1)];left-=w}
+const short=v.length<need;let conf=f.confidence||undefined;
+if(short){const cap=v.length*2<need?"low":"medium";conf=CL[Math.min(CL.indexOf(conf||"high"),CL.indexOf(cap))]}
+const note=tt(`싼 순 ${need}개 평균 단가 (${trim(v[0],1)}~${trim(v[Math.min(v.length,need)-1],1)} Ex)`+(short?` · 매물이 ${v.length}개뿐이라 부족분은 최고가로 계산 (실제론 더 비쌀 수 있음)`:""),
+ `Avg. price of the cheapest ${need} (${trim(v[0],1)}–${trim(v[Math.min(v.length,need)-1],1)} Ex)`+(short?` · only ${v.length} listings, the shortfall is priced at the highest (real cost may be higher)`:""));
+return{n,ex:sum/kk,conf,skipped:f.skipped||0,need,have:v.length,short,reason:[f.reason,note].filter(Boolean).join(" · ")}}
 function calc(B,sale,X,W,M){const k=1/M.P,cost=k*(B+M.Q*W+M.E*X);return{cost,margin:sale-cost,roi:(sale-cost)/cost}}
 //M
 function pickFair(side,S,N){const f=side&&side.fair;if(!f)return{n:0};
@@ -204,7 +219,7 @@ function render(){
   if(!lv.length){g.list.push({b,msg:tt("수집 데이터 없음","No data collected")});continue}
   for(const v of lv){const st=stp(v);
    if(st){if(v===81)continue;g.list.push({b,ilvl:v,msg:tt("데이터 부족으로 수집 중지","Collection stopped (insufficient data)"),tip:(st.reason||"")+(st.since?tt(" ("+fmT(st.since)+" 이후)"," (since "+fmT(st.since)+")"):"")});continue}
-   const e=es.find(x=>x.ilvl===v);const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,need),T=pickFair(e.sell30,S,need);
+   const e=es.find(x=>x.ilvl===v);const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,1/M.P),T=pickFair(e.sell30,S,need);
    const r={b,e,B,T};if(B.ex!=null&&T.ex!=null)Object.assign(r,calc(B.ex,T.ex,S.inf[b.infuser],S.q[b.qcur],M));else r.msg=tt("데이터 부족","Insufficient data");g.list.push(r)}}
  if(TAB==="rec"){const g=groups.get("");if(g){const sc=r=>Math.pow(r.margin,REC_W)*Math.pow(r.roi,1-REC_W);  /* 마진·수익률이 모두 양수인 행만 대상 */
   g.list=g.list.filter(r=>r.margin>0&&r.B.conf!=="low"&&r.T.conf!=="low").sort((a,b)=>sc(b)-sc(a)).slice(0,REC_N)}}  /* 0% 베이스·시장가 중 하나라도 신뢰 낮음이면 제외 */
@@ -213,10 +228,10 @@ function render(){
   if(TAB!=="rec"&&!isOpen)return;
   for(const r of g.list){const b=r.b,e=r.e;
    if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td class="il">${r.ilvl}</td><td colspan="5" class="dim" style="text-align:center"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td colspan="6" class="dim" style="text-align:center">${esc(r.msg)}</td></tr>`;continue}
-   const cs=p=>[p.n>=1&&p.n<=9?tt(p.n+"개",p.n+(p.n===1?" listing":" listings")):"",p.conf?CONF[p.conf]:"",p.skipped?tt("저가 "+p.skipped+"개 제외",p.skipped+" low-priced excluded"):""].filter(Boolean).join(" · ");
+   const cs=p=>[p.short?tt(`필요 ${p.need}개 중 ${p.have}개`,`${p.have} of ${p.need} needed`):p.n>=1&&p.n<=9?tt(p.n+"개",p.n+(p.n===1?" listing":" listings")):"",p.conf?CONF[p.conf]:"",p.skipped?tt("저가 "+p.skipped+"개 제외",p.skipped+" low-priced excluded"):""].filter(Boolean).join(" · ");
    const sm=p=>{const t=cs(p);return t?`<small>${t}</small>`:""};
    const lk=side=>`<a class="tl" href="${esc(tradeUrl(b,e.ilvl,side))}" target="_blank" rel="noopener" title="${tt("거래소에서 보기","Open in trade site")}" aria-label="${tt("거래소에서 보기","Open in trade site")}">↗</a>`;
-   const cell=(p,side)=>p.omitted?`<span class="dim">-</span>`:p.ex!=null?`${fm(p.ex)}${lk(side)}${sm(p)}`:`<span class="dim">${tt("없음","None")}</span>${lk(side)}`;
+   const cell=(p,side)=>p.omitted?`<span class="dim">-</span>`:p.insufficient?`<span class="dim">${tt("데이터 부족","Insufficient data")}</span>${lk(side)}`:p.ex!=null?`${fm(p.ex)}${lk(side)}${sm(p)}`:`<span class="dim">${tt("없음","None")}</span>${lk(side)}`;
    const cellT=(p,side)=>p.insufficient?`<span class="dim">${tt("데이터 부족","Insufficient data")}</span>${lk(side)}`:p.ex==null?cell(p,side):`${fm(p.ex)}${lk(side)}${sm(p)}`;
    const m=r.margin;
    h+=`<tr><td>${nm(b)}</td><td class="il">${e.ilvl}</td><td${r.B.reason?` title="${esc(r.B.reason)}"`:""}>${cell(r.B,"buy0")}</td>`+
