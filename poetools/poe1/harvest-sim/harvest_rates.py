@@ -11,12 +11,16 @@ harvest-sim.html 의 아래 입력값을 poe.ninja 의 PoE1 경제 API 에서 �
   lifeforce.purple         #pp  (보라 = Wild)        〃
   scarab.doubling          #scdp (복제의 수확 갑충석)   Harvest Scarab of Doubling 1개 = 카오스 N개
   scarab.lineage           #sclp (기괴한 혈통의 갑충석) Scarab of Monstrous Lineage 1개 = 카오스 N개
+  fragment.sacrifice       #fsp  (희생의 조각)         Sacrifice at Dusk / Midday / Midnight / Dawn 중 가장 싼 값 (카오스)
+  fragment.mortal          #fmp  (필멸의 조각)         Mortal Grief / Ignorance / Rage / Hope 중 가장 싼 값 (카오스)
+  fragment.sacrificeItem   (조각 효율 패널의 이름·이미지)  위에서 가장 싼 희생의 조각 이름 (예: "Sacrifice at Dusk")
+  fragment.mortalItem      〃                              위에서 가장 싼 필멸의 조각 이름 (예: "Mortal Hope")
   updatedAt                (화면 표시용)             그 리그를 마지막으로 갱신한 시각 (UTC)
 
 파일 형식 (version 2):
   {"version": 2, "source": "poe.ninja", "updatedAt": "...Z",
    "order": ["최신 시즌 리그", "직전 시즌 리그"],
-   "leagues": {"최신 시즌 리그": {ratio, lifeforce, scarab, updatedAt}, "직전 시즌 리그": {...}, "Standard": {...}}}
+   "leagues": {"최신 시즌 리그": {ratio, lifeforce, scarab, fragment, updatedAt}, "직전 시즌 리그": {...}, "Standard": {...}}}
   이전 형식(version 1: 단일 리그)의 파일은 읽을 때 자동으로 version 2 로 바꿔 저장한다.
 
 poe.ninja 규칙 (https://poe.ninja/docs/api):
@@ -65,6 +69,19 @@ ITEMS = {
     "purple":   ("Wild Crystallised Lifeforce", ("wildcrystallisedlifeforce", "wildlifeforce"), ("Currency",)),
     "doubling": ("Harvest Scarab of Doubling", ("harvestscarabofdoubling",), ("Scarab", "Fragment")),
     "lineage":  ("Scarab of Monstrous Lineage", ("scarabofmonstrouslineage",), ("Scarab", "Fragment")),
+    # 조각: 희생의 조각 4종, 필멸의 조각 4종 (아래 FRAGMENT_GROUPS 로 묶어 그룹마다 가장 싼 값을 쓴다)
+    "sac_dusk":      ("Sacrifice at Dusk", ("sacrificeatdusk",), ("Fragment",)),
+    "sac_midday":    ("Sacrifice at Noon", ("sacrificeatnoon", "sacrificeatmidday"), ("Fragment",)),
+    "sac_midnight":  ("Sacrifice at Midnight", ("sacrificeatmidnight",), ("Fragment",)),
+    "sac_dawn":      ("Sacrifice at Dawn", ("sacrificeatdawn",), ("Fragment",)),
+    "mortal_grief":     ("Mortal Grief", ("mortalgrief",), ("Fragment",)),
+    "mortal_ignorance": ("Mortal Ignorance", ("mortalignorance",), ("Fragment",)),
+    "mortal_rage":      ("Mortal Rage", ("mortalrage",), ("Fragment",)),
+    "mortal_hope":      ("Mortal Hope", ("mortalhope",), ("Fragment",)),
+}
+FRAGMENT_GROUPS = {
+    "sacrifice": ("sac_dusk", "sac_midday", "sac_midnight", "sac_dawn"),
+    "mortal": ("mortal_grief", "mortal_ignorance", "mortal_rage", "mortal_hope"),
 }
 CHAOS_KEYS = ITEMS["chaos"][1]
 
@@ -309,6 +326,15 @@ def build_rates(chaos):
     for k in ("doubling", "lineage"):
         if chaos.get(k):
             out.setdefault("scarab", {})[k] = round(chaos[k], 1)
+    for grp, keys in FRAGMENT_GROUPS.items():       # 조각: 그룹 안에서 가장 싼 값 (카오스 기준, 싼 조각은 1 미만일 수 있어 소수 둘째 자리까지)
+        found = [(chaos[k], k) for k in keys if chaos.get(k)]
+        prices = [v for v, _ in found]
+        if found:
+            low, lowk = min(found)
+            out.setdefault("fragment", {})[grp] = round(low, 2)
+            out["fragment"][grp + "Item"] = ITEMS[lowk][0]      # 가장 싼 조각의 영문 이름 (harvest-sim.html 이 이름·이미지를 고르는 데 씀)
+            if len(prices) < len(keys):
+                print(f"  ⚠ {grp} 조각: {len(keys)}종 중 {len(prices)}종만 찾아 그중 최저가를 사용")
     return out
 
 
@@ -352,6 +378,9 @@ def show(league_id, chaos, rates):
     for k, label in (("doubling", "복제의 수확 갑충석"), ("lineage", "기괴한 혈통의 갑충석")):
         if k in rates.get("scarab", {}):
             print(f"  {label:14}: {rates['scarab'][k]:g} 카오스")
+    for k, label in (("sacrifice", "희생의 조각(최저가)"), ("mortal", "필멸의 조각(최저가)")):
+        if k in rates.get("fragment", {}):
+            print(f"  {label:14}: {rates['fragment'][k]:g} 카오스  ({rates['fragment'].get(k + 'Item', '?')})")
 
 
 def main():
