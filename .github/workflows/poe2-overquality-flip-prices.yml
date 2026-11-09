@@ -2,7 +2,7 @@ name: PoE2 / overquality-flip prices
 
 on:
   schedule:
-    - cron: "17 * * * *"       # 2시간마다 (UTC 기준, 정각을 피해 17분에 실행)
+    - cron: "17 * * * *"        # 1시간마다 (UTC 기준, 정각을 피해 17분에 실행)
   workflow_dispatch:             # Actions 탭의 "Run workflow" 버튼으로 수동 실행
 
 permissions:
