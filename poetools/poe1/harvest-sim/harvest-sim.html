@@ -8,7 +8,7 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 이 파일에는 수확 시뮬레이터에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
-main.wrap{max-width:960px;margin-left:auto;margin-right:auto}
+main.wrap{max-width:960px}
 .grid{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
 @media(max-width:820px){.grid{grid-template-columns:1fr}}
 label span.h{color:var(--mute);font-size:12px;display:block}
@@ -17,7 +17,7 @@ label span.h{color:var(--mute);font-size:12px;display:block}
 .big .grp{display:flex;flex-wrap:wrap;gap:16px 20px;align-items:baseline}
 .big b{font:600 clamp(26px,3.4vw,34px)/1.1 var(--serif);color:var(--g);letter-spacing:-.01em}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}}
-:root[data-theme="dark"] .big b,.dark .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}
+:root[data-theme="dark"] .big b{color:color-mix(in srgb,var(--g) 65%,#fff)}
 .big small{color:var(--mute);font-size:13.5px}
 .bar{display:grid;grid-template-columns:70px var(--bw,1fr) minmax(var(--emw,190px),1fr);gap:10px;align-items:center;margin:6px 0}
 .bar i{display:block;height:12px;border-radius:2px}
@@ -28,8 +28,7 @@ label span.h{color:var(--mute);font-size:12px;display:block}
 .axis{display:flex;justify-content:space-between;color:var(--mute);font-size:13px}
 .panel .stats{margin-bottom:4px}
 table{font-size:14px}
-th,td{padding:6px 8px}
-th{font-size:13px;font-weight:500}
+th{font-size:13px}
 .stat small{font-size:13px}
 .dot{display:inline-block;width:9px;height:9px;margin-right:8px;transform:rotate(45deg)}
 .px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin:10px 0 8px;text-align:center;font-size:14px}
@@ -67,12 +66,10 @@ details.note .dbody>p:last-child{margin-bottom:0}
 .tabs{overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}  /* 탭 줄 우측 끝 스크롤바(화살표) 숨김 — 좁은 화면에서는 스크롤 자체는 유지 */
 .tabs::-webkit-scrollbar{display:none;width:0;height:0}
 #lgInfo{margin:6px 0 0}
-label.ctr{display:flex;justify-content:space-between;align-items:center;text-align:left}
 label.ctr input[type=checkbox]{flex:none;margin:0}
 .lgrow{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:10px 0 8px}  /* 아래 8px: 마지막이 label인 다른 구역과 같은 여백 */
-.lgrow .btn{color:var(--mute);border-color:var(--ln2)}  /* 포인트색 대신 차분한 중립색 */
+.lgrow .btn{color:var(--mute);border-color:var(--ln2);margin:0;font-size:13px;padding:6px 14px;width:auto;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap}  /* 포인트색 대신 차분한 중립색 */
 .lgrow .btn:hover{background:color-mix(in oklab,var(--ink) 7%,transparent);color:var(--ink);border-color:var(--mute)}
-.lgrow .btn{margin:0;font-size:13px;padding:6px 14px;width:auto;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap}
 /* 카테고리 제목 더블클릭으로 접기/펼치기: 설정 패널의 legend, 결과 패널의 h2 (overquality-flip 의 카테고리 행과 같은 방식) */
 fieldset>legend,#tabSim .panel>h2{cursor:pointer;user-select:none}
 fieldset>legend::before{width:6px;height:6px}
@@ -85,7 +82,6 @@ fieldset.col>:not(legend),.panel.col>:not(h2){display:none}
 .frag{display:grid;grid-template-columns:36px minmax(0,1fr) 68px 100px 108px;gap:10px;align-items:center;margin:8px 0}
 .frag .fi{width:32px;height:32px;object-fit:contain}
 .frag .nm small{display:block;color:var(--mute);font-size:12px}
-.frag .xn{margin-left:6px;color:var(--mute);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
 :root[lang="en"] .frag .nm small{display:none}
 .frag .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .frag.hd{color:var(--mute);font-size:13px;margin:0 0 4px}
@@ -235,7 +231,7 @@ const NAMES=["노랑","파랑","보라"],COL=["var(--y)","var(--b)","var(--p)"];
 /* 조각: iiq = 개당 맵 IIQ 증가(%), price/chk/cnt = 가격·체크·개수(1~4) 입력칸 id, icon = 가격 파일에 조각 이름이 없을 때 쓰는 기본 이미지, item = 가장 싼 조각의 영문 이름 (시세 파일에서 읽음) */
 const IMG="./img/";
 const FR=[
-  {ko:"희생의 조각",en:"Sacrifice Fragment",iiq:5,price:"fsp",chk:"fsc",cnt:"fsn",icon:"sacrifice_at_dusk.webp.webp",item:null},
+  {ko:"희생의 조각",en:"Sacrifice Fragment",iiq:5,price:"fsp",chk:"fsc",cnt:"fsn",icon:"sacrifice_at_dusk.webp",item:null},
   {ko:"필멸의 조각",en:"Mortal Fragment",iiq:10,price:"fmp",chk:"fmc",cnt:"fmn",icon:"mortal_grief.webp",item:null}
 ];
 /* 조각 8종: 영문 이름 -> 한글 이름, ./img/ 안의 이미지 파일 */
@@ -268,8 +264,8 @@ const rnd=v=>v>=10?Math.round(v):Math.round(v*10)/10;
 function params(){
   const g=id=>{const e=$(id),v=parseFloat(e.dataset.raw!==undefined?e.dataset.raw:e.value);return isNaN(v)?0:v};
   const eff=fragEff(),fac0=$("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1;   // 체크한 조각은 맵 IIQ와 비용에 반영 (합계 4개까지, 필멸 우선)
-  return {fac:fac0,pack:g("pack"),iiq:g("iiq")+FR.reduce((s,f,i)=>s+f.iiq*eff[i],0),iiq0:g("iiq"),fp:FR.map(f=>g(f.price)),fn:eff,sp:g("scdp"),inc:g("inc"),mx:$("scd").checked?2:1,nw:g("nw")/100,cost:(($("scd").checked?g("scdp"):0)+FR.reduce((s,f,i)=>s+g(f.price)*eff[i],0))*fac0,pairs:$("pairs").value.split(",").map(Number),
-    t3:g("t3inc"),t4:g("t4inc"),guar:-1,
+  return {fac:fac0,pack:g("pack"),iiq:g("iiq")+FR.reduce((s,f,i)=>s+f.iiq*eff[i],0),iiq0:g("iiq"),fp:FR.map(f=>g(f.price)),sp:g("scdp"),inc:g("inc"),mx:$("scd").checked?2:1,nw:g("nw")/100,cost:(($("scd").checked?g("scdp"):0)+FR.reduce((s,f,i)=>s+g(f.price)*eff[i],0))*fac0,pairs:$("pairs").value.split(",").map(Number),
+    t3:g("t3inc"),t4:g("t4inc"),
     w:[1-g("ry")/100,1-g("rb")/100,1-g("rp")/100].map(x=>Math.max(0,x)),
     rot:$("rot").checked,u:[g("u1")/100,g("u2")/100,g("u3")/100],bount:$("bount").checked,dupm:g("dupm")/100,dupl:$("dupl").checked,
     price:[g("py"),g("pb"),g("pp")].map(r=>r>0?1000/r*($("unit").value==="디바인"?1/Math.max(g("ratio"),1e-9):1):0),unit:$("unit").value==="디바인"?"D":"C",n:+$("n").value};
@@ -565,7 +561,7 @@ function* recGen(P,out){
   const ord=SETS.map((_,i)=>i).sort((a,b)=>sc[b]-sc[a]),bi=SINGLEI.reduce((a,b)=>sc[a]>=sc[b]?a:b);
   const rowOf=c=>({c:SETS[c],v:sc[c],isBase:c===bi,dBase:rel(sc[c],sc[bi]),dLead:rel(sc[c],sc[ord[0]]),
     seBase:dseFn&&c!==bi?dseFn(c,bi)/Math.max(sc[bi],1e-12):0,seLead:c===ord[0]||!se?0:se[c]/Math.max(sc[ord[0]],1e-12)});
-  out.base=sc[bi];out.fac=P.fac;out.info=info;
+  out.fac=P.fac;out.info=info;
   out.rows=ord.slice(0,4).map(rowOf);
   if(!out.rows.some(r=>r.isBase))out.rows.push(rowOf(bi));   // 기준(-45% 단일 색상 중 최고)이 상위 4개 밖이어도 비교 대상으로 함께 표시
 }
@@ -622,7 +618,7 @@ function renderCmp(){
 function genPairs(P){
   const pc=P.pairs;let n=pc[Math.floor(R()*pc.length)];
   const pairs=[];
-  for(let i=0;i<n;i++)pairs.push([genCrop(P,P.guar>=0?P.guar:pickType(P.w)),genCrop(P,pickType(P.w))]);
+  for(let i=0;i<n;i++)pairs.push([genCrop(P,pickType(P.w)),genCrop(P,pickType(P.w))]);
   return pairs;
 }
 function runMap(P){
@@ -686,7 +682,7 @@ function showFrag(){
   if(!L||!box)return;
   const cur=params(),kk=cur.fac/L.fac,unit=cur.unit,P=L.P;
   const A0=1+P.iiq0/200+P.inc/100,s=A0/(1+P.iiq/200+P.inc/100);   // 실행 때 켠 조각 효과를 뺀 기준으로 되돌리는 비율
-  const lf0=L.total*s,val0=L.avgVal*kk*s;
+  const val0=L.avgVal*kk*s;
   const rows=[];
   FR.forEach((f,i)=>{
     const it=fiOf(f.item),ns=[1];   // 조각 1개인 경우만 표시 (개수 표기 없음)
@@ -787,9 +783,9 @@ function syncRot(){const r=$("rot").checked;["t3inc","t4inc"].forEach(id=>{$(id)
 $("rot").addEventListener("change",syncRot);syncRot();
 function syncUnit(){$("ratio").disabled=$("unit").value!=="디바인"}
 $("unit").addEventListener("change",syncUnit);syncUnit();
-const EN={"모델 가정": "Model assumptions", "최적 선택지 예상 (비시듦 제외)": "Expected optimal choices (excluding no-wilt)", "안내": "Notes", "작물을 선택한 뒤 수확을 누름": "Select a crop, then press Harvest", "에뮬레이션": "Emulation", "현재 예상 수확량": "Expected harvest so far", "기대 최적 수확량": "Expected optimal harvest", "플레이 도우미": "Play assistant", "쌍 입력": "Enter pairs", "시작 / 초기화": "Start / Reset",  "현재 선택지": "Current options", "작물": "Crop", "씨앗 기대 (T1 / T2 / T3 / T4)": "Expected seeds (T1 / T2 / T3 / T4)", "이번 수확 가치": "Value of this harvest", "선택 후 예상 총 가치": "Expected total after choosing", "비시듦": "Not wilted", "수확": "Harvest", "수확한 기대 가치": "Harvested so far", "남은 최적 기대 가치": "Remaining (optimal)", "예상 총 가치": "Expected total", "기록": "History", "반대쪽 비시듦 확인": "Opposite crop did not wilt", "비시듦 수확": "Harvested after no-wilt", "되돌리기": "Undo", "씨앗 직접 입력 (선택)": "Enter seeds manually (optional)", "적용": "Apply", "모든 작물을 수확함": "All crops harvested", "기록 없음": "No harvests yet", "씨앗을 입력하지 않으면 업그레이드 확률로 계산한 기대값을 사용함. 인게임에서 실제 씨앗 개수를 보고 입력하면 조언이 더 정확해짐.": "If seeds are not entered, expected values from the upgrade chances are used. Entering the actual seed counts from the game makes the advice more accurate.", "노랑 생기": "Yellow lifeforce", "파랑 생기": "Blue lifeforce", "보라 생기": "Purple lifeforce", "오차가 생길 수 있는 부분": "Possible sources of error",  "위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.": "These figures come from changing assumptions inside the model and are not verified in the actual game.",      "수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.": "Not quantified: exact behavior of duplicated monsters and Doubling Season (simplified), the effect of magic/rare monsters, Sacred Blossom, Einhar memories, and the uniform drop-amount assumption.",    "패스 오브 엑자일 (Path of Exile)": "Path of Exile", "수확(Harvest) 시뮬레이터": "Harvest Simulator", "패스 오브 엑자일(Path of Exile) 수확(Harvest) 시뮬레이터": "Path of Exile Harvest Simulator", "Forgotten Arbiter의 분석에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 추정치이며 실제와 다를 수 있음.": "A probability model estimated from Forgotten Arbiter's analysis. Expected lifeforce per map is computed by Monte Carlo simulation. All figures are estimates and may differ from the actual game.", "시뮬레이션 실행": "Run simulation", "시뮬레이션": "Simulation", "시뮬레이션 맵 수": "Maps to simulate", "맵": "Map", "맵 IIQ (%)": "Map IIQ (%)", "효과의 절반만 반영": "Only half of the effect counts", "무리 규모 (%)": "Pack size (%)", "작물 쌍 수": "Crop pairs", "4, 5: 3쌍은 수확 안 함": "4, 5: 3-pair groves are skipped", "화폐": "Currency", "생기 가격 (카오스)": "Lifeforce price (Chaos)", "화폐 단위": "Currency", "카오스": "Chaos", "디바인": "Divine", "노랑": "Yellow", "파랑": "Blue", "보라": "Purple", "윤작 (Crop Rotation)": "Crop Rotation", "윤작(Crop Rotation)": "Crop Rotation", "T1→T2 확률 (%)": "T1→T2 chance (%)", "T2→T3 확률 (%)": "T2→T3 chance (%)", "T3→T4 확률 (%)": "T3→T4 chance (%)", "글의 측정 20%, 다른 연구는 약 25%": "Article measured 20%, other research ~25%", "글의 추정은 약 2~5.5%": "Article estimate ~2–5.5%", "아틀라스 패시브": "Atlas passives", "생기의 수량 증가 (%)": "Increased quantity of lifeforce (%)", "T3 씨앗 확률 증가 (%)": "Increased chance of Tier 3 seeds (%)", "숲의 중심: T4 씨앗 확률 증가 (%)": "Heart of the Grove: increased chance of Tier 4 seeds (%)", "숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)": "Heart of the Grove: chance the unchosen crop does not wilt (%)", "노랑 작물 확률 감소 (%)": "Yellow crop chance reduction (%)", "파랑 작물 확률 감소 (%)": "Blue crop chance reduction (%)", "보라 작물 확률 감소 (%)": "Purple crop chance reduction (%)", "풍성한 수확: 추가 몬스터 10%": "Bountiful Harvest: 10% extra monster", "복제 몬스터 확률 (%)": "Duplicated monster chance (%)", "복제 철: 생기 복제 10%": "Doubling Season: 10% duplicated lifeforce", "갑충석 · 조각 (카오스)": "Scarab & fragment price (Chaos)", "복제의 수확 갑충석": "Harvest Scarab of Doubling", "기괴한 혈통의 갑충석": "Scarab of Monstrous Lineage", "맵 1회당 예상 획득량": "Expected yield per map", "생기 (평균)": "Lifeforce (average)", "생기 (중앙값)": "Lifeforce (median)", "기대 화폐 획득량": "Expected currency", "갑충석·조각 비용 제외": "Excluding scarab and fragment cost", "윤작 선택 전략 비교": "Crop Rotation strategy comparison", "데이터 분포": "Data distribution", "총 생기": "Total lifeforce", "작물 감소 아틀라스 패시브 추천 세팅": "Recommended crop reduction Atlas passives setting", "노랑 / 파랑 / 보라 감소 (%)": "Yellow / Blue / Purple reduction (%)", "맵당 기대 가치 (C)": "Expected value per map (C)", "맵당 기대 가치 (D)": "Expected value per map (D)", "기준 대비": "vs baseline", "균등 대비": "vs even", "0 / 45 / 0 대비": "vs 0 / 45 / 0", "0 / 0 / 0 (균등)": "0 / 0 / 0 (even)", "기준": "Baseline", "시뮬레이션을 실행할 시 다시 계산됨. -45% 단일 색상 패시브만 찍은 세팅 중 가장 우수한 값을 기준으로 모든 시뮬레이션 결과를 비교.": "Recalculated each time the simulation runs. All simulation results are compared against the best result among setups that take only a single -45% color passive.",  "최적": "Optimal", "탐욕 (현재 가치가 높은 쪽)": "Greedy (higher current value)", "무작위": "Random", "전략": "Strategy", "무작위 대비": "vs Random", "생기 중앙값": "Lifeforce median", "생기 상위 10%": "Lifeforce top 10%", "생기 하위 10%": "Lifeforce bottom 10%", "평균 오차(±1σ)": "Mean error (±1σ)", "화폐 중앙값": "Currency median", "화폐 하위 10%": "Currency bottom 10%", "화폐 상위 10%": "Currency top 10%", "T4가 나온 맵 비율": "Maps with a T4 seed"};
+const EN={"모델 가정": "Model assumptions", "최적 선택지 예상 (비시듦 제외)": "Expected optimal choices (excluding no-wilt)", "에뮬레이션": "Emulation", "현재 예상 수확량": "Expected harvest so far", "기대 최적 수확량": "Expected optimal harvest", "쌍 입력": "Enter pairs",  "현재 선택지": "Current options", "작물": "Crop", "비시듦": "Not wilted", "수확": "Harvest", "예상 총 가치": "Expected total", "기록": "History", "되돌리기": "Undo", "적용": "Apply", "모든 작물을 수확함": "All crops harvested", "오차가 생길 수 있는 부분": "Possible sources of error",  "위 수치는 모델 안에서 가정을 바꿔 본 결과이며, 실제 게임에서 검증된 값이 아님.": "These figures come from changing assumptions inside the model and are not verified in the actual game.",      "수치로 재지 못한 부분: 복제 몬스터와 복제 철의 정확한 작동 방식(단순화), 마법·희귀 몬스터의 영향, Sacred Blossom, 아인하르 기억, 드랍량의 균등분포 가정.": "Not quantified: exact behavior of duplicated monsters and Doubling Season (simplified), the effect of magic/rare monsters, Sacred Blossom, Einhar memories, and the uniform drop-amount assumption.",    "패스 오브 엑자일 (Path of Exile)": "Path of Exile", "수확(Harvest) 시뮬레이터": "Harvest Simulator", "Forgotten Arbiter의 분석에서 추정한 확률 모델로, 맵 한 번당 얻는 생기 기댓값을 몬테카를로 방식으로 계산. 모든 수치는 추정치이며 실제와 다를 수 있음.": "A probability model estimated from Forgotten Arbiter's analysis. Expected lifeforce per map is computed by Monte Carlo simulation. All figures are estimates and may differ from the actual game.", "시뮬레이션 실행": "Run simulation", "시뮬레이션": "Simulation", "시뮬레이션 맵 수": "Maps to simulate", "맵": "Map", "맵 IIQ (%)": "Map IIQ (%)", "효과의 절반만 반영": "Only half of the effect counts", "무리 규모 (%)": "Pack size (%)", "작물 쌍 수": "Crop pairs", "4, 5: 3쌍은 수확 안 함": "4, 5: 3-pair groves are skipped", "화폐": "Currency", "생기 가격 (카오스)": "Lifeforce price (Chaos)", "화폐 단위": "Currency", "카오스": "Chaos", "디바인": "Divine", "노랑": "Yellow", "파랑": "Blue", "보라": "Purple", "윤작 (Crop Rotation)": "Crop Rotation", "윤작(Crop Rotation)": "Crop Rotation", "T1→T2 확률 (%)": "T1→T2 chance (%)", "T2→T3 확률 (%)": "T2→T3 chance (%)", "T3→T4 확률 (%)": "T3→T4 chance (%)", "글의 측정 20%, 다른 연구는 약 25%": "Article measured 20%, other research ~25%", "글의 추정은 약 2~5.5%": "Article estimate ~2–5.5%", "아틀라스 패시브": "Atlas passives", "생기의 수량 증가 (%)": "Increased quantity of lifeforce (%)", "T3 씨앗 확률 증가 (%)": "Increased chance of Tier 3 seeds (%)", "숲의 중심: T4 씨앗 확률 증가 (%)": "Heart of the Grove: increased chance of Tier 4 seeds (%)", "숲의 중심: 선택하지 않은 작물이 시들지 않을 확률 (%)": "Heart of the Grove: chance the unchosen crop does not wilt (%)", "노랑 작물 확률 감소 (%)": "Yellow crop chance reduction (%)", "파랑 작물 확률 감소 (%)": "Blue crop chance reduction (%)", "보라 작물 확률 감소 (%)": "Purple crop chance reduction (%)", "풍성한 수확: 추가 몬스터 10%": "Bountiful Harvest: 10% extra monster", "복제 몬스터 확률 (%)": "Duplicated monster chance (%)", "복제 철: 생기 복제 10%": "Doubling Season: 10% duplicated lifeforce", "갑충석 · 조각 (카오스)": "Scarab & fragment price (Chaos)", "복제의 수확 갑충석": "Harvest Scarab of Doubling", "기괴한 혈통의 갑충석": "Scarab of Monstrous Lineage", "맵 1회당 예상 획득량": "Expected yield per map", "생기 (평균)": "Lifeforce (average)", "생기 (중앙값)": "Lifeforce (median)", "기대 화폐 획득량": "Expected currency", "갑충석·조각 비용 제외": "Excluding scarab and fragment cost", "윤작 선택 전략 비교": "Crop Rotation strategy comparison", "데이터 분포": "Data distribution", "총 생기": "Total lifeforce", "작물 감소 아틀라스 패시브 추천 세팅": "Recommended crop reduction Atlas passives setting", "노랑 / 파랑 / 보라 감소 (%)": "Yellow / Blue / Purple reduction (%)", "맵당 기대 가치 (C)": "Expected value per map (C)", "맵당 기대 가치 (D)": "Expected value per map (D)", "기준 대비": "vs baseline", "기준": "Baseline", "시뮬레이션을 실행할 시 다시 계산됨. -45% 단일 색상 패시브만 찍은 세팅 중 가장 우수한 값을 기준으로 모든 시뮬레이션 결과를 비교.": "Recalculated each time the simulation runs. All simulation results are compared against the best result among setups that take only a single -45% color passive.",  "최적": "Optimal", "탐욕 (현재 가치가 높은 쪽)": "Greedy (higher current value)", "무작위": "Random", "전략": "Strategy", "무작위 대비": "vs Random", "생기 중앙값": "Lifeforce median", "생기 상위 10%": "Lifeforce top 10%", "생기 하위 10%": "Lifeforce bottom 10%", "평균 오차(±1σ)": "Mean error (±1σ)", "화폐 중앙값": "Currency median", "화폐 하위 10%": "Currency bottom 10%", "화폐 상위 10%": "Currency top 10%", "T4가 나온 맵 비율": "Maps with a T4 seed"};
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
-const RX=[[/^쌍 (\d+)$/,"Pair $1"],[/^단계 (\d+)$/,"Step $1"],[/^쌍 (\d+) 노랑$/,"Pair $1 Yellow"],[/^쌍 (\d+) 파랑$/,"Pair $1 Blue"],[/^쌍 (\d+) 보라$/,"Pair $1 Purple"]];
+const RX=[[/^쌍 (\d+)$/,"Pair $1"]];
 const tr=k=>{if(EN[k])return EN[k];for(const [r,v] of RX)if(r.test(k))return k.replace(r,v);return null};
 function applyLang(){
   if(!document.createTreeWalker)return;
@@ -801,7 +797,6 @@ function applyLang(){
     n.nodeValue=t?n.__ko.replace(k,()=>t):n.__ko;
   }
   try{plSize()}catch(e){}
-  document.documentElement.lang=LANG;
   document.documentElement.lang=LANG;
 }
 window.addEventListener("sitebar:lang",e=>{LANG=e.detail;applyLang()});
@@ -816,8 +811,8 @@ function fitMapBoxes(){
 fitMapBoxes();window.addEventListener("load",fitMapBoxes);window.addEventListener("resize",fitMapBoxes);
 /* ---------- 리그별 시세: harvest_rates.py 가 poe.ninja 에서 받아 out/harvest-rates.json 에 저장 ----------
    형식 v2: {order:[최신 시즌 리그, 직전 시즌 리그], leagues:{리그 이름:{ratio, lifeforce:{yellow,blue,purple}, scarab:{doubling,lineage}, updatedAt}}}
-   이전 형식 v1(단일 리그: league + ratio/lifeforce/scarab)도 그대로 읽음. 드롭다운에는 파일에 있는 리그(시즌 최근 2개 + Standard)만 표시 */
-Object.assign(EN,{"마지막 1개 집중":"Last-crop focus","마지막 1개 집중: 마지막에 먹을 작물 하나를 정하고, 나머지 쌍에서는 그 작물과 다른 색을 먼저 수확해 마지막 작물의 씨앗을 최대한 키운 뒤 수확.":"Last-crop focus: pick one crop to harvest last, and in every other pair harvest a crop of a different color first so the last crop's seeds are upgraded as much as possible before it is harvested.","시뮬레이션을 실행하면 계산됨":"Calculated when the simulation runs","계산 중...":"Calculating...","리그":"League","시세 파일 불러오기":"Load rates file","실행 중...":"Running...","시세 파일 없음 (입력창의 기본값 사용)":"No rates file (using the default inputs)","시세 재설정":"Reset rates","작물 감소 패시브 추천":"Crop reduction passive recommendation","작물 감소 패시브 추천이 꺼져 있음":"Crop reduction passive recommendation is off"});
+   드롭다운에는 파일에 있는 리그(시즌 최근 2개 + Standard)만 표시 */
+Object.assign(EN,{"마지막 1개 집중":"Last-crop focus","시뮬레이션을 실행하면 계산됨":"Calculated when the simulation runs","계산 중...":"Calculating...","리그":"League","시세 파일 불러오기":"Load rates file","실행 중...":"Running...","시세 파일 없음 (입력창의 기본값 사용)":"No rates file (using the default inputs)","시세 재설정":"Reset rates","작물 감소 패시브 추천":"Crop reduction passive recommendation","작물 감소 패시브 추천이 꺼져 있음":"Crop reduction passive recommendation is off"});
 RX.push([/^시세 기준: (.+)$/,"Rates as of: $1"],[/^계산 중\.\.\. (\d+)%$/,"Calculating... $1%"]);
 Object.assign(EN,{"조각 효율":"Fragment efficiency","희생의 조각":"Sacrifice Fragment","필멸의 조각":"Mortal Fragment","획득량 (%)":"Gain (%)","획득":"Income","손익":"Profit / Loss","생기":"Lifeforce","갑충석·조각 비용 제외":"Excluding scarab and fragment cost","희생의 조각(개당 +5%)과 필멸의 조각(개당 +10%)은 맵 IIQ에 더해지며, 맵 IIQ와 같이 효과의 절반만 반영함. 조각은 종류마다 1~4개를 선택할 수 있고 개수만큼 IIQ와 비용이 늘어나며, 두 조각의 합이 4개를 넘으면 필멸의 조각을 우선해 합계 4개까지만 적용함(예: 희생 4 + 필멸 2는 필멸 2 + 희생 2, 희생 4 + 필멸 4는 필멸 4만 적용). 체크한 조각은 시뮬레이션의 IIQ와 비용에 반영되고, 조각 효율 패널은 각 조각(1개)과 복제의 수확 갑충석을 단독으로 썼을 때의 증가분, 비용을 제외하지 않은 추가 획득 화폐(획득), 손익을 보여 줌. 조각 이름과 이미지는 가장 싼 조각 기준임.":"Sacrifice Fragment (+5% each) and Mortal Fragment (+10% each) add to map IIQ, and only half of their effect counts, like map IIQ. You can pick 1 to 4 of each kind, and IIQ and cost scale with the count; if the two add up to more than 4, only 4 are applied in total and Mortal Fragments take priority (e.g. 4 Sacrifice + 2 Mortal applies 2 Mortal + 2 Sacrifice, and 4 Sacrifice + 4 Mortal applies 4 Mortal only). Checked fragments are included in the simulation's IIQ and cost; the Fragment efficiency panel shows the gain, the extra currency earned before subtracting cost (Income), and the profit of each fragment (1 piece) and the Harvest Scarab of Doubling used on their own. The fragment name and image are those of the cheapest fragment."});
 Object.assign(EN,Object.fromEntries(Object.entries(FI).map(([en,v])=>[v.ko,en])));   /* 조각 한글 이름 -> 영문 */
@@ -833,7 +828,6 @@ let RATES={order:[],leagues:{}};
 function normRates(d){
   if(!d||typeof d!=="object")return null;
   if(d.leagues&&typeof d.leagues==="object")return{order:Array.isArray(d.order)?d.order.filter(k=>typeof k==="string"):[],leagues:d.leagues};
-  if(typeof d.league==="string"&&d.league)return{order:d.league===STD?[]:[d.league],leagues:{[d.league]:{ratio:d.ratio,lifeforce:d.lifeforce,scarab:d.scarab,updatedAt:d.updatedAt}}};
   return null;
 }
 const tsOf=s=>Date.parse(s)||0;
@@ -874,7 +868,7 @@ $("rfile").addEventListener("change",async e=>{
 async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
 async function loadRates(){
   let fresh=null;
-  for(const u of ["out/harvest-rates.json","harvest-rates.json"]){fresh=normRates(await jget(u));if(fresh)break}
+  fresh=normRates(await jget("out/harvest-rates.json"));
   const cached=normRates(lsGet(RK,null))||{order:[],leagues:{}};
   if(fresh)for(const k of Object.keys(cached.leagues))if(!fresh.leagues[k])delete cached.leagues[k];   /* 서버의 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
   RATES=fresh?mergeRates(cached,fresh):cached;
@@ -890,17 +884,14 @@ $("rreset").addEventListener("click",async()=>{
   await loadRates();
   refresh();
 });
-const PL={sel:null,n:4,pairs:[[0,2],[1,2],[0,1],[2,2],[1,1]],events:[],surv:{},ovr:{}};
+const PL={sel:null,n:4,pairs:[[0,2],[1,2],[0,1],[2,2],[1,1]],events:[],surv:{}};
 const DR={n:4,pairs:PL.pairs.map(p=>p.slice())};
 const CLS=["cy","cb","cp"],CN=["노랑","파랑","보라"];
-const cs=t=>`<span class="${CLS[t]}">${CN[t]} 생기</span>`;
 const upE=(c,u)=>{const n4=c[3]+u[2]*c[2],n3=c[2]*(1-u[2])+u[1]*c[1],n2=c[1]*(1-u[1])+u[0]*c[0],n1=c[0]*(1-u[0]);c[0]=n1;c[1]=n2;c[2]=n3;c[3]=n4};
 function buildState(P){
   const N=PL.n,crops=PL.pairs.slice(0,N).map(pr=>pr.map(t=>({type:t,c:[23,0,0,0]}))),st=new Array(N).fill(0);
   let spent=0;
-  const setO=t=>{for(const k in PL.ovr){const o=PL.ovr[k];if(o.at===t){const [i,j]=k.split("-").map(Number);if(crops[i])crops[i][j].c=o.c.slice()}}};
   PL.events.forEach(([i,j],t)=>{
-    setO(t);
     const pick=crops[i][j],first=st[i]===0;
     spent+=cropEV(P,pick);st[i]=1;
     for(let k=0;k<N;k++){
@@ -909,7 +900,6 @@ function buildState(P){
     }
     if(first&&PL.surv[i]){const tw=crops[i][1-j];st[i]=3-j;if(tw.type!==pick.type)upE(tw.c,P.u)}
   });
-  setO(PL.events.length);
   return {crops,st,spent};
 }
 function plInputs(){
@@ -928,7 +918,6 @@ function seqPlans(P,S){
   if(m)rec(0,[0,0,0],[],0);
   return best;
 }
-function plReset(){PL.events=[];PL.surv={};PL.ovr={};PL.sel=null;plInputs();plRender()}
 function plRender(){
   const P=params();P.rot=true;
   const S=buildState(P),N=PL.n;
@@ -959,10 +948,10 @@ function plSize(){
 $("tabPlay").addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;
   const a=b.dataset.act,i=+b.dataset.i,j=+b.dataset.j;
-  if(a==="r"){PL.n=DR.n;PL.pairs=DR.pairs.map(x=>x.slice());PL.events=[];PL.surv={};PL.ovr={};PL.sel=null;plRender();return}
+  if(a==="r"){PL.n=DR.n;PL.pairs=DR.pairs.map(x=>x.slice());PL.events=[];PL.surv={};PL.sel=null;plRender();return}
   if(a==="p"){PL.sel=[i,j];plRender();return}
   if(a==="h"){if(!PL.sel)return;PL.events.push(PL.sel);PL.sel=null}
-  else if(a==="u"){const e0=PL.events.pop();if(e0&&!PL.events.some(x=>x[0]===e0[0]))delete PL.surv[e0[0]];for(const k in PL.ovr)if(PL.ovr[k].at>PL.events.length)delete PL.ovr[k]}
+  else if(a==="u"){const e0=PL.events.pop();if(e0&&!PL.events.some(x=>x[0]===e0[0]))delete PL.surv[e0[0]]}
   else if(a==="s"){if(PL.surv[i]){if(PL.events.filter(x=>x[0]===i).length>1)return;delete PL.surv[i]}else PL.surv[i]=true}
   plRender();
 });
