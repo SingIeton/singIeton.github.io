@@ -8,7 +8,7 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 이 파일에는 베이스 퀄리티 계산기에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
-main.wrap{max-width:1100px}  /* 표(약 720px) + 설정 패널(300px)이 딱 맞는 폭. 서비스 공용 폭(1040px)보다 약간 넓게 */
+main.wrap{max-width:1142px}  /* 표(약 790px) + 설정 패널(300px)이 딱 맞는 폭. 서비스 공용 폭(1040px)보다 약간 넓게 */
 .grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
@@ -23,10 +23,24 @@ label>span:first-child{white-space:nowrap}
 .tabs{overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}  /* 탭 줄 우측 끝 스크롤바(화살표) 숨김 — 좁은 화면에서는 스크롤 자체는 유지 */
 .tabs::-webkit-scrollbar{display:none;width:0;height:0}
 .tbl{overflow-x:auto;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));border-radius:var(--r);margin-bottom:16px}
-table{min-width:640px}  /* 컬럼 7개 기준 */
-thead th:nth-child(-n+2){width:1%}  /* 베이스·iLvl 열은 내용 폭만 차지, 남는 폭은 오른쪽 숫자 열들이 나눠 가짐 */
-.sz{height:0;overflow:hidden;visibility:hidden;font:400 calc(var(--fs) - 1px)/var(--lh) var(--sans);white-space:nowrap}  /* 머리글 안의 보이지 않는 요소: 모든 탭의 베이스 이름 중 가장 넓은 것이 열 폭을 정함 */
+/* 열 폭 고정: 보조 문구 길이 등 내용에 따라 열이 들쭉날쭉해지지 않게 함.
+   - 베이스 열: 모든 탭의 장비명 중 가장 긴 것에 맞춤 (render() 의 fitBase 가 th 폭을 지정). iLvl 은 그 바로 옆.
+   - 시장가·예상 마진: 고정 폭 / 나머지 숫자 열(0% 베이스·제작비·예상 수익률·권장): 남는 폭을 똑같이 나눠 가짐 */
+table{table-layout:fixed;min-width:722px}
+table.rec{min-width:782px}  /* 추천 탭: '권장' 열이 하나 더 있음 */
+thead th:nth-child(2){width:52px}   /* iLvl */
+thead th:nth-child(5){width:140px}  /* 시장가 (보조 문구가 가장 긺) */
+thead th:nth-child(6){width:140px}  /* 예상 마진 */
+thead th:nth-child(7){width:80px}   /* 예상 ROI: 머리글이 한 줄에 들어가는 최소 폭 */
+table.rec thead th:nth-child(5){width:116px}
+table.rec thead th:nth-child(6){width:112px}
+thead th:nth-child(6),td.mg{padding-right:24px}  /* 예상 마진 열만 오른쪽 여백을 더 줌 */
+thead th{white-space:normal;word-break:keep-all;line-height:1.3;vertical-align:bottom}
+thead th:nth-child(3){white-space:nowrap}  /* '0% 베이스' 가 단어 중간에서 끊기지 않게 */  /* 영문 머리글이 길면 두 줄로 */
+.sz{height:0;overflow:hidden;visibility:hidden;font:400 calc(var(--fs) - 1px)/var(--lh) var(--sans);white-space:nowrap}  /* 머리글 안의 보이지 않는 측정용 요소 */
 .sz .en{font-size:13px;font-weight:400;font-family:var(--sans)}
+.szi{display:inline-block}
+.grid>div{min-width:0}  /* 표가 넓어도 페이지가 아니라 표 안에서만 가로 스크롤 */
 .il{text-align:left}  /* iLvl: 베이스 옆에 기본 여백으로 */
 th,td{padding:8px 12px;white-space:nowrap}
 thead th{background:var(--sf2);border-bottom-color:var(--ln2)}
@@ -39,22 +53,36 @@ tr.g.col td::before{background:none;border:1px solid var(--g)}  /* 접힘 표시
 .en{display:block;font-size:12px;color:var(--mute);font-weight:400;font-family:var(--sans)}
 tbody tr:not(.g) .en{font-size:13px;color:color-mix(in oklab,var(--mute) 75%,var(--ink))}  /* 표 안 영문 장비명: overquality-flip_new 스타일 (카테고리·설정 패널의 영문은 12px 그대로) */
 .cnt{float:right;font:400 12px/1.8 var(--sans);color:var(--mute)}  /* 접힌 카테고리의 행 수 */
-td small{display:block;color:var(--mute);font-size:12px}
+td small{display:block;color:var(--mute);font-size:12px;line-height:1.35;white-space:normal}  /* 보조 문구: 열 폭 안에서 · 기준으로 줄바꿈 */
+td small .nw{white-space:nowrap}
 .tl{margin-left:6px;color:var(--mute);text-decoration:none;font-size:12px}  /* 거래소 링크 */
 .tl:hover{color:var(--g)}
 .pos{color:var(--pos)}.neg{color:var(--bad)}.dim{color:var(--mute)}
-td.mg.pos,td.roi.pos{color:color-mix(in oklab,var(--pos) 60%,var(--mute));text-shadow:none}  /* 형광 느낌 제거: 초록/빨강을 회색과 섞어 채도만 낮춤 (비율 60%를 올리면 진해짐) */
-td.mg.neg,td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute));text-shadow:none}
+/* 라이트(theme.css 기본값): 회색과 섞으면 흰 바탕에서 흐려 보이므로 대비가 충분한 진한 초록/빨강 사용 */
+td.mg.pos,td.roi.pos{color:#0b6b32;text-shadow:none}
+td.mg.neg,td.roi.neg{color:#b3202a;text-shadow:none}
+/* 다크: 기존처럼 초록/빨강을 회색과 섞어 채도만 낮춤 (theme.css 의 다크 적용 조건과 동일: OS 설정 따라가기 / 직접 선택) */
+@media(prefers-color-scheme:dark){
+:root:not([data-theme="light"]) td.mg.pos,:root:not([data-theme="light"]) td.roi.pos{color:color-mix(in oklab,var(--pos) 60%,var(--mute))}
+:root:not([data-theme="light"]) td.mg.neg,:root:not([data-theme="light"]) td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute))}}
+:root[data-theme="dark"] td.mg.pos,:root[data-theme="dark"] td.roi.pos{color:color-mix(in oklab,var(--pos) 60%,var(--mute))}
+:root[data-theme="dark"] td.mg.neg,:root[data-theme="dark"] td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute))}
 /* 예상 마진: 설정 패널 제목(화폐 환율)과 같은 글꼴·굵기(명조 600). ROI는 다른 숫자와 똑같이 두고 색으로만 구분 */
 .mg{font:600 16px/1.3 var(--serif)}
 .devnote{margin:14px 0 0;font-size:12px;line-height:1.4;color:var(--g)}  /* '*개발자용' 안내: 버튼 글자와 같은 포인트 색 */
 .devnote+.row{margin-top:4px}
+/* 설정 패널 카테고리 제목(legend): 더블클릭으로 접기/펼치기 (표의 카테고리 행과 같은 방식) */
+fieldset>legend{cursor:pointer;user-select:none}
+fieldset>legend::before{width:6px;height:6px}
+fieldset>legend:focus-visible{outline-offset:2px}
+fieldset.col>legend::before{background:none;border:1px solid var(--g)}  /* 접힘 표시: 속 빈 마름모 */
+fieldset.col>:not(legend){display:none}
 #reset{color:var(--ink);border-color:var(--mute)}  /* 설정 초기화: 기본(보조 버튼) 색이 너무 어두워 비활성처럼 보여서 글자·테두리를 진하게 */
 </style>
 </head>
 <body>
 <main class="wrap">
-<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑 수익 계산</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocketed bases to maximum quality and reselling them. Data is updated periodically but may differ from the current market. Data with uncertain information is not collected.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 데이터는 일정 주기로 업데이트되지만, 현재 시장과 다를 수 있음에 유의. 정보가 불확실한 데이터는 수집하지 않음.</p><p class="note" id="src"></p></div></div>
+<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocketed bases to maximum quality and reselling them. Data is updated periodically but may differ from the current market. Data with uncertain information is not collected.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 데이터는 일정 주기로 업데이트되지만, 현재 시장과 다를 수 있음에 유의. 정보가 불확실한 데이터는 수집하지 않음.</p><p class="note" id="src"></p></div></div>
 <p id="err" class="note" hidden style="color:var(--bad)"></p>
 <noscript><p class="note">(JavaScript required) 이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
 <div class="grid">
@@ -64,7 +92,7 @@ td.mg.neg,td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute));text-s
 <div>
 <div class="stats" id="stats"></div>
 <div class="tabs" id="tabs"></div>
-<div class="tbl"><table><thead><tr><th><span data-en="Base">베이스</span><div class="sz" id="sz" aria-hidden="true"></div></th><th class="il">iLvl</th><th data-en="0% Base">0% 베이스</th><th data-en="Crafting cost">제작비</th><th data-en="Market price">시장가</th><th data-en="Est. margin">예상 마진</th><th data-en="ROI">수익률</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="tbl"><table><thead><tr><th id="thBase"><span data-en="Base">베이스</span><div class="sz" id="sz" aria-hidden="true"></div></th><th class="il">iLvl</th><th data-en="0% Base">0% 베이스</th><th data-en="Crafting cost">제작비</th><th data-en="Market price">시장가</th><th data-en="Est. margin">예상 마진</th><th data-en="Est. ROI">예상 ROI</th><th id="thRec" data-en="Min. suggested" hidden>최소 권장</th></tr></thead><tbody id="rows"></tbody></table></div>
 </div>
 </div>
 </main>
@@ -125,6 +153,26 @@ if(f.status==="insufficient"||f.a==null)return{n,insufficient:true,reason:f.reas
 const ex=toEx({a:f.a,c:f.c},S);if(ex==null)return{n,reason:f.reason};
 return{n,ex,conf:f.confidence,skipped:f.skipped||0,reason:f.reason}}
 const CONF={get high(){return tt("신뢰 높음","High confidence")},get medium(){return tt("신뢰 보통","Medium confidence")},get low(){return tt("신뢰 낮음","Low confidence")}};
+/* 권장 시도 횟수: '손해를 보지 않을 확률'이 TRY_CONF 이상이 되는 최소 시도 횟수.
+   시도 1회 = 0% 베이스 1개를 끝까지 가공해 보는 것 (성공 확률 M.P, 성공하면 시장가에 판매).
+   n회 중 성공이 k회 이상이면 본전 (k = n × 제작비/시장가 × M.P 를 올림) -> 이항분포로 P(성공 ≥ k) ≥ TRY_CONF 를 계산.
+   확률이 횟수에 따라 들쭉날쭉하므로 '그 이상 몇 번을 해도 계속 만족하는' 최소 n 을 쓴다. 가격 고정·시도 독립 가정의 하한 추정치.
+   결과는 (제작비/시장가) 비율에만 의존하므로 비율별로 캐시한다. */
+const TRY_CONF=.9,TRY_MAX=3000,TRY_CACHE=new Map();
+function triesFor(ratio,P){if(!(ratio>0&&ratio<1))return null;
+const key=ratio.toFixed(4)+"|"+P;if(TRY_CACHE.has(key))return TRY_CACHE.get(key);
+const rr=P/(1-P);let last=0;
+for(let n=1;n<=TRY_MAX;n++){const k=Math.ceil(n*ratio*P-1e-9);let ok=true;
+ if(k>0){let pm=Math.exp(n*Math.log1p(-P)),cdf=0;for(let j=0;j<k;j++){cdf+=pm;pm*=(n-j)/(j+1)*rr}ok=1-cdf>=TRY_CONF}
+ if(!ok)last=n}
+const res=last>=TRY_MAX?{n:TRY_MAX,over:true}:{n:last+1};TRY_CACHE.set(key,res);return res}
+/* 권장 열: "권장 X회" 줄바꿈 "X D"(그만큼 시도하는 데 드는 총 투자금). 마진이 0 이하이면 '-' */
+function triesCell(r,M){const t=r.margin>0&&r.T&&r.T.ex>0?triesFor(r.cost/r.T.ex,M.P):null;
+if(!t)return`<td><span class="dim">-</span><small>&#12288;</small></td>`;
+const inv=t.n*r.cost*M.P,cnt=trim(t.n,0)+(t.over?"+":"");
+const tip=tt(`손해를 보지 않을 확률 ${TRY_CONF*100}% 이상이 되는 최소 시도 횟수 / 그만큼 시도할 때의 총 투자금\n(가격 고정 · 성공 확률 ${trim(M.P*100,1)}% 가정의 하한 추정치)`,
+ `Minimum tries for a ${TRY_CONF*100}% chance of not losing money / total investment for that many tries\n(lower-bound estimate assuming fixed prices and a ${trim(M.P*100,1)}% success chance)`);
+return`<td title="${esc(tip)}">${tt(cnt+"회",cnt+" tries")}<small>${fm(inv,0)+(t.over?"+":"")}</small></td>`}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem(k);const x=v?JSON.parse(v):d;return x==null?d:x}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -137,6 +185,7 @@ const LGDEF={Standard:{div:200,chaos:80,inf:{blacksmith:500}}};
 const defFor=l=>{const o=LGDEF[l]||{},r=((PRICES.leagues||{})[l]||{}).rates||{};return{div:r.div??o.div??BASEDEF.div,chaos:r.chaos??o.chaos??BASEDEF.chaos,inf:Object.assign({},BASEDEF.inf,o.inf,r.inf),q:Object.assign({},BASEDEF.q,o.q,r.q)}};
 const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"]};
 const TABS=Object.assign({rec:["추천","Recommended"]},CATS),REC_N=8;  /* 추천 탭: 전체 장비 중 종합 점수 상위 REC_N개 */
+const REC_MIN_ROI=.25;  /* 추천 탭에는 예상 ROI 가 이 값(25%) 이상인 행만 표시 */
 const REC_W=.5;  /* 추천 정렬 가중치: 점수 = 예상 마진^W × 수익률^(1-W). 0.5면 둘을 동일 비중(기하평균)으로, 1에 가까울수록 마진, 0에 가까울수록 수익률 중시 */
 const L2=(ko,en)=>LANG==="en"?`${en}<span class="en">${ko}</span>`:`${ko}<span class="en">${en}</span>`;
 const FIELDS=()=>[[tt("화폐 환율","Currency exchange rates"),[["div","Divine =","ex"],["chaos","Chaos =","ex"]]],
@@ -186,8 +235,11 @@ function autoCollapse(){COL.clear();const lg=PRICES.leagues[S.league]||{},sm=lg.
  const allStopped=b=>{const stp=v=>sm[b.id+":"+v]||sm[b.id];const lv=[...new Set([...(lg.entries||[]).filter(e=>e.base===b.id).map(e=>e.ilvl),...[82,81].filter(stp)])];return lv.length>0&&lv.every(stp)};
  const byCls=new Map();BASES.forEach(b=>byCls.set(b.cls,(byCls.get(b.cls)||[]).concat(b)));
  byCls.forEach((bs,c)=>{if(bs.every(allStopped))COL.add(c)})}
-function panel(){let h=`<fieldset><legend>${tt("리그","League")}</legend><label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label></fieldset>`;
-for(const[t,fs]of FIELDS())h+=`<fieldset><legend>${t}</legend>${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"${OFF.includes(k)?" disabled":""}>${u?`<em>${u}</em>`:""}</span></label>`).join("")}</fieldset>`;
+/* 설정 카테고리 접힘 상태: panel() 이 설정 패널을 통째로 다시 그리므로(리그 전환·언어 전환·설정 초기화·가격 파일 불러오기) 번호(0=리그, 1~=FIELDS 순서)로 따로 보관. 제목 문구는 언어마다 달라 키로 쓰지 않음 */
+const COLP=new Set();
+const fsH=(i,t)=>`<fieldset data-i="${i}"${COLP.has(i)?' class="col"':""}><legend tabindex="0" role="button" aria-expanded="${!COLP.has(i)}" title="${tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand")}">${t}</legend>`;
+function panel(){let h=fsH(0,tt("리그","League"))+`<label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label></fieldset>`;
+let fi=0;for(const[t,fs]of FIELDS())h+=fsH(++fi,t)+`${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"${OFF.includes(k)?" disabled":""}>${u?`<em>${u}</em>`:""}</span></label>`).join("")}</fieldset>`;
 h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div><p class="devnote">${tt("*개발자용","*For developers")}</p><div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label>${updBtn()}</div>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
@@ -205,9 +257,14 @@ const tradeUrl=(b,v,side)=>{const q=side==="buy0"?{min:0,max:0}:{min:30},il=v===
  const body={query:{status:{option:"securable"},type:b.en,filters:{type_filters:{filters:{rarity:{option:"normal"}}},misc_filters:{filters:{ilvl:il,quality:q,corrupted:{option:"false"},mirrored:{option:"false"},fractured_item:{option:"false"}}},equipment_filters:{filters:{rune_sockets:{min:b.sockets,max:b.sockets}}}}},sort:{price:"asc"}};
  return"https://www.pathofexile.com/trade2/search/poe2/"+encodeURIComponent(S.league)+"?q="+encodeURIComponent(JSON.stringify(body))};
 const nm=b=>LANG==="en"?`${esc(b.en)}${b.ko?`<span class="en">${esc(b.ko)}</span>`:""}`:`${esc(b.ko||b.en)}${b.ko?`<span class="en">${esc(b.en)}</span>`:""}`;
+/* 베이스 열 폭 = 모든 탭의 장비명 중 가장 넓은 것 + 좌우 여백(12px×2). 탭을 바꿔도 같은 폭이라 iLvl 위치가 고정됨 */
+function fitBase(){const z=$("sz");z.innerHTML=BASES.map(b=>`<span class="szi">${nm(b)}</span>`).join("");
+ const w=Math.max(0,...[...z.children].map(e=>e.offsetWidth));if(w)$("thBase").style.width=Math.ceil(w)+24+"px"}
 function render(){
  const M=model(P2/100),lg=PRICES.leagues[S.league]||{entries:[]},need=Math.max(1,Math.ceil(1/M.P-1e-9));
- $("sz").innerHTML=BASES.map(nm).join("");
+ const REC=TAB==="rec",NC=REC?8:7;  /* 권장 열은 추천 탭에서만 표시 */
+ $("thRec").hidden=!REC;
+ $("rows").closest("table").classList.toggle("rec",REC);fitBase();
  $("stats").innerHTML=[[tt("최대 퀄리티 도달 확률","Chance to reach max quality"),trim(M.P*100,1)+"%"],[tt("평균 필요 베이스 수","Avg. bases needed"),trim(1/M.P,1)+tt("개","")],[tt("평균 필요 바알 화폐","Avg. Vaal currency needed"),trim(M.E/M.P,1)+tt("개","")],[tt("평균 필요 퀄리티 화폐","Avg. quality currency needed"),trim(M.Q/M.P,0)+tt("개","")]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
  $("tabs").innerHTML=Object.keys(TABS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${LANG==="en"?TABS[c][1]:TABS[c][0]} <small>${LANG==="en"?TABS[c][0]:TABS[c][1]}</small></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
@@ -218,27 +275,27 @@ function render(){
   const lv=[...new Set([...es.map(e=>e.ilvl),...[82,81].filter(stp)])].sort((x,y)=>y-x);
   if(!lv.length){g.list.push({b,msg:tt("수집 데이터 없음","No data collected")});continue}
   for(const v of lv){const st=stp(v);
-   if(st){if(v===81)continue;g.list.push({b,ilvl:v,msg:tt("데이터 부족으로 수집 중지","Collection stopped (insufficient data)"),tip:(st.reason||"")+(st.since?tt(" ("+fmT(st.since)+" 이후)"," (since "+fmT(st.since)+")"):"")});continue}
+   if(st){if(v===81)continue;g.list.push({b,ilvl:v,msg:tt("수집 중지 (데이터 부족)","Collection stopped (insufficient data)"),tip:(st.reason||"")+(st.since?tt(" ("+fmT(st.since)+" 이후)"," (since "+fmT(st.since)+")"):"")+(st.checkedAt?tt(" · 마지막 확인 "+fmT(st.checkedAt)," · last checked "+fmT(st.checkedAt)):"")});continue}
    const e=es.find(x=>x.ilvl===v);const B=e.buy0&&e.buy0.omitted?{omitted:true}:pick(e.buy0,S,1/M.P),T=pickFair(e.sell30,S,need);
    const r={b,e,B,T};if(B.ex!=null&&T.ex!=null)Object.assign(r,calc(B.ex,T.ex,S.inf[b.infuser],S.q[b.qcur],M));else r.msg=tt("데이터 부족","Insufficient data");g.list.push(r)}}
  if(TAB==="rec"){const g=groups.get("");if(g){const sc=r=>Math.pow(r.margin,REC_W)*Math.pow(r.roi,1-REC_W);  /* 마진·수익률이 모두 양수인 행만 대상 */
-  g.list=g.list.filter(r=>r.margin>0&&r.B.conf!=="low"&&r.T.conf!=="low").sort((a,b)=>sc(b)-sc(a)).slice(0,REC_N)}}  /* 0% 베이스·시장가 중 하나라도 신뢰 낮음이면 제외 */
+  g.list=g.list.filter(r=>r.margin>0&&r.roi>=REC_MIN_ROI&&r.B.conf!=="low"&&r.T.conf!=="low").sort((a,b)=>sc(b)-sc(a)).slice(0,REC_N)}}  /* 0% 베이스·시장가 중 하나라도 신뢰 낮음이면 제외 */
  let h="";groups.forEach((g,cls)=>{const isOpen=!COL.has(cls);
-  if(TAB!=="rec")h+=`<tr class="g${isOpen?"":" col"}" data-cls="${esc(cls)}" tabindex="0" role="button" aria-expanded="${isOpen}" title="${tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand")}"><td colspan="7">${LANG==="en"?`${esc(cls)} <span class="ge">${esc(g.ko||cls)}</span>`:`${esc(g.ko||cls)} <span class="ge">${esc(cls)}</span>`}${isOpen?"":`<span class="cnt">${tt(g.list.length+"행 접힘",g.list.length+" rows hidden")}</span>`}</td></tr>`;
+  if(TAB!=="rec")h+=`<tr class="g${isOpen?"":" col"}" data-cls="${esc(cls)}" tabindex="0" role="button" aria-expanded="${isOpen}" title="${tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand")}"><td colspan="${NC}">${LANG==="en"?`${esc(cls)} <span class="ge">${esc(g.ko||cls)}</span>`:`${esc(g.ko||cls)} <span class="ge">${esc(cls)}</span>`}${isOpen?"":`<span class="cnt">${tt(g.list.length+"행 접힘",g.list.length+" rows hidden")}</span>`}</td></tr>`;
   if(TAB!=="rec"&&!isOpen)return;
   for(const r of g.list){const b=r.b,e=r.e;
-   if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td class="il">${r.ilvl}</td><td colspan="5" class="dim" style="text-align:center"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td colspan="6" class="dim" style="text-align:center">${esc(r.msg)}</td></tr>`;continue}
-   const cs=p=>[p.short?tt(`필요 ${p.need}개 중 ${p.have}개`,`${p.have} of ${p.need} needed`):p.n>=1&&p.n<=9?tt(p.n+"개",p.n+(p.n===1?" listing":" listings")):"",p.conf?CONF[p.conf]:"",p.skipped?tt("저가 "+p.skipped+"개 제외",p.skipped+" low-priced excluded"):""].filter(Boolean).join(" · ");
+   if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td class="il">${r.ilvl}</td><td colspan="${NC-2}" class="dim" style="text-align:center"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td colspan="${NC-1}" class="dim" style="text-align:center">${esc(r.msg)}</td></tr>`;continue}
+   const cs=p=>[p.short?tt(p.have+"개",p.have+(p.have===1?" listing":" listings")):p.n>=1&&p.n<=9?tt(p.n+"개",p.n+(p.n===1?" listing":" listings")):"",p.conf?CONF[p.conf]:""].filter(Boolean).map(x=>`<span class="nw">${x}</span>`).join(" · ");
    const sm=p=>{const t=cs(p);return t?`<small>${t}</small>`:""};
    const lk=side=>`<a class="tl" href="${esc(tradeUrl(b,e.ilvl,side))}" target="_blank" rel="noopener" title="${tt("거래소에서 보기","Open in trade site")}" aria-label="${tt("거래소에서 보기","Open in trade site")}">↗</a>`;
    const cell=(p,side)=>p.omitted?`<span class="dim">-</span>`:p.insufficient?`<span class="dim">${tt("데이터 부족","Insufficient data")}</span>${lk(side)}`:p.ex!=null?`${fm(p.ex)}${lk(side)}${sm(p)}`:`<span class="dim">${tt("없음","None")}</span>${lk(side)}`;
    const cellT=(p,side)=>p.insufficient?`<span class="dim">${tt("데이터 부족","Insufficient data")}</span>${lk(side)}`:p.ex==null?cell(p,side):`${fm(p.ex)}${lk(side)}${sm(p)}`;
    const m=r.margin;
    h+=`<tr><td>${nm(b)}</td><td class="il">${e.ilvl}</td><td${r.B.reason?` title="${esc(r.B.reason)}"`:""}>${cell(r.B,"buy0")}</td>`+
-   (m==null?`<td class="dim">-</td>`:`<td>${fm(r.cost,0)}</td>`)+
+   (m==null?`<td><span class="dim">-</span><small>&#12288;</small></td>`:`<td>${fm(r.cost,0)}<small>&#12288;</small></td>`)+
    `<td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T,"sell30")}</td>`+
-   (m==null?`<td colspan="2" class="dim">${r.msg}</td>`:`<td class="mg ${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fmM(Math.abs(m))}</td><td class="roi ${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`)+`</tr>`}});
- $("rows").innerHTML=h||`<tr><td colspan="7" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
+   (m==null?`<td colspan="${NC-5}" class="dim">${r.msg}</td>`:`<td class="mg ${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fmM(Math.abs(m))}</td><td class="roi ${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`+(REC?triesCell(r,M):""))+`</tr>`}});
+ $("rows").innerHTML=h||`<tr><td colspan="${NC}" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
  /* 수집 로그: 경매장(GGG 거래소) 데이터와 환율(poe.ninja) 데이터는 수집 시각이 서로 달라 한 줄에 구분해 표시 */
  const aT=tt("경매장 데이터: ","Trade-site data: ")+(lg.collectedAt?fmT(lg.collectedAt):tt("없음 (가격 파일을 불러오세요)","none (load a price file)")),
   rT=tt("환율 데이터: ","Rates data: ")+(lg.rates&&lg.rates.updatedAt?fmT(lg.rates.updatedAt):tt("없음 (기본값 사용)","none (using defaults)"));
@@ -248,6 +305,9 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  const fb=JSON.parse($("fb").textContent);
  const tg=tr=>{const c=tr.dataset.cls;COL.has(c)?COL.delete(c):COL.add(c);render()};
  $("rows").addEventListener("dblclick",e=>{const tr=e.target.closest("tr.g");if(tr)tg(tr)});
+ const tgS=lg=>{const fs=lg.parentNode,i=+fs.dataset.i;COLP.has(i)?COLP.delete(i):COLP.add(i);fs.classList.toggle("col",COLP.has(i));lg.setAttribute("aria-expanded",!COLP.has(i))};  /* 설정 패널은 다시 그리지 않고 클래스만 바꿈 */
+ $("set").addEventListener("dblclick",e=>{const lg=e.target.closest("fieldset>legend");if(lg)tgS(lg)});
+ $("set").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const lg=e.target.closest("fieldset>legend");if(!lg)return;e.preventDefault();tgS(lg)});
  $("rows").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr.g");if(!tr)return;e.preventDefault();const c=tr.dataset.cls;tg(tr);const n=[...$("rows").querySelectorAll("tr.g")].find(x=>x.dataset.cls===c);if(n)n.focus()});
  applyStatic();loadSettings();panel();
  BASES=fb.bases;
@@ -256,6 +316,7 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  PRICES=merge(cached,fresh||{leagues:{}});
  fixLeague();autoCollapse();
  panel();LS.set("poe2bq:prices",PRICES);render();
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitBase);  /* 웹폰트가 늦게 로드돼도 폭 재측정 */
 })();
 </script>
 </body>
