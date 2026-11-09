@@ -12,7 +12,7 @@
 <style>
 /* 폰트·색·상단 바·페이지 머리·푸터 등 공통 모양은 style/theme.css. 여기에는 허브 페이지 전용 스타일만 둡니다. */
 /* 홈: 차원문 */
-.portals{display:grid;grid-template-columns:repeat(2,minmax(0,360px));justify-content:center;gap:40px;margin:36px 0 8px}
+.portals{display:grid;grid-template-columns:repeat(2,minmax(0,360px));justify-content:center;gap:40px;margin:24px 0}
 .portal{--pg:var(--g1);position:relative;display:flex;flex-direction:column;align-items:center;padding:30px 28px 26px;text-decoration:none;border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:999px 999px 4px 4px;background:radial-gradient(90% 38% at 50% 0,color-mix(in oklab,var(--pg) 20%,transparent),transparent 75%),var(--sf);transition:border-color .2s}
 .portal[data-game=poe2]{--pg:var(--g2)}
 .portal::before{content:"";position:absolute;inset:7px;border:1px solid color-mix(in oklab,var(--pg) 22%,transparent);border-radius:999px 999px 2px 2px;pointer-events:none}
@@ -22,7 +22,6 @@
 .psub{color:var(--mute);font-size:13px}
 .portal .go{margin:32px 0 18px}
 main.home{display:flex;align-items:center}
-main.home .portals{margin:24px 0}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mute);white-space:nowrap}
 .st::before{content:"";width:7px;height:7px;border:1px solid currentColor;border-radius:50%}
 .st.on{color:var(--pg,var(--g))}.st.on::before{background:currentColor}
@@ -59,15 +58,15 @@ main.home .portals{margin:24px 0}
 /* 페이지별로 다른 값은 아래 두 줄뿐입니다. ROOT: 레포 루트(github.io 메인)까지의 상대경로, PAGE: "home" | "poe1" | "poe2" */
 const ROOT="../",PAGE="home";
 
-/* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). 세 index.html의 이 블록을 동일하게 유지하세요. */
+/* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). poe1.html, poe2.html, poetools.html의 이 블록을 동일하게 유지하세요. */
 const SITE={ko:"PoE Tools",en:"PoE Tools"};
 const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile Tools"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2 Tools"}];
 const SERVICES=[
-{id:"harvest",dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
+{dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
- desc:{ko:"맵 1회당 수확 생기 기댓값 계산\n아틀라스 패시브 세팅 추천",en:"Expected lifeforce per map\nAtlas passive setup suggestions"}},
-{id:"basequality",dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"30% 베이스 퀄리티",en:"30% Base Quality"},
- desc:{ko:"30% 오버퀄리티 베이스 플리핑 마진 계산",en:"Calculates flipping margin for 30% overquality bases"}}];
+ desc:{ko:"수확 생기 기댓값 시뮬레이션\n작물 감소 아틀라스 패시브 추천\n갑충석, 조각 효율 분석",en:"Expected lifeforce simulation\nCrop-reduction Atlas passive suggestions\nScarab and fragment efficiency analysis"}},
+{dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플리핑",en:"Base Quality Flipping"},
+ desc:{ko:"오버소켓 베이스 오버퀄리티 플리핑 수익 계산",en:"Calculates profit from flipping oversocketed bases with overquality"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 if(LANG!=="en")LANG="ko";
@@ -83,7 +82,7 @@ const ART={
 harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--y"],[48,10,26,13,"--b"],[76,2,22,15,"--p"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
 quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--gem"],[48,10,26,13,"--b"],[76,2,22,15,"--mod"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>'};
 
-const dk=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+const dk=()=>document.documentElement.dataset.theme;
 {let t=null;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"}
 const svcsOf=g=>SERVICES.filter(s=>s.games.includes(g.id));
 const gameHref=g=>ROOT+"poetools/"+g.id+"/"+g.id+".html";
