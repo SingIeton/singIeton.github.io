@@ -1,45 +1,47 @@
 {
  "version": 2,
  "source": "poe.ninja",
- "updatedAt": "2026-11-10T04:12:19Z",
+ "updatedAt": "2026-11-10T12:49:32Z",
  "order": [
   "Allflame"
  ],
  "leagues": {
   "Allflame": {
-   "ratio": 525.1,
+   "ratio": 533.7,
    "lifeforce": {
-    "yellow": 3.24,
-    "blue": 16.41,
-    "purple": 26.85
+    "yellow": 3.28,
+    "blue": 15.08,
+    "purple": 22.53
    },
    "scarab": {
-    "doubling": 37.9,
-    "lineage": 6.0
+    "doubling": 43.0,
+    "lineage": 5.4
    },
-   "updatedAt": "2026-11-10T04:12:19Z",
+   "updatedAt": "2026-11-10T12:49:32Z",
    "fragment": {
-    "sacrifice": 0.91,
-    "mortal": 14.88,
-    "sacrificeItem": "Sacrifice at Dusk",
+    "sacrifice": 0.51,
+    "mortal": 17.61,
+    "sacrificeItem": "Sacrifice at Noon",
     "mortalItem": "Mortal Grief"
    }
   },
   "Standard": {
-   "ratio": 627.9,
+   "ratio": 598.2,
    "lifeforce": {
-    "yellow": 2.14,
-    "blue": 15.21,
-    "purple": 17.9
+    "yellow": 2.28,
+    "blue": 17.7,
+    "purple": 19.02
    },
    "scarab": {
-    "doubling": 8.7,
-    "lineage": 8.8
+    "doubling": 6.9,
+    "lineage": 2.6
    },
-   "updatedAt": "2026-11-09T16:58:24Z",
+   "updatedAt": "2026-11-10T12:49:32Z",
    "fragment": {
-    "sacrifice": 0.5,
-    "mortal": 74.73
+    "sacrifice": 0.33,
+    "mortal": 24.06,
+    "sacrificeItem": "Sacrifice at Noon",
+    "mortalItem": "Mortal Hope"
    }
   }
  }
