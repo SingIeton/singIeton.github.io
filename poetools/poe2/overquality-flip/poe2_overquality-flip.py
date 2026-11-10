@@ -5,7 +5,8 @@
 4-B : ilvl >= 82, Quality = 0    -> 최저가 TOP_N_BUY0 (index.html: ilvl 82 행의 0% 베이스)
 5-A : ilvl  = 81, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 81 행의 30% 판매가)
 5-B : ilvl  = 81, Quality = 0    -> 최저가 TOP_N_BUY0 (index.html: ilvl 81 행의 0% 베이스)
-소켓 수는 베이스별로 다르다 (BASES 참고).
+소켓 수는 베이스별로 다르다 (WEAPONS / BODY_ARMOURS 참고). 방어구의 방어 타입(AR/EV/ES)은 BODY_ARMOUR_TYPES 에 보관한다.
+방어구(현재 갑옷만)는 ilvl 82 이상(4-A / 4-B)만 조사하고 ilvl 81(5-A / 5-B)은 조사하지 않는다. 갑옷 소켓은 3.
 
 후처리:
   1) 정상 매물(가격·통화를 알 수 있는 매물)이 2개 미만이면 '데이터 부족'
@@ -23,11 +24,11 @@
 
 요청 절약 규칙:
   - 30% 매물(4-A / 5-A)이 데이터 부족(정상 매물 1개 이하)이면 같은 ilvl 의 0% 검색(4-B / 5-B)은 생략한다.
-    생략된 항목은 prices.json 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
-  - 30% 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
+    생략된 항목은 overquality-flip-prices.json 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
+  - 30% 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 overquality-flip-prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
     기록하고, 이후 실행에서는 그 항목만 건너뛴다 (예: Siege Crossbow ilvl 82 만 중지, 81 은 계속 조회).
     index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 마지막 확인(checkedAt) 후 STOPPED_RETRY_DAYS(3일)가 지나면
-    다음 실행에서 자동으로 다시 조회한다. 그 전에 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을 직접 지정한다.
+    다음 실행에서 자동으로 다시 조회한다 (최신·직전·Standard 리그 모두, 그 리그가 수집되는 실행에서). 그 전에 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을 직접 지정한다.
     조회 결과 30% 매물이 생기면 자동으로 해제되고, 여전히 부족하면 중지가 유지되며 마지막 확인 시각만 갱신된다.
 
 레이트리밋:
@@ -37,25 +38,26 @@
     규칙은 응답 헤더로 매번 갱신하고, 서버가 센 횟수가 더 많으면(브라우저·다른 프로그램 사용분) 그만큼 더 기다린다.
 
 화폐 환율 (poe.ninja):
-  - 실행할 때마다 리그별로 Divine, Chaos, 바알 대장장이의 주입기, 대장장이의 숫돌 가격을 poe.ninja 의 PoE2 화폐 거래소
-    집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 prices.json 의 리그 항목 "rates" 에 저장한다.
+  - 실행할 때마다 리그별로 Divine, Chaos, 바알 대장장이/방어구 장인의 주입기, 대장장이의 숫돌·방어구 장인의 고철 가격을 poe.ninja 의 PoE2 화폐 거래소
+    집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
     overquality-flip.html 이 이 값을 리그별 기본 환율로 쓴다. 모든 리그는 소프트코어(하드코어 제외)다.
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
   - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
 
-결과는 이 스크립트 옆의 out/prices.json 에 저장된다 (index.html 이 같은 out/ 에서 읽음, 기존 파일이 있으면 병합).
+결과는 이 스크립트 옆의 out/overquality-flip-prices.json 에 저장된다 (index.html 이 같은 out/ 에서 읽음, 기존 파일이 있으면 병합).
 
 실행:
-  python poe2_basequality.py                          # 기본: 전체 13종 (QUERY_BASES = BASES), 최신 리그만, 수집 중지 항목 제외
+  python poe2_basequality.py                          # 기본: 전체 23종 (무기 13 + 갑옷 10, QUERY_BASES = BASES), 최신 리그만,
+                                                      # 수집 중지 항목은 STOPPED_RETRY_DAYS(3일)마다 자동 재조회
   python poe2_basequality.py "Warmonger Bow"          # 지정한 베이스 하나 (수집 중지여도 조회)
-  python poe2_basequality.py all                      # 전체 13종 (베이스당 요청 최대 8회)
+  python poe2_basequality.py all                      # 전체 23종 (요청 최대: 무기 베이스당 10회, 갑옷 베이스당 5회)
   python poe2_basequality.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
   python poe2_basequality.py all --league latest      # 최신 리그만 (기본값)
   python poe2_basequality.py all --league "이름"       # 리그 이름 직접 지정
   python poe2_basequality.py all --league "latest,previous:6,standard:24"
       # 최신 리그는 매번, 직전(second latest) 리그는 마지막 수집 후 6시간이 지났을 때만, Standard 는 24시간이 지났을 때만 수집.
       # 리그 뒤의 ":시간" 은 최소 수집 간격이다 (생략하면 매번 수집). 실행 소요 시간·지연을 감안해 1.5시간 일찍 도래한 것으로 본다 (INTERVAL_MARGIN_H).
-  python poe2_basequality.py all --out other/prices.json   # 저장 위치 지정 (기본: out/prices.json)
+  python poe2_basequality.py all --out other/overquality-flip-prices.json   # 저장 위치 지정 (기본: out/overquality-flip-prices.json)
   python poe2_basequality.py --rates-only             # poe.ninja 환율만 갱신 (GGG 검색 없음)
   python poe2_basequality.py all --no-rates           # poe.ninja 환율 갱신 생략
 """
@@ -73,7 +75,7 @@ import requests
 BASE = "https://www.pathofexile.com"
 POESESSID = ""                        # 선택
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")   # index.html 과 같은 위치의 ./out
-DEFAULT_OUT = os.path.join(OUT_DIR, "prices.json")
+DEFAULT_OUT = os.path.join(OUT_DIR, "overquality-flip-prices.json")
 KEEP_LEAGUES = 2               # 수집·표시할 시즌 리그 수 (최신 + 직전)
 INTERVAL_MARGIN_H = 1.5        # '--league 이름:N' 의 N시간 간격을 판단할 때 앞당겨 보는 시간.
                                # 수집 시각은 그 리그 수집이 끝난 뒤에 찍히고, 직전 리그·Standard 는 최신 리그 뒤에 수집되므로
@@ -103,26 +105,27 @@ ISOLATED_REF_N = 3              # 고립된 최저가일 때 윗 매물층의 �
 ISOLATED_BLEND = 0.5            # 적정 시장가 = 최저가 + 이 비율 × (윗 매물층 대표값 − 최저가).  0 이면 최저가 그대로, 1 이면 윗 매물층 가격
 MAX_SKIP = 2                   # 고립된 저가 매물로 보고 제외할 최대 개수 (그 이상 몰려 있으면 실제 시세)
 OUTLIER_MAX_AGE_DAYS = 2            # 이상치로 제외할 수 있는 저가 매물의 최대 경과 일수. 이보다 오래된 저가 매물은 '안 팔리는 가격'이라 제외하지 않는다
-STOPPED_RETRY_DAYS = 3             # 수집 중지 항목을 이 일수마다 자동으로 다시 조회한다 (마지막 확인 시각 기준, 0 이하면 자동 재조회 안 함)
+STOPPED_RETRY_DAYS = 3             # 수집 중지 항목을 이 일수마다 자동으로 다시 조회한다 (마지막 확인 시각 기준, 0 이하면 자동 재조회 안 함).
+                                   # 최신·직전·Standard 모두 같다 (중지 목록은 리그별로 관리되고, 그 리그가 수집되는 실행에서 확인한다)
 # 서로 다른 통화의 매물을 비교하기 위한 환율(Exalted 기준). 이상치 판정과 정렬에만 쓰이고, 저장되는 가격은 매물 원래의 (금액, 통화)다.
-# 실제 값은 리그 수집을 시작할 때 prices.json 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
+# 실제 값은 리그 수집을 시작할 때 overquality-flip-prices.json 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
 # 아래 기본값은 poe.ninja 환율이 없을 때(--no-rates 이고 저장된 값도 없음, 조회 실패)만 쓰인다.
 DEFAULT_CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
 CMP_RATES = dict(DEFAULT_CMP_RATES)
 
 # 검색 조건 (basequality.txt 4-A, 4-B, 5-A, 5-B)
 # ilvl_max / q_max 가 None 이면 "이상(>=)", 값이 있으면 min~max 범위(같으면 정확히 일치)
-# entry_ilvl : prices.json 에서 이 결과가 들어갈 행 / side : sell30(30% 판매가) 또는 buy0(0% 베이스)
+# entry_ilvl : overquality-flip-prices.json 에서 이 결과가 들어갈 행 / side : sell30(30% 판매가) 또는 buy0(0% 베이스)
 SEARCHES = [
     {"label": "4-A", "ilvl_min": 82, "ilvl_max": None, "q_min": 30, "q_max": None, "entry_ilvl": 82, "side": "sell30"},
     {"label": "4-B", "ilvl_min": 82, "ilvl_max": None, "q_min": 0,  "q_max": 0,    "entry_ilvl": 82, "side": "buy0"},
     {"label": "5-A", "ilvl_min": 81, "ilvl_max": 81,   "q_min": 30, "q_max": None, "entry_ilvl": 81, "side": "sell30"},
     {"label": "5-B", "ilvl_min": 81, "ilvl_max": 81,   "q_min": 0,  "q_max": 0,    "entry_ilvl": 81, "side": "buy0"},
 ]
-ILVLS = sorted({sp["entry_ilvl"] for sp in SEARCHES}, reverse=True)   # prices.json 의 ilvl 행 (82, 81)
+ILVLS = sorted({sp["entry_ilvl"] for sp in SEARCHES}, reverse=True)   # overquality-flip-prices.json 의 ilvl 행 (82, 81)
 
 # 베이스 이름 -> 증강 가능 소켓 수 (정확히 이 값)
-BASES = {
+WEAPONS = {
     "Obliterator Bow": 3, "Warmonger Bow": 3,                                       # 활
     "Siege Crossbow": 3, "Gemini Crossbow": 3, "Desolate Crossbow": 3,              # 석궁
     "Sinister Quarterstaff": 3, "Bolting Quarterstaff": 3,                          # 육척봉
@@ -130,9 +133,33 @@ BASES = {
     "Spiny Talisman": 3,                                                            # 부적
     "Massive Greathammer": 3, "Ironwood Greathammer": 3,                            # 양손 철퇴
 }
-# 기본 조회 대상 (all 과 같음): BASES 전체 (활·석궁·육척봉·창·부적·양손 철퇴).
-# 조회에서 빼려면 BASES 에서 지우거나, 데이터 부족이면 아래 '수집 중지' 기능이 자동으로 막는다.
+# 방어구: 부위별로 오버소켓 수가 다르다 (갑옷 = 3). 방어구는 ilvl 82 이상만 조사한다 (ilvl 81 행 없음).
+# 방어력 종류(AR/EV/ES 조합)는 검색 조건에 쓰이지 않으므로 구분하지 않는다. 베이스 이름 -> 소켓 수.
+# 방어 타입은 검색 조건에 쓰이지 않지만, 나중에 타입별 분류·집계에 쓸 수 있도록 데이터로 보관한다 (overquality-flip.html 의 bases[].def 와 같은 값).
+#   AR = 방어도(Armour), EV = 회피(Evasion), ES = 에너지 보호막(Energy Shield), 복합 타입은 '/' 로 연결
+DEFENCE_TYPES = ("AR", "EV", "ES", "AR/EV", "AR/ES", "EV/ES", "AR/EV/ES")
+BODY_ARMOUR_SOCKETS = 3
+BODY_ARMOUR_TYPES = {                                                               # 베이스 이름 -> 방어 타입
+    "Warlord Cuirass": "AR", "Ornate Plate": "AR",
+    "Slipstrike Vest": "EV",
+    "Feathered Raiment": "ES", "Vile Robe": "ES",
+    "Death Mail": "AR/EV", "Dastard Armour": "AR/EV",
+    "Sleek Jacket": "EV/ES", "Falconer's Jacket": "EV/ES",
+    "Sacrificial Regalia": "AR/EV/ES",
+}
+assert set(BODY_ARMOUR_TYPES.values()) <= set(DEFENCE_TYPES)
+BODY_ARMOURS = {name: BODY_ARMOUR_SOCKETS for name in BODY_ARMOUR_TYPES}
+BASES = {**WEAPONS, **BODY_ARMOURS}
+# 기본 조회 대상 (all 과 같음): BASES 전체 (무기 + 갑옷).
+# 조회에서 빼려면 WEAPONS / BODY_ARMOURS 에서 지우거나, 데이터 부족이면 아래 '수집 중지' 기능이 자동으로 막는다.
 QUERY_BASES = list(BASES)
+ARMOUR_ILVLS = (82,)           # 방어구는 82 이상만 조사
+
+
+def ilvls_for(name):
+    """이 베이스에서 조사하는 ilvl 행. 무기는 ILVLS (82, 81), 방어구는 ARMOUR_ILVLS (82)."""
+    return ARMOUR_ILVLS if name in BODY_ARMOURS else tuple(ILVLS)
+
 
 session = requests.Session()
 session.headers.update({"User-Agent": UA, "Content-Type": "application/json"})
@@ -286,9 +313,9 @@ def call(method, url, **kw):
 
 # ---------------------------------------------------------------- poe.ninja 환율 (Exalted 기준)
 # 오버퀄리티 계산에 쓰는 가격을 리그별로 poe.ninja 의 PoE2 화폐 거래소 집계(exchange overview, 약 1시간 단위 갱신)에서 읽어
-# prices.json 의 리그 항목 "rates" 에 저장한다. 값은 모두 '해당 화폐 1개 = Exalted 몇 개'이고,
-# overquality-flip.html 이 같은 키(div, chaos, inf.blacksmith, q.whetstone)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
-#   "rates": {"div": 515.0, "chaos": 67.0, "inf": {"blacksmith": 60.0}, "q": {"whetstone": 0.15},
+# overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다. 값은 모두 '해당 화폐 1개 = Exalted 몇 개'이고,
+# overquality-flip.html 이 같은 키(div, chaos, inf.blacksmith/armourer, q.whetstone/scrap)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
+#   "rates": {"div": 515.0, "chaos": 67.0, "inf": {"blacksmith": 60.0, "armourer": 60.0}, "q": {"whetstone": 0.15, "scrap": 0.15},
 #             "source": "poe.ninja", "updatedAt": "2026-11-08T12:30:00Z"}
 NINJA = "https://poe.ninja/poe2/api/economy"
 # rates 키 -> (표시 이름, 매칭 후보). id·이름·detailsId 에서 영숫자만 남겨 소문자로 만든 값과 비교하므로
@@ -298,6 +325,9 @@ RATE_ITEMS = {
     "chaos": ("Chaos Orb", ("chaos", "chaosorb")),
     "inf.blacksmith": ("Vaal Blacksmith's Infuser", ("vaalblacksmithsinfuser", "vaalblacksmithinfuser")),
     "q.whetstone": ("Blacksmith's Whetstone", ("blacksmithswhetstone", "blacksmithwhetstone", "whetstone")),
+    # 방어구용 (무기는 위의 대장장이 계열)
+    "inf.armourer": ("Vaal Armourer's Infuser", ("vaalarmourersinfuser", "vaalarmourerinfuser")),
+    "q.scrap": ("Armourer's Scrap", ("armourersscrap", "armourerscrap")),
 }
 EXALTED_KEYS = ("exalted", "exaltedorb")
 # Currency 에서 못 찾은 항목을 찾아볼 다른 카테고리 (poe.ninja 문서의 PoE2 type 값)
@@ -415,7 +445,7 @@ def fetch_ninja_rates(league, ninja_leagues):
 
 
 def save_rates(path, league, found, order=None):
-    """found 를 prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
+    """found 를 overquality-flip-prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
     data = {"version": 1, "leagues": {}}
     if os.path.exists(path):
         try:
@@ -465,7 +495,7 @@ def update_rates(leagues, out, order=None):
 
 
 def use_cmp_rates(path, league):
-    """이 리그의 poe.ninja 환율(prices.json 의 rates.chaos / rates.div)을 CMP_RATES 에 반영한다.
+    """이 리그의 poe.ninja 환율(overquality-flip-prices.json 의 rates.chaos / rates.div)을 CMP_RATES 에 반영한다.
     값이 없거나 비정상(숫자가 아니거나 0 이하, Divine <= Chaos)이면 기본값을 쓴다. 리그마다 호출해 다른 리그 값이 섞이지 않게 한다.
     index.html 이 같은 rates 를 읽어 정렬·계산하므로, 이상치 판정(몇 개를 제외할지)이 화면의 기준과 일치한다."""
     CMP_RATES.clear()
@@ -508,7 +538,7 @@ def fetch_leagues():
 
 
 def known_season(path, idx):
-    """리그 목록 조회가 실패했을 때의 대체값: prices.json 에 기록된 시즌 리그 순서(order)의 idx 번째 (0=최신, 1=직전).
+    """리그 목록 조회가 실패했을 때의 대체값: overquality-flip-prices.json 에 기록된 시즌 리그 순서(order)의 idx 번째 (0=최신, 1=직전).
     order 가 없으면 Standard 아닌 리그를 수집 시각이 최근인 순으로 놓고 idx 번째."""
     try:
         with open(path, encoding="utf-8") as f:
@@ -524,7 +554,7 @@ def known_season(path, idx):
 
 
 def hours_since_collected(path, league):
-    """prices.json 에서 이 리그를 마지막으로 수집한 뒤 지난 시간(시). 기록이 없거나 시각 형식을 읽지 못하면 None (= 수집해야 함)."""
+    """overquality-flip-prices.json 에서 이 리그를 마지막으로 수집한 뒤 지난 시간(시). 기록이 없거나 시각 형식을 읽지 못하면 None (= 수집해야 함)."""
     try:
         with open(path, encoding="utf-8") as f:
             ts = json.load(f)["leagues"][league]["collectedAt"]
@@ -666,7 +696,7 @@ _CONF_LEVELS = ["low", "medium", "high"]
 def fair_price(rows, market=False):
     """적정 최저가 판정.
 
-    반환 dict (prices.json 의 sell30.fair / buy0.fair 로 그대로 저장됨):
+    반환 dict (overquality-flip-prices.json 의 sell30.fair / buy0.fair 로 그대로 저장됨):
       status     : "ok" | "insufficient"(데이터 부족)
       a, c       : 적정 최저가 (매물 원래의 금액, 통화). insufficient 면 None
       n          : 판정에 쓴 정상 매물 수
@@ -796,7 +826,7 @@ def show(spec, sockets, total, rows, fair):
         print(f"    -> 적정 최저가: {fair['a']} {fair['c']}  [{CONF_KO[fair['confidence']]}] {fair['reason']}")
 
 
-# ---------------------------------------------------------------- 저장 (index.html 이 읽는 prices.json)
+# ---------------------------------------------------------------- 저장 (index.html 이 읽는 overquality-flip-prices.json)
 def side_payload(total, rows, fair):
     return {
         "total": total,
@@ -826,11 +856,13 @@ def retry_due(info, now=None):
     if last is None:
         return True
     now = now or datetime.now(timezone.utc)
-    return (now - last).total_seconds() >= STOPPED_RETRY_DAYS * 86400
+    # 조회 계획은 실행 '시작'에 세우지만 checkedAt 은 수집 도중(Standard 는 맨 끝)에 찍힌다. 그 차이만큼 매번 조금 모자라
+    # 간격이 실행 주기 단위로 한 칸씩 밀리므로(예: Standard 3일 -> 4일), 리그 수집 간격과 같은 INTERVAL_MARGIN_H 만큼 일찍 도래한 것으로 본다.
+    return (now - last).total_seconds() >= STOPPED_RETRY_DAYS * 86400 - INTERVAL_MARGIN_H * 3600
 
 
 def load_stopped(path, league):
-    """prices.json 에 기록된 '수집 중지' 항목 {"베이스slug:ilvl": {since(중지 시작), checkedAt(마지막 확인), reason}}."""
+    """overquality-flip-prices.json 에 기록된 '수집 중지' 항목 {"베이스slug:ilvl": {since(중지 시작), checkedAt(마지막 확인), reason}}."""
     try:
         with open(path, encoding="utf-8") as f:
             raw = json.load(f)["leagues"].get(league, {}).get("stopped", {})
@@ -847,7 +879,7 @@ def load_stopped(path, league):
 
 
 def load_order(path):
-    """prices.json 의 시즌 리그 순서 ["최신", "직전"] (html 이 최신/직전을 구분하는 데 사용)."""
+    """overquality-flip-prices.json 의 시즌 리그 순서 ["최신", "직전"] (html 이 최신/직전을 구분하는 데 사용)."""
     try:
         with open(path, encoding="utf-8") as f:
             order = json.load(f).get("order")
@@ -905,7 +937,7 @@ def omitted_payload():
 
 
 def run(league, base_name, sockets, ilvls):
-    """베이스 하나를 조회하고 prices.json 용 entries 를 반환 (ilvls 에 든 항목만).
+    """베이스 하나를 조회하고 overquality-flip-prices.json 용 entries 를 반환 (ilvls 에 든 항목만).
     SEARCHES 는 ilvl 마다 30%(A) -> 0%(B) 순서라, 30% 가 데이터 부족이면 같은 ilvl 의 0% 검색은 생략한다."""
     print(f"\n=== {base_name} (소켓 {sockets}, ilvl {'/'.join(map(str, ilvls))}) ===")
     by_ilvl = {}
@@ -936,7 +968,7 @@ def plan_requests(targets, stopped, force):
     now = datetime.now(timezone.utc)
     for name, _ in targets:
         keep = []
-        for v in ILVLS:
+        for v in ilvls_for(name):                           # 무기 82/81, 방어구 82
             key = f"{slug(name)}:{v}"
             if not force and key in stopped:
                 if retry_due(stopped[key], now):
@@ -983,12 +1015,12 @@ def collect(league, stopped, active, todo, out, order):
 def main():
     ap = argparse.ArgumentParser(description="PoE2 trade2 베이스별 최저가 조회")
     ap.add_argument("target", nargs="?", default="all",
-                    help='베이스 이름 또는 "all" = 전체 13종 (기본: %(default)s)')
+                    help=f'베이스 이름 또는 "all" = 전체 {len(BASES)}종 (기본: %(default)s)')
     ap.add_argument("--league", default="latest",
                     help="latest | previous(직전 리그) | standard | 리그 이름 직접 지정. 쉼표로 여러 개. "
                          "'이름:시간' 으로 최소 수집 간격 지정 (예: latest,previous:6,standard:24) (기본: %(default)s)")
     ap.add_argument("--out", default=DEFAULT_OUT,
-                    help="결과 저장 경로 (기본: 스크립트 옆 out/prices.json, 기존 파일이 있으면 병합)")
+                    help="결과 저장 경로 (기본: 스크립트 옆 out/overquality-flip-prices.json, 기존 파일이 있으면 병합)")
     ap.add_argument("--retry-stopped", action="store_true",
                     help="all 실행에서도 '수집 중지'된 항목(베이스+ilvl)을 다시 조회")
     ap.add_argument("--no-rates", action="store_true", help="poe.ninja 환율 갱신을 건너뜀")
