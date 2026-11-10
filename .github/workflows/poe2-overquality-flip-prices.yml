@@ -7,7 +7,7 @@ on:
   workflow_dispatch:             # Actions 탭의 "Run workflow" 버튼으로 수동 실행
 
 permissions:
-  contents: write                # prices.json 을 커밋·푸시하기 위해 필요
+  contents: write                # overquality-flip-prices.json 을 커밋·푸시하기 위해 필요
 
 concurrency:
   group: poe2-overquality-flip-prices          # 이전 실행이 끝나기 전에는 다음 실행을 시작하지 않음
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 out/prices.json 에 저장됩니다.
+      # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 out/overquality-flip-prices.json 에 저장됩니다.
       SCRIPT_DIR: poetools/poe2/overquality-flip
       SCRIPT_NAME: poe2_overquality-flip.py
     steps:
@@ -37,17 +37,17 @@ jobs:
         # ':N' 은 마지막 수집 후 최소 N시간 간격 (실행 소요 시간·크론 지연을 감안해 1.5시간 일찍 도래한 것으로 봄)
         run: python -u "$SCRIPT_NAME" all --league "latest,previous:6,standard:24"
 
-      - name: Validate and commit prices.json
+      - name: Validate and commit overquality-flip-prices.json
         if: ${{ !cancelled() }}                # 수집 중 일부 실패해도, 저장된 진행분은 커밋
         run: |
-          python -c "import json,sys; json.load(open('${SCRIPT_DIR}/out/prices.json', encoding='utf-8'))"
+          python -c "import json,sys; json.load(open('${SCRIPT_DIR}/out/overquality-flip-prices.json', encoding='utf-8'))"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "${SCRIPT_DIR}/out/prices.json"
+          git add "${SCRIPT_DIR}/out/overquality-flip-prices.json"
           if git diff --cached --quiet; then
             echo "변경 없음"
             exit 0
           fi
-          git commit -m "chore: update prices.json ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git commit -m "chore: update overquality-flip-prices.json ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push
