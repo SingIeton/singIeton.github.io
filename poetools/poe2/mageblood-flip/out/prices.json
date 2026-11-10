@@ -1,0 +1,10086 @@
+{
+ "version": 1,
+ "order": [
+  "Forbidden Rites"
+ ],
+ "leagues": {
+  "Forbidden Rites": {
+   "entries": [],
+   "rates": {
+    "div": 616.9,
+    "chaos": 63.48,
+    "source": "poe.ninja",
+    "updatedAt": "2026-11-08T21:23:59Z"
+   },
+   "mageblood": {
+    "total": 7188,
+    "fetched": 832,
+    "partial": true,
+    "bands": [
+     {
+      "lo": 1,
+      "hi": 140,
+      "total": 125,
+      "used": 114
+     },
+     {
+      "lo": 140,
+      "hi": 160,
+      "total": 421,
+      "used": 86
+     },
+     {
+      "lo": 160,
+      "hi": 200,
+      "total": 1241,
+      "used": 87
+     },
+     {
+      "lo": 200,
+      "hi": 260,
+      "total": 1312,
+      "used": 113
+     },
+     {
+      "lo": 260,
+      "hi": 350,
+      "total": 1282,
+      "used": 88
+     },
+     {
+      "lo": 350,
+      "hi": 500,
+      "total": 1390,
+      "used": 104
+     },
+     {
+      "lo": 500,
+      "hi": 800,
+      "total": 979,
+      "used": 102
+     },
+     {
+      "lo": 800,
+      "hi": 1500,
+      "total": 298,
+      "used": 67
+     },
+     {
+      "lo": 1500,
+      "hi": 3000,
+      "total": 108,
+      "used": 62
+     },
+     {
+      "lo": 3000,
+      "hi": null,
+      "total": 32,
+      "used": 9
+     }
+    ],
+    "listings": [
+     {
+      "a": 127,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "gold",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:50:32Z"
+     },
+     {
+      "a": 128,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "jade",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:26:37Z"
+     },
+     {
+      "a": 128,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "ruby",
+       "granite",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T12:27:00Z"
+     },
+     {
+      "a": 128,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "diamond",
+       "topaz"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T20:33:32Z"
+     },
+     {
+      "a": 129,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "sulphur",
+       "granite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-07T11:16:19Z"
+     },
+     {
+      "a": 129,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "quicksilver",
+       "gold",
+       "stibnite"
+      ],
+      "e": 37.0,
+      "t": "2026-11-08T15:02:13Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 25.0,
+      "t": "2026-11-07T02:54:05Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "basalt",
+       "basalt",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T20:54:41Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "granite",
+       "sulphur",
+       "gold",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:42:27Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "bismuth",
+       "ruby",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T19:34:05Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "topaz",
+       "stibnite",
+       "sapphire"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T15:29:21Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "amethyst",
+       "amethyst"
+      ],
+      "e": 37.0,
+      "t": "2026-11-08T19:42:26Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "gold",
+       "amethyst",
+       "diamond",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:59:04Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "sulphur",
+       "jade",
+       "sulphur"
+      ],
+      "e": 38.0,
+      "t": "2026-11-07T01:23:24Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "jade",
+       "basalt",
+       "diamond",
+       "basalt"
+      ],
+      "e": 29.0,
+      "t": "2026-11-08T12:57:27Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "granite",
+       "quicksilver",
+       "gold",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:45:21Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "quicksilver",
+       "stibnite",
+       "silver"
+      ],
+      "e": 35.0,
+      "t": "2026-11-08T17:37:11Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "diamond",
+       "gold",
+       "gold"
+      ],
+      "e": 41.0,
+      "t": "2026-11-08T09:19:49Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "diamond",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T14:28:05Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "sulphur",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:29:21Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "diamond",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-08T20:45:27Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "gold",
+       "ruby",
+       "stibnite",
+       "ruby"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T10:15:57Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "topaz",
+       "granite",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T19:05:12Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "sapphire",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T21:36:07Z"
+     },
+     {
+      "a": 130,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "stibnite",
+       "jade",
+       "jade"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T10:15:57Z"
+     },
+     {
+      "a": 133,
+      "c": "divine",
+      "g": [
+       "jade",
+       "granite",
+       "topaz",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:23:22Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "silver",
+       "topaz"
+      ],
+      "e": 43.0,
+      "t": "2026-11-05T01:12:00Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "amethyst",
+       "sulphur",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T16:18:44Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "stibnite",
+       "jade"
+      ],
+      "e": 39.0,
+      "t": "2026-11-08T15:48:26Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "granite",
+       "sulphur",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T19:51:47Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "quicksilver",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 28.0,
+      "t": "2026-11-08T07:27:16Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "granite",
+       "silver"
+      ],
+      "e": 35.0,
+      "t": "2026-11-08T13:46:58Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "jade",
+       "bismuth",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-08T18:08:42Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "quicksilver",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 32.0,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "silver",
+       "gold",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-04T19:20:00Z"
+     },
+     {
+      "a": 135,
+      "c": "divine",
+      "g": [
+       "silver",
+       "stibnite",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:25:05Z"
+     },
+     {
+      "a": 137,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "amethyst",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-04T11:54:40Z"
+     },
+     {
+      "a": 137,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "diamond",
+       "stibnite"
+      ],
+      "e": 42.0,
+      "t": "2026-11-08T20:07:19Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "gold",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:50:01Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "gold",
+       "quicksilver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "jade",
+       "granite",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T17:39:24Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "sulphur",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "sapphire",
+       "jade",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "gold",
+       "ruby",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "silver",
+       "topaz",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "amethyst",
+       "sapphire",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "sulphur",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "jade",
+       "topaz",
+       "basalt",
+       "basalt"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "amethyst",
+       "sapphire",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "topaz",
+       "gold"
+      ],
+      "e": 25.0,
+      "t": "2026-11-08T06:07:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "bismuth",
+       "silver",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T06:07:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "sapphire",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "amethyst",
+       "basalt",
+       "amethyst"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "jade",
+       "quicksilver",
+       "quicksilver",
+       "sapphire"
+      ],
+      "e": 35.0,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "basalt",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 37.0,
+      "t": "2026-11-08T00:39:51Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "granite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "granite",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "granite",
+       "gold",
+       "quicksilver",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "basalt",
+       "basalt",
+       "jade"
+      ],
+      "e": 27.0,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "granite",
+       "quicksilver",
+       "gold",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "gold",
+       "granite",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sapphire",
+       "silver",
+       "ruby"
+      ],
+      "e": 34.0,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "silver",
+       "silver",
+       "diamond"
+      ],
+      "e": 29.0,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 138,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "basalt",
+       "stibnite",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T04:22:34Z"
+     },
+     {
+      "a": 139,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "sapphire",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-03T06:18:19Z"
+     },
+     {
+      "a": 139,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "basalt",
+       "quicksilver"
+      ],
+      "e": 39.0,
+      "t": "2026-11-08T17:43:21Z"
+     },
+     {
+      "a": 139,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "stibnite",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T16:35:01Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T16:59:03Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "amethyst",
+       "jade",
+       "amethyst"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T12:18:09Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "granite",
+       "amethyst",
+       "granite"
+      ],
+      "e": 32.0,
+      "t": "2026-11-08T15:12:50Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "quicksilver",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T11:12:02Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "diamond",
+       "stibnite"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T10:30:07Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "basalt",
+       "jade"
+      ],
+      "e": 31.0,
+      "t": "2026-11-08T05:41:03Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "quicksilver",
+       "granite"
+      ],
+      "e": 36.0,
+      "t": "2026-11-08T18:25:57Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "basalt",
+       "diamond",
+       "bismuth"
+      ],
+      "e": 43.0,
+      "t": "2026-11-08T08:47:44Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "diamond",
+       "topaz",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:58:39Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "gold",
+       "sulphur",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-11-06T23:39:34Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 34.0,
+      "t": "2026-11-08T12:15:47Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "sulphur",
+       "bismuth",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:29:21Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "gold",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:25:31Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "gold",
+       "jade",
+       "amethyst"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T20:17:24Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "jade",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T11:24:19Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "quicksilver",
+       "ruby",
+       "quicksilver"
+      ],
+      "e": 25.0,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "gold",
+       "ruby"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T08:52:20Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "topaz",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:59:58Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "silver",
+       "basalt"
+      ],
+      "e": 39.0,
+      "t": "2026-11-08T14:24:45Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "jade",
+       "diamond",
+       "diamond"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T11:25:21Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "jade",
+       "bismuth",
+       "jade",
+       "diamond"
+      ],
+      "e": 32.0,
+      "t": "2026-11-08T06:06:01Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "basalt",
+       "sulphur",
+       "basalt"
+      ],
+      "e": 35.0,
+      "t": "2026-11-08T19:15:16Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sapphire",
+       "ruby",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:59:58Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "silver",
+       "sapphire",
+       "gold",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T10:38:20Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "diamond",
+       "amethyst",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T10:32:29Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "granite",
+       "sulphur",
+       "granite"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T00:32:42Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "stibnite",
+       "amethyst",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-06T20:12:50Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "granite",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:59:58Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "diamond",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-07T06:13:17Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "silver",
+       "bismuth",
+       "gold",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T20:29:48Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "sulphur",
+       "silver",
+       "sulphur"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T04:13:39Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "silver",
+       "basalt",
+       "jade",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:29:21Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "silver",
+       "granite"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T05:46:32Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sapphire",
+       "stibnite",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-08T00:53:48Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "diamond",
+       "quicksilver",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T12:02:59Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "gold",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-06T10:54:01Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "quicksilver",
+       "granite"
+      ],
+      "e": 31.0,
+      "t": "2026-11-08T12:55:33Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "granite",
+       "amethyst",
+       "stibnite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-01T15:59:05Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "basalt",
+       "bismuth"
+      ],
+      "e": 39.0,
+      "t": "2026-11-07T17:23:47Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "basalt",
+       "amethyst",
+       "silver"
+      ],
+      "e": 25.0,
+      "t": "2026-11-07T20:27:18Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "basalt",
+       "diamond",
+       "bismuth"
+      ],
+      "e": 41.0,
+      "t": "2026-11-08T11:12:42Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "silver",
+       "topaz",
+       "diamond"
+      ],
+      "e": 41.0,
+      "t": "2026-11-05T14:35:39Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "topaz",
+       "silver",
+       "amethyst"
+      ],
+      "e": 41.0,
+      "t": "2026-11-08T00:15:12Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "quicksilver",
+       "granite"
+      ],
+      "e": 29.0,
+      "t": "2026-11-08T14:01:10Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "ruby",
+       "quicksilver",
+       "sapphire"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T16:36:56Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "diamond",
+       "gold",
+       "gold"
+      ],
+      "e": 43.0,
+      "t": "2026-11-08T08:47:44Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "gold",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T09:01:20Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "quicksilver",
+       "diamond",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T21:14:12Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sulphur",
+       "silver",
+       "silver"
+      ],
+      "e": 29.0,
+      "t": "2026-11-08T14:24:13Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "basalt",
+       "granite",
+       "basalt"
+      ],
+      "e": 39.0,
+      "t": "2026-11-08T14:18:05Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "diamond",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-11-02T11:27:11Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "jade",
+       "diamond",
+       "sulphur",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T02:32:38Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "diamond",
+       "quicksilver",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:32:11Z"
+     },
+     {
+      "a": 140,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sulphur",
+       "gold",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T17:20:32Z"
+     },
+     {
+      "a": 143,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "gold",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T09:20:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "diamond",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:18:53Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "gold",
+       "gold",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "amethyst",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "sulphur",
+       "jade",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T10:59:16Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "amethyst",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "granite",
+       "amethyst",
+       "gold",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T11:12:30Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "jade",
+       "sulphur",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "amethyst",
+       "granite",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T19:47:35Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "diamond",
+       "gold",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "jade",
+       "sulphur",
+       "amethyst",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:19:09Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "jade",
+       "granite",
+       "gold",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "granite",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "sulphur",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "amethyst",
+       "silver"
+      ],
+      "e": 45.0,
+      "t": "2026-11-05T09:48:26Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "silver",
+       "amethyst",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:19:09Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "sulphur",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "amethyst",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "amethyst",
+       "quicksilver",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "granite",
+       "gold",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "jade",
+       "amethyst",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "jade",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "sulphur",
+       "basalt"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T06:19:09Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "silver",
+       "jade",
+       "amethyst",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:19:09Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "granite",
+       "jade",
+       "gold",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:09:08Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "silver",
+       "stibnite",
+       "stibnite",
+       "basalt"
+      ],
+      "e": 32.0,
+      "t": "2026-11-07T20:45:18Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "amethyst",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:41:05Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "sulphur",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-07T15:08:28Z"
+     },
+     {
+      "a": 144,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "silver",
+       "jade",
+       "jade"
+      ],
+      "e": 46.0,
+      "t": "2026-11-07T16:17:10Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "bismuth",
+       "stibnite"
+      ],
+      "e": 40.0,
+      "t": "2026-11-08T12:36:39Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "sulphur",
+       "ruby"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T14:42:27Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "sulphur",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:59:28Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "silver",
+       "topaz",
+       "quicksilver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:42:27Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "stibnite",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-07T20:34:08Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "gold",
+       "sulphur",
+       "quicksilver",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-05T14:32:23Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "gold",
+       "granite"
+      ],
+      "e": 38.0,
+      "t": "2026-11-08T18:04:40Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "gold",
+       "basalt",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T02:49:34Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "diamond",
+       "stibnite",
+       "gold"
+      ],
+      "e": 32.0,
+      "t": "2026-11-03T11:24:54Z"
+     },
+     {
+      "a": 145,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "bismuth",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:55:33Z"
+     },
+     {
+      "a": 146,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "topaz",
+       "stibnite",
+       "gold"
+      ],
+      "e": 47.0,
+      "t": "2026-11-01T10:40:54Z"
+     },
+     {
+      "a": 146,
+      "c": "divine",
+      "g": [
+       "gold",
+       "sulphur",
+       "sapphire",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-07T17:44:44Z"
+     },
+     {
+      "a": 147,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "sulphur",
+       "diamond"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T00:49:19Z"
+     },
+     {
+      "a": 148,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "basalt",
+       "diamond",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-07T14:39:06Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "silver",
+       "granite",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-10-31T11:16:17Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "jade",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:30:40Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "stibnite",
+       "jade",
+       "stibnite"
+      ],
+      "e": 31.0,
+      "t": "2026-11-08T06:43:42Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "sulphur",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": 30.0,
+      "t": "2026-11-08T09:42:37Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "basalt",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 40.0,
+      "t": "2026-11-08T08:49:29Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "jade",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-11-05T23:41:00Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "quicksilver",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:53:52Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 34.0,
+      "t": "2026-11-08T01:39:14Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "stibnite",
+       "ruby",
+       "gold"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T00:15:12Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "quicksilver",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-11-08T10:06:03Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "silver",
+       "diamond",
+       "granite",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T21:22:37Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "sapphire",
+       "basalt",
+       "amethyst"
+      ],
+      "e": 37.0,
+      "t": "2026-11-05T06:37:30Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-07T22:50:30Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "jade",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:28:14Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "jade",
+       "stibnite",
+       "gold",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T16:57:25Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "granite",
+       "granite"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T20:26:14Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "diamond",
+       "ruby"
+      ],
+      "e": 34.0,
+      "t": "2026-11-07T14:04:20Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "sulphur",
+       "basalt"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T19:41:10Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "diamond",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T21:21:42Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "sulphur",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-08T01:38:16Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "jade",
+       "amethyst",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:31:25Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "sulphur",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T09:08:10Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "quicksilver",
+       "bismuth",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:36:12Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "jade",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:52:26Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "basalt",
+       "bismuth",
+       "gold"
+      ],
+      "e": 26.0,
+      "t": "2026-11-08T01:39:19Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "granite",
+       "quicksilver",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-10-30T16:20:08Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:53:52Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "stibnite",
+       "silver",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-26T21:31:52Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "silver",
+       "jade",
+       "sulphur",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:42:27Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "diamond",
+       "ruby"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T16:23:16Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "basalt",
+       "silver",
+       "silver"
+      ],
+      "e": 46.0,
+      "t": "2026-11-04T02:43:13Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "silver",
+       "topaz",
+       "diamond",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "diamond",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:01:13Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "granite",
+       "gold",
+       "silver"
+      ],
+      "e": 46.0,
+      "t": "2026-11-07T16:19:03Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "silver",
+       "silver"
+      ],
+      "e": 31.0,
+      "t": "2026-11-08T17:54:26Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "jade",
+       "quicksilver",
+       "stibnite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T16:30:22Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "granite",
+       "amethyst"
+      ],
+      "e": 39.0,
+      "t": "2026-11-07T20:27:18Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "sulphur",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-08T07:43:02Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "diamond",
+       "topaz",
+       "sulphur"
+      ],
+      "e": 33.0,
+      "t": "2026-11-03T16:27:37Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "quicksilver",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T10:20:25Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "ruby",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 39.0,
+      "t": "2026-11-08T08:47:44Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "basalt",
+       "bismuth",
+       "jade"
+      ],
+      "e": 39.0,
+      "t": "2026-11-08T14:43:44Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "silver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:24:16Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "quicksilver",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:50:31Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "basalt",
+       "basalt",
+       "sulphur"
+      ],
+      "e": 47.0,
+      "t": "2026-11-07T11:53:29Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sulphur",
+       "silver",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:47:58Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sapphire",
+       "amethyst",
+       "sapphire"
+      ],
+      "e": 36.0,
+      "t": "2026-11-07T12:15:18Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "bismuth",
+       "jade",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T21:20:53Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "granite",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-07T11:23:09Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "silver",
+       "bismuth",
+       "stibnite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-10-30T20:12:07Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "gold",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:23:47Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "sulphur",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-05T00:40:46Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "amethyst",
+       "gold",
+       "jade"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T10:48:40Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "bismuth",
+       "jade"
+      ],
+      "e": 31.0,
+      "t": "2026-11-07T22:50:42Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "amethyst",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T21:17:11Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "stibnite",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:47:44Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "bismuth",
+       "silver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:48:56Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "sulphur",
+       "gold",
+       "silver"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T01:42:49Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "bismuth",
+       "jade"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T16:05:39Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "jade",
+       "basalt",
+       "sulphur",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T18:18:56Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T14:28:05Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "quicksilver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:30:30Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "granite",
+       "quicksilver",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-08T11:50:17Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "diamond",
+       "basalt",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T10:23:18Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "sulphur",
+       "gold",
+       "diamond"
+      ],
+      "e": 44.0,
+      "t": "2026-11-07T12:20:38Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "amethyst",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 36.0,
+      "t": "2026-11-07T10:13:46Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "silver",
+       "diamond",
+       "diamond"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:52:20Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "gold",
+       "diamond",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "sapphire",
+       "ruby",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-08T20:18:49Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "gold",
+       "diamond"
+      ],
+      "e": 35.0,
+      "t": "2026-11-08T01:33:32Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "sulphur",
+       "silver"
+      ],
+      "e": 34.0,
+      "t": "2026-11-08T17:06:35Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "stibnite",
+       "sapphire",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T18:20:19Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "granite",
+       "granite",
+       "basalt",
+       "stibnite"
+      ],
+      "e": 35.0,
+      "t": "2026-11-07T07:59:20Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 37.0,
+      "t": "2026-11-08T14:42:27Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "bismuth",
+       "jade",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:26:42Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "bismuth",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-10-30T13:28:00Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "basalt",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 27.0,
+      "t": "2026-11-08T08:26:40Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "bismuth",
+       "amethyst",
+       "topaz"
+      ],
+      "e": 46.0,
+      "t": "2026-10-26T09:32:17Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "gold",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:01:15Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "jade",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-08T09:01:20Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "granite",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:39:29Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "gold",
+       "gold",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T18:55:16Z"
+     },
+     {
+      "a": 160,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "jade",
+       "jade",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T09:08:10Z"
+     },
+     {
+      "a": 163,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "silver",
+       "granite",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T18:36:30Z"
+     },
+     {
+      "a": 164,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "granite",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T05:28:45Z"
+     },
+     {
+      "a": 164,
+      "c": "divine",
+      "g": [
+       "jade",
+       "quicksilver",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 41.0,
+      "t": "2026-11-07T22:05:13Z"
+     },
+     {
+      "a": 164,
+      "c": "divine",
+      "g": [
+       "jade",
+       "diamond",
+       "quicksilver",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T07:39:57Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "sulphur",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T10:35:11Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:27:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "gold",
+       "sapphire",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-07T16:19:43Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "bismuth",
+       "topaz",
+       "topaz"
+      ],
+      "e": 49.0,
+      "t": "2026-11-03T23:47:31Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "silver",
+       "sulphur",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "sapphire",
+       "gold",
+       "bismuth"
+      ],
+      "e": 46.0,
+      "t": "2026-11-05T02:27:46Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "silver",
+       "granite",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-06T00:11:50Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "quicksilver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-06T11:09:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "granite",
+       "gold",
+       "gold"
+      ],
+      "e": 42.0,
+      "t": "2026-10-25T07:57:20Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "jade",
+       "silver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-07T08:52:04Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "granite",
+       "bismuth",
+       "topaz"
+      ],
+      "e": 36.0,
+      "t": "2026-11-03T12:29:47Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 39.0,
+      "t": "2026-10-28T07:03:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "amethyst",
+       "ruby",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-03T06:37:19Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "granite",
+       "stibnite",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-10-30T11:33:44Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "basalt",
+       "granite",
+       "granite"
+      ],
+      "e": 32.0,
+      "t": "2026-11-08T17:46:09Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "jade",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-07T19:18:38Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "sulphur",
+       "gold",
+       "gold"
+      ],
+      "e": 45.0,
+      "t": "2026-11-07T17:01:34Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "diamond",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:42:48Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "jade",
+       "silver"
+      ],
+      "e": 43.0,
+      "t": "2026-11-06T12:27:58Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "silver",
+       "jade",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-10-15T19:23:27Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "stibnite",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-04T20:06:52Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "topaz",
+       "silver"
+      ],
+      "e": 27.0,
+      "t": "2026-11-06T11:09:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "gold",
+       "ruby"
+      ],
+      "e": 47.0,
+      "t": "2026-11-04T17:28:52Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "gold",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-24T01:37:02Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "sapphire",
+       "silver",
+       "silver"
+      ],
+      "e": 42.0,
+      "t": "2026-10-23T09:10:04Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "gold",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 34.0,
+      "t": "2026-10-18T05:30:04Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "stibnite",
+       "diamond"
+      ],
+      "e": 43.0,
+      "t": "2026-11-02T00:39:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "diamond",
+       "topaz"
+      ],
+      "e": 40.0,
+      "t": "2026-10-20T23:38:53Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "bismuth",
+       "gold",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-10-31T07:58:23Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "gold",
+       "jade",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T11:08:38Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-05T14:07:51Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "quicksilver",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T14:24:45Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sapphire",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 44.0,
+      "t": "2026-11-01T06:11:39Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "sulphur",
+       "quicksilver",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T12:17:08Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "jade",
+       "stibnite",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:44:09Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "amethyst",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 29.0,
+      "t": "2026-11-08T12:58:19Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "granite",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T13:26:01Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "diamond",
+       "granite",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T19:49:07Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "diamond",
+       "jade",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T05:28:42Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "basalt",
+       "granite",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-08T12:11:56Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "sapphire",
+       "silver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-02T03:50:01Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "diamond",
+       "granite"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T12:25:39Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "bismuth",
+       "gold"
+      ],
+      "e": 30.0,
+      "t": "2026-11-08T17:01:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "jade",
+       "amethyst",
+       "jade",
+       "quicksilver"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:47:59Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "gold",
+       "gold"
+      ],
+      "e": 42.0,
+      "t": "2026-11-05T01:23:53Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:01:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "diamond",
+       "silver",
+       "jade"
+      ],
+      "e": 30.0,
+      "t": "2026-11-03T23:05:52Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "granite",
+       "granite"
+      ],
+      "e": 45.0,
+      "t": "2026-10-27T15:30:16Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "diamond",
+       "sulphur"
+      ],
+      "e": 33.0,
+      "t": "2026-10-20T04:05:17Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "topaz",
+       "sapphire",
+       "topaz"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T04:39:21Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "basalt",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 29.0,
+      "t": "2026-10-26T09:19:38Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "ruby",
+       "silver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-03T07:02:20Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "sapphire",
+       "amethyst",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-06T05:31:50Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "silver",
+       "gold",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-03T07:44:15Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "diamond",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 41.0,
+      "t": "2026-11-06T19:24:11Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "diamond",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T03:01:26Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "sapphire",
+       "sulphur"
+      ],
+      "e": 48.0,
+      "t": "2026-10-22T12:35:16Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "diamond",
+       "silver"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T18:26:27Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "stibnite",
+       "amethyst",
+       "amethyst"
+      ],
+      "e": 43.0,
+      "t": "2026-11-04T15:43:22Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "granite",
+       "basalt",
+       "granite"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T12:15:10Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "sulphur",
+       "jade",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-06T05:38:33Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "bismuth",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:01:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "amethyst",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-08T20:02:16Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "sulphur",
+       "silver",
+       "jade"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T13:26:01Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "stibnite",
+       "ruby",
+       "ruby"
+      ],
+      "e": 50.0,
+      "t": "2026-11-03T10:15:29Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "stibnite",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 31.0,
+      "t": "2026-10-20T19:11:26Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "sulphur",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-06T13:15:16Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "sulphur",
+       "granite",
+       "ruby"
+      ],
+      "e": 43.0,
+      "t": "2026-10-25T16:54:25Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "granite",
+       "jade",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-05T01:51:58Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "jade",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-10-30T08:46:12Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "topaz",
+       "diamond",
+       "stibnite"
+      ],
+      "e": 45.0,
+      "t": "2026-11-06T11:09:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "diamond",
+       "gold",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-10-31T02:25:23Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "diamond",
+       "jade",
+       "granite"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T21:02:00Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "ruby",
+       "gold",
+       "gold"
+      ],
+      "e": 44.0,
+      "t": "2026-11-04T15:54:55Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "quicksilver",
+       "amethyst",
+       "quicksilver"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T09:19:04Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "ruby",
+       "basalt",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-06T11:09:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "ruby",
+       "amethyst",
+       "gold"
+      ],
+      "e": 47.0,
+      "t": "2026-11-07T16:26:14Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "gold",
+       "gold"
+      ],
+      "e": 39.0,
+      "t": "2026-11-07T10:02:40Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "ruby",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-26T14:14:32Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "basalt",
+       "diamond",
+       "gold"
+      ],
+      "e": 47.0,
+      "t": "2026-10-25T05:00:25Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "amethyst",
+       "diamond",
+       "stibnite"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T16:46:10Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "silver",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T17:01:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "diamond",
+       "granite",
+       "diamond"
+      ],
+      "e": 42.0,
+      "t": "2026-11-03T08:42:35Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "bismuth",
+       "basalt"
+      ],
+      "e": 46.0,
+      "t": "2026-11-01T18:27:21Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "diamond",
+       "amethyst"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T00:59:05Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "granite",
+       "gold",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-11-03T06:14:14Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "ruby",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T11:35:03Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "jade",
+       "quicksilver",
+       "jade",
+       "gold"
+      ],
+      "e": 28.0,
+      "t": "2026-11-08T14:51:38Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "diamond",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T18:54:23Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "diamond",
+       "diamond",
+       "gold"
+      ],
+      "e": 46.0,
+      "t": "2026-11-06T04:00:02Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "jade",
+       "gold",
+       "bismuth"
+      ],
+      "e": 35.0,
+      "t": "2026-11-06T19:23:20Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "basalt",
+       "gold"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T05:08:39Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "gold",
+       "bismuth",
+       "gold"
+      ],
+      "e": 36.0,
+      "t": "2026-11-08T18:09:20Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "stibnite",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-10-24T01:30:46Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "granite",
+       "silver"
+      ],
+      "e": 42.0,
+      "t": "2026-11-04T19:22:04Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "gold",
+       "bismuth",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-04T12:04:35Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "silver",
+       "jade",
+       "granite",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-05T00:58:08Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "gold",
+       "amethyst",
+       "topaz"
+      ],
+      "e": 39.0,
+      "t": "2026-10-31T08:13:46Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "gold",
+       "jade"
+      ],
+      "e": 44.0,
+      "t": "2026-11-07T15:15:35Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "ruby",
+       "diamond",
+       "diamond"
+      ],
+      "e": 39.0,
+      "t": "2026-11-04T10:54:52Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "gold",
+       "silver"
+      ],
+      "e": 47.0,
+      "t": "2026-10-18T15:52:16Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 44.0,
+      "t": "2026-11-07T19:11:59Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "bismuth",
+       "granite"
+      ],
+      "e": 47.0,
+      "t": "2026-11-01T14:48:33Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 40.0,
+      "t": "2026-11-05T15:20:36Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "basalt",
+       "jade"
+      ],
+      "e": 30.0,
+      "t": "2026-11-07T09:30:55Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "silver",
+       "sulphur",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-10-26T00:52:03Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "topaz",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-07T23:37:51Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "amethyst",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:40:34Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "granite",
+       "gold",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-10-28T03:38:36Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "quicksilver",
+       "sulphur"
+      ],
+      "e": 25.0,
+      "t": "2026-11-05T08:37:17Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "stibnite",
+       "basalt",
+       "quicksilver"
+      ],
+      "e": 44.0,
+      "t": "2026-10-26T13:17:52Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "diamond",
+       "sulphur",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T09:00:17Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "diamond",
+       "bismuth",
+       "sulphur"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T04:23:54Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "stibnite",
+       "ruby"
+      ],
+      "e": 31.0,
+      "t": "2026-10-28T14:27:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "bismuth",
+       "jade"
+      ],
+      "e": 29.0,
+      "t": "2026-11-08T17:32:35Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "sulphur",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-06T11:09:13Z"
+     },
+     {
+      "a": 200,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "diamond",
+       "jade"
+      ],
+      "e": 42.0,
+      "t": "2026-11-04T20:29:35Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "jade",
+       "basalt",
+       "granite"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T08:53:15Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "gold",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T18:36:32Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "gold",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T16:57:10Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "diamond",
+       "bismuth",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T19:44:29Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "gold",
+       "granite",
+       "gold",
+       "bismuth"
+      ],
+      "e": 45.0,
+      "t": "2026-11-06T13:16:55Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "diamond",
+       "stibnite",
+       "gold"
+      ],
+      "e": 43.0,
+      "t": "2026-10-26T14:59:35Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "gold",
+       "gold",
+       "jade"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T19:34:28Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "gold",
+       "gold",
+       "basalt"
+      ],
+      "e": 48.0,
+      "t": "2026-10-22T07:22:57Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 43.0,
+      "t": "2026-11-07T13:20:19Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 41.0,
+      "t": "2026-10-29T03:22:08Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "gold",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-05T04:21:28Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "bismuth",
+       "bismuth",
+       "diamond"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T21:15:42Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "basalt",
+       "gold",
+       "amethyst"
+      ],
+      "e": 43.0,
+      "t": "2026-10-07T10:10:38Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "ruby",
+       "ruby",
+       "gold"
+      ],
+      "e": 38.0,
+      "t": "2026-11-08T20:51:55Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "gold",
+       "jade"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T05:58:13Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "granite",
+       "silver",
+       "granite",
+       "gold"
+      ],
+      "e": 46.0,
+      "t": "2026-10-20T09:55:41Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "silver",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:47:13Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "granite",
+       "bismuth",
+       "granite",
+       "jade"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T09:42:58Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "diamond",
+       "jade",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-07T19:17:39Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "bismuth",
+       "diamond"
+      ],
+      "e": 25.0,
+      "t": "2026-11-06T13:06:36Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "amethyst",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-10-24T07:34:51Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "quicksilver",
+       "stibnite",
+       "amethyst"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T07:37:47Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "basalt",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-10-14T07:42:52Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "sapphire",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-10-22T10:25:40Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "quicksilver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:11:47Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sulphur",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": 27.0,
+      "t": "2026-10-18T16:19:55Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-06T00:21:49Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "sulphur",
+       "diamond"
+      ],
+      "e": 37.0,
+      "t": "2026-10-11T02:54:21Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "jade",
+       "bismuth",
+       "amethyst"
+      ],
+      "e": 44.0,
+      "t": "2026-10-30T11:52:16Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 41.0,
+      "t": "2026-10-28T05:26:30Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "diamond",
+       "diamond",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-10-31T16:20:23Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "stibnite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:45:16Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "basalt",
+       "silver",
+       "silver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-07T04:34:05Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "ruby",
+       "sulphur",
+       "silver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T15:13:20Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "diamond",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-07T21:00:51Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "amethyst",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T17:13:24Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "stibnite",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-01T10:03:37Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "granite",
+       "ruby",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-01T11:27:21Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "stibnite",
+       "jade",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-28T23:58:04Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-04T05:05:48Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "basalt",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-07T06:25:30Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "quicksilver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:30:31Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "silver",
+       "silver"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T13:21:09Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-07T12:03:24Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "silver",
+       "diamond",
+       "diamond"
+      ],
+      "e": 47.0,
+      "t": "2026-10-24T11:19:33Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "quicksilver",
+       "basalt",
+       "basalt"
+      ],
+      "e": 42.0,
+      "t": "2026-10-12T17:43:32Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "gold",
+       "jade"
+      ],
+      "e": 41.0,
+      "t": "2026-11-06T22:59:36Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "silver",
+       "stibnite",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-06T14:01:16Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "basalt",
+       "quicksilver"
+      ],
+      "e": 31.0,
+      "t": "2026-10-13T08:07:22Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "silver",
+       "jade",
+       "basalt",
+       "basalt"
+      ],
+      "e": 32.0,
+      "t": "2026-10-28T03:52:13Z"
+     },
+     {
+      "a": 260,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "bismuth",
+       "sulphur",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-28T05:04:47Z"
+     },
+     {
+      "a": 263,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "diamond",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-02T16:55:22Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T16:51:21Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "bismuth",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:05:36Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "granite",
+       "jade",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 46.0,
+      "t": "2026-11-07T15:19:11Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "silver",
+       "silver"
+      ],
+      "e": 45.0,
+      "t": "2026-10-23T19:19:28Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "jade",
+       "bismuth",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 40.0,
+      "t": "2026-11-07T04:20:42Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "granite",
+       "sulphur",
+       "diamond"
+      ],
+      "e": 41.0,
+      "t": "2026-11-07T19:23:31Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "topaz",
+       "quicksilver",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-16T19:42:08Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "ruby",
+       "bismuth",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-03T18:28:18Z"
+     },
+     {
+      "a": 265,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "bismuth",
+       "diamond"
+      ],
+      "e": 25.0,
+      "t": "2026-11-06T22:54:21Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "ruby",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-07T10:02:46Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "diamond",
+       "basalt",
+       "basalt"
+      ],
+      "e": 49.0,
+      "t": "2026-11-05T01:41:44Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sapphire",
+       "gold",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-10-09T07:09:58Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "quicksilver",
+       "sulphur",
+       "ruby"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T17:18:00Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "diamond",
+       "amethyst"
+      ],
+      "e": 39.0,
+      "t": "2026-10-16T01:32:05Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "granite",
+       "quicksilver",
+       "sapphire",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-10-30T11:42:00Z"
+     },
+     {
+      "a": 266,
+      "c": "divine",
+      "g": [
+       "granite",
+       "topaz",
+       "gold",
+       "gold"
+      ],
+      "e": 36.0,
+      "t": "2026-10-13T17:11:21Z"
+     },
+     {
+      "a": 267,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "topaz",
+       "silver",
+       "silver"
+      ],
+      "e": 33.0,
+      "t": "2026-10-25T18:39:56Z"
+     },
+     {
+      "a": 267,
+      "c": "divine",
+      "g": [
+       "jade",
+       "sapphire",
+       "quicksilver",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-10-25T18:39:56Z"
+     },
+     {
+      "a": 267,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "amethyst",
+       "sulphur",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-25T18:39:56Z"
+     },
+     {
+      "a": 267,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "stibnite",
+       "sulphur",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-25T18:40:02Z"
+     },
+     {
+      "a": 268,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "sulphur",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T12:03:46Z"
+     },
+     {
+      "a": 269,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 38.0,
+      "t": "2026-10-25T06:03:33Z"
+     },
+     {
+      "a": 269,
+      "c": "divine",
+      "g": [
+       "gold",
+       "ruby",
+       "quicksilver",
+       "ruby"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T11:52:16Z"
+     },
+     {
+      "a": 269,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 44.0,
+      "t": "2026-10-30T01:53:07Z"
+     },
+     {
+      "a": 269,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "diamond",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T13:28:30Z"
+     },
+     {
+      "a": 269,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "granite",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:51:25Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "quicksilver",
+       "sulphur"
+      ],
+      "e": 36.0,
+      "t": "2026-11-05T04:07:28Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "stibnite",
+       "jade",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-10-26T09:53:31Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "granite",
+       "jade",
+       "gold",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-13T06:40:45Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "stibnite",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 46.0,
+      "t": "2026-10-19T22:01:46Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "basalt",
+       "gold"
+      ],
+      "e": 38.0,
+      "t": "2026-10-22T16:21:47Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "jade",
+       "gold"
+      ],
+      "e": 43.0,
+      "t": "2026-11-08T16:47:41Z"
+     },
+     {
+      "a": 270,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 45.0,
+      "t": "2026-10-30T01:45:21Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "jade",
+       "sulphur"
+      ],
+      "e": 43.0,
+      "t": "2026-10-17T17:07:46Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "stibnite",
+       "jade"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T03:46:21Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "silver",
+       "ruby"
+      ],
+      "e": 40.0,
+      "t": "2026-10-03T19:56:49Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "bismuth",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-01T18:49:52Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "ruby",
+       "bismuth",
+       "ruby"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T09:52:30Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "silver",
+       "silver",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-11-06T17:57:56Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "jade",
+       "silver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:52:35Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T21:07:34Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "gold",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 45.0,
+      "t": "2026-10-16T16:36:43Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "diamond",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-03T09:11:18Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "granite",
+       "gold"
+      ],
+      "e": 40.0,
+      "t": "2026-10-13T11:47:47Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "diamond",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T11:19:58Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "amethyst",
+       "granite"
+      ],
+      "e": 47.0,
+      "t": "2026-10-16T11:29:51Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "jade",
+       "amethyst"
+      ],
+      "e": 50.0,
+      "t": "2026-11-01T12:09:29Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "ruby",
+       "ruby",
+       "diamond"
+      ],
+      "e": 47.0,
+      "t": "2026-11-01T19:41:41Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "diamond",
+       "silver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-04T10:07:22Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "silver",
+       "gold"
+      ],
+      "e": 42.0,
+      "t": "2026-11-08T09:40:55Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "amethyst",
+       "diamond",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-07T13:04:37Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "jade",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": 28.0,
+      "t": "2026-11-08T16:24:24Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-10-31T00:03:44Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T02:52:17Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "quicksilver",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-10-30T15:33:28Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 45.0,
+      "t": "2026-10-13T17:47:14Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-11-06T12:45:38Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "quicksilver",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 31.0,
+      "t": "2026-10-12T05:59:37Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "sapphire",
+       "amethyst",
+       "stibnite"
+      ],
+      "e": 34.0,
+      "t": "2026-11-07T10:11:41Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "ruby",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-06T16:39:08Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "gold",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T14:46:49Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "bismuth",
+       "jade",
+       "bismuth"
+      ],
+      "e": 40.0,
+      "t": "2026-10-14T04:17:58Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 44.0,
+      "t": "2026-11-07T08:13:13Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T10:37:22Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "jade",
+       "diamond",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-10-14T21:58:55Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "ruby",
+       "bismuth",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:24:29Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "sulphur",
+       "diamond",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-07T17:50:50Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "topaz",
+       "ruby",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-10-09T13:26:27Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "diamond",
+       "gold"
+      ],
+      "e": 32.0,
+      "t": "2026-10-07T06:36:19Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "bismuth",
+       "sapphire"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T06:06:29Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "sulphur",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-08T20:16:03Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "silver",
+       "silver"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T14:35:03Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "diamond",
+       "quicksilver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-05T09:19:32Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "sapphire",
+       "sapphire"
+      ],
+      "e": 48.0,
+      "t": "2026-10-14T03:26:54Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "diamond",
+       "granite",
+       "diamond"
+      ],
+      "e": 47.0,
+      "t": "2026-11-05T00:41:27Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "stibnite",
+       "gold",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T15:53:36Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T02:39:47Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "granite",
+       "sapphire"
+      ],
+      "e": 50.0,
+      "t": "2026-10-30T01:48:31Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T07:34:30Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "quicksilver",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T21:28:25Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 29.0,
+      "t": "2026-11-07T16:19:08Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "silver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-10-31T22:34:49Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "stibnite",
+       "amethyst",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:27:49Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "gold",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-10-10T10:57:18Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "sapphire",
+       "stibnite"
+      ],
+      "e": 28.0,
+      "t": "2026-10-02T10:21:46Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": 31.0,
+      "t": "2026-11-07T13:40:53Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 33.0,
+      "t": "2026-11-07T17:45:36Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "silver",
+       "jade"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T14:57:17Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "diamond",
+       "diamond",
+       "ruby"
+      ],
+      "e": 41.0,
+      "t": "2026-11-08T09:32:11Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "gold",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T15:55:13Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "silver",
+       "sulphur",
+       "silver",
+       "granite"
+      ],
+      "e": 49.0,
+      "t": "2026-10-21T12:03:33Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T18:47:36Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "gold",
+       "quicksilver",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-10-23T19:46:45Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "silver",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-10-17T01:56:22Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "sulphur",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T11:15:20Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "diamond",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-04T12:28:01Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "gold",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-11T16:56:13Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "quicksilver",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-10-04T16:42:23Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "ruby",
+       "bismuth"
+      ],
+      "e": 29.0,
+      "t": "2026-11-07T16:24:07Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "silver",
+       "bismuth",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 42.0,
+      "t": "2026-11-04T20:23:54Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "stibnite",
+       "granite",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-10-08T12:02:00Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "silver",
+       "diamond",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T17:37:48Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "gold",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-03T01:26:24Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "ruby",
+       "diamond",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T01:32:43Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "stibnite",
+       "bismuth"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T08:51:47Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "granite",
+       "amethyst",
+       "topaz"
+      ],
+      "e": 50.0,
+      "t": "2026-10-26T00:20:29Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "jade",
+       "diamond",
+       "topaz"
+      ],
+      "e": 50.0,
+      "t": "2026-10-15T17:16:38Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "diamond",
+       "granite",
+       "bismuth"
+      ],
+      "e": 28.0,
+      "t": "2026-10-10T17:24:11Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "quicksilver",
+       "diamond"
+      ],
+      "e": 37.0,
+      "t": "2026-11-04T23:18:47Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "bismuth",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T11:48:53Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-10-27T12:17:41Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "ruby",
+       "bismuth",
+       "amethyst"
+      ],
+      "e": 48.0,
+      "t": "2026-11-05T16:51:32Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "basalt",
+       "bismuth",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-11-08T18:28:35Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "jade",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-10-14T09:44:10Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "stibnite",
+       "quicksilver",
+       "stibnite"
+      ],
+      "e": 38.0,
+      "t": "2026-10-25T13:59:39Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 35.0,
+      "t": "2026-10-21T14:21:05Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "ruby",
+       "gold"
+      ],
+      "e": 37.0,
+      "t": "2026-11-04T19:09:37Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "ruby",
+       "bismuth"
+      ],
+      "e": 46.0,
+      "t": "2026-11-05T00:14:35Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "sulphur",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T12:08:15Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "silver",
+       "silver"
+      ],
+      "e": 35.0,
+      "t": "2026-11-07T22:29:34Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "diamond",
+       "stibnite",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T16:24:25Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "sulphur",
+       "diamond",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T14:37:50Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "jade",
+       "jade",
+       "silver"
+      ],
+      "e": 44.0,
+      "t": "2026-11-08T13:21:31Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "amethyst",
+       "gold",
+       "gold"
+      ],
+      "e": 29.0,
+      "t": "2026-10-10T03:10:01Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "stibnite",
+       "amethyst",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-10-18T10:08:33Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": 44.0,
+      "t": "2026-10-10T02:42:59Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "jade",
+       "bismuth",
+       "bismuth",
+       "sapphire"
+      ],
+      "e": 41.0,
+      "t": "2026-11-08T04:24:46Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "quicksilver",
+       "silver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:00:57Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "silver",
+       "sulphur"
+      ],
+      "e": 45.0,
+      "t": "2026-11-04T19:38:00Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": 46.0,
+      "t": "2026-10-30T02:53:47Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "topaz",
+       "ruby",
+       "stibnite"
+      ],
+      "e": 38.0,
+      "t": "2026-10-10T05:53:38Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "basalt",
+       "granite",
+       "jade"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T20:48:20Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "basalt",
+       "sulphur",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-08T06:04:20Z"
+     },
+     {
+      "a": 350,
+      "c": "divine",
+      "g": [
+       "granite",
+       "gold",
+       "basalt",
+       "basalt"
+      ],
+      "e": 47.0,
+      "t": "2026-11-06T20:08:31Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "diamond",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-10-24T04:31:08Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "amethyst",
+       "bismuth"
+      ],
+      "e": 27.0,
+      "t": "2026-09-28T14:30:31Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "quicksilver",
+       "amethyst"
+      ],
+      "e": 43.0,
+      "t": "2026-10-06T13:25:28Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "gold",
+       "topaz",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-09-25T01:47:01Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "sulphur",
+       "stibnite",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-10-07T05:56:51Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "bismuth",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-01T20:05:36Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-10-17T10:21:18Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "quicksilver",
+       "sulphur",
+       "jade"
+      ],
+      "e": 43.0,
+      "t": "2026-11-01T05:05:20Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 46.0,
+      "t": "2026-10-07T00:30:59Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "quicksilver",
+       "stibnite",
+       "jade"
+      ],
+      "e": 48.0,
+      "t": "2026-11-07T15:01:03Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "gold",
+       "basalt",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-03T14:28:41Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "basalt",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-10-06T10:27:41Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "bismuth",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-09-30T12:03:47Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "bismuth",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T21:10:41Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "stibnite",
+       "amethyst"
+      ],
+      "e": 33.0,
+      "t": "2026-11-01T16:37:00Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "jade",
+       "quicksilver"
+      ],
+      "e": 48.0,
+      "t": "2026-11-06T22:46:33Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "silver",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-11-08T08:04:22Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "stibnite",
+       "quicksilver"
+      ],
+      "e": 42.0,
+      "t": "2026-11-07T19:05:43Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "quicksilver",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-08T13:33:20Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sulphur",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-10-19T14:52:10Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "bismuth",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 42.0,
+      "t": "2026-11-02T01:01:49Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "diamond",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-10-31T10:27:32Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "basalt",
+       "jade",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T13:33:20Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "sulphur",
+       "gold",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-09-29T22:00:36Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "amethyst",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-09-25T14:37:01Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-08T21:12:01Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "sulphur",
+       "silver",
+       "sulphur"
+      ],
+      "e": 48.0,
+      "t": "2026-10-22T06:35:23Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "granite",
+       "bismuth"
+      ],
+      "e": 42.0,
+      "t": "2026-10-11T23:03:46Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "ruby",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 43.0,
+      "t": "2026-10-20T10:44:03Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "gold",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-03T16:36:35Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "bismuth",
+       "gold",
+       "bismuth"
+      ],
+      "e": 44.0,
+      "t": "2026-10-25T12:18:51Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "granite",
+       "basalt",
+       "basalt"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T05:24:57Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "jade",
+       "gold",
+       "gold"
+      ],
+      "e": 35.0,
+      "t": "2026-09-27T17:33:55Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "silver",
+       "sapphire"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T16:59:30Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "jade",
+       "diamond"
+      ],
+      "e": 46.0,
+      "t": "2026-10-03T08:06:57Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "gold",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-10-26T05:52:51Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "jade",
+       "jade",
+       "stibnite"
+      ],
+      "e": 47.0,
+      "t": "2026-10-13T14:51:41Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "granite",
+       "basalt",
+       "granite"
+      ],
+      "e": 34.0,
+      "t": "2026-10-25T05:00:25Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "stibnite",
+       "diamond",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-10-13T12:59:30Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T06:28:17Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "granite",
+       "topaz"
+      ],
+      "e": 43.0,
+      "t": "2026-11-07T18:44:28Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "ruby",
+       "topaz",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-05T15:37:10Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "diamond",
+       "silver",
+       "amethyst"
+      ],
+      "e": 43.0,
+      "t": "2026-09-27T22:03:41Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "stibnite",
+       "silver",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-10-06T05:39:31Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "bismuth",
+       "jade"
+      ],
+      "e": 42.0,
+      "t": "2026-10-11T01:07:47Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "jade",
+       "granite"
+      ],
+      "e": 50.0,
+      "t": "2026-10-28T15:49:31Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 41.0,
+      "t": "2026-10-15T01:13:34Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "bismuth",
+       "gold",
+       "gold"
+      ],
+      "e": 44.0,
+      "t": "2026-10-26T19:18:06Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "gold",
+       "ruby"
+      ],
+      "e": 48.0,
+      "t": "2026-10-28T19:09:09Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "diamond",
+       "diamond"
+      ],
+      "e": 48.0,
+      "t": "2026-11-07T08:50:20Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "diamond",
+       "silver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 34.0,
+      "t": "2026-10-24T16:03:02Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "bismuth",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-31T04:24:00Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-04T02:28:50Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "bismuth",
+       "gold",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T16:09:01Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "diamond",
+       "diamond",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T16:14:32Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "quicksilver",
+       "gold",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-10-28T07:26:47Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "silver",
+       "gold"
+      ],
+      "e": 34.0,
+      "t": "2026-09-27T16:42:04Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "quicksilver",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T17:28:30Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "jade",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-07T06:34:12Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "silver",
+       "sulphur",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-06T16:45:39Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "ruby",
+       "ruby",
+       "quicksilver"
+      ],
+      "e": 48.0,
+      "t": "2026-10-15T16:57:15Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "jade",
+       "quicksilver"
+      ],
+      "e": 45.0,
+      "t": "2026-10-25T15:42:36Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "diamond",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-11-05T22:41:13Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "quicksilver",
+       "silver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-07T19:05:43Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "bismuth",
+       "granite",
+       "quicksilver"
+      ],
+      "e": 39.0,
+      "t": "2026-10-14T18:08:11Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "quicksilver",
+       "jade"
+      ],
+      "e": 46.0,
+      "t": "2026-10-17T08:35:06Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "jade",
+       "granite"
+      ],
+      "e": 48.0,
+      "t": "2026-10-24T19:34:52Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "sapphire",
+       "sapphire",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T13:33:20Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "diamond",
+       "silver",
+       "stibnite"
+      ],
+      "e": 48.0,
+      "t": "2026-10-15T02:25:21Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "diamond",
+       "diamond",
+       "quicksilver"
+      ],
+      "e": 44.0,
+      "t": "2026-10-27T00:01:00Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 41.0,
+      "t": "2026-11-06T03:52:25Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sapphire",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-10-30T11:36:01Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "granite",
+       "jade",
+       "jade"
+      ],
+      "e": 45.0,
+      "t": "2026-11-06T23:22:33Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "bismuth",
+       "silver",
+       "ruby"
+      ],
+      "e": 49.0,
+      "t": "2026-10-15T18:03:37Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-17T15:24:22Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "sulphur",
+       "quicksilver",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-10-08T14:30:06Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": 44.0,
+      "t": "2026-09-28T13:23:17Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "granite",
+       "silver",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T14:13:12Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "bismuth",
+       "silver",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-10-18T12:40:09Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "amethyst",
+       "granite",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T16:16:26Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "quicksilver",
+       "jade",
+       "sulphur"
+      ],
+      "e": 47.0,
+      "t": "2026-10-22T13:59:39Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "gold",
+       "ruby"
+      ],
+      "e": 43.0,
+      "t": "2026-10-05T10:11:38Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "granite",
+       "quicksilver",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-11-03T02:05:37Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "bismuth",
+       "silver",
+       "diamond"
+      ],
+      "e": 46.0,
+      "t": "2026-10-18T19:18:49Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "granite",
+       "granite",
+       "sulphur"
+      ],
+      "e": 43.0,
+      "t": "2026-11-08T20:19:12Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "quicksilver",
+       "diamond"
+      ],
+      "e": 39.0,
+      "t": "2026-10-01T04:20:44Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "stibnite",
+       "quicksilver",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-06T15:21:59Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "bismuth",
+       "sulphur"
+      ],
+      "e": 41.0,
+      "t": "2026-10-24T20:42:47Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "bismuth",
+       "sulphur",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-10-25T13:20:36Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "jade",
+       "jade",
+       "silver"
+      ],
+      "e": 41.0,
+      "t": "2026-10-04T15:51:09Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-17T12:13:13Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sulphur",
+       "granite",
+       "amethyst"
+      ],
+      "e": null,
+      "t": "2026-11-05T07:04:35Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "bismuth",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-10T06:51:57Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T19:29:00Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "bismuth",
+       "granite",
+       "jade"
+      ],
+      "e": 41.0,
+      "t": "2026-10-24T20:23:10Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "bismuth",
+       "jade",
+       "silver"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:01:16Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "quicksilver",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-10-20T19:53:19Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "jade",
+       "stibnite"
+      ],
+      "e": 45.0,
+      "t": "2026-10-27T21:39:19Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "bismuth",
+       "gold",
+       "diamond"
+      ],
+      "e": 46.0,
+      "t": "2026-10-25T22:27:50Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "quicksilver",
+       "bismuth",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-09-30T16:04:45Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "sapphire",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 45.0,
+      "t": "2026-09-25T12:06:34Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "topaz",
+       "jade",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-10-15T19:58:29Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "diamond",
+       "basalt"
+      ],
+      "e": 49.0,
+      "t": "2026-10-06T08:03:44Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "jade",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T14:07:24Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "basalt",
+       "quicksilver",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-10-26T22:27:34Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "jade",
+       "basalt"
+      ],
+      "e": null,
+      "t": "2026-10-02T10:55:21Z"
+     },
+     {
+      "a": 500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "sulphur",
+       "bismuth",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T19:12:41Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "bismuth",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-10-26T00:14:24Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sapphire",
+       "topaz",
+       "topaz"
+      ],
+      "e": 49.0,
+      "t": "2026-11-04T23:43:18Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "granite",
+       "granite"
+      ],
+      "e": 49.0,
+      "t": "2026-10-24T20:46:28Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "granite",
+       "gold",
+       "basalt"
+      ],
+      "e": 49.0,
+      "t": "2026-11-05T23:44:31Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "stibnite",
+       "basalt",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T02:48:30Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "jade",
+       "basalt"
+      ],
+      "e": 48.0,
+      "t": "2026-09-30T21:19:42Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "gold",
+       "gold",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-09-29T02:04:58Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "diamond",
+       "ruby"
+      ],
+      "e": null,
+      "t": "2026-09-28T18:34:39Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "gold",
+       "gold"
+      ],
+      "e": 42.0,
+      "t": "2026-10-09T11:15:22Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "quicksilver",
+       "silver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-02T06:41:34Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "jade",
+       "diamond",
+       "gold",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-10-05T02:01:29Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "granite",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-09-28T12:08:32Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "sulphur",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-10-23T18:59:38Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "granite",
+       "basalt",
+       "basalt"
+      ],
+      "e": 33.0,
+      "t": "2026-11-06T14:10:31Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "jade",
+       "topaz"
+      ],
+      "e": 46.0,
+      "t": "2026-11-08T17:18:47Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "diamond",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 37.0,
+      "t": "2026-10-18T23:10:32Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "diamond",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-10-03T14:36:47Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 49.0,
+      "t": "2026-10-19T13:51:24Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "topaz",
+       "jade",
+       "silver"
+      ],
+      "e": 48.0,
+      "t": "2026-09-29T19:47:23Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T05:46:32Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "silver",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T08:34:40Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "silver",
+       "gold"
+      ],
+      "e": 43.0,
+      "t": "2026-09-17T17:26:48Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "granite",
+       "jade",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-03T06:07:41Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "topaz",
+       "amethyst",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-11-02T12:51:19Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "diamond",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-10-09T14:30:08Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "ruby",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 43.0,
+      "t": "2026-09-28T02:10:49Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "bismuth",
+       "bismuth",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T16:34:33Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "jade",
+       "quicksilver",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-05T01:31:47Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "ruby",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-10-04T23:54:05Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "jade",
+       "sulphur",
+       "stibnite",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-09-15T13:15:11Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "granite",
+       "granite",
+       "quicksilver",
+       "basalt"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T12:46:21Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "diamond",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T16:34:33Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "amethyst",
+       "stibnite",
+       "granite"
+      ],
+      "e": 46.0,
+      "t": "2026-09-26T09:12:09Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T19:04:06Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "granite",
+       "granite"
+      ],
+      "e": 49.0,
+      "t": "2026-10-29T07:06:46Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "basalt",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-10-07T04:32:16Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "quicksilver",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-05T16:44:00Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "topaz",
+       "silver",
+       "silver"
+      ],
+      "e": 39.0,
+      "t": "2026-11-03T14:33:48Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "jade",
+       "silver",
+       "stibnite"
+      ],
+      "e": 44.0,
+      "t": "2026-11-07T12:08:27Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "gold",
+       "gold",
+       "sulphur"
+      ],
+      "e": 46.0,
+      "t": "2026-10-27T21:02:33Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "stibnite",
+       "silver"
+      ],
+      "e": 42.0,
+      "t": "2026-11-08T20:59:18Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "stibnite",
+       "jade",
+       "jade"
+      ],
+      "e": 48.0,
+      "t": "2026-11-02T10:44:43Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "basalt",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-09-16T07:19:31Z"
+     },
+     {
+      "a": 800,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "bismuth",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-10-19T12:50:19Z"
+     },
+     {
+      "a": 840,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "silver",
+       "bismuth"
+      ],
+      "e": 48.0,
+      "t": "2026-11-01T10:54:37Z"
+     },
+     {
+      "a": 840,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "diamond",
+       "quicksilver",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-08T16:13:55Z"
+     },
+     {
+      "a": 843,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "amethyst",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-01T12:14:53Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "granite",
+       "amethyst",
+       "sulphur"
+      ],
+      "e": null,
+      "t": "2026-09-27T03:40:19Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "topaz",
+       "granite"
+      ],
+      "e": 32.0,
+      "t": "2026-09-25T21:26:57Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "gold",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-11-06T21:50:23Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "amethyst",
+       "gold",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-09-23T22:02:28Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "granite",
+       "basalt",
+       "quicksilver",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-10-19T22:50:46Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "jade",
+       "sulphur"
+      ],
+      "e": 47.0,
+      "t": "2026-09-22T19:32:55Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "gold",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T22:22:31Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "granite",
+       "bismuth",
+       "bismuth",
+       "basalt"
+      ],
+      "e": 42.0,
+      "t": "2026-11-07T19:25:02Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "granite",
+       "granite",
+       "silver",
+       "basalt"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T11:34:44Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "basalt",
+       "diamond",
+       "bismuth"
+      ],
+      "e": 45.0,
+      "t": "2026-10-10T02:29:30Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 26.0,
+      "t": "2026-11-05T12:11:50Z"
+     },
+     {
+      "a": 850,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "silver",
+       "bismuth"
+      ],
+      "e": 43.0,
+      "t": "2026-10-31T04:45:13Z"
+     },
+     {
+      "a": 860,
+      "c": "divine",
+      "g": [
+       "gold",
+       "topaz",
+       "gold",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-10-04T03:53:31Z"
+     },
+     {
+      "a": 868,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "diamond",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-10-20T03:21:53Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "jade",
+       "granite",
+       "granite"
+      ],
+      "e": 33.0,
+      "t": "2026-11-07T14:16:17Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "jade",
+       "bismuth",
+       "gold",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-10-24T03:14:00Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "jade",
+       "silver",
+       "jade"
+      ],
+      "e": 48.0,
+      "t": "2026-11-05T20:13:11Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "sulphur",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-10-27T02:56:22Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "gold",
+       "granite",
+       "granite",
+       "basalt"
+      ],
+      "e": 50.0,
+      "t": "2026-10-29T05:04:26Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "quicksilver",
+       "amethyst",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-05T21:57:17Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "granite",
+       "stibnite",
+       "jade",
+       "stibnite"
+      ],
+      "e": 48.0,
+      "t": "2026-10-15T01:55:33Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "sulphur",
+       "quicksilver"
+      ],
+      "e": null,
+      "t": "2026-11-07T06:59:56Z"
+     },
+     {
+      "a": 888,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 47.0,
+      "t": "2026-11-06T09:08:11Z"
+     },
+     {
+      "a": 890,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "gold",
+       "silver"
+      ],
+      "e": 50.0,
+      "t": "2026-10-10T00:25:09Z"
+     },
+     {
+      "a": 899,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "basalt",
+       "bismuth",
+       "granite"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T09:21:38Z"
+     },
+     {
+      "a": 899,
+      "c": "divine",
+      "g": [
+       "topaz",
+       "ruby",
+       "quicksilver",
+       "sapphire"
+      ],
+      "e": null,
+      "t": "2026-11-04T14:19:26Z"
+     },
+     {
+      "a": 899,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "quicksilver",
+       "quicksilver",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T17:46:44Z"
+     },
+     {
+      "a": 899,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T13:51:15Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "granite",
+       "gold",
+       "bismuth",
+       "jade"
+      ],
+      "e": null,
+      "t": "2026-11-07T13:00:13Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "quicksilver",
+       "sulphur"
+      ],
+      "e": 47.0,
+      "t": "2026-11-05T21:41:40Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "gold",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-10-20T00:04:15Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "sapphire",
+       "bismuth",
+       "bismuth"
+      ],
+      "e": 40.0,
+      "t": "2026-09-29T06:12:23Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "basalt",
+       "gold",
+       "gold"
+      ],
+      "e": 48.0,
+      "t": "2026-10-01T06:43:47Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "silver",
+       "diamond",
+       "diamond"
+      ],
+      "e": 46.0,
+      "t": "2026-10-13T15:13:32Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "diamond",
+       "amethyst",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T18:02:42Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "jade",
+       "jade",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T09:11:20Z"
+     },
+     {
+      "a": 1500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T20:31:55Z"
+     },
+     {
+      "a": 1450,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "gold",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T21:24:55Z"
+     },
+     {
+      "a": 1450,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "stibnite",
+       "jade",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T10:23:12Z"
+     },
+     {
+      "a": 1450,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "basalt",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-11-08T12:09:46Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "gold",
+       "gold",
+       "ruby",
+       "sulphur"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "amethyst",
+       "bismuth",
+       "silver",
+       "silver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "granite",
+       "quicksilver"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T20:23:33Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "silver",
+       "bismuth",
+       "basalt",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "silver",
+       "silver",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 48.0,
+      "t": "2026-10-29T18:47:32Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "gold",
+       "sapphire",
+       "sapphire"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "stibnite",
+       "jade"
+      ],
+      "e": 45.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "bismuth",
+       "quicksilver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "granite",
+       "amethyst"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1400,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T05:02:33Z"
+     },
+     {
+      "a": 1550,
+      "c": "divine",
+      "g": [
+       "jade",
+       "silver",
+       "silver",
+       "granite"
+      ],
+      "e": 50.0,
+      "t": "2026-10-30T00:02:17Z"
+     },
+     {
+      "a": 1566,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "silver",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-10-07T08:58:32Z"
+     },
+     {
+      "a": 1588,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "silver",
+       "silver"
+      ],
+      "e": 50.0,
+      "t": "2026-10-06T15:02:11Z"
+     },
+     {
+      "a": 1588,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "sulphur",
+       "silver"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T17:16:37Z"
+     },
+     {
+      "a": 1600,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "jade",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T06:44:06Z"
+     },
+     {
+      "a": 1600,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "diamond",
+       "gold",
+       "bismuth"
+      ],
+      "e": 49.0,
+      "t": "2026-11-06T12:33:51Z"
+     },
+     {
+      "a": 1600,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "quicksilver",
+       "bismuth",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-10-17T21:05:18Z"
+     },
+     {
+      "a": 1770,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "gold",
+       "basalt"
+      ],
+      "e": 47.0,
+      "t": "2026-10-31T13:09:06Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "quicksilver",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-11-01T12:56:30Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "amethyst",
+       "amethyst"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "diamond",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T21:54:06Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "granite",
+       "sulphur",
+       "ruby"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "quicksilver",
+       "bismuth"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T20:23:33Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "diamond",
+       "bismuth"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "silver",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T21:54:06Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "diamond",
+       "gold",
+       "ruby"
+      ],
+      "e": 50.0,
+      "t": "2026-10-30T09:09:18Z"
+     },
+     {
+      "a": 1800,
+      "c": "divine",
+      "g": [
+       "jade",
+       "granite",
+       "diamond",
+       "diamond"
+      ],
+      "e": 48.0,
+      "t": "2026-11-08T08:47:02Z"
+     },
+     {
+      "a": 1900,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "silver",
+       "gold",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-10-19T18:21:01Z"
+     },
+     {
+      "a": 1900,
+      "c": "divine",
+      "g": [
+       "jade",
+       "jade",
+       "stibnite",
+       "silver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-05T12:35:58Z"
+     },
+     {
+      "a": 1900,
+      "c": "divine",
+      "g": [
+       "granite",
+       "basalt",
+       "bismuth",
+       "granite"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T13:30:45Z"
+     },
+     {
+      "a": 1998,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sapphire",
+       "ruby",
+       "topaz"
+      ],
+      "e": 50.0,
+      "t": "2026-10-29T11:41:33Z"
+     },
+     {
+      "a": 1999,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "gold",
+       "silver",
+       "gold"
+      ],
+      "e": 33.0,
+      "t": "2026-10-14T08:09:42Z"
+     },
+     {
+      "a": 1999,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "diamond",
+       "jade",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-10-25T19:07:44Z"
+     },
+     {
+      "a": 1999,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "gold",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-10-18T03:55:34Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "diamond",
+       "diamond",
+       "topaz"
+      ],
+      "e": 48.0,
+      "t": "2026-10-16T10:30:15Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "jade",
+       "granite",
+       "ruby"
+      ],
+      "e": 49.0,
+      "t": "2026-10-19T12:46:14Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "jade",
+       "stibnite",
+       "gold",
+       "gold"
+      ],
+      "e": 49.0,
+      "t": "2026-09-25T11:18:01Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "silver",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-04T06:13:29Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "jade",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-11-05T10:44:29Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "silver",
+       "silver",
+       "ruby",
+       "sulphur"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T17:55:54Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "topaz",
+       "ruby",
+       "gold"
+      ],
+      "e": null,
+      "t": "2026-10-06T06:43:35Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "basalt",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-06T08:55:03Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "jade",
+       "bismuth",
+       "granite"
+      ],
+      "e": 31.0,
+      "t": "2026-11-07T05:55:50Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "silver",
+       "quicksilver",
+       "silver",
+       "jade"
+      ],
+      "e": 46.0,
+      "t": "2026-11-07T12:42:11Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "ruby",
+       "granite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T14:38:18Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "gold",
+       "silver",
+       "diamond",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-09-26T13:33:01Z"
+     },
+     {
+      "a": 2000,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "quicksilver",
+       "gold",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-10-14T18:14:36Z"
+     },
+     {
+      "a": 2100,
+      "c": "divine",
+      "g": [
+       "jade",
+       "bismuth",
+       "sulphur",
+       "jade"
+      ],
+      "e": 47.0,
+      "t": "2026-11-08T03:13:26Z"
+     },
+     {
+      "a": 2100,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "jade",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-10-17T11:07:54Z"
+     },
+     {
+      "a": 2250,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "sulphur",
+       "diamond",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T08:31:21Z"
+     },
+     {
+      "a": 2300,
+      "c": "divine",
+      "g": [
+       "granite",
+       "diamond",
+       "granite",
+       "basalt"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T09:03:36Z"
+     },
+     {
+      "a": 2388,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "stibnite",
+       "gold",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-10-08T09:47:31Z"
+     },
+     {
+      "a": 2400,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "granite",
+       "granite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T15:16:25Z"
+     },
+     {
+      "a": 2499,
+      "c": "divine",
+      "g": [
+       "basalt",
+       "granite",
+       "bismuth",
+       "granite"
+      ],
+      "e": 49.0,
+      "t": "2026-11-07T14:03:11Z"
+     },
+     {
+      "a": 2500,
+      "c": "divine",
+      "g": [
+       "silver",
+       "granite",
+       "granite",
+       "jade"
+      ],
+      "e": 50.0,
+      "t": "2026-11-05T09:37:17Z"
+     },
+     {
+      "a": 2500,
+      "c": "divine",
+      "g": [
+       "ruby",
+       "sapphire",
+       "quicksilver",
+       "topaz"
+      ],
+      "e": null,
+      "t": "2026-11-07T14:48:27Z"
+     },
+     {
+      "a": 2500,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "stibnite",
+       "stibnite"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T13:28:23Z"
+     },
+     {
+      "a": 2500,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "bismuth",
+       "diamond",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-01T18:33:41Z"
+     },
+     {
+      "a": 2550,
+      "c": "divine",
+      "g": [
+       "gold",
+       "jade",
+       "bismuth",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-10-14T12:54:57Z"
+     },
+     {
+      "a": 2688,
+      "c": "divine",
+      "g": [
+       "jade",
+       "gold",
+       "diamond",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-09-29T10:47:27Z"
+     },
+     {
+      "a": 2688,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "silver",
+       "stibnite"
+      ],
+      "e": 40.0,
+      "t": "2026-10-07T23:17:03Z"
+     },
+     {
+      "a": 2900,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "sulphur",
+       "sulphur",
+       "diamond"
+      ],
+      "e": 49.0,
+      "t": "2026-11-02T08:22:07Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "sulphur",
+       "sulphur"
+      ],
+      "e": 49.0,
+      "t": "2026-10-29T18:27:33Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "gold",
+       "stibnite",
+       "jade",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-10-15T13:22:46Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "stibnite",
+       "granite",
+       "jade"
+      ],
+      "e": 49.0,
+      "t": "2026-11-08T17:55:54Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "sapphire",
+       "basalt",
+       "jade",
+       "granite"
+      ],
+      "e": null,
+      "t": "2026-11-01T19:27:45Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "gold",
+       "quicksilver",
+       "gold",
+       "granite"
+      ],
+      "e": 50.0,
+      "t": "2026-10-12T11:46:32Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "amethyst",
+       "quicksilver"
+      ],
+      "e": 50.0,
+      "t": "2026-10-19T10:50:56Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "stibnite",
+       "jade",
+       "jade",
+       "diamond"
+      ],
+      "e": 32.0,
+      "t": "2026-10-29T08:42:04Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "bismuth",
+       "stibnite"
+      ],
+      "e": 41.0,
+      "t": "2026-10-29T08:42:04Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "bismuth",
+       "diamond",
+       "diamond"
+      ],
+      "e": 50.0,
+      "t": "2026-11-07T12:17:10Z"
+     },
+     {
+      "a": 3000,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "granite",
+       "granite",
+       "jade"
+      ],
+      "e": 47.0,
+      "t": "2026-10-15T13:34:44Z"
+     },
+     {
+      "a": 3500,
+      "c": "divine",
+      "g": [
+       "sulphur",
+       "silver",
+       "sulphur",
+       "bismuth"
+      ],
+      "e": 47.0,
+      "t": "2026-10-17T02:42:15Z"
+     },
+     {
+      "a": 3600,
+      "c": "divine",
+      "g": [
+       "gold",
+       "bismuth",
+       "silver",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-11-08T12:08:50Z"
+     },
+     {
+      "a": 3800,
+      "c": "divine",
+      "g": [
+       "silver",
+       "gold",
+       "bismuth",
+       "gold"
+      ],
+      "e": 50.0,
+      "t": "2026-10-17T16:53:34Z"
+     },
+     {
+      "a": 4222,
+      "c": "divine",
+      "g": [
+       "jade",
+       "bismuth",
+       "stibnite",
+       "silver"
+      ],
+      "e": null,
+      "t": "2026-10-07T05:26:51Z"
+     },
+     {
+      "a": 4555,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "basalt",
+       "jade",
+       "stibnite"
+      ],
+      "e": null,
+      "t": "2026-10-10T14:28:00Z"
+     },
+     {
+      "a": 5000,
+      "c": "divine",
+      "g": [
+       "granite",
+       "bismuth",
+       "sapphire",
+       "diamond"
+      ],
+      "e": null,
+      "t": "2026-11-08T15:20:37Z"
+     },
+     {
+      "a": 5000,
+      "c": "divine",
+      "g": [
+       "quicksilver",
+       "jade",
+       "gold",
+       "bismuth"
+      ],
+      "e": null,
+      "t": "2026-10-15T11:12:51Z"
+     },
+     {
+      "a": 5555,
+      "c": "divine",
+      "g": [
+       "diamond",
+       "bismuth",
+       "silver",
+       "silver"
+      ],
+      "e": 33.0,
+      "t": "2026-10-26T11:22:50Z"
+     },
+     {
+      "a": 6000,
+      "c": "divine",
+      "g": [
+       "bismuth",
+       "amethyst",
+       "bismuth",
+       "ruby"
+      ],
+      "e": 49.0,
+      "t": "2026-09-30T07:06:16Z"
+     }
+    ],
+    "buy": {
+     "status": "ok",
+     "a": 127,
+     "c": "divine",
+     "n": 10,
+     "confidence": "high",
+     "skipped": 0,
+     "age": 0.2,
+     "reason": "매물 10개, 최저가/중앙값 98%"
+    },
+    "skipped": 0,
+    "excluded": {
+     "못 파는 조합": 159
+    },
+    "collectedAt": "2026-11-08T21:34:02Z"
+   },
+   "collectedAt": "2026-11-08T21:34:02Z"
+  }
+ }
+}

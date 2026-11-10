@@ -1,27 +1,94 @@
-Path of Exile 2에서 마법사의 피(Mageblood) 아이템의 4를 최저가로 구매해서 디바인을 발라서 되파는데(flipping) 도움을 줄 웹페이지를 만들거야.
-github의 root/poetools/poe2/mageblood-flip/ 아래에 들어갈거고, index.html과 기타 필요한 폴더를 작성할거야. javascript와 python으로 작업.
+[사용자 요청]
+기존 서비스(overquality-flip)의 구조를 참고해서 만드는 중인 PoE2 경매장에서 mageblood를 구매해서 divine orb로 reroll 후 재판매하기 위해 1. 어떤 모드 조합가 나오면 reroll을 멈추는 것이 유리한지 2. flipping 한건 당 평균 예상 수익을 보여주는 mageblood-flip 서비스야. 
 
-index.html에서는 
-	1. 미타락(uncorropted), indentified 마법사의 피(mageblood) 베이스 시장 최저가 (평균, 중앙값 etc)
-	2. mageblood를 divine으로 1회 reroll 했을 때의 무작위 조합에 대한 평균 기대 판매가
-	3. 사용자가 보면서 reroll 하거나 reroll하다가 그 조합에서 멈추는게 좋은지 확인할 수 있도록 1의 평균 기대 판매가와 divine orb 소모까지 고려해서 나왔을 때 멈추는 것(더 리롤하지 않고 그대로 파는 것이 이익인)이 확률적으로 유리한 모든 조합 구성, 
-	즉, 해당 조합의 평균적인 판매가가 최저 판매가 라인보다 유의미하게(meaningfully, significantly) 높은 모든 조합 목록을 높은 가격 순으로 표시
-	4. 4개 모드를 드롭다운으로 입력받고 데이터에서 확인 가능한 해당 조합의 예상 판매가, 더 리롤할지 여부를 검토해주는 기능
+[Search info]
+1. contact: augustusminu@hotmail.com
+2. Lastest PoE2 League (later will expand to two lastest leagues + standard)
+3. Instant Buyout only (never use or query any data other than Instant Buyout)
+4. identified, NOT corrupted,
+5. Buyout Price == divine orb (only)
+6. Listed == a week ago (might narrow down more)
+7. Collapse Listings by Account == no
+5. charm slots >= 2 (probably will have to use stat filter (Implicit) Has # Charm Slot)
 
-위에 필요한 웹에서 쿼리가 불가능한 데이터는 사용자가 로컬 PC에서 python 등으로 실행하여 쿼리해서 github에 output 파일을 올려주는 구조로 작업.
+[Mageblood]
+Mages Legacy
+Mages Legacy
+Mages Legacy
+Mages Legacy
+All Mage's Legacies have (25—50)% increased effect per duplicate Mage's Legacy
 
-local 에서는 스크립드 등을 통해 아래 내용을 계산할 것 (일부 index.html에서 해야 하는게 있을수도 있음)
-	1. 미타락(uncorrupted) indentified 마법사의 피(mageblood) 베이스 시장 최저가 (평균, 중앙값 etc)를 시장 최저가 N개(약 20~30개면 충분)의 가격으로 추정.
-	instant buyout 데이터만 사용.
-	2. 3,4의 더 굴릴지 여부를 결정하는 방법을 어떻게 추론할 것인지 설명해. 
-	- 4개 모드를 세트 단위로 추적하는 것을 적극 권장
-	- 조합의 수가 너무 많아서(2000개 이상)라 검색이 제한된다면, uncorrupted+indentified 쿼리로 나오는 모든 mageblood 최대 10,000개(Forbidden Rite 현재 약 7,300개)의 가격을 읽어오는게 가능한지. 그 중에서 충분한 수의 최소 데이터가 존재하는 조합의 적정 최저가를 확인하고 나머지는 데이터 부족으로 표시 
-	10,000개일 경우에도 2,000개의 조합에 대해 평균적으로 5개의 조합밖에 없을 것이나 유저들이 원하는 조합의 폭은 훨씬 좁기 때문에 유효한 4모드 세트의 종류는 훨씬 적고 충분히 가격을 신뢰할 수 있는 수준으로 데이터가 많을 것.
-	- 모든 옵션이 다른 경우와, 2개 옵션이 다른 경우만 확인하면 됨
-	- 2개 옵션이 다른 경우는 중복당 증가 효과의 가치도 추측 필요
-	
-기타
-	- divine 시 모든 옵션은 균등 무작위
+[Mage's Legacy]
+• Legacy of Amethyst
+• Legacy of Basalt
+• Legacy of Bismuth
+• Legacy of Diamond
+• Legacy of Gold
+• Legacy of Granite
+• Legacy of Jade
+• Legacy of Quicksilver
+• Legacy of Ruby
+• Legacy of Sapphire
+• Legacy of Silver
+• Legacy of Stibnite
+• Legacy of Sulphur
+• Legacy of Topaz
+Only one instance of each Mage's Legacy can apply its bonus at a time.
+
+- 모든 옵션은 정수, 균등분포
+- Mage's Legacy 옵션은 총 14개로 균등, 무작위, 중복 가능
+- Only one instance of each Mage's Legacy can apply its bonus at a time
+- 옵션의 순서(order)는 가치와 무관
+- 못 파는 장비 = 최저가 장비 = 리롤해야 하는 장비
+- 모든 옵션이 다르거나 (1+1+1+1), 1개 옵션이 중복인 것만 판매 가능(2+1+1), 나머지는 모두 못 파는 장비
+- 한 옵션이라도 못 쓰는 옵션이면 못 파는 장비(최저가)
+- increased effect per duplicate 옵션은 중복 옵션이 있는 경우에만 가치가 있으며 (이 경우 2+1+1) 33%만 돼도 4옵션과 동일하기 때문에 나머지 옵션의 가치에 영향을 많이 받지만 일반적으로 2+1+1은 좋은 모드
+- divine orb로 리롤 (리롤 기회 1회의 비용 = 1 divine orb)
+- 가장 많이 팔리는 옵션 조합을 조사해서 상한을 정하고 상한선 외의 데이터를 줄이는 방법은 어떨까
 
 
-어떠한 내용도 절대 먼저 작업하지 말고 위 내용을 읽고 모호하거나 확인이 필요한 내용에 대해 전부 확인.
+- 아래 3개 옵션은 하나라도 포함되면 매우 높은 확률로 최저가이므로 필요 시 가격 데이터 수집에서 제외해도 무방
+	- Legacy of Ruby
+	- Legacy of Sapphire
+	- Legacy of Topaz
+
+- 아래 2개 Flat 옵션은 꼭 필요할 시만 데이터 수집에서 제외. 다른 옵션과 비교했을 때 팔리는 매물의 비율이 더 적을 것.
+	- Legacy of Granite
+	- Legacy of Jade
+
+
+추정 시장 선호 옵션
+
+
+A1. Legacy of Silver	은의 유산		스킬 속도
+A2. Legacy of Quicksilver 	수은의 유산	이동 속도
+A3. Legacy of Diamond 	다이아몬드의 유산 	치명타 명중 확률
+
+B4. Legacy of Gold 	금의 유산		아이템 희귀도
+
+C5. Legacy of Bismuth 	비스무트의 유산	모든 원소 저항
+C6. Legacy of Amethyst 	자수정의 유산	카오스 저항
+
+D7. Legacy of Sulphur 	유황의 유산	신성화 지대
+D8. Legacy of Stibnite 	휘안석의 유산	회피 %
+D9. Legacy of Basalt 	현무암의 유산	방어도 %
+
+E10 Legacy of Granite 	화강암의 유산	방어도 #
+E11 Legacy of Jade 	비취의 유산	회피 #
+
+F14 Legacy of Ruby 	루비의 유산	화염 저항
+F14 Legacy of Sapphire 	사파이어의 유산	냉기 저항
+F14 Legacy of Topaz 	토파즈의 유산	번개 저항
+
+[ Top Comp ] (with high duplicate roll) 
+Any 3 of Diamond/Silver/Gold/Quicksilver+duplicate mod
+
+Quicksilver	Diamond		Silver		200	25%
+Quicksilver	Diamond		Bismuth		200
+Quicksilver	Silver		Bismuth		180
+
+
+Diamond		Silver		Bismuth		180
+Silver		Diamond		Gold		180
+Quicksilver	Silver		Gold		160
+Quicksilver	Diamond		Gold		140
