@@ -1,35 +1,38 @@
 """PoE2 trade2: 베이스별 최저가 조회 + 적정 최저가 계산 (basequality.txt 명세 기준).
 
 공통 조건 : Instant Buyout(securable), Rarity=Normal, NOT corrupted/mirrored/fractured
-4-A : ilvl >= 82, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 82 행의 30% 판매가)
-4-B : ilvl >= 82, Quality = 0    -> 최저가 TOP_N_BUY0 (index.html: ilvl 82 행의 0% 베이스)
-5-A : ilvl  = 81, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 81 행의 30% 판매가)
-5-B : ilvl  = 81, Quality = 0    -> 최저가 TOP_N_BUY0 (index.html: ilvl 81 행의 0% 베이스)
+4-A : ilvl >= 82, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 82 행의 최대 오버퀄리티 시장가)
+4-B : ilvl >= 82, Quality 제한 없음 -> 최저가 TOP_N_BUY0 (index.html: ilvl 82 행의 베이스)
+5-A : ilvl  = 81, Quality >= 30  -> 최저가 TOP_N   (index.html: ilvl 81 행의 최대 오버퀄리티 시장가)
+5-B : ilvl  = 81, Quality 제한 없음 -> 최저가 TOP_N_BUY0 (index.html: ilvl 81 행의 베이스)
 소켓 수는 베이스별로 다르다 (WEAPONS / BODY_ARMOURS 참고). 방어구의 방어 타입(AR/EV/ES)은 BODY_ARMOUR_TYPES 에 보관한다.
 방어구(현재 갑옷만)는 ilvl 82 이상(4-A / 4-B)만 조사하고 ilvl 81(5-A / 5-B)은 조사하지 않는다. 갑옷 소켓은 3.
 
 후처리:
   1) 정상 매물(가격·통화를 알 수 있는 매물)이 2개 미만이면 '데이터 부족'
-  2) 매물 수와 가격 분포로 신뢰도를 매기고 적정 최저가를 고른다.
+  2) 유효 매물 수(같은 판매자 매물은 1, 0.5, 0.33 ... 으로 줄여 센다. SELLER_* 참고)와 가격 분포로 신뢰도를 매기고
+     적정 최저가를 고른다. high: 유효 매물 5 이상 & 최저가/중앙값 75% 이상, medium: 3 이상 & 65% 이상, 그 외 low.
      Instant Buyout은 허위 매물이 드물어 최저가가 시장 최저가에 가깝다고 보되,
      중앙값보다 지나치게 싼 고립 매물(시세를 모르거나 급처)은 제외한다.
      단, 제외 대상은 '최근 등록된' 매물뿐이다. 싸게 나온 매물은 금방 팔려야 정상이므로, 오래 안 팔리고
      남아 있는 저가 매물은 '급처'가 아니라 그 가격이 실제로는 거래되지 않는다(허위·비활성 판매자·시세 오기 등)는
      증거다. 이런 매물은 제외하지 않고 최저가로 남겨, 아래 4)의 경과일 규칙으로 신뢰도를 깎는다.
-  3) (30% 시장가만) 고른 최저가가 다음 매물보다 ISOLATED_RATIO(10%) 넘게 싸게 혼자 떨어져 있으면, 그 가격은 '싸게 나온
+  3) (최대 오버퀄리티 시장가만) 고른 최저가가 다음 매물보다 ISOLATED_RATIO(10%) 넘게 싸게 혼자 떨어져 있으면, 그 가격은 '싸게 나온
      물건 하나'로 보고 적정 시장가를 윗 매물층 쪽으로 끌어올리며(최저가와 윗층 대표값의 중간, ISOLATED_BLEND) 신뢰도를
-     한 단계 낮춘다. 0% 베이스는 실제로 사야 하는 값이라 이 보정을 하지 않는다.
-  4) 고른 최저가 매물이 오래됐으면(listing.indexed 기준 STALE_DAYS 이상 한 단계, OLD_DAYS 이상 두 단계) 신뢰도를 낮춘다.
+     한 단계 낮춘다. 베이스는 실제로 사야 하는 값이라 이 보정을 하지 않는다.
+  4) 고른 최저가 매물이 오래됐으면(listing.indexed 기준 STALE_DAYS(3일) 이상 한 단계, OLD_DAYS(7일) 이상 두 단계) 신뢰도를 낮춘다.
+     최저가 한 개만 보면 오래 안 팔리던 매물층에서 재등록한 매물이 '방금 등록'으로 통과하므로, 최저가 근처 매물층
+     (AGE_GROUP_N 개)의 나이 중앙값과 최저가 나이 중 더 오래된 쪽으로 판정한다.
      오래된 최저가는 이미 시세와 어긋났을 가능성이 크기 때문이다. 등록 시각을 알 수 없으면 보정하지 않는다.
 
 요청 절약 규칙:
-  - 30% 매물(4-A / 5-A)이 데이터 부족(정상 매물 1개 이하)이면 같은 ilvl 의 0% 검색(4-B / 5-B)은 생략한다.
+  - 최대 오버퀄리티 매물(4-A / 5-A)이 데이터 부족(정상 매물 1개 이하)이면 같은 ilvl 의 베이스 검색(4-B / 5-B)은 생략한다.
     생략된 항목은 overquality-flip-prices.json 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
-  - 30% 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 overquality-flip-prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
+  - 최대 오버퀄리티 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 overquality-flip-prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
     기록하고, 이후 실행에서는 그 항목만 건너뛴다 (예: Siege Crossbow ilvl 82 만 중지, 81 은 계속 조회).
     index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 마지막 확인(checkedAt) 후 STOPPED_RETRY_DAYS(3일)가 지나면
     다음 실행에서 자동으로 다시 조회한다 (최신·직전·Standard 리그 모두, 그 리그가 수집되는 실행에서). 그 전에 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을 직접 지정한다.
-    조회 결과 30% 매물이 생기면 자동으로 해제되고, 여전히 부족하면 중지가 유지되며 마지막 확인 시각만 갱신된다.
+    조회 결과 최대 오버퀄리티 매물이 생기면 자동으로 해제되고, 여전히 부족하면 중지가 유지되며 마지막 확인 시각만 갱신된다.
 
 레이트리밋:
   - 실행 전에 조회할 항목으로 최대 요청 수와 최단 소요 시간을 계산해 출력한다.
@@ -40,6 +43,10 @@
 화폐 환율 (poe.ninja):
   - 실행할 때마다 리그별로 Divine, Chaos, 바알 대장장이/방어구 장인의 주입기, 대장장이의 숫돌·방어구 장인의 고철 가격을 poe.ninja 의 PoE2 화폐 거래소
     집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
+    poe.ninja 가 기본으로 주는 primaryValue 는 리그·시점에 따라 바뀌는 기준 화폐(core.primary, adaptive)로 매긴 값이라 싼 화폐는 오차가 크다.
+    그래서 항목별로 '그 화폐로 매겨진 실제 시세'(거래량이 가장 많은 상대 화폐 maxVolumeCurrency 와, 그 화폐 1개로 살 수 있는 개수 maxVolumeRate -> 가격 = 1 / maxVolumeRate)를 읽어 Exalted 로 환산한다.
+      · 퀄리티 화폐(숫돌·고철): 항상 Exalted 로 매겨진 시세만 쓴다 (없으면 이전 값 유지)
+      · 바알 주입기·Divine·Chaos: Exalted 시세를 먼저 보고, 없으면 Divine -> Chaos 순서로 그 화폐로 매겨진 시세를 Exalted 로 환산
     overquality-flip.html 이 이 값을 리그별 기본 환율로 쓴다. 모든 리그는 소프트코어(하드코어 제외)다.
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
   - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
@@ -54,6 +61,8 @@
   python poe2_basequality.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
   python poe2_basequality.py all --league latest      # 최신 리그만 (기본값)
   python poe2_basequality.py all --league "이름"       # 리그 이름 직접 지정
+  python poe2_basequality.py all --league all         # 거래소에 있는 모든 소프트코어 리그 (시즌 리그 전부 + Standard)
+  python poe2_basequality.py all --league all:6       # 위와 같되, 리그마다 마지막 수집 후 6시간이 지났을 때만 수집
   python poe2_basequality.py all --league "latest,previous:6,standard:24"
       # 최신 리그는 매번, 직전(second latest) 리그는 마지막 수집 후 6시간이 지났을 때만, Standard 는 24시간이 지났을 때만 수집.
       # 리그 뒤의 ":시간" 은 최소 수집 간격이다 (생략하면 매번 수집). 실행 소요 시간·지연을 감안해 1.5시간 일찍 도래한 것으로 본다 (INTERVAL_MARGIN_H).
@@ -83,8 +92,8 @@ INTERVAL_MARGIN_H = 1.5        # '--league 이름:N' 의 N시간 간격을 판�
 UA = "poe2-price-test/0.1 (contact: augustusminu@hotmail.com)"
 
 FETCH_MAX = 10                 # fetch 한 번에 가져올 수 있는 최대 개수 (GGG API 한계). 그보다 많이 보려면 나눠서 여러 번 fetch 한다
-TOP_N = 10                     # 30% 판매가(4-A/5-A) 검색에서 보는 최저가 매물 수 (fetch 1회)
-TOP_N_BUY0 = 15                # 0% 베이스(4-B/5-B) 검색에서 보는 최저가 매물 수 (fetch 2회: 10 + 5)
+TOP_N = 10                     # 최대 오버퀄리티 시장가(4-A/5-A) 검색에서 보는 최저가 매물 수 (fetch 1회)
+TOP_N_BUY0 = 20                # 베이스(4-B/5-B) 검색에서 보는 최저가 매물 수 (fetch 2회: 10 + 10, 21개 이상이면 fetch 3회)
                                # index.html 은 '필요 베이스 수(약 9.1 -> 10개)'만큼 싼 순으로 평균을 내므로, 이상치 제외 후에도 10개가 남도록 여유를 둔다
 
 
@@ -97,10 +106,21 @@ def utc_stamp():
 MIN_LISTINGS = 2               # 정상 매물이 이보다 적으면 '데이터 부족'
 OUTLIER_MIN_N = 4              # 이상치 판정은 매물이 이 수 이상일 때만 (그 미만이면 비교 기준이 부족)
 OUTLIER_RATIO = 0.5            # 중앙값의 이 비율 미만이면 '너무 싼' 매물
-STALE_DAYS = 7                 # 적정 최저가로 고른 매물이 이 일수 이상 오래되면 신뢰도를 한 단계 낮춘다
-OLD_DAYS = 30                  # 이 일수 이상이면 두 단계 낮춘다 (시세와 어긋났을 가능성이 큼)
-ISOLATED_RATIO = 1.10           # (30% 시장가만) 바로 다음 매물이 최저가의 이 배수보다 비싸면 '고립된 최저가'로 본다
+STALE_DAYS = 3                 # 적정 최저가로 고른 매물이 이 일수 이상 오래되면 신뢰도를 한 단계 낮춘다 (이전 7일)
+OLD_DAYS = 7                   # 이 일수 이상이면 두 단계 낮춘다 (시세와 어긋났을 가능성이 큼) (이전 30일)
+# 신뢰도 등급 기준 (유효 매물 수 n_eff 와 최저가/중앙값 비율 rel)
+CONF_HIGH_N, CONF_HIGH_REL = 5, 0.75      # high  : n_eff >= 5, rel >= 75%
+CONF_MED_N, CONF_MED_REL = 3, 0.65        # medium: n_eff >= 3, rel >= 65% (그 외 low)
+# 같은 판매자 매물의 신뢰도 반영 (유효 매물 수 n_eff 계산).
+# 한 판매자의 첫 매물 = 1, 두 번째 = SELLER_W2, 세 번째부터는 직전 가치 x SELLER_RATIO 로 지수적으로 줄어든다.
+# SELLER_RATIO 는 몇 개를 올리든 그 판매자의 가치 합이 SELLER_CAP 을 넘지 않도록 자동 계산된다
+# (기본: 1, 0.5, 0.33, 0.22, 0.15 ... -> 합의 한계 2.5). SELLER_CAP 은 1 + SELLER_W2 이상이어야 한다.
+SELLER_W2 = 0.5
+SELLER_CAP = 2.5
+SELLER_RATIO = 1 - SELLER_W2 / (SELLER_CAP - 1)
+ISOLATED_RATIO = 1.10           # (최대 오버퀄리티 시장가만) 바로 다음 매물이 최저가의 이 배수보다 비싸면 '고립된 최저가'로 본다
 ISOLATED_MIN_N = 4              # 고립 보정은 (최저가 + 그 위 매물 3개 이상), 즉 정상 매물이 이 수 이상일 때만 (위가 한두 개면 '매물층'이라 볼 수 없음)
+AGE_GROUP_N = 3                # 경과일 판정에 쓰는 '최저가 매물층' 크기: 적정 최저가부터 싼 순으로 이 개수의 매물 (1 이면 최저가 한 개만 본다)
 ISOLATED_REF_N = 3              # 고립된 최저가일 때 윗 매물층의 대표값 = 최저가 다음 매물 최대 이 개수의 중앙값
 ISOLATED_BLEND = 0.5            # 적정 시장가 = 최저가 + 이 비율 × (윗 매물층 대표값 − 최저가).  0 이면 최저가 그대로, 1 이면 윗 매물층 가격
 MAX_SKIP = 2                   # 고립된 저가 매물로 보고 제외할 최대 개수 (그 이상 몰려 있으면 실제 시세)
@@ -115,12 +135,13 @@ CMP_RATES = dict(DEFAULT_CMP_RATES)
 
 # 검색 조건 (basequality.txt 4-A, 4-B, 5-A, 5-B)
 # ilvl_max / q_max 가 None 이면 "이상(>=)", 값이 있으면 min~max 범위(같으면 정확히 일치)
-# entry_ilvl : overquality-flip-prices.json 에서 이 결과가 들어갈 행 / side : sell30(30% 판매가) 또는 buy0(0% 베이스)
+# q_min 이 None 이면 퀄리티 필터를 검색 조건에 넣지 않음(퀄리티 제한 없음)
+# entry_ilvl : overquality-flip-prices.json 에서 이 결과가 들어갈 행 / side : sell30(최대 오버퀄리티 시장가) 또는 buy0(베이스, 퀄리티 제한 없음)
 SEARCHES = [
     {"label": "4-A", "ilvl_min": 82, "ilvl_max": None, "q_min": 30, "q_max": None, "entry_ilvl": 82, "side": "sell30"},
-    {"label": "4-B", "ilvl_min": 82, "ilvl_max": None, "q_min": 0,  "q_max": 0,    "entry_ilvl": 82, "side": "buy0"},
+    {"label": "4-B", "ilvl_min": 82, "ilvl_max": None, "q_min": None, "q_max": None, "entry_ilvl": 82, "side": "buy0"},
     {"label": "5-A", "ilvl_min": 81, "ilvl_max": 81,   "q_min": 30, "q_max": None, "entry_ilvl": 81, "side": "sell30"},
-    {"label": "5-B", "ilvl_min": 81, "ilvl_max": 81,   "q_min": 0,  "q_max": 0,    "entry_ilvl": 81, "side": "buy0"},
+    {"label": "5-B", "ilvl_min": 81, "ilvl_max": 81,   "q_min": None, "q_max": None, "entry_ilvl": 81, "side": "buy0"},
 ]
 ILVLS = sorted({sp["entry_ilvl"] for sp in SEARCHES}, reverse=True)   # overquality-flip-prices.json 의 ilvl 행 (82, 81)
 
@@ -330,6 +351,14 @@ RATE_ITEMS = {
     "q.scrap": ("Armourer's Scrap", ("armourersscrap", "armourerscrap")),
 }
 EXALTED_KEYS = ("exalted", "exaltedorb")
+# 가격을 환산할 때 기준으로 삼는 세 화폐 (poe.ninja 응답에서 찾는 이름)
+ANCHORS = {"exalted": EXALTED_KEYS, "divine": ("divine", "divineorb"), "chaos": ("chaos", "chaosorb")}
+ANCHOR_KEYS = {"div": "divine", "chaos": "chaos"}       # rates 키 -> ANCHORS 이름 (Divine / Chaos 자체의 Exalted 가격)
+# 항목별로 '어떤 화폐로 매겨진 시세'를 읽을지, 그리고 그 우선순위.
+#   poe.ninja 의 기준 화폐(core.primary, adaptive)로 환산한 primaryValue 는 싼 화폐일수록 오차가 커서 쓰지 않는다.
+#   퀄리티 화폐(q.*)는 항상 Exalted 로 매겨진 시세만 쓴다 (Exalted 쌍이 없으면 이전 값 유지).
+#   바알 주입기·Divine·Chaos 는 Exalted 시세를 먼저 보고, 없으면 Divine -> Chaos 순서로 그 화폐로 매겨진 시세를 Exalted 로 환산한다.
+RATE_CHAINS = {k: ("exalted",) if k.startswith("q.") else ("exalted", "divine", "chaos") for k in RATE_ITEMS}
 # Currency 에서 못 찾은 항목을 찾아볼 다른 카테고리 (poe.ninja 문서의 PoE2 type 값)
 NINJA_TYPES = ["Currency", "Fragments", "Abyss", "Essences", "SoulCores", "Runes", "Ritual", "Expedition",
                "Delirium", "Breach", "Verisium", "UncutGems", "Idols", "LineageSupportGems"]
@@ -365,33 +394,94 @@ def _meta_list(src):
     return [x for x in (src or []) if isinstance(x, dict) and x.get("id") is not None]
 
 
-def ninja_exalted_values(resp):
-    """exchange overview 응답 -> {정규화한 id/이름/detailsId: '1개 = Exalted 몇 개'}.
-    lines[].primaryValue 는 기준 화폐(core.primary) 단위 가격이므로 Exalted 의 primaryValue 로 나눠 환산한다
-    (기준 화폐가 Exalted 이면 그대로). Exalted 를 찾지 못하면 {} 를 반환한다."""
+def _num(x):
+    """양수 숫자만 float 로 (bool·0·음수·문자열은 None)."""
+    return float(x) if isinstance(x, (int, float)) and not isinstance(x, bool) and x > 0 else None
+
+
+def ninja_parse(resp):
+    """exchange overview 응답을 시세 계산용으로 정리한다.
+      lines  : {화폐 id: line}
+      keys   : {id / 이름 / detailsId 를 정규화한 값: 화폐 id}
+      primary: core.primary (리그·시점에 따라 바뀌는 'adaptive' 기준 화폐 id. 이 화폐 자신의 line 은 없을 수 있다)
+      anchor : {'exalted' | 'divine' | 'chaos': 화폐 id}  (응답에서 찾은 것만)"""
     core = resp.get("core") or {}
     meta = {}
     for src in (resp.get("items"), core.get("items")):
         for it in _meta_list(src):
             meta.setdefault(str(it["id"]), {}).update({k: it[k] for k in ("name", "detailsId") if it.get(k)})
-    value = {}
-    for ln in resp.get("lines") or []:
-        v = ln.get("primaryValue") if isinstance(ln, dict) else None
-        if isinstance(v, (int, float)) and v > 0 and ln.get("id") is not None:
-            value[str(ln["id"])] = float(v)
+    lines = {str(ln["id"]): ln for ln in resp.get("lines") or [] if isinstance(ln, dict) and ln.get("id") is not None}
     primary = str(core.get("primary") or "")
-    if primary and primary not in value:
-        value[primary] = 1.0                       # 기준 화폐 자신은 정의상 1
     keys = {}
-    for cid in set(value) | set(meta):
+    for cid in set(lines) | set(meta) | ({primary} if primary else set()):
         for k in (cid, meta.get(cid, {}).get("name"), meta.get(cid, {}).get("detailsId")):
             if k:
                 keys.setdefault(_norm(k), cid)
-    ex_id = next((keys[k] for k in EXALTED_KEYS if k in keys), None)
-    ex = value.get(ex_id) if ex_id else None
-    if not ex:
-        return {}
-    return {k: value[cid] / ex for k, cid in keys.items() if cid in value}
+    anchor = {}
+    for name, cands in ANCHORS.items():
+        cid = next((keys[k] for k in cands if k in keys), None)
+        if cid:
+            anchor[name] = cid
+    return {"lines": lines, "keys": keys, "primary": primary, "anchor": anchor}
+
+
+def _direct(ov, cid, cur):
+    """cid 1개를 cur 화폐로 나타낸 시세(cur 몇 개)를 poe.ninja 가 직접 준 값에서 읽는다. (값, 출처) 또는 None.
+      pair   : 거래량이 가장 많은 상대 화폐(maxVolumeCurrency)가 cur 일 때.
+               maxVolumeRate 는 '상대 화폐 1개로 살 수 있는 이 화폐의 개수'(예: Exalted 줄의 Divine 쌍 = 644.8 -> Divine 1개 = Exalted 644.8개)
+               이므로 이 화폐 1개의 가격은 1 / maxVolumeRate 다. (실제 응답으로 확인한 방향. poe.ninja 는 항상 같은 방향으로 준다)
+      primary: cur 이 core.primary 일 때의 primaryValue (primaryValue 는 가격 그대로)"""
+    ln = ov["lines"].get(cid)
+    if not ln:
+        return None
+    rate = _num(ln.get("maxVolumeRate"))
+    if rate and _norm(ln.get("maxVolumeCurrency")) == _norm(cur):
+        return 1 / rate, "pair"
+    pv = _num(ln.get("primaryValue"))
+    if pv and cur == ov["primary"]:
+        return pv, "primary"
+    return None
+
+
+def _quote(ov, cid, cur):
+    """cid 1개의 cur 화폐 기준 시세. (값, 출처) 또는 None. 자기 자신 = 1, 직접 시세가 없으면 반대쪽 line 의 역수."""
+    if cid == cur:
+        return 1.0, "자신"
+    r = _direct(ov, cid, cur)
+    if r:
+        return r
+    r = _direct(ov, cur, cid)                      # 예: Divine 이 core.primary 이면 Divine 자신의 line 은 없다 -> Exalted 쪽 시세의 역수
+    return (1 / r[0], r[1] + " 역수") if r else None
+
+
+def _ex_price(ov, cid, chain, per):
+    """cid 1개의 Exalted 가격. chain(화폐 이름 순서)대로 '그 화폐로 매겨진 시세'를 찾아 Exalted 로 환산한다.
+    첫 번째로 구해지는 것을 쓴다. 반환: (Ex 값, 쓴 화폐 이름, 출처) 또는 None.  per = {'exalted': 1, 'divine': .., 'chaos': ..} (1개 = Ex 몇 개)"""
+    for name in chain:
+        cur = ov["anchor"].get(name)
+        if cur is None or per.get(name) is None:
+            continue
+        q = _quote(ov, cid, cur)
+        if q:
+            return q[0] * per[name], name, q[1]
+    return None
+
+
+def ninja_ex_per(ov):
+    """Divine / Chaos 1개 = Exalted 몇 개 -> ({'exalted': 1.0, 'divine': .., 'chaos': ..}, {이름: 출처}).
+    먼저 Exalted 로 매겨진 시세를 읽고, 못 구한 쪽만 다른 쪽(Divine <-> Chaos)을 거쳐 환산한다. Exalted 를 찾지 못하면 ({}, {})."""
+    if "exalted" not in ov["anchor"]:
+        return {}, {}
+    per, src = {"exalted": 1.0}, {}
+    for fallback in (False, True):
+        for name, other in (("divine", "chaos"), ("chaos", "divine")):
+            cid = ov["anchor"].get(name)
+            if cid is None or name in per:
+                continue
+            r = _ex_price(ov, cid, (other,) if fallback else ("exalted",), per)
+            if r:
+                per[name], src[name] = r[0], f"{r[1].title()}·{r[2]}"
+    return per, src
 
 
 def ninja_league_id(league, ninja_leagues):
@@ -406,41 +496,61 @@ def ninja_league_id(league, ninja_leagues):
 
 def fetch_ninja_rates(league, ninja_leagues):
     """리그 하나의 환율을 읽어 {"div": .., "chaos": .., "inf.blacksmith": .., "q.whetstone": ..} 로 반환 (찾은 것만).
-    아무것도 못 얻거나 값이 비정상이면 None."""
+    가격은 poe.ninja 의 기준 화폐(core.primary, 'adaptive')로 환산하지 않고, 화폐별로 정한 순서대로 '그 화폐로 매겨진 시세'를 읽는다
+    (RATE_CHAINS: 퀄리티 화폐는 Exalted 만, 그 외는 Exalted -> Divine -> Chaos). 아무것도 못 얻거나 값이 비정상이면 None."""
     lid = ninja_league_id(league, ninja_leagues)
     if lid is None:
         names = ", ".join(str(x.get("id")) for x in ninja_leagues) or "없음"
         print(f"  [{league}] poe.ninja 에서 같은 이름의 리그를 찾지 못함 (poe.ninja 리그: {names})")
         return None
-    found, sample = {}, []
+    found, how, quoteless, sample = {}, {}, {}, []
     for typ in NINJA_TYPES:
         want = [k for k in RATE_ITEMS if k not in found]
         if not want:
             break
         try:
-            vals = ninja_exalted_values(ninja_get("exchange/current/overview", {"league": lid, "type": typ}))
+            ov = ninja_parse(ninja_get("exchange/current/overview", {"league": lid, "type": typ}))
         except (requests.RequestException, ValueError, AttributeError) as e:
             print(f"  [{league}] poe.ninja {typ} 조회 실패 ({str(e)[:200]})")
             if typ == "Currency":
                 return None                         # 첫 요청부터 실패하면 나머지 카테고리도 소용없다
             continue
         if not sample:
-            sample = sorted(vals)[:25]
+            sample = sorted(ov["keys"])[:25]
+        per, per_src = ninja_ex_per(ov)
         for k in want:
-            for cand in RATE_ITEMS[k][1]:
-                if cand in vals:
-                    found[k] = vals[cand]
-                    break
+            if k in ANCHOR_KEYS:                    # Divine / Chaos 자체의 Exalted 가격
+                name = ANCHOR_KEYS[k]
+                if name in per:
+                    found[k], how[k] = per[name], per_src.get(name, "")
+                continue
+            cid = next((ov["keys"][c] for c in RATE_ITEMS[k][1] if c in ov["keys"]), None)
+            if cid is None or not per:
+                continue
+            r = _ex_price(ov, cid, RATE_CHAINS[k], per)
+            if r:
+                found[k], how[k] = r[0], f"{r[1].title()}·{r[2]}"
+            else:
+                ln = ov["lines"].get(cid) or {}     # 이 카테고리에는 있으나 허용된 화폐(Exalted 등)로 매겨진 시세가 없음 -> 원인 확인용으로 원본 필드를 남긴다
+                quoteless[k] = (f"{RATE_ITEMS[k][0]}: " + (f"primary={ov['primary']}, primaryValue={ln.get('primaryValue')}, "
+                                f"maxVolumeCurrency={ln.get('maxVolumeCurrency')}, maxVolumeRate={ln.get('maxVolumeRate')}"
+                                if ln else f"line 없음 (primary={ov['primary']})"))
         time.sleep(0.5)
     missing = [RATE_ITEMS[k][0] for k in RATE_ITEMS if k not in found]
     if "div" in found and "chaos" in found and found["div"] <= found["chaos"]:
         print(f"  [{league}] 값이 비정상(Divine {found['div']:.1f} <= Chaos {found['chaos']:.1f} Ex)이라 저장하지 않음")
         return None
-    shown = ", ".join(f"{RATE_ITEMS[k][0]} {found[k]:.4g} Ex" for k in RATE_ITEMS if k in found)
+    shown = ", ".join(f"{RATE_ITEMS[k][0]} {found[k]:.4g} Ex" + (f" ({how[k]})" if how.get(k) else "")
+                      for k in RATE_ITEMS if k in found)
     print(f"  [{league}] {shown or '찾은 항목 없음'}")
     if missing:
         print(f"    찾지 못함 (이전 값 유지): {', '.join(missing)}")
-        print(f"    poe.ninja Currency 응답의 키 예시: {', '.join(sample) or '(비어 있음 - Exalted 를 찾지 못함)'}")
+        nq = [quoteless[k] for k in RATE_ITEMS if k in quoteless and k not in found]
+        if nq:
+            print("    └ 항목은 있으나 지정한 화폐로 매겨진 시세가 없음 (퀄리티 화폐=Exalted, 주입기=Exalted→Divine→Chaos):")
+            for line in nq:
+                print(f"      {line}")
+        print(f"    poe.ninja Currency 응답의 키 예시: {', '.join(sample) or '(비어 있음)'}")
     return found or None
 
 
@@ -537,6 +647,28 @@ def fetch_leagues():
     return names
 
 
+def all_leagues(out_path):
+    """--league all: 거래소 목록의 모든 소프트코어 리그. 시즌 리그(API 순서 = 최신 순)를 앞에, Standard 를 뒤에 둔다.
+    Hardcore / SSF / Ruthless 등은 제외 (_EXCLUDE). 목록 조회가 실패하면 저장된 데이터의 리그 순서 + Standard 로 대체."""
+    names = None
+    try:
+        names = fetch_leagues()
+    except Exception as e:
+        print(f"  리그 목록 조회 실패 ({e})")
+
+    if names is not None:
+        softcore = [n for n in names if not _EXCLUDE.search(n)]
+        seasonal = [n for n in softcore if n.lower() != "standard"]
+        standard = [n for n in softcore if n.lower() == "standard"] or ["Standard"]
+        found = seasonal + standard
+        print(f"  감지된 전체 리그(API 순서): {found}")
+        return found
+
+    saved = [x for x in load_order(out_path) if x.lower() != "standard"] + ["Standard"]
+    print(f"  -> 저장된 데이터의 리그 {saved} 사용")
+    return saved
+
+
 def known_season(path, idx):
     """리그 목록 조회가 실패했을 때의 대체값: overquality-flip-prices.json 에 기록된 시즌 리그 순서(order)의 idx 번째 (0=최신, 1=직전).
     order 가 없으면 Standard 아닌 리그를 수집 시각이 최근인 순으로 놓고 idx 번째."""
@@ -604,21 +736,21 @@ def _range(lo, hi):
 
 
 def build_query(base_name, spec, sockets):
+    misc = {"ilvl": _range(spec["ilvl_min"], spec["ilvl_max"])}
+    if spec["q_min"] is not None:                       # q_min 이 None 이면 퀄리티 제한 없음 (필터 생략)
+        misc["quality"] = _range(spec["q_min"], spec["q_max"])
+    misc.update({
+        "corrupted": {"option": "false"},
+        "mirrored": {"option": "false"},
+        "fractured_item": {"option": "false"},
+    })
     return {
         "query": {
             "status": {"option": "securable"},
             "type": base_name,
             "filters": {
                 "type_filters": {"filters": {"rarity": {"option": "normal"}}},
-                "misc_filters": {
-                    "filters": {
-                        "ilvl": _range(spec["ilvl_min"], spec["ilvl_max"]),
-                        "quality": _range(spec["q_min"], spec["q_max"]),
-                        "corrupted": {"option": "false"},
-                        "mirrored": {"option": "false"},
-                        "fractured_item": {"option": "false"},
-                    }
-                },
+                "misc_filters": {"filters": misc},
                 "equipment_filters": {
                     "filters": {"rune_sockets": {"min": sockets, "max": sockets}}
                 },
@@ -629,7 +761,7 @@ def build_query(base_name, spec, sockets):
 
 
 def top_n_for(spec):
-    """검색 종류별로 볼 최저가 매물 수: 0% 베이스는 TOP_N_BUY0, 30% 판매가는 TOP_N."""
+    """검색 종류별로 볼 최저가 매물 수: 베이스는 TOP_N_BUY0, 최대 오버퀄리티 시장가는 TOP_N."""
     return TOP_N_BUY0 if spec["side"] == "buy0" else TOP_N
 
 
@@ -693,6 +825,23 @@ def age_days(r):
 _CONF_LEVELS = ["low", "medium", "high"]
 
 
+def effective_count(rows):
+    """신뢰도에 쓰는 유효 매물 수 n_eff. rows 는 가격 오름차순.
+    같은 판매자의 매물은 싼 것부터 1, SELLER_W2, SELLER_W2*SELLER_RATIO, ... 로 셈 (판매자 한 명의 합은 SELLER_CAP 미만).
+    판매자를 모르는 매물('?' 또는 없음)은 서로 다른 판매자로 보고 1로 센다."""
+    seen = {}
+    total = 0.0
+    for r in rows:
+        who = str(r.get("seller") or "?").strip().lower()
+        if who == "?":
+            total += 1.0
+            continue
+        k = seen.get(who, 0)                      # 이 판매자의 앞선(더 싼) 매물 수
+        seen[who] = k + 1
+        total += 1.0 if k == 0 else SELLER_W2 * SELLER_RATIO ** (k - 1)
+    return total
+
+
 def fair_price(rows, market=False):
     """적정 최저가 판정.
 
@@ -700,14 +849,16 @@ def fair_price(rows, market=False):
       status     : "ok" | "insufficient"(데이터 부족)
       a, c       : 적정 최저가 (매물 원래의 금액, 통화). insufficient 면 None
       n          : 판정에 쓴 정상 매물 수
+      n_eff      : 같은 판매자 매물을 줄여 센 유효 매물 수 (신뢰도 판정에 사용)
       confidence : "high" | "medium" | "low" | None
       skipped    : 너무 싸서 제외한 매물 수
       age        : 고른 최저가 매물의 경과 일수 (등록 시각을 모르면 None)
+      group_age  : 최저가 근처 매물층(AGE_GROUP_N 개)의 경과 일수 중앙값 (경과일 신뢰도 보정은 age 와 이 값 중 큰 쪽 기준)
       reason     : 사람이 읽는 판정 사유
       raw        : (market 이고 고립 보정을 했을 때만) 보정 전 최저가 {"a", "c"}
 
-    market=True 는 30% 판매가(적정 시장가) 판정이다. 이때는 최저가가 무리에서 혼자 떨어져 있으면 그 가격을 시장가로
-    쓰지 않고 윗 매물층 쪽으로 끌어올린다(아래 '고립된 최저가' 참고). 0% 베이스(buy0)는 실제로 사야 하는 값이므로
+    market=True 는 최대 오버퀄리티 시장가(적정 시장가) 판정이다. 이때는 최저가가 무리에서 혼자 떨어져 있으면 그 가격을 시장가로
+    쓰지 않고 윗 매물층 쪽으로 끌어올린다(아래 '고립된 최저가' 참고). 베이스(buy0)는 실제로 사야 하는 값이므로
     최저가 그대로 둔다.
     """
     usable = sorted((r for r in rows if _ex(r) is not None), key=_ex)
@@ -746,16 +897,18 @@ def fair_price(rows, market=False):
     valid_n = len(valid)
     rel = round(valid[0] / statistics.median(valid), 6)   # 최저가가 나머지 무리에 얼마나 붙어 있는지 (1에 가까울수록 좋음). 반올림: 정확히 0.8 같은 경계값이 환율 곱셈의 부동소수점 오차로 갈리지 않게
 
-    if valid_n >= 5 and rel >= 0.8:
+    n_eff = round(effective_count(usable[skipped:]), 6)    # 같은 판매자 매물을 줄여 센 유효 매물 수 (신뢰도 판정에만 사용)
+    if n_eff >= CONF_HIGH_N and rel >= CONF_HIGH_REL:
         conf = "high"
-    elif valid_n >= 3 and rel >= 0.6:
+    elif n_eff >= CONF_MED_N and rel >= CONF_MED_REL:
         conf = "medium"
     else:
         conf = "low"
 
-    notes.insert(0, f"매물 {valid_n}개, 최저가/중앙값 {rel:.0%}")
+    cnt = f"매물 {valid_n}개" + (f"(같은 판매자 보정 후 {n_eff:.1f}개 상당)" if abs(n_eff - valid_n) > 1e-9 else "")
+    notes.insert(0, f"{cnt}, 최저가/중앙값 {rel:.0%}")
 
-    # 고립된 최저가 (30% 시장가만): 최저가 바로 위에 받쳐 주는 매물이 없고 그 위에 정상 매물층이 따로 있으면,
+    # 고립된 최저가 (최대 오버퀄리티 시장가만): 최저가 바로 위에 받쳐 주는 매물이 없고 그 위에 정상 매물층이 따로 있으면,
     # 최저가는 '시세'가 아니라 '싸게 나온 물건 하나'다. 사람이 시세를 볼 때처럼 최저가와 윗 매물층의 중간보다
     # 약간 위를 적정 시장가로 본다. (예: 160, 180, 187, 199, 199, 199, 250 -> 윗층 대표 187, 적정 시장가 173.5)
     # 최저가/중앙값은 '무리 전체'와의 비교라 이런 경우를 못 잡으므로(위 예시는 80%) 신뢰도도 한 단계 낮춘다.
@@ -773,15 +926,29 @@ def fair_price(rows, market=False):
         conf = _CONF_LEVELS[max(0, _CONF_LEVELS.index(conf) - 1)]
         notes.append("고립된 최저가라 신뢰도 1단계 하향")
 
-    age = age_days(chosen)                          # 고른 최저가 매물이 오래됐으면 신뢰도를 낮춘다
-    if age is not None:
-        drop = 2 if age >= OLD_DAYS else 1 if age >= STALE_DAYS else 0
+    # 경과일 보정. 최저가 한 개의 등록 시각만 보면, 오래 안 팔리던 매물층에서 한 명이 내렸다가 다시 올린 순간
+    # '방금 등록된 최저가'가 되어 통과해 버린다 (예: 지금 1개 + 5주 된 9개). 재등록은 indexed 를 새로 찍기 때문이다.
+    # 그래서 최저가 근처 매물층(AGE_GROUP_N 개)의 나이 중앙값도 같이 보고, 둘 중 더 오래된 쪽으로 판정한다.
+    # 중앙값(작은 쪽)이라 신선하게 싼 매물 하나가 오래된 매물 위에서 시세를 새로 잡은 경우(예: 0일, 2일, 40일)는 걸리지 않는다.
+    age = age_days(chosen)
+    grp = [x for x in (age_days(r) for r in usable[skipped:skipped + AGE_GROUP_N]) if x is not None]
+    group_age = statistics.median_low(grp) if grp else None
+    cands = [x for x in (age, group_age) if x is not None]
+    eff_age = max(cands) if cands else None          # 등록 시각을 하나도 모르면 보정하지 않는다
+    if eff_age is not None:
+        drop = 2 if eff_age >= OLD_DAYS else 1 if eff_age >= STALE_DAYS else 0
         if drop:
             conf = _CONF_LEVELS[max(0, _CONF_LEVELS.index(conf) - drop)]
-            notes.append(f"최저가 매물이 {age:.0f}일 전 등록이라 신뢰도 {drop}단계 하향")
+            if age is not None and eff_age <= age:
+                notes.append(f"최저가 매물이 {age:.0f}일 전 등록이라 신뢰도 {drop}단계 하향")
+            else:
+                mine = f"최저가 매물은 {age:.0f}일 전이지만 " if age is not None else ""
+                notes.append(f"{mine}최저가 근처 매물층(하위 {len(grp)}개)의 나이 중앙값이 {group_age:.0f}일이라 "
+                             f"(재등록으로 새것처럼 보였을 수 있음) 신뢰도 {drop}단계 하향")
     out = {"status": "ok", "a": a, "c": c, "n": valid_n,
-           "confidence": conf, "skipped": skipped,
-           "age": None if age is None else round(age, 1), "reason": "; ".join(notes)}
+           "n_eff": round(n_eff, 2), "confidence": conf, "skipped": skipped,
+           "age": None if age is None else round(age, 1),
+           "group_age": None if group_age is None else round(group_age, 1), "reason": "; ".join(notes)}
     if raw:
         out["raw"] = raw
     return out
@@ -792,10 +959,11 @@ def describe(spec, sockets):
     ilvl = (f">={spec['ilvl_min']}" if spec["ilvl_max"] is None
             else str(spec["ilvl_min"]) if spec["ilvl_min"] == spec["ilvl_max"]
             else f"{spec['ilvl_min']}~{spec['ilvl_max']}")
-    qual = (f">={spec['q_min']}" if spec["q_max"] is None
+    qual = ("제한 없음" if spec["q_min"] is None
+            else f">={spec['q_min']}" if spec["q_max"] is None
             else str(spec["q_min"]) if spec["q_min"] == spec["q_max"]
             else f"{spec['q_min']}~{spec['q_max']}")
-    return f"{spec['label']}  ilvl{ilvl}, Quality{qual}, 소켓={sockets}"
+    return f"{spec['label']}  ilvl{ilvl}, Quality {qual}, 소켓={sockets}"
 
 
 CONF_KO = {"high": "신뢰 높음", "medium": "신뢰 보통", "low": "신뢰 낮음"}
@@ -888,13 +1056,13 @@ def load_order(path):
     return [x for x in order if isinstance(x, str)] if isinstance(order, list) else []
 
 
-def merge_order(path, seasonal, has_latest):
-    """이번 실행에서 확인한 시즌 리그를 앞에 두고, 기존 순서의 나머지를 이어 붙여 KEEP_LEAGUES 개까지 유지.
+def merge_order(path, seasonal, has_latest, keep=KEEP_LEAGUES):
+    """이번 실행에서 확인한 시즌 리그를 앞에 두고, 기존 순서의 나머지를 이어 붙여 keep(기본 KEEP_LEAGUES) 개까지 유지.
     latest 를 조회하지 않은 실행(previous 단독 등)은 기존 순서를 바꾸지 않는다."""
     old = load_order(path)
     if old and not has_latest:
-        return old[:KEEP_LEAGUES]
-    return (seasonal + [x for x in old if x not in seasonal])[:KEEP_LEAGUES]
+        return old[:keep]
+    return (seasonal + [x for x in old if x not in seasonal])[:keep]
 
 
 def save_prices(path, league, entries, stopped=None, order=None):
@@ -930,25 +1098,25 @@ def save_prices(path, league, entries, stopped=None, order=None):
 
 
 def omitted_payload():
-    """30% 매물이 부족해 0% 검색을 생략했을 때 저장하는 buy0 (index.html 은 '-', '-개' 로 표시)."""
+    """최대 오버퀄리티 매물이 부족해 베이스 검색을 생략했을 때 저장하는 buy0 (index.html 은 '-', '-개' 로 표시)."""
     return {"total": None, "listings": [], "omitted": True,
             "fair": {"status": "omitted", "a": None, "c": None, "n": 0, "confidence": None,
-                     "skipped": 0, "reason": "30% 매물 데이터 부족으로 0% 조회 생략"}}
+                     "skipped": 0, "reason": "최대 오버퀄리티 매물 데이터 부족으로 베이스 조회 생략"}}
 
 
 def run(league, base_name, sockets, ilvls):
     """베이스 하나를 조회하고 overquality-flip-prices.json 용 entries 를 반환 (ilvls 에 든 항목만).
-    SEARCHES 는 ilvl 마다 30%(A) -> 0%(B) 순서라, 30% 가 데이터 부족이면 같은 ilvl 의 0% 검색은 생략한다."""
+    SEARCHES 는 ilvl 마다 최대 오버퀄리티(A) -> 베이스(B) 순서라, 최대 오버퀄리티 매물이 데이터 부족이면 같은 ilvl 의 베이스 검색은 생략한다."""
     print(f"\n=== {base_name} (소켓 {sockets}, ilvl {'/'.join(map(str, ilvls))}) ===")
     by_ilvl = {}
-    sell_short = {}                      # entry_ilvl -> 30% 매물이 데이터 부족인지
+    sell_short = {}                      # entry_ilvl -> 최대 오버퀄리티 매물이 데이터 부족인지
     for spec in SEARCHES:
         if spec["entry_ilvl"] not in ilvls:
             continue
         e = by_ilvl.setdefault(spec["entry_ilvl"], {
             "base": slug(base_name), "ilvl": spec["entry_ilvl"], "sockets": sockets})
         if spec["side"] == "buy0" and sell_short.get(spec["entry_ilvl"]):
-            print(f"\n  {describe(spec, sockets)}  -> 30% 매물 데이터 부족으로 조회 생략")
+            print(f"\n  {describe(spec, sockets)}  -> 최대 오버퀄리티 매물 데이터 부족으로 조회 생략")
             e["buy0"] = omitted_payload()
             continue
         total, rows = cheapest(league, base_name, spec, sockets)
@@ -980,8 +1148,8 @@ def plan_requests(targets, stopped, force):
                 keep.append(v)
         active[name] = keep
     n_ilvl = sum(len(v) for v in active.values())
-    searches = 2 * n_ilvl                                    # ilvl 마다 30% + 0% (30% 부족이면 0% 생략으로 줄어듦)
-    fetches = n_ilvl * (fetch_calls(TOP_N) + fetch_calls(TOP_N_BUY0))   # 30% 는 TOP_N, 0% 는 TOP_N_BUY0 개를 FETCH_MAX 개씩
+    searches = 2 * n_ilvl                                    # ilvl 마다 최대 오버퀄리티 + 베이스 (최대 오버퀄리티 매물이 부족하면 베이스 생략으로 줄어듦)
+    fetches = n_ilvl * (fetch_calls(TOP_N) + fetch_calls(TOP_N_BUY0))   # 최대 오버퀄리티는 TOP_N, 베이스는 TOP_N_BUY0 개를 FETCH_MAX 개씩
     return active, held, searches, fetches, due
 
 
@@ -1003,7 +1171,7 @@ def collect(league, stopped, active, todo, out, order):
             if e["sell30"]["fair"]["status"] == "insufficient":
                 stopped[key] = {"since": stopped.get(key, {}).get("since", now),     # 처음 중지된 시각 (재확인해도 유지)
                                 "checkedAt": now,                                       # 마지막으로 다시 확인한 시각 (자동 재조회 주기의 기준)
-                                "reason": "30% 매물 데이터 부족 (정상 매물 2개 미만)"}
+                                "reason": "최대 오버퀄리티 매물 데이터 부족 (정상 매물 2개 미만)"}
             else:
                 stopped.pop(key, None)
         save_prices(out, league, entries, stopped, order)     # 베이스마다 저장 -> 중간에 끊겨도 진행분 보존
@@ -1017,8 +1185,8 @@ def main():
     ap.add_argument("target", nargs="?", default="all",
                     help=f'베이스 이름 또는 "all" = 전체 {len(BASES)}종 (기본: %(default)s)')
     ap.add_argument("--league", default="latest",
-                    help="latest | previous(직전 리그) | standard | 리그 이름 직접 지정. 쉼표로 여러 개. "
-                         "'이름:시간' 으로 최소 수집 간격 지정 (예: latest,previous:6,standard:24) (기본: %(default)s)")
+                    help="latest | previous(직전 리그) | standard | all(모든 소프트코어 리그) | 리그 이름 직접 지정. 쉼표로 여러 개. "
+                         "'이름:시간' 으로 최소 수집 간격 지정 (예: latest,previous:6,standard:24 / all:6) (기본: %(default)s)")
     ap.add_argument("--out", default=DEFAULT_OUT,
                     help="결과 저장 경로 (기본: 스크립트 옆 out/overquality-flip-prices.json, 기존 파일이 있으면 병합)")
     ap.add_argument("--retry-stopped", action="store_true",
@@ -1036,27 +1204,38 @@ def main():
             sys.exit(f"알 수 없는 베이스: {args.target}\n사용 가능: {', '.join(BASES)}")
         targets = [(match, BASES[match])]
 
-    leagues, choices, waiting = [], [], []
+    leagues, waiting, has_latest = [], [], False
+    all_mode, seen_seasonal = False, []                  # --league all 사용 여부 / 이번에 확인한 시즌 리그(API 순서, 수집 간격으로 건너뛴 것 포함)
     for token in args.league.split(","):
         token = token.strip()
         if not token:
             continue
         m = re.fullmatch(r"(.+?):(\d+(?:\.\d+)?)", token)          # '이름:시간' -> 최소 수집 간격(시간)
         choice, every = (m.group(1).strip(), float(m.group(2))) if m else (token, None)
-        lg = resolve_league(choice, args.out)
-        if lg is None:
-            print(f"리그 '{choice}' 를 확인하지 못해 건너뜁니다")
-            continue
-        if lg in leagues:
-            continue
-        if every is not None:
-            age = hours_since_collected(args.out, lg)
-            if age is not None and age < every - INTERVAL_MARGIN_H:
-                print(f"[{lg}] 마지막 수집 {age:.1f}시간 전 (간격 {every:g}시간) -> 이번에는 건너뜁니다")
-                waiting.append(lg)
+        from_all = choice.lower() == "all"
+        if from_all:                                    # 모든 소프트코어 리그로 펼침 ('all:6' 이면 각 리그에 같은 간격 적용)
+            all_mode = True
+            picks = all_leagues(args.out)
+        else:
+            picks = [choice]
+        for pick in picks:
+            lg = resolve_league(pick, args.out)
+            if lg is None:
+                print(f"리그 '{pick}' 를 확인하지 못해 건너뜁니다")
                 continue
-        leagues.append(lg)
-        choices.append(choice.lower())
+            if from_all and lg.lower() != "standard" and lg not in seen_seasonal:
+                seen_seasonal.append(lg)
+            if lg in leagues or lg in waiting:
+                continue
+            if every is not None:
+                age = hours_since_collected(args.out, lg)
+                if age is not None and age < every - INTERVAL_MARGIN_H:
+                    print(f"[{lg}] 마지막 수집 {age:.1f}시간 전 (간격 {every:g}시간) -> 이번에는 건너뜁니다")
+                    waiting.append(lg)
+                    continue
+            leagues.append(lg)
+            if pick.lower() == "latest":
+                has_latest = True
     if not leagues:
         if waiting:
             print("수집 주기가 아직 되지 않아 이번 실행은 할 일이 없습니다.")
@@ -1064,7 +1243,10 @@ def main():
         sys.exit('수집할 리그를 확인하지 못했습니다. --league "이름" 으로 직접 지정하세요.')
 
     seasonal = [l for l in leagues if l.lower() != "standard"]
-    order = merge_order(args.out, seasonal, "latest" in choices)
+    if all_mode:                                        # all: 시즌 리그 전부(수집 간격으로 건너뛴 것 포함)를 표시 순서에 유지
+        order = merge_order(args.out, seen_seasonal, True, keep=max(KEEP_LEAGUES, len(seen_seasonal)))
+    else:
+        order = merge_order(args.out, seasonal, has_latest)
     if not args.no_rates:
         update_rates(leagues, args.out, order)
         if args.rates_only:
@@ -1089,7 +1271,7 @@ def main():
         return
     est = estimate_seconds(n_search, n_fetch)
     print(f"요청 최대 {n_search + n_fetch}회 (검색 {n_search} + fetch {n_fetch}) · 레이트리밋 기준 최단 약 {est / 60:.1f}분"
-          f"  (30% 매물이 부족하면 0% 검색을 생략해 줄어듭니다)")
+          f"  (최대 오버퀄리티 매물이 부족하면 베이스 검색을 생략해 줄어듭니다)")
 
     started = time.monotonic()
     failed = []
