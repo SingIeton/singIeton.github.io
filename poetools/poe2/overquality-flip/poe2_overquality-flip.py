@@ -30,8 +30,10 @@
     생략된 항목은 overquality-flip-prices.json 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
   - 최대 오버퀄리티 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 overquality-flip-prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
     기록하고, 이후 실행에서는 그 항목만 건너뛴다 (예: Siege Crossbow ilvl 82 만 중지, 81 은 계속 조회).
-    index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 마지막 확인(checkedAt) 후 STOPPED_RETRY_DAYS(3일)가 지나면
-    다음 실행에서 자동으로 다시 조회한다 (최신·직전·Standard 리그 모두, 그 리그가 수집되는 실행에서). 그 전에 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을 직접 지정한다.
+    index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 마지막 확인(checkedAt) 후 재조회 간격이 지나면
+    다음 실행에서 자동으로 다시 조회한다 (그 리그가 수집되는 실행에서). 재조회 간격은 --stopped-retry 로 리그별 지정
+    (예: latest:1,previous:3,standard:10 = 최신 1일 / 직전 3일 / Standard 10일), 지정하지 않은 리그는 STOPPED_RETRY_DAYS(1일).
+    즉 중지 항목은 '그 리그의 수집 주기'와 '재조회 간격' 중 덜 자주 조회된다. 그 전에 다시 조회하려면 --retry-stopped 를 쓰거나 베이스 이름을 직접 지정한다.
     조회 결과 최대 오버퀄리티 매물이 생기면 자동으로 해제되고, 여전히 부족하면 중지가 유지되며 마지막 확인 시각만 갱신된다.
 
 레이트리밋:
@@ -56,10 +58,12 @@
 
 실행:
   python poe2_basequality.py                          # 기본: 전체 23종 (무기 13 + 갑옷 10, QUERY_BASES = BASES), 최신 리그만,
-                                                      # 수집 중지 항목은 STOPPED_RETRY_DAYS(3일)마다 자동 재조회
+                                                      # 수집 중지 항목은 STOPPED_RETRY_DAYS(1일)마다 자동 재조회 (--stopped-retry 로 리그별 지정 가능)
   python poe2_basequality.py "Warmonger Bow"          # 지정한 베이스 하나 (수집 중지여도 조회)
   python poe2_basequality.py all                      # 전체 23종 (요청 최대: 무기 베이스당 10회, 갑옷 베이스당 5회)
   python poe2_basequality.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
+  python poe2_basequality.py all --league "latest,previous:6,standard:24" --stopped-retry "latest:1,previous:3,standard:10"
+      # 수집 중지 항목 재조회: 최신 1일 / 직전 3일 / Standard 10일마다
   python poe2_basequality.py all --league latest      # 최신 리그만 (기본값)
   python poe2_basequality.py all --league "이름"       # 리그 이름 직접 지정
   python poe2_basequality.py all --league all         # 거래소에 있는 모든 소프트코어 리그 (시즌 리그 전부 + Standard)
@@ -126,8 +130,10 @@ ISOLATED_REF_N = 3              # 고립된 최저가일 때 윗 매물층의 �
 ISOLATED_BLEND = 0.5            # 적정 시장가 = 최저가 + 이 비율 × (윗 매물층 대표값 − 최저가).  0 이면 최저가 그대로, 1 이면 윗 매물층 가격
 MAX_SKIP = 2                   # 고립된 저가 매물로 보고 제외할 최대 개수 (그 이상 몰려 있으면 실제 시세)
 OUTLIER_MAX_AGE_DAYS = 2            # 이상치로 제외할 수 있는 저가 매물의 최대 경과 일수. 이보다 오래된 저가 매물은 '안 팔리는 가격'이라 제외하지 않는다
-STOPPED_RETRY_DAYS = 3             # 수집 중지 항목을 이 일수마다 자동으로 다시 조회한다 (마지막 확인 시각 기준, 0 이하면 자동 재조회 안 함).
-                                   # 최신·직전·Standard 모두 같다 (중지 목록은 리그별로 관리되고, 그 리그가 수집되는 실행에서 확인한다)
+STOPPED_RETRY_DAYS = 1             # 수집 중지 항목을 이 일수마다 자동으로 다시 조회한다 (마지막 확인 시각 기준, 0 이하면 자동 재조회 안 함).
+                                   # 이 값은 기본값이다. --stopped-retry "latest:1,previous:3,standard:10" 처럼 리그별로 지정하면 그 값이 우선한다.
+                                   # 재조회는 그 리그가 수집되는 실행에서만 일어나므로, 리그 수집 주기가 이 일수보다 길면 그 주기를 따른다.
+                                   # (중지 목록은 리그별로 관리되고, 그 리그가 수집되는 실행에서 확인한다)
 # 서로 다른 통화의 매물을 비교하기 위한 환율(Exalted 기준). 이상치 판정과 정렬에만 쓰이고, 저장되는 가격은 매물 원래의 (금액, 통화)다.
 # 실제 값은 리그 수집을 시작할 때 overquality-flip-prices.json 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
 # 아래 기본값은 poe.ninja 환율이 없을 때(--no-rates 이고 저장된 값도 없음, 조회 실패)만 쓰인다.
@@ -1043,10 +1049,12 @@ def _parse_ts(t):
     return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
-def retry_due(info, now=None):
+def retry_due(info, now=None, days=None):
     """수집 중지 항목을 자동으로 다시 조회할 때가 됐는지. 마지막 확인(checkedAt) 없으면 중지 시작(since) 기준.
-    둘 다 없거나 해석하지 못하면 확인 기록이 없는 것이므로 다시 조회한다."""
-    if STOPPED_RETRY_DAYS <= 0:
+    둘 다 없거나 해석하지 못하면 확인 기록이 없는 것이므로 다시 조회한다.
+    days: 이 리그의 재조회 간격(일). 생략하면 STOPPED_RETRY_DAYS."""
+    days = STOPPED_RETRY_DAYS if days is None else days
+    if days <= 0:
         return False
     info = info if isinstance(info, dict) else {}
     last = _parse_ts(info.get("checkedAt")) or _parse_ts(info.get("since"))
@@ -1054,8 +1062,8 @@ def retry_due(info, now=None):
         return True
     now = now or datetime.now(timezone.utc)
     # 조회 계획은 실행 '시작'에 세우지만 checkedAt 은 수집 도중(Standard 는 맨 끝)에 찍힌다. 그 차이만큼 매번 조금 모자라
-    # 간격이 실행 주기 단위로 한 칸씩 밀리므로(예: Standard 3일 -> 4일), 리그 수집 간격과 같은 INTERVAL_MARGIN_H 만큼 일찍 도래한 것으로 본다.
-    return (now - last).total_seconds() >= STOPPED_RETRY_DAYS * 86400 - INTERVAL_MARGIN_H * 3600
+    # 간격이 실행 주기 단위로 한 칸씩 밀리므로(예: Standard 1일 -> 2일), 리그 수집 간격과 같은 INTERVAL_MARGIN_H 만큼 일찍 도래한 것으로 본다.
+    return (now - last).total_seconds() >= days * 86400 - INTERVAL_MARGIN_H * 3600
 
 
 def load_stopped(path, league):
@@ -1157,9 +1165,9 @@ def run(league, base_name, sockets, ilvls):
     return list(by_ilvl.values())
 
 
-def plan_requests(targets, stopped, force):
+def plan_requests(targets, stopped, force, days=None):
     """실행 전에 조회할 (베이스, ilvl)과 최대 요청 수를 계산한다.
-    수집 중지 항목은 건너뛰되, 마지막 확인 후 STOPPED_RETRY_DAYS 일이 지났으면 다시 조회한다 (force 면 전부 조회).
+    수집 중지 항목은 건너뛰되, 마지막 확인 후 days(리그별 재조회 일수, 생략하면 STOPPED_RETRY_DAYS)일이 지났으면 다시 조회한다 (force 면 전부 조회).
     반환: ({베이스: [ilvl...]}, 건너뛴 수집 중지 항목 이름들, 최대 검색 수, 최대 fetch 수, 기간이 지나 다시 조회하는 항목 이름들)"""
     active, held, due = {}, [], []
     now = datetime.now(timezone.utc)
@@ -1168,7 +1176,7 @@ def plan_requests(targets, stopped, force):
         for v in ilvls_for(name):                           # 무기 82/81, 방어구 82
             key = f"{slug(name)}:{v}"
             if not force and key in stopped:
-                if retry_due(stopped[key], now):
+                if retry_due(stopped[key], now, days):
                     due.append(f"{name} ilvl {v}")
                     keep.append(v)
                 else:
@@ -1209,6 +1217,20 @@ def collect(league, stopped, active, todo, out, order):
     return failed
 
 
+def parse_stopped_retry(text):
+    """'--stopped-retry' 값 ('latest:1,previous:3,standard:10') -> {소문자 키: 일수}. 키는 latest / previous / standard / 리그 이름."""
+    table = {}
+    for token in (text or "").split(","):
+        token = token.strip()
+        if not token:
+            continue
+        m = re.fullmatch(r"(.+?):(\d+(?:\.\d+)?)", token)
+        if not m:
+            sys.exit(f"--stopped-retry 형식 오류: '{token}' (예: latest:1,previous:3,standard:10)")
+        table[m.group(1).strip().lower()] = float(m.group(2))
+    return table
+
+
 def main():
     ap = argparse.ArgumentParser(description="PoE2 trade2 베이스별 최저가 조회")
     ap.add_argument("target", nargs="?", default="all",
@@ -1220,6 +1242,9 @@ def main():
                     help="결과 저장 경로 (기본: 스크립트 옆 out/overquality-flip-prices.json, 기존 파일이 있으면 병합)")
     ap.add_argument("--retry-stopped", action="store_true",
                     help="all 실행에서도 '수집 중지'된 항목(베이스+ilvl)을 다시 조회")
+    ap.add_argument("--stopped-retry", default="",
+                    help="'수집 중지' 항목을 다시 조회하는 간격(일)을 리그별로 지정 (예: latest:1,previous:3,standard:10). "
+                         f"지정하지 않은 리그는 {STOPPED_RETRY_DAYS}일 (STOPPED_RETRY_DAYS). 0 이하면 자동 재조회 안 함")
     ap.add_argument("--no-rates", action="store_true", help="poe.ninja 환율 갱신을 건너뜀")
     ap.add_argument("--rates-only", action="store_true", help="poe.ninja 환율만 갱신하고 끝냄 (GGG 검색 없음)")
     args = ap.parse_args()
@@ -1233,6 +1258,8 @@ def main():
             sys.exit(f"알 수 없는 베이스: {args.target}\n사용 가능: {', '.join(BASES)}")
         targets = [(match, BASES[match])]
 
+    stopped_retry = parse_stopped_retry(args.stopped_retry)
+    retry_days = {}                                      # 리그 이름 -> 수집 중지 항목 재조회 간격(일)
     leagues, waiting, has_latest = [], [], False
     all_mode, seen_seasonal = False, []                  # --league all 사용 여부 / 이번에 확인한 시즌 리그(API 순서, 수집 간격으로 건너뛴 것 포함)
     for token in args.league.split(","):
@@ -1256,6 +1283,18 @@ def main():
                 seen_seasonal.append(lg)
             if lg in leagues or lg in waiting:
                 continue
+            if lg.lower() == "standard":                 # 리그 역할(latest / previous / standard) -> 재조회 간격
+                role = "standard"
+            elif pick.lower() in ("latest", "previous"):
+                role = pick.lower()
+            elif from_all and lg in seen_seasonal and seen_seasonal.index(lg) < 2:
+                role = ("latest", "previous")[seen_seasonal.index(lg)]
+            else:
+                role = None
+            d = stopped_retry.get(role) if role else None
+            if d is None:
+                d = stopped_retry.get(lg.lower())
+            retry_days[lg] = STOPPED_RETRY_DAYS if d is None else d
             if every is not None:
                 age = hours_since_collected(args.out, lg)
                 if age is not None and age < every - INTERVAL_MARGIN_H:
@@ -1285,13 +1324,14 @@ def main():
     print(f"리그: {', '.join(leagues)}")
     for league in leagues:
         stopped = load_stopped(args.out, league)
-        active, held, ns, nf, due = plan_requests(targets, stopped, force)
+        days = retry_days.get(league, STOPPED_RETRY_DAYS)
+        active, held, ns, nf, due = plan_requests(targets, stopped, force, days)
         todo = [(n, k) for n, k in targets if active[n]]
         print(f"[{league}] 조회 대상 {len(todo)}종 / {sum(len(active[n]) for n, _ in todo)}개 항목")
         if due:
-            print(f"  수집 중지 {len(due)}건은 마지막 확인 후 {STOPPED_RETRY_DAYS}일이 지나 다시 조회: {', '.join(due)}")
+            print(f"  수집 중지 {len(due)}건은 마지막 확인 후 {days:g}일이 지나 다시 조회: {', '.join(due)}")
         if held:
-            print(f"  수집 중지 {len(held)}건 건너뜀 ({STOPPED_RETRY_DAYS}일마다 자동 재조회, 지금 전부 다시 조회: --retry-stopped): {', '.join(held)}")
+            print(f"  수집 중지 {len(held)}건 건너뜀 ({days:g}일마다 자동 재조회, 지금 전부 다시 조회: --retry-stopped): {', '.join(held)}")
         if todo:
             plans.append((league, stopped, active, todo))
             n_search += ns
