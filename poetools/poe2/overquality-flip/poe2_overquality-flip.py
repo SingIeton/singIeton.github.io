@@ -44,9 +44,10 @@
   - 실행할 때마다 리그별로 Divine, Chaos, 바알 대장장이/방어구 장인의 주입기, 대장장이의 숫돌·방어구 장인의 고철 가격을 poe.ninja 의 PoE2 화폐 거래소
     집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
     poe.ninja 가 기본으로 주는 primaryValue 는 리그·시점에 따라 바뀌는 기준 화폐(core.primary, adaptive)로 매긴 값이라 싼 화폐는 오차가 크다.
-    그래서 항목별로 '그 화폐로 매겨진 실제 시세'(거래량이 가장 많은 상대 화폐 maxVolumeCurrency 와, 그 화폐 1개로 살 수 있는 개수 maxVolumeRate -> 가격 = 1 / maxVolumeRate)를 읽어 Exalted 로 환산한다.
-      · 퀄리티 화폐(숫돌·고철): 항상 Exalted 로 매겨진 시세만 쓴다 (없으면 이전 값 유지)
-      · 바알 주입기·Divine·Chaos: Exalted 시세를 먼저 보고, 없으면 Divine -> Chaos 순서로 그 화폐로 매겨진 시세를 Exalted 로 환산
+    그래서 항목별로 '그 화폐로 매겨진 실제 시세'(거래량이 가장 많은 상대 화폐 maxVolumeCurrency 와, 그 화폐 1개로 살 수 있는 개수 maxVolumeRate -> 가격 = 1 / maxVolumeRate)를 읽는다.
+      · 바알 주입기·퀄리티 화폐(숫돌·고철): 읽은 값을 Exalted 로 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다 (u = e Exalted / d Divine / c Chaos).
+        maxVolumeCurrency 가 Exalted·Divine·Chaos 중 하나면 그 화폐 값을 쓰고, 아니면 Exalted -> Divine -> Chaos 순서로 찾는다. 화면은 값 뒤에 d / c / e 를 붙여 보여준다
+      · Divine·Chaos 자체: 항상 Exalted 기준 숫자 (Exalted 시세를 먼저 보고, 없으면 서로를 거쳐 환산)
     overquality-flip.html 이 이 값을 리그별 기본 환율로 쓴다. 모든 리그는 소프트코어(하드코어 제외)다.
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
   - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
@@ -334,9 +335,14 @@ def call(method, url, **kw):
 
 # ---------------------------------------------------------------- poe.ninja 환율 (Exalted 기준)
 # 오버퀄리티 계산에 쓰는 가격을 리그별로 poe.ninja 의 PoE2 화폐 거래소 집계(exchange overview, 약 1시간 단위 갱신)에서 읽어
-# overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다. 값은 모두 '해당 화폐 1개 = Exalted 몇 개'이고,
+# overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
+#   - div, chaos: '1개 = Exalted 몇 개' (항상 Exalted 기준 숫자)
+#   - inf.*, q.*: poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다.
+#     단위 u 는 e = Exalted, d = Divine, c = Chaos. (예: {"v": 0.12, "u": "d"} = 1개 = 0.12 Divine)
+#     화면(overquality-flip.html)이 읽은 값과 단위를 그대로 보여주고, 계산할 때만 div / chaos 환율로 Exalted 로 환산한다.
 # overquality-flip.html 이 같은 키(div, chaos, inf.blacksmith/armourer, q.whetstone/scrap)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
-#   "rates": {"div": 515.0, "chaos": 67.0, "inf": {"blacksmith": 60.0, "armourer": 60.0}, "q": {"whetstone": 0.15, "scrap": 0.15},
+#   "rates": {"div": 515.0, "chaos": 67.0, "inf": {"blacksmith": {"v": 0.12, "u": "d"}, "armourer": {"v": 60.0, "u": "e"}},
+#             "q": {"whetstone": {"v": 0.15, "u": "e"}, "scrap": {"v": 0.0003, "u": "d"}},
 #             "source": "poe.ninja", "updatedAt": "2026-11-08T12:30:00Z"}
 NINJA = "https://poe.ninja/poe2/api/economy"
 # rates 키 -> (표시 이름, 매칭 후보). id·이름·detailsId 에서 영숫자만 남겨 소문자로 만든 값과 비교하므로
@@ -356,9 +362,11 @@ ANCHORS = {"exalted": EXALTED_KEYS, "divine": ("divine", "divineorb"), "chaos": 
 ANCHOR_KEYS = {"div": "divine", "chaos": "chaos"}       # rates 키 -> ANCHORS 이름 (Divine / Chaos 자체의 Exalted 가격)
 # 항목별로 '어떤 화폐로 매겨진 시세'를 읽을지, 그리고 그 우선순위.
 #   poe.ninja 의 기준 화폐(core.primary, adaptive)로 환산한 primaryValue 는 싼 화폐일수록 오차가 커서 쓰지 않는다.
-#   퀄리티 화폐(q.*)는 항상 Exalted 로 매겨진 시세만 쓴다 (Exalted 쌍이 없으면 이전 값 유지).
-#   바알 주입기·Divine·Chaos 는 Exalted 시세를 먼저 보고, 없으면 Divine -> Chaos 순서로 그 화폐로 매겨진 시세를 Exalted 로 환산한다.
-RATE_CHAINS = {k: ("exalted",) if k.startswith("q.") else ("exalted", "divine", "chaos") for k in RATE_ITEMS}
+#   퀄리티 화폐·바알 주입기(q.*, inf.*)는 거래량이 가장 많은 상대 화폐(maxVolumeCurrency)가 Exalted / Divine / Chaos 중 하나면 그 화폐로 매겨진 값을
+#   환산 없이 그대로 쓰고(단위 e / d / c 와 함께 저장), 아니면 Exalted -> Divine -> Chaos 순서로 찾는다.
+#   Divine·Chaos 자체의 가격은 이전처럼 Exalted 시세를 먼저 보고, 없으면 서로를 거쳐 Exalted 로 환산한다 (항상 Exalted 기준 숫자).
+RATE_CHAINS = {k: ("exalted", "divine", "chaos") for k in RATE_ITEMS}
+UNIT_SHORT = {"exalted": "e", "divine": "d", "chaos": "c"}   # rates 에 저장하는 단위 표기
 # Currency 에서 못 찾은 항목을 찾아볼 다른 카테고리 (poe.ninja 문서의 PoE2 type 값)
 NINJA_TYPES = ["Currency", "Fragments", "Abyss", "Essences", "SoulCores", "Runes", "Ritual", "Expedition",
                "Delirium", "Breach", "Verisium", "UncutGems", "Idols", "LineageSupportGems"]
@@ -467,6 +475,22 @@ def _ex_price(ov, cid, chain, per):
     return None
 
 
+def _native_price(ov, cid, chain, per):
+    """cid 1개의 시세를 poe.ninja 가 매긴 화폐 단위 그대로 읽는다 (Exalted 로 환산하지 않음). 반환: (값, 화폐 이름, 출처) 또는 None.
+    거래량이 가장 많은 상대 화폐(maxVolumeCurrency)가 chain 에 있는 화폐면 그것을 먼저 보고, 이어서 chain 순서로 찾는다.
+    per(Exalted 환율)에 그 화폐가 없으면 화면에서 Exalted 로 환산할 수 없으므로 건너뛴다."""
+    mv = _norm((ov["lines"].get(cid) or {}).get("maxVolumeCurrency"))
+    first = [n for n, c in ov["anchor"].items() if mv and _norm(c) == mv and n in chain]
+    for name in first + [n for n in chain if n not in first]:
+        cur = ov["anchor"].get(name)
+        if cur is None or per.get(name) is None:
+            continue
+        q = _quote(ov, cid, cur)
+        if q:
+            return q[0], name, q[1]
+    return None
+
+
 def ninja_ex_per(ov):
     """Divine / Chaos 1개 = Exalted 몇 개 -> ({'exalted': 1.0, 'divine': .., 'chaos': ..}, {이름: 출처}).
     먼저 Exalted 로 매겨진 시세를 읽고, 못 구한 쪽만 다른 쪽(Divine <-> Chaos)을 거쳐 환산한다. Exalted 를 찾지 못하면 ({}, {})."""
@@ -495,9 +519,10 @@ def ninja_league_id(league, ninja_leagues):
 
 
 def fetch_ninja_rates(league, ninja_leagues):
-    """리그 하나의 환율을 읽어 {"div": .., "chaos": .., "inf.blacksmith": .., "q.whetstone": ..} 로 반환 (찾은 것만).
-    가격은 poe.ninja 의 기준 화폐(core.primary, 'adaptive')로 환산하지 않고, 화폐별로 정한 순서대로 '그 화폐로 매겨진 시세'를 읽는다
-    (RATE_CHAINS: 퀄리티 화폐는 Exalted 만, 그 외는 Exalted -> Divine -> Chaos). 아무것도 못 얻거나 값이 비정상이면 None."""
+    """리그 하나의 환율을 읽어 {"div": (값, "exalted"), "chaos": (값, "exalted"), "inf.blacksmith": (값, "divine"), "q.whetstone": (값, "exalted"), ..} 로 반환 (찾은 것만).
+    div / chaos 는 Exalted 기준 값이고, 나머지는 poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 단위(화폐 이름)와 함께 돌려준다.
+    poe.ninja 의 기준 화폐(core.primary, 'adaptive')로 환산하지 않고 '그 화폐로 매겨진 시세'를 읽는다
+    (maxVolumeCurrency 우선, 이어서 Exalted -> Divine -> Chaos). 아무것도 못 얻거나 값이 비정상이면 None."""
     lid = ninja_league_id(league, ninja_leagues)
     if lid is None:
         names = ", ".join(str(x.get("id")) for x in ninja_leagues) or "없음"
@@ -522,14 +547,14 @@ def fetch_ninja_rates(league, ninja_leagues):
             if k in ANCHOR_KEYS:                    # Divine / Chaos 자체의 Exalted 가격
                 name = ANCHOR_KEYS[k]
                 if name in per:
-                    found[k], how[k] = per[name], per_src.get(name, "")
+                    found[k], how[k] = (per[name], "exalted"), per_src.get(name, "")
                 continue
             cid = next((ov["keys"][c] for c in RATE_ITEMS[k][1] if c in ov["keys"]), None)
             if cid is None or not per:
                 continue
-            r = _ex_price(ov, cid, RATE_CHAINS[k], per)
+            r = _native_price(ov, cid, RATE_CHAINS[k], per)
             if r:
-                found[k], how[k] = r[0], f"{r[1].title()}·{r[2]}"
+                found[k], how[k] = (r[0], r[1]), r[2]
             else:
                 ln = ov["lines"].get(cid) or {}     # 이 카테고리에는 있으나 허용된 화폐(Exalted 등)로 매겨진 시세가 없음 -> 원인 확인용으로 원본 필드를 남긴다
                 quoteless[k] = (f"{RATE_ITEMS[k][0]}: " + (f"primary={ov['primary']}, primaryValue={ln.get('primaryValue')}, "
@@ -537,17 +562,17 @@ def fetch_ninja_rates(league, ninja_leagues):
                                 if ln else f"line 없음 (primary={ov['primary']})"))
         time.sleep(0.5)
     missing = [RATE_ITEMS[k][0] for k in RATE_ITEMS if k not in found]
-    if "div" in found and "chaos" in found and found["div"] <= found["chaos"]:
-        print(f"  [{league}] 값이 비정상(Divine {found['div']:.1f} <= Chaos {found['chaos']:.1f} Ex)이라 저장하지 않음")
+    if "div" in found and "chaos" in found and found["div"][0] <= found["chaos"][0]:
+        print(f"  [{league}] 값이 비정상(Divine {found['div'][0]:.1f} <= Chaos {found['chaos'][0]:.1f} Ex)이라 저장하지 않음")
         return None
-    shown = ", ".join(f"{RATE_ITEMS[k][0]} {found[k]:.4g} Ex" + (f" ({how[k]})" if how.get(k) else "")
+    shown = ", ".join(f"{RATE_ITEMS[k][0]} {found[k][0]:.4g} {UNIT_SHORT[found[k][1]]}" + (f" ({how[k]})" if how.get(k) else "")
                       for k in RATE_ITEMS if k in found)
     print(f"  [{league}] {shown or '찾은 항목 없음'}")
     if missing:
         print(f"    찾지 못함 (이전 값 유지): {', '.join(missing)}")
         nq = [quoteless[k] for k in RATE_ITEMS if k in quoteless and k not in found]
         if nq:
-            print("    └ 항목은 있으나 지정한 화폐로 매겨진 시세가 없음 (퀄리티 화폐=Exalted, 주입기=Exalted→Divine→Chaos):")
+            print("    └ 항목은 있으나 Exalted / Divine / Chaos 로 매겨진 시세가 없음:")
             for line in nq:
                 print(f"      {line}")
         print(f"    poe.ninja Currency 응답의 키 예시: {', '.join(sample) or '(비어 있음)'}")
@@ -555,7 +580,7 @@ def fetch_ninja_rates(league, ninja_leagues):
 
 
 def save_rates(path, league, found, order=None):
-    """found 를 overquality-flip-prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
+    """found({키: (값, 화폐 이름)})를 overquality-flip-prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
     data = {"version": 1, "leagues": {}}
     if os.path.exists(path):
         try:
@@ -575,7 +600,11 @@ def save_rates(path, league, found, order=None):
         t = rates
         for p in parts[:-1]:
             t = t.setdefault(p, {})
-        t[parts[-1]] = round(v, 2) if v >= 1 else round(v, 4)
+        val, unit = v
+        if key in ANCHOR_KEYS:                      # div / chaos: Exalted 기준 숫자 (이상치 판정·환산 기준이라 형식 유지)
+            t[parts[-1]] = round(val, 2) if val >= 1 else round(val, 4)
+        else:                                       # 읽은 값 그대로 + 단위. 작은 값(0.0003 d)이 0 으로 사라지지 않게 유효숫자 4자리로 저장
+            t[parts[-1]] = {"v": float(f"{val:.4g}"), "u": UNIT_SHORT.get(unit, "e")}
     rates["source"] = "poe.ninja"
     rates["updatedAt"] = utc_stamp()
     with open(path, "w", encoding="utf-8") as f:
@@ -584,7 +613,7 @@ def save_rates(path, league, found, order=None):
 
 def update_rates(leagues, out, order=None):
     """모든 리그의 환율을 poe.ninja 에서 읽어 저장한다. 실패해도 예외를 내지 않는다 (GGG 가격 수집은 계속)."""
-    print("\n== poe.ninja 환율 (Exalted 기준) ==")
+    print("\n== poe.ninja 환율 (읽은 단위 그대로: e=Exalted, d=Divine, c=Chaos / Divine·Chaos 자체는 Ex) ==")
     try:
         nl = ninja_get("leagues")
         if isinstance(nl, dict):
