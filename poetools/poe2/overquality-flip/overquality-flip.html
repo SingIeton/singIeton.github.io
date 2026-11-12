@@ -10,7 +10,7 @@
 /* 이 파일에는 베이스 퀄리티 계산기에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널·탭 등 공통 모양은 style/theme.css */
 main.wrap{max-width:1142px}  /* 표(약 790px) + 설정 패널(300px)이 딱 맞는 폭. 서비스 공용 폭(1040px)보다 약간 넓게 */
 .grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.grid>div:first-child{order:2}}  /* 1열일 때 설정 패널을 결과(표) 아래로 */
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .row .btn,.row button{margin:0;font-size:13.5px;line-height:1.2;min-height:38px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
 select:disabled{opacity:.4;cursor:not-allowed}
@@ -104,20 +104,7 @@ window.addEventListener("unhandledrejection",ev=>show(String(ev.reason&&ev.reaso
 /* 언어: 저장·동기화는 style/site-bar.js 가 담당. 여기서는 현재 언어를 읽고 "sitebar:lang" 이벤트만 구독 */
 let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||(document.documentElement.lang==="en"?"en":"ko");
 const tt=(ko,en)=>LANG==="en"?en:ko;
-/* 본인 전용 '갱신 요청' 버튼: GitHub Actions workflow_dispatch 호출. 토큰은 코드에 없고, 처음 누를 때 입력받아 이 브라우저(localStorage)에만 저장 */
-const GH={repo:"SingIeton/singIeton.github.io",wf:"update-prices.yml",ref:"main",key:"gh_dispatch_token"};
-const updLabel=()=>tt("갱신 요청","Request update");
-const updBtn=()=>`<button type="button" class="btn upd" title="${tt("GitHub Actions를 실행해 overquality-flip-prices.json 을 갱신합니다. 반영까지 1~3분 걸립니다.","Runs GitHub Actions to refresh overquality-flip-prices.json. Takes 1–3 minutes to appear.")}">${updLabel()}</button>`;
-document.addEventListener("click",async e=>{const b=e.target.closest(".upd");if(!b||b.disabled)return;
- let t=null;try{t=localStorage.getItem(GH.key)}catch(x){}
- if(!t){t=(prompt(tt("GitHub 토큰을 입력하세요 (이 브라우저에만 저장됩니다)","Enter your GitHub token (stored only in this browser)"))||"").trim();if(!t)return;try{localStorage.setItem(GH.key,t)}catch(x){}}
- const say=(m,d)=>document.querySelectorAll(".upd").forEach(x=>{x.innerHTML=m;x.disabled=d});
- say(tt("요청 중…","Requesting…"),true);
- try{const r=await fetch(`https://api.github.com/repos/${GH.repo}/actions/workflows/${GH.wf}/dispatches`,{method:"POST",headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+t,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},body:JSON.stringify({ref:GH.ref})});
-  if(r.status===204)say(tt("요청 완료","Requested"),true);
-  else{if([401,403,404].includes(r.status))try{localStorage.removeItem(GH.key)}catch(x){}say(tt("실패 ("+r.status+")","Failed ("+r.status+")"),true)}}
- catch(x){say(tt("네트워크 오류","Network error"),true)}
- setTimeout(()=>say(updLabel(),false),6000)});
+try{localStorage.removeItem("gh_dispatch_token")}catch(x){}  /* 삭제된 '갱신 요청' 버튼이 이 브라우저에 저장해 둔 GitHub 토큰 정리 */
 function applyStatic(){document.querySelectorAll("[data-en]").forEach(e=>{if(e.dataset.ko===undefined)e.dataset.ko=e.textContent;e.textContent=LANG==="en"?e.dataset.en:e.dataset.ko});
 document.title=tt("PoE 2 오버소켓 베이스 오버퀄리티 플리핑","PoE 2 Oversocket Base Overquality Flipping Profit Calculator")}
 window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyStatic();panel();render()});
@@ -238,10 +225,12 @@ function autoCollapse(){COL.clear();const lg=PRICES.leagues[S.league]||{},sm=lg.
  byCls.forEach((bs,c)=>{if(bs.every(allStopped))COL.add(c)})}
 /* 설정 카테고리 접힘 상태: panel() 이 설정 패널을 통째로 다시 그리므로(리그 전환·언어 전환·설정 초기화·가격 파일 불러오기) 번호(0=리그, 1~=FIELDS 순서)로 따로 보관. 제목 문구는 언어마다 달라 키로 쓰지 않음 */
 const COLP=new Set();
-const fsH=(i,t)=>`<fieldset data-i="${i}"${COLP.has(i)?' class="col"':""}><legend tabindex="0" role="button" aria-expanded="${!COLP.has(i)}" title="${tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand")}">${t}</legend>`;
-function panel(){let h=fsH(0,tt("리그","League"))+`<label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label></fieldset>`;
+const TOUCH=window.matchMedia("(hover:none) and (pointer:coarse)");  /* 터치가 주 입력인 기기: 탭 한 번으로 접기/펼치기, 그 외(마우스)는 더블클릭 */
+const colHint=()=>TOUCH.matches?tt("탭하여 접기/펼치기","Tap to collapse/expand"):tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand");
+const fsH=(i,t)=>`<fieldset data-i="${i}"${COLP.has(i)?' class="col"':""}><legend tabindex="0" role="button" aria-expanded="${!COLP.has(i)}" title="${colHint()}">${t}</legend>`;
+function panel(){let h=fsH(0,tt("리그","League"))+`<label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${esc(l)}</option>`).join("")}</select></label></fieldset>`;
 let fi=0;for(const[t,fs]of FIELDS())h+=fsH(++fi,t)+`${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"${OFF.includes(k)?" disabled":""}>${u?`<em>${u}</em>`:""}</span></label>`).join("")}</fieldset>`;
-h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div><p class="devnote">${tt("*개발자용","*For developers")}</p><div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label>${updBtn()}</div>`;
+h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div><p class="devnote">${tt("*개발자용","*For developers")}</p><div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label></div>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
  if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;saveSettings();useLeague(e.value);autoCollapse();  /* 리그 전환: 그 리그의 설정값으로 바꾸고 전체 다시 계산 */
@@ -284,7 +273,7 @@ function render(){
   groups.forEach(g=>{g.list=g.list.filter(r=>r.margin>0&&r.roi>=REC_MIN_ROI&&r.B.conf!=="low"&&r.T.conf!=="low").sort((a,b)=>sc(b)-sc(a)).filter((r,i)=>i<REC_N||r.roi>REC_BONUS_ROI)});
   groups.forEach((g,k)=>{if(!g.list.length)groups.delete(k)})}  /* 추천할 항목이 하나도 없는 카테고리는 머리글까지 숨김 (전부 비면 아래 '추천할 데이터가 없습니다.') */  /* 베이스·시장가 중 하나라도 신뢰 낮음이면 제외 */
  let h="";groups.forEach((g,cls)=>{const isOpen=!COL.has(cls);
-  h+=`<tr class="g${isOpen?"":" col"}" data-cls="${esc(cls)}" tabindex="0" role="button" aria-expanded="${isOpen}" title="${tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand")}"><td colspan="${NC}">${LANG==="en"?`${esc(g.en||cls)} <span class="ge">${esc(g.ko||g.en||cls)}</span>`:`${esc(g.ko||g.en||cls)} <span class="ge">${esc(g.en||cls)}</span>`}${isOpen?"":`<span class="cnt">${tt(g.list.length+"행 접힘",g.list.length+" rows hidden")}</span>`}</td></tr>`;
+  h+=`<tr class="g${isOpen?"":" col"}" data-cls="${esc(cls)}" tabindex="0" role="button" aria-expanded="${isOpen}" title="${colHint()}"><td colspan="${NC}">${LANG==="en"?`${esc(g.en||cls)} <span class="ge">${esc(g.ko||g.en||cls)}</span>`:`${esc(g.ko||g.en||cls)} <span class="ge">${esc(g.en||cls)}</span>`}${isOpen?"":`<span class="cnt">${tt(g.list.length+"행 접힘",g.list.length+" rows hidden")}</span>`}</td></tr>`;
   if(!isOpen)return;
   for(const r of g.list){const b=r.b,e=r.e;
    if(!e){h+=r.ilvl!=null?`<tr><td>${nm(b)}</td><td class="il">${r.ilvl}</td><td colspan="${NC-2}" class="dim" style="text-align:center"${r.tip?` title="${esc(r.tip)}"`:""}>${esc(r.msg)}</td></tr>`:`<tr><td>${nm(b)}</td><td colspan="${NC-1}" class="dim" style="text-align:center">${esc(r.msg)}</td></tr>`;continue}
@@ -307,9 +296,11 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
 (async()=>{
  const fb=JSON.parse($("fb").textContent);
  const tg=tr=>{const c=tr.dataset.cls;COL.has(c)?COL.delete(c):COL.add(c);render()};
- $("rows").addEventListener("dblclick",e=>{const tr=e.target.closest("tr.g");if(tr)tg(tr)});
+ $("rows").addEventListener("dblclick",e=>{if(TOUCH.matches)return;const tr=e.target.closest("tr.g");if(tr)tg(tr)});
+ $("rows").addEventListener("click",e=>{if(!TOUCH.matches)return;const tr=e.target.closest("tr.g");if(tr)tg(tr)});
  const tgS=lg=>{const fs=lg.parentNode,i=+fs.dataset.i;COLP.has(i)?COLP.delete(i):COLP.add(i);fs.classList.toggle("col",COLP.has(i));lg.setAttribute("aria-expanded",!COLP.has(i))};  /* 설정 패널은 다시 그리지 않고 클래스만 바꿈 */
- $("set").addEventListener("dblclick",e=>{const lg=e.target.closest("fieldset>legend");if(lg)tgS(lg)});
+ $("set").addEventListener("dblclick",e=>{if(TOUCH.matches)return;const lg=e.target.closest("fieldset>legend");if(lg)tgS(lg)});
+ $("set").addEventListener("click",e=>{if(!TOUCH.matches)return;const lg=e.target.closest("fieldset>legend");if(lg)tgS(lg)});
  $("set").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const lg=e.target.closest("fieldset>legend");if(!lg)return;e.preventDefault();tgS(lg)});
  $("rows").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr.g");if(!tr)return;e.preventDefault();const c=tr.dataset.cls;tg(tr);const n=[...$("rows").querySelectorAll("tr.g")].find(x=>x.dataset.cls===c);if(n)n.focus()});
  applyStatic();loadSettings();panel();
