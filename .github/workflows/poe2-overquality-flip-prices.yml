@@ -36,9 +36,10 @@ jobs:
 
       - name: Collect prices
         working-directory: ${{ env.SCRIPT_DIR }}
-        # 최신 리그: 2시간마다(매 실행) / 직전(second latest) 리그: 6시간마다 / Standard: 24시간마다
+        # 최신 리그: 1.5시간마다(매 실행) / 직전(second latest) 리그: 6시간마다 / Standard: 24시간마다
         # ':N' 은 마지막 수집 후 최소 N시간 간격 (실행 소요 시간·크론 지연을 감안해 1.5시간 일찍 도래한 것으로 봄)
-        run: python -u "$SCRIPT_NAME" all --league "latest,previous:6,standard:24"
+        # 수집 중지 항목 재조회: 최신 1일 / 직전 3일 / Standard 10일마다 (--stopped-retry, 일 단위, 같은 방식으로 1.5시간 일찍 도래)
+        run: python -u "$SCRIPT_NAME" all --league "latest,previous:6,standard:24" --stopped-retry "latest:1,previous:3,standard:10"
 
       - name: Validate and commit overquality-flip-prices.json
         if: ${{ !cancelled() }}                # 수집 중 일부 실패해도, 저장된 진행분은 커밋
