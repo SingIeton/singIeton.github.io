@@ -8,12 +8,8 @@
      "ilvl": 82,
      "sockets": 3,
      "sell30": {
-      "total": 6,
+      "total": 5,
       "listings": [
-       {
-        "a": 100,
-        "c": "divine"
-       },
        {
         "a": 110,
         "c": "divine"
@@ -37,43 +33,31 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 100,
+       "a": 110,
        "c": "divine",
-       "n": 6,
-       "n_eff": 5.5,
-       "confidence": "high",
+       "n": 5,
+       "n_eff": 4.5,
+       "confidence": "medium",
        "skipped": 0,
-       "age": 0.2,
-       "group_age": 0.8,
-       "reason": "매물 6개(같은 판매자 보정 후 5.5개 상당), 최저가/중앙값 84%"
+       "age": 0.9,
+       "group_age": 0.9,
+       "reason": "매물 5개(같은 판매자 보정 후 4.5개 상당), 최저가/중앙값 85%"
       }
      },
      "buy0": {
-      "total": 148,
+      "total": 145,
       "listings": [
        {
-        "a": 58,
-        "c": "chaos"
-       },
-       {
-        "a": 5,
+        "a": 7,
         "c": "divine"
        },
        {
-        "a": 6,
+        "a": 7,
         "c": "divine"
        },
        {
-        "a": 6,
+        "a": 7,
         "c": "divine"
-       },
-       {
-        "a": 6,
-        "c": "divine"
-       },
-       {
-        "a": 75,
-        "c": "chaos"
        },
        {
         "a": 7,
@@ -120,8 +104,20 @@
         "c": "divine"
        },
        {
+        "a": 9,
+        "c": "divine"
+       },
+       {
         "a": 115,
         "c": "chaos"
+       },
+       {
+        "a": 10,
+        "c": "divine"
+       },
+       {
+        "a": 10,
+        "c": "divine"
        },
        {
         "a": 10,
@@ -134,18 +130,18 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 5,
+       "a": 7,
        "c": "divine",
        "n": 20,
        "n_eff": 17.83,
-       "confidence": "low",
+       "confidence": "high",
        "skipped": 0,
        "age": 0.0,
-       "group_age": 0.1,
-       "reason": "매물 20개(같은 판매자 보정 후 17.8개 상당), 최저가/중앙값 56%"
+       "group_age": 0.0,
+       "reason": "매물 20개(같은 판매자 보정 후 17.8개 상당), 최저가/중앙값 78%"
       }
      },
-     "collectedAt": "2026-11-12T16:51:29Z"
+     "collectedAt": "2026-11-12T18:36:38Z"
     },
     {
      "base": "obliterator-bow",
@@ -212,22 +208,14 @@
        "n_eff": 2.83,
        "confidence": "low",
        "skipped": 0,
-       "age": 0.8,
-       "group_age": 0.8,
+       "age": 0.9,
+       "group_age": 0.9,
        "reason": "매물 4개(같은 판매자 보정 후 2.8개 상당), 최저가/중앙값 100%"
       }
      },
      "buy0": {
-      "total": 141,
+      "total": 139,
       "listings": [
-       {
-        "a": 25,
-        "c": "divine"
-       },
-       {
-        "a": 25,
-        "c": "divine"
-       },
        {
         "a": 25,
         "c": "divine"
@@ -299,6 +287,14 @@
        {
         "a": 34,
         "c": "divine"
+       },
+       {
+        "a": 35,
+        "c": "divine"
+       },
+       {
+        "a": 35,
+        "c": "divine"
        }
       ],
       "fair": {
@@ -309,12 +305,12 @@
        "n_eff": 20.0,
        "confidence": "high",
        "skipped": 0,
-       "age": 0.1,
+       "age": 0.0,
        "group_age": 0.1,
-       "reason": "매물 20개, 최저가/중앙값 89%"
+       "reason": "매물 20개, 최저가/중앙값 88%"
       }
      },
-     "collectedAt": "2026-11-12T16:51:31Z"
+     "collectedAt": "2026-11-12T18:36:39Z"
     },
     {
      "base": "warmonger-bow",
@@ -582,9 +578,17 @@
       }
      },
      "buy0": {
-      "total": 123,
+      "total": 128,
       "listings": [
        {
+        "a": 18,
+        "c": "divine"
+       },
+       {
+        "a": 18,
+        "c": "divine"
+       },
+       {
         "a": 19,
         "c": "divine"
        },
@@ -606,6 +610,14 @@
        },
        {
         "a": 20,
+        "c": "divine"
+       },
+       {
+        "a": 20,
+        "c": "divine"
+       },
+       {
+        "a": 21,
         "c": "divine"
        },
        {
@@ -647,38 +659,22 @@
        {
         "a": 24,
         "c": "divine"
-       },
-       {
-        "a": 24,
-        "c": "divine"
-       },
-       {
-        "a": 24,
-        "c": "divine"
-       },
-       {
-        "a": 24,
-        "c": "divine"
-       },
-       {
-        "a": 25,
-        "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 19,
+       "a": 18,
        "c": "divine",
        "n": 20,
-       "n_eff": 18.5,
+       "n_eff": 19.5,
        "confidence": "high",
        "skipped": 0,
        "age": 0.0,
-       "group_age": 0.0,
-       "reason": "매물 20개(같은 판매자 보정 후 18.5개 상당), 최저가/중앙값 84%"
+       "group_age": 0.1,
+       "reason": "매물 20개(같은 판매자 보정 후 19.5개 상당), 최저가/중앙값 86%"
       }
      },
-     "collectedAt": "2026-11-12T16:51:40Z"
+     "collectedAt": "2026-11-12T18:36:48Z"
     },
     {
      "base": "sinister-quarterstaff",
@@ -742,16 +738,28 @@
        "n_eff": 2.0,
        "confidence": "low",
        "skipped": 0,
-       "age": 18.1,
-       "group_age": 18.1,
+       "age": 18.2,
+       "group_age": 18.2,
        "reason": "매물 2개, 최저가/중앙값 96%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 18일 전이지만 최저가 근처 매물층(하위 2개)의 나이 중앙값이 18일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
       }
      },
      "buy0": {
-      "total": 346,
+      "total": 350,
       "listings": [
        {
         "a": 4,
+        "c": "chaos"
+       },
+       {
+        "a": 4,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
+        "c": "chaos"
+       },
+       {
+        "a": 5,
         "c": "chaos"
        },
        {
@@ -817,34 +825,22 @@
        {
         "a": 1,
         "c": "divine"
-       },
-       {
-        "a": 1,
-        "c": "divine"
-       },
-       {
-        "a": 1,
-        "c": "divine"
-       },
-       {
-        "a": 1,
-        "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 5,
+       "a": 4,
        "c": "chaos",
-       "n": 19,
-       "n_eff": 19.0,
+       "n": 20,
+       "n_eff": 20.0,
        "confidence": "low",
-       "skipped": 1,
-       "age": 0.2,
-       "group_age": 1.4,
-       "reason": "매물 19개, 최저가/중앙값 50%; 중앙값의 50% 미만인 최근 저가 1개 제외"
+       "skipped": 0,
+       "age": 0.1,
+       "group_age": 0.1,
+       "reason": "매물 20개, 최저가/중앙값 57%"
       }
      },
-     "collectedAt": "2026-11-12T16:51:41Z"
+     "collectedAt": "2026-11-12T18:36:50Z"
     },
     {
      "base": "bolting-quarterstaff",
@@ -984,10 +980,10 @@
       }
      },
      "buy0": {
-      "total": 130,
+      "total": 131,
       "listings": [
        {
-        "a": 4,
+        "a": 3,
         "c": "divine"
        },
        {
@@ -1069,18 +1065,18 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 4,
+       "a": 5,
        "c": "divine",
-       "n": 20,
-       "n_eff": 17.67,
+       "n": 19,
+       "n_eff": 16.67,
        "confidence": "low",
-       "skipped": 0,
+       "skipped": 1,
        "age": 0.1,
-       "group_age": 0.1,
-       "reason": "매물 20개(같은 판매자 보정 후 17.7개 상당), 최저가/중앙값 50%"
+       "group_age": 1.9,
+       "reason": "매물 19개(같은 판매자 보정 후 16.7개 상당), 최저가/중앙값 62%; 중앙값의 50% 미만인 최근 저가 1개 제외"
       }
      },
-     "collectedAt": "2026-11-12T16:51:52Z"
+     "collectedAt": "2026-11-12T18:37:00Z"
     },
     {
      "base": "akoyan-spear",
@@ -1112,10 +1108,14 @@
       }
      },
      "buy0": {
-      "total": 111,
+      "total": 112,
       "listings": [
        {
-        "a": 1,
+        "a": 6,
+        "c": "chaos"
+       },
+       {
+        "a": 6,
         "c": "chaos"
        },
        {
@@ -1189,38 +1189,30 @@
        {
         "a": 15,
         "c": "chaos"
-       },
-       {
-        "a": 16,
-        "c": "chaos"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 9,
+       "a": 6,
        "c": "chaos",
-       "n": 19,
-       "n_eff": 18.5,
-       "confidence": "high",
-       "skipped": 1,
-       "age": 0.2,
-       "group_age": 0.8,
-       "reason": "매물 19개(같은 판매자 보정 후 18.5개 상당), 최저가/중앙값 86%; 중앙값의 50% 미만인 최근 저가 1개 제외"
+       "n": 20,
+       "n_eff": 19.0,
+       "confidence": "low",
+       "skipped": 0,
+       "age": 0.1,
+       "group_age": 0.1,
+       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 57%"
       }
      },
-     "collectedAt": "2026-11-12T16:51:52Z"
+     "collectedAt": "2026-11-12T18:37:00Z"
     },
     {
      "base": "flying-spear",
      "ilvl": 82,
      "sockets": 2,
      "sell30": {
-      "total": 5,
+      "total": 4,
       "listings": [
-       {
-        "a": 175,
-        "c": "divine"
-       },
        {
         "a": 188,
         "c": "divine"
@@ -1240,20 +1232,28 @@
       ],
       "fair": {
        "status": "ok",
-       "a": 175,
+       "a": 188,
        "c": "divine",
-       "n": 5,
-       "n_eff": 4.5,
+       "n": 4,
+       "n_eff": 3.5,
        "confidence": "medium",
        "skipped": 0,
-       "age": 0.1,
-       "group_age": 0.9,
-       "reason": "매물 5개(같은 판매자 보정 후 4.5개 상당), 최저가/중앙값 93%"
+       "age": 1.0,
+       "group_age": 1.0,
+       "reason": "매물 4개(같은 판매자 보정 후 3.5개 상당), 최저가/중앙값 97%"
       }
      },
      "buy0": {
-      "total": 140,
+      "total": 141,
       "listings": [
+       {
+        "a": 8,
+        "c": "divine"
+       },
+       {
+        "a": 9,
+        "c": "divine"
+       },
        {
         "a": 9,
         "c": "divine"
@@ -1325,30 +1325,22 @@
        {
         "a": 15,
         "c": "divine"
-       },
-       {
-        "a": 15,
-        "c": "divine"
-       },
-       {
-        "a": 15,
-        "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 9,
+       "a": 8,
        "c": "divine",
        "n": 20,
        "n_eff": 19.5,
        "confidence": "medium",
        "skipped": 0,
-       "age": 0.1,
-       "group_age": 0.1,
-       "reason": "매물 20개(같은 판매자 보정 후 19.5개 상당), 최저가/중앙값 69%"
+       "age": 0.0,
+       "group_age": 0.0,
+       "reason": "매물 20개(같은 판매자 보정 후 19.5개 상당), 최저가/중앙값 67%"
       }
      },
-     "collectedAt": "2026-11-12T16:52:30Z"
+     "collectedAt": "2026-11-12T18:37:38Z"
     },
     {
      "base": "flying-spear",
@@ -1378,13 +1370,13 @@
        "n_eff": 2.5,
        "confidence": "low",
        "skipped": 0,
-       "age": 25.2,
-       "group_age": 26.2,
+       "age": 25.3,
+       "group_age": 26.3,
        "reason": "매물 3개(같은 판매자 보정 후 2.5개 상당), 최저가/중앙값 92%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 25일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 26일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
       }
      },
      "buy0": {
-      "total": 245,
+      "total": 247,
       "listings": [
        {
         "a": 3,
@@ -1475,12 +1467,12 @@
        "n_eff": 20.0,
        "confidence": "high",
        "skipped": 0,
-       "age": 1.9,
-       "group_age": 1.9,
+       "age": 1.5,
+       "group_age": 1.5,
        "reason": "매물 20개, 최저가/중앙값 75%"
       }
      },
-     "collectedAt": "2026-11-12T16:52:30Z"
+     "collectedAt": "2026-11-12T18:37:38Z"
     },
     {
      "base": "spiny-talisman",
@@ -1811,12 +1803,12 @@
        "n_eff": 19.5,
        "confidence": "low",
        "skipped": 0,
-       "age": 46.6,
-       "group_age": 38.2,
-       "reason": "매물 20개(같은 판매자 보정 후 19.5개 상당), 최저가/중앙값 82%; 최저가 매물이 47일 전 등록이라 신뢰도 2단계 하향"
+       "age": 38.3,
+       "group_age": 38.3,
+       "reason": "매물 20개(같은 판매자 보정 후 19.5개 상당), 최저가/중앙값 82%; 최저가 매물은 38일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 38일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
       }
      },
-     "collectedAt": "2026-11-12T16:52:31Z"
+     "collectedAt": "2026-11-12T18:37:40Z"
     },
     {
      "base": "ornate-plate",
@@ -1970,32 +1962,16 @@
        "n_eff": 6.5,
        "confidence": "high",
        "skipped": 0,
-       "age": 2.0,
-       "group_age": 2.0,
+       "age": 2.1,
+       "group_age": 2.1,
        "reason": "매물 8개(같은 판매자 보정 후 6.5개 상당), 최저가/중앙값 96%"
       }
      },
      "buy0": {
-      "total": 113,
+      "total": 110,
       "listings": [
        {
-        "a": 27,
-        "c": "divine"
-       },
-       {
-        "a": 27,
-        "c": "divine"
-       },
-       {
-        "a": 27,
-        "c": "divine"
-       },
-       {
-        "a": 27,
-        "c": "divine"
-       },
-       {
-        "a": 27,
+        "a": 28,
         "c": "divine"
        },
        {
@@ -2019,7 +1995,7 @@
         "c": "divine"
        },
        {
-        "a": 30,
+        "a": 29,
         "c": "divine"
        },
        {
@@ -2057,22 +2033,38 @@
        {
         "a": 33,
         "c": "divine"
+       },
+       {
+        "a": 34,
+        "c": "divine"
+       },
+       {
+        "a": 34,
+        "c": "divine"
+       },
+       {
+        "a": 34,
+        "c": "divine"
+       },
+       {
+        "a": 34,
+        "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 27,
+       "a": 28,
        "c": "divine",
        "n": 20,
-       "n_eff": 20.0,
+       "n_eff": 19.0,
        "confidence": "high",
        "skipped": 0,
-       "age": 0.1,
-       "group_age": 0.1,
-       "reason": "매물 20개, 최저가/중앙값 93%"
+       "age": 0.2,
+       "group_age": 0.3,
+       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 88%"
       }
      },
-     "collectedAt": "2026-11-12T16:52:40Z"
+     "collectedAt": "2026-11-12T18:37:49Z"
     },
     {
      "base": "death-mail",
@@ -2170,11 +2162,19 @@
       }
      },
      "buy0": {
-      "total": 80,
+      "total": 82,
       "listings": [
        {
-        "a": 3,
-        "c": "chaos"
+        "a": 8,
+        "c": "divine"
+       },
+       {
+        "a": 8,
+        "c": "divine"
+       },
+       {
+        "a": 9,
+        "c": "divine"
        },
        {
         "a": 9,
@@ -2242,31 +2242,23 @@
        },
        {
         "a": 11,
-        "c": "divine"
-       },
-       {
-        "a": 11,
-        "c": "divine"
-       },
-       {
-        "a": 12,
         "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 9,
+       "a": 8,
        "c": "divine",
-       "n": 19,
-       "n_eff": 14.8,
+       "n": 20,
+       "n_eff": 15.3,
        "confidence": "high",
-       "skipped": 1,
+       "skipped": 0,
        "age": 0.0,
-       "group_age": 2.9,
-       "reason": "매물 19개(같은 판매자 보정 후 14.8개 상당), 최저가/중앙값 90%; 중앙값의 50% 미만인 최근 저가 1개 제외"
+       "group_age": 0.0,
+       "reason": "매물 20개(같은 판매자 보정 후 15.3개 상당), 최저가/중앙값 80%"
       }
      },
-     "collectedAt": "2026-11-12T16:52:42Z"
+     "collectedAt": "2026-11-12T18:37:50Z"
     },
     {
      "base": "falconer-s-jacket",
@@ -2296,9 +2288,9 @@
        "n_eff": 3.0,
        "confidence": "low",
        "skipped": 0,
-       "age": 22.5,
-       "group_age": 22.5,
-       "reason": "매물 3개, 최저가/중앙값 100%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 22일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 22일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
+       "age": 7.3,
+       "group_age": 22.6,
+       "reason": "매물 3개, 최저가/중앙값 100%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 7일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 23일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
       }
      },
      "buy0": {
@@ -2391,14 +2383,14 @@
        "c": "chaos",
        "n": 20,
        "n_eff": 20.0,
-       "confidence": "medium",
+       "confidence": "high",
        "skipped": 0,
-       "age": 2.9,
-       "group_age": 6.5,
-       "reason": "매물 20개, 최저가/중앙값 100%; 최저가 매물은 3일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 6일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 1단계 하향"
+       "age": 0.4,
+       "group_age": 1.7,
+       "reason": "매물 20개, 최저가/중앙값 100%"
       }
      },
-     "collectedAt": "2026-11-12T16:52:51Z"
+     "collectedAt": "2026-11-12T18:37:59Z"
     },
     {
      "base": "sacrificial-regalia",
@@ -2435,32 +2427,32 @@
     }
    ],
    "rates": {
-    "div": 651.1,
-    "chaos": 62.01,
+    "div": 647.7,
+    "chaos": 61.74,
     "inf": {
      "blacksmith": {
       "v": 0.1506,
       "u": "d"
      },
      "armourer": {
-      "v": 1.255,
+      "v": 1.223,
       "u": "d"
      }
     },
     "q": {
      "whetstone": {
-      "v": 0.009728,
+      "v": 0.01145,
       "u": "d"
      },
      "scrap": {
-      "v": 0.01399,
+      "v": 0.01273,
       "u": "d"
      }
     },
     "source": "poe.ninja",
-    "updatedAt": "2026-11-12T16:51:27Z"
+    "updatedAt": "2026-11-12T18:36:36Z"
    },
-   "collectedAt": "2026-11-12T16:52:51Z",
+   "collectedAt": "2026-11-12T18:37:59Z",
    "stopped": {
     "obliterator-bow:81": {
      "since": "2026-11-10T05:48:36Z",
