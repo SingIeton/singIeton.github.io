@@ -82,7 +82,7 @@ fieldset.col>:not(legend){display:none}
 </head>
 <body>
 <main class="wrap">
-<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocketed bases to maximum quality and reselling them. Data is updated periodically but may differ from the current market. Data with uncertain information is not collected.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 데이터는 일정 주기로 업데이트되지만, 현재 시장과 다를 수 있음에 유의. 정보가 불확실한 데이터는 수집하지 않음.</p><p class="note" id="src"></p></div></div>
+<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑</h1><p class="sub" data-en="Data is updated at least once an hour. Base and market price information is estimated and may differ from actual traded prices.">데이터는 최소 1시간 주기로 업데이트. 베이스와 시장가 정보는 추정치이며, 실제 거래되는 가격과 차이가 있을 수 있음에 유의.</p><p class="note" id="src"></p></div></div>
 <p id="err" class="note" hidden style="color:var(--bad)"></p>
 <noscript><p class="note">(JavaScript required) 이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
 <div class="grid">
@@ -266,7 +266,7 @@ function render(){
  const REC=TAB==="rec",NC=REC?8:7;  /* 권장 열은 추천 탭에서만 표시 */
  $("thRec").hidden=!REC;
  $("rows").closest("table").classList.toggle("rec",REC);fitBase();
- $("stats").innerHTML=[[tt("최대 퀄리티 도달 확률","Chance to reach max quality"),trim(M.P*100,1)+"%"],[tt("평균 필요 베이스 수","Avg. bases needed"),trim(1/M.P,1)+tt("개","")],[tt("평균 필요 바알 화폐","Avg. Vaal currency needed"),trim(M.E/M.P,1)+tt("개","")],[tt("평균 필요 퀄리티 화폐","Avg. quality currency needed"),trim(M.Q/M.P,0)+tt("개","")]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+ $("stats").innerHTML=[[tt("최대 퀄리티 도달 확률","Chance to reach max quality"),trim(M.P*100,1)+"%"],[tt("필요 베이스 수 (평균)","Bases needed (avg.)"),trim(1/M.P,1)+tt("개","")],[tt("필요 바알 화폐 (평균)","Vaal currency needed (avg.)"),trim(M.E/M.P,1)+tt("개","")],[tt("필요 퀄리티 화폐 (평균)","Quality currency needed (avg.)"),trim(M.Q/M.P,0)+tt("개","")]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
  $("tabs").innerHTML=Object.keys(TABS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${LANG==="en"?TABS[c][1]:TABS[c][0]} <small>${LANG==="en"?TABS[c][0]:TABS[c][1]}</small></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
  const groups=new Map();
