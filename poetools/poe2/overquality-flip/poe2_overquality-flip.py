@@ -48,7 +48,7 @@
     poe.ninja 가 기본으로 주는 primaryValue 는 리그·시점에 따라 바뀌는 기준 화폐(core.primary, adaptive)로 매긴 값이라 싼 화폐는 오차가 크다.
     그래서 항목별로 '그 화폐로 매겨진 실제 시세'(거래량이 가장 많은 상대 화폐 maxVolumeCurrency 와, 그 화폐 1개로 살 수 있는 개수 maxVolumeRate -> 가격 = 1 / maxVolumeRate)를 읽는다.
       · 바알 주입기·퀄리티 화폐(숫돌·고철): 읽은 값을 Exalted 로 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다 (u = e Exalted / d Divine / c Chaos).
-        maxVolumeCurrency 가 Exalted·Divine·Chaos 중 하나면 그 화폐 값을 쓰고, 아니면 Exalted -> Divine -> Chaos 순서로 찾는다. 화면은 값 뒤에 d / c / e 를 붙여 보여준다
+        maxVolumeCurrency 가 Exalted·Divine·Chaos 중 하나면 그 화폐 값을 쓰고, 아니면 Exalted -> Divine -> Chaos 순서로 찾는다. 저장은 읽은 단위 그대로지만, 화면(overquality-flip.html)은 1 Divine 이상이면 d, 그보다 작으면 읽은 단위와 무관하게 Exalted(e)로 환산해 보여준다
       · Divine·Chaos 자체: 항상 Exalted 기준 숫자 (Exalted 시세를 먼저 보고, 없으면 서로를 거쳐 환산)
     overquality-flip.html 이 이 값을 리그별 기본 환율로 쓴다. 모든 리그는 소프트코어(하드코어 제외)다.
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
@@ -344,12 +344,12 @@ def call(method, url, **kw):
 # overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
 #   - div, chaos: '1개 = Exalted 몇 개' (항상 Exalted 기준 숫자)
 #   - inf.*, q.*: poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다.
-#     단위 u 는 e = Exalted, d = Divine, c = Chaos. (예: {"v": 0.12, "u": "d"} = 1개 = 0.12 Divine)
-#     화면(overquality-flip.html)이 읽은 값과 단위를 그대로 보여주고, 계산할 때만 div / chaos 환율로 Exalted 로 환산한다.
+#     단위 u 는 e = Exalted, d = Divine, c = Chaos. (예: {"v": 0.1364, "u": "d"} = 1개 = 0.1364 Divine)
+#     화면(overquality-flip.html)은 1 Divine 이상이면 d, 그보다 작으면 읽은 단위(d / c / e)와 무관하게 e 로 환산해 보여주고, 계산은 항상 div / chaos 환율로 Exalted 로 환산한 값으로 한다.
 # overquality-flip.html 이 같은 키(div, chaos, inf.blacksmith/armourer, q.whetstone/scrap)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
-#   "rates": {"div": 515.0, "chaos": 67.0, "inf": {"blacksmith": {"v": 0.12, "u": "d"}, "armourer": {"v": 60.0, "u": "e"}},
-#             "q": {"whetstone": {"v": 0.15, "u": "e"}, "scrap": {"v": 0.0003, "u": "d"}},
-#             "source": "poe.ninja", "updatedAt": "2026-11-08T12:30:00Z"}
+#   "rates": {"div": 646.2, "chaos": 60.96, "inf": {"blacksmith": {"v": 0.1364, "u": "d"}, "armourer": {"v": 1.273, "u": "d"}},
+#             "q": {"whetstone": {"v": 0.01042, "u": "d"}, "scrap": {"v": 0.0139, "u": "d"}},
+#             "source": "poe.ninja", "updatedAt": "2026-11-12T12:41:26Z"}
 NINJA = "https://poe.ninja/poe2/api/economy"
 # rates 키 -> (표시 이름, 매칭 후보). id·이름·detailsId 에서 영숫자만 남겨 소문자로 만든 값과 비교하므로
 # "vaal-blacksmith-s-infuser", "Vaal Blacksmith's Infuser" 같은 표기 차이는 문제되지 않는다.
@@ -609,7 +609,7 @@ def save_rates(path, league, found, order=None):
         val, unit = v
         if key in ANCHOR_KEYS:                      # div / chaos: Exalted 기준 숫자 (이상치 판정·환산 기준이라 형식 유지)
             t[parts[-1]] = round(val, 2) if val >= 1 else round(val, 4)
-        else:                                       # 읽은 값 그대로 + 단위. 작은 값(0.0003 d)이 0 으로 사라지지 않게 유효숫자 4자리로 저장
+        else:                                       # 읽은 값 그대로 + 단위. 작은 값(0.01042 d)이 0 으로 사라지지 않게 유효숫자 4자리로 저장
             t[parts[-1]] = {"v": float(f"{val:.4g}"), "u": UNIT_SHORT.get(unit, "e")}
     rates["source"] = "poe.ninja"
     rates["updatedAt"] = utc_stamp()
