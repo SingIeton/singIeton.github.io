@@ -181,12 +181,14 @@ const LGDEF={Standard:{div:200,chaos:80,inf:{blacksmith:500,armourer:500}}};
 /* 기본값 우선순위: overquality-flip-prices.json 의 리그별 rates (수집기가 poe.ninja 에서 읽어 저장, 모두 Exalted 기준) > LGDEF > BASEDEF.
    수집기가 못 찾은 항목은 rates 에 없으므로 자동으로 다음 순위 값을 쓴다 */
 /* 가격 값 형식: 숫자(이전 형식 = Exalted) 또는 {v:값, u:"e"|"d"|"c"} — 수집기가 poe.ninja 에서 읽은 값 그대로와 그 화폐 단위 (e = Exalted, d = Divine, c = Chaos).
-   디바인·카오스 환율(div, chaos) 자체는 항상 Exalted. 화면에는 읽은 값과 단위를 그대로 보여주고, 계산할 때만 Exalted 로 환산한다 */
+   디바인·카오스 환율(div, chaos) 자체는 항상 Exalted. 화면에는 1 Divine 이상이면 d, 그보다 작으면 읽은 단위와 무관하게 e 로 환산해 보여준다 (defFor). 계산은 항상 Exalted 환산값 */
 const UNITS={e:["엑잘티드","Exalted"],d:["디바인","Divine"],c:["카오스","Chaos"]};
 const asP=(x,k)=>{const p=x&&typeof x==="object"?{v:+x.v||0,u:UNITS[x.u]?x.u:"e"}:{v:+x||0,u:"e"};if(k==="div"||k==="chaos")p.u="e";return p};
 const defFor=l=>{const o=LGDEF[l]||{},r=((PRICES.leagues||{})[l]||{}).rates||{},d={};KEYS.forEach(k=>d[k]=asP(gq(r,k)??gq(o,k)??gq(BASEDEF,k),k));
- const dv=d.div.v;  /* 표시 단위 정리: Exalted(e)로 읽은 값이 1 Divine 이상이면 d 단위로 보여준다 (c / d 로 읽은 값은 그대로, 계산용 Exalted 값도 그대로) */
- if(dv>0)KEYS.forEach(k=>{const p=d[k];if(k==="div"||k==="chaos"||p.u!=="e")return;if(p.v>=dv)d[k]={v:p.v/dv,u:"d"}});
+ const dv=d.div.v;  /* 표시 단위 정리: 1 Divine 이상이면 d, 그보다 작으면 읽은 단위(d / c / e)와 무관하게 전부 e (Exalted)로 보여준다. 계산용 Exalted 값은 변하지 않는다 */
+ if(dv>0)KEYS.forEach(k=>{const p=d[k];if(k==="div"||k==="chaos")return;
+  if(p.u==="d"){if(p.v<1)d[k]={v:p.v*dv,u:"e"};return}  /* d 로 읽은 값: 1 이상이면 그대로, 미만이면 e 로 환산 */
+  const ex=p.u==="c"?p.v*d.chaos.v:p.v;d[k]=ex>=dv?{v:ex/dv,u:"d"}:{v:ex,u:"e"}});  /* c / e 로 읽은 값: Exalted 환산 후 1 Divine 이상이면 d, 미만이면 e */
  return d};  /* {키: {v,u}} */
 const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"]};
 const TABS=Object.assign({rec:["추천","Recommended"]},CATS),REC_N=5;  /* 추천 탭: 카테고리(무기/방어구/장신구)별 추천 점수 내림차순 상위 REC_N개 */
