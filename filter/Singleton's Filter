@@ -190,7 +190,7 @@
 # 2 "Bombard Crossbow" "Siege Crossbow" "Trarthan Cannon"
 # 3 "Flexed Crossbow" "Desolate Crossbow" "Gemini Crossbow" "Elegant Crossbow"
 
-# [ Daggers ]
+# [ Dagger ]
 # 1 
 # 2 
 # 3 
@@ -315,7 +315,7 @@
 # Show
     # AreaLevel < 78
     # Rarity Rare
-    # Class ==n "One Hand Axes" "One Hand Maces" "One Hand Swords" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords"
+    # Class == "One Hand Axes" "One Hand Maces" "One Hand Swords" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords"
 	# SetFontSize 42
 	# SetBorderColor 220 220 220 220
     # PlayEffect Yellow
@@ -527,6 +527,11 @@ Show
     PlayAlertSound 1 150
     PlayEffect Red
     MinimapIcon 0 Red Square
+# [ Dagger ]
+# 1 
+# 2 
+# 3 
+
 # [ Quarterstaff ]
 # 1 "Sinister Quarterstaff"
 # 2 "Bolting Quarterstaff" "Striking Quarterstaff" "Dreaming Quarterstaff"
@@ -833,7 +838,7 @@ Show # %D5 $type->uniques $tier->oversockt_3s_all !exotics_artifacthigh
     DropLevel >= 65
 	Sockets >= 3
 	Rarity Normal Magic Rare
-	Class == "Body Armours" "Bows" "Crossbows" "Quarterstaves" "Staves" "Talismans" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords"
+	Class == "Body Armours" "Bows" "Crossbows" "Quarterstaves" "Flails" "Talismans" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords" "Staves"
     SetFontSize 30
     SetTextColor 0 0 255 255
 	SetBorderColor 0 0 255 255
@@ -848,7 +853,7 @@ Show # %D5 $type->uniques $tier->oversockt_2s_all !exotics_artifacthigh
     DropLevel >= 65
     Sockets >= 2
 	Rarity Normal Magic Rare
-	Class == "Boots" "Bucklers" "Claws" "Daggers" "Foci" "Gloves" "Helmets" "One Hand Axes" "One Hand Maces" "One Hand Swords" "Sceptres" "Shields" "Spears" "Wands"
+	Class == "Helmets" "Gloves" "Boots" "Claws" "Daggers" "Spears" "One Hand Axes" "One Hand Maces" "One Hand Swords" "Sceptres" "Wands" "Bucklers" "Foci" "Shields"
 	SetFontSize 30
     SetTextColor 0 0 255 255
 	SetBorderColor 0 0 255 255
@@ -967,6 +972,11 @@ Show
 	SetBorderColor 0 240 190 255
 	SetBackgroundColor 0 75 30 255
     MinimapIcon 1 Cyan Square
+# [ Dagger ]
+# 1 
+# 2 
+# 3 
+
 # [ Quarterstaff ]
 # 1 "Sinister Quarterstaff"
 # 2 "Bolting Quarterstaff" "Striking Quarterstaff" "Dreaming Quarterstaff"
@@ -1222,6 +1232,10 @@ Show
 	# SetBorderColor 0 240 190 255
 	# SetBackgroundColor 0 75 30 255
     # MinimapIcon 2 Cyan Square
+# [ Dagger ]
+# 1 
+# 2 
+# 3 
 
 # [ Quarterstaff ]
 # 1 "Sinister Quarterstaff"
@@ -2081,6 +2095,10 @@ Show
     # PlayAlertSound 2 190
     # PlayEffect Green
 	# MinimapIcon 2 Green Square
+# [ Dagger ]
+# 1 
+# 2 
+# 3 
 
 # [ Quarterstaff ]
 # 1 "Sinister Quarterstaff"
@@ -5501,7 +5519,7 @@ Show # $type->uniques $tier->vaalmodunique !uniques_exceptional
 Show # %D5 $type->uniques $tier->oversocketuniques1 !uniques_exceptional
 	Sockets >= 3
 	Rarity Unique
-	Class == "Body Armours" "Bows" "Crossbows" "Quarterstaves" "Staves" "Talismans" "Two Hand Maces"
+    Class == "Body Armours" "Bows" "Crossbows" "Quarterstaves" "Flails" "Talismans" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords" "Staves"
 	SetFontSize 40
 	SetTextColor 0 0 0 255
 	SetBorderColor 0 240 190 255
@@ -6254,76 +6272,27 @@ Show # %D4 $type->leveling->rare->universal $tier->highertier3 !exotics_ctier
 
 # !! Waypoint c21.leveling.rares.armors : "Leveling - Rares - Armour Pieces" : "Leveling"
 
-Show # %D4 $type->leveling->rare->armours $tier->ar !gear_highlightedsize
-	BaseEnergyShield 0
-	BaseEvasion 0
-	BaseArmour > 0
+Show # %D4 $type->leveling->rare->armours $tier->all !gear_highlightedsize
+
 	Rarity Rare
-	Class == "Body Armours" "Boots" "Gloves" "Helmets"
+	Class == "Helmets" "Body Armours" "Gloves" "Boots"
 	AreaLevel <= 64
 	SetFontSize 40
 	SetBackgroundColor 20 20 0 255
+    
+# Show # %D4 $type->leveling->rare->armours $tier->ar !gear_highlightedsize
+	# BaseEnergyShield 0
+	# BaseEvasion 0
+	# BaseArmour > 0
+	# Rarity Rare
+	# Class == "Body Armours" "Boots" "Gloves" "Helmets"
+	# AreaLevel <= 64
+	# SetFontSize 40
+	# SetBackgroundColor 20 20 0 255
 
-Show # %D4 $type->leveling->rare->armours $tier->ev !gear_highlightedsize
-	BaseEnergyShield 0
-	BaseEvasion > 0
-	BaseArmour 0
+Show # %D4 $type->leveling->rare->weapons $tier->all !gear_highlightedsize
 	Rarity Rare
-	Class == "Body Armours" "Boots" "Gloves" "Helmets"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->armours $tier->es !gear_highlightedsize
-	BaseEnergyShield > 0
-	BaseEvasion 0
-	BaseArmour 0
-	Rarity Rare
-	Class == "Body Armours" "Boots" "Gloves" "Helmets"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->armours $tier->arev !gear_highlightedsize
-	BaseEnergyShield 0
-	BaseEvasion > 0
-	BaseArmour > 0
-	Rarity Rare
-	Class == "Body Armours" "Boots" "Gloves" "Helmets"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->armours $tier->ares !gear_highlightedsize
-	BaseEnergyShield > 0
-	BaseEvasion 0
-	BaseArmour > 0
-	Rarity Rare
-	Class == "Body Armours" "Boots" "Gloves" "Helmets"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->armours $tier->eves !gear_highlightedsize
-	BaseEnergyShield > 0
-	BaseEvasion > 0
-	BaseArmour 0
-	Rarity Rare
-	Class == "Body Armours" "Boots" "Gloves" "Helmets"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->wands !gear_highlightedsize
-	Rarity Rare
-	Class == "Wands"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->foci !gear_highlightedsize
-	Rarity Rare
-	Class == "Foci"
+	Class == "Bows" "Claws" "Crossbows" "Daggers" "Flails" "Quarterstaves" "Spears" "Talismans" "One Hand Axes" "One Hand Maces" "One Hand Swords" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords" "Sceptres" "Staves" "Wands" "Bucklers" "Foci" "Shields" "Quivers"
 	AreaLevel <= 64
 	SetFontSize 40
 	SetBackgroundColor 20 20 0 255
@@ -6352,101 +6321,28 @@ Show # %D4 $type->leveling->rare->weapons $tier->shieldsares !gear_highlightedsi
 	SetFontSize 40
 	SetBackgroundColor 20 20 0 255
 
-Show # %D4 $type->leveling->rare->weapons $tier->sceptres !gear_highlightedsize
-	Rarity Rare
-	Class == "Sceptres"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->staves !gear_highlightedsize
-	Rarity Rare
-	Class == "Staves"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->bows !gear_highlightedsize
-	Rarity Rare
-	Class == "Bows"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->quivers !gear_highlightedsize
-	Rarity Rare
-	Class == "Quivers"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->crossbows !gear_highlightedsize
-	Rarity Rare
-	Class == "Crossbows"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->spears !gear_highlightedsize
-	Rarity Rare
-	Class == "Spears"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->bucklers !gear_highlightedsize
-	Rarity Rare
-	Class == "Bucklers"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->onehandmaces !gear_highlightedsize
-	Rarity Rare
-	Class == "One Hand Maces"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->twohandmaces !gear_highlightedsize
-	Rarity Rare
-	Class == "Two Hand Maces"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->talismans !gear_highlightedsize
-	Rarity Rare
-	Class == "Talismans"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
-
-Show # %D4 $type->leveling->rare->weapons $tier->quarterstaves !gear_highlightedsize
-	Rarity Rare
-	Class == "Quarterstaves"
-	AreaLevel <= 64
-	SetFontSize 40
-	SetBackgroundColor 20 20 0 255
 
 #------------------------------------
 #   [3503] Rares - Other
 #------------------------------------
 # !! Waypoint c21.leveling.rares.low : "Leveling - Gear - Low Tier" : "Leveling"
 
-Show # %H5 $type->leveling->rare->remaining $tier->anythingact1 class == "body armours" "gloves" "boots" "helmets" "shields" "foci" "bucklers" "staves" "sceptres" "wands" "one hand maces" "spears" "quarterstaves" "two hand maces" "bows" "crossbows" "talismans" "quivers" "amulets" "belts" "rings" !gear_weakrareleveling1
+Show # %H5 $type->leveling->rare->remaining $tier->anythingact1 !gear_weakrareleveling1
+    Class == "Amulets" "Rings" "Belts" "Helmets" "Body Armours" "Gloves" "Boots" "Bows" "Claws" "Crossbows" "Daggers" "Flails" "Quarterstaves" "Spears" "Talismans" "One Hand Axes" "One Hand Maces" "One Hand Swords" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords" "Sceptres" "Staves" "Wands" "Bucklers" "Foci" "Shields" "Quivers"
 	Rarity Rare
 	AreaLevel <= 16
 	SetFontSize 38
 	SetBackgroundColor 35 35 35 240
 
-Show # %H4 $type->leveling->rare->remaining $tier->anythingact2 class == "body armours" "gloves" "boots" "helmets" "shields" "foci" "bucklers" "staves" "sceptres" "wands" "one hand maces" "spears" "quarterstaves" "two hand maces" "bows" "crossbows" "talismans" "quivers" "amulets" "belts" "rings" !gear_weakrareleveling1
+Show # %H4 $type->leveling->rare->remaining $tier->anythingact2 !gear_weakrareleveling1
+    Class == "Amulets" "Rings" "Belts" "Helmets" "Body Armours" "Gloves" "Boots" "Bows" "Claws" "Crossbows" "Daggers" "Flails" "Quarterstaves" "Spears" "Talismans" "One Hand Axes" "One Hand Maces" "One Hand Swords" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords" "Sceptres" "Staves" "Wands" "Bucklers" "Foci" "Shields" "Quivers"
 	Rarity Rare
 	AreaLevel <= 24
 	SetFontSize 38
 	SetBackgroundColor 35 35 35 240
 
-Show # %H3 $type->leveling->rare->remaining $tier->any class == "body armours" "gloves" "boots" "helmets" "shields" "foci" "bucklers" "staves" "sceptres" "wands" "one hand maces" "spears" "quarterstaves" "two hand maces" "bows" "crossbows" "talismans" "quivers" "amulets" "belts" "rings" !gear_weakrare1
+Show # %H3 $type->leveling->rare->remaining $tier->any " !gear_weakrare1
+    Class == "Amulets" "Rings" "Belts" "Helmets" "Body Armours" "Gloves" "Boots" "Bows" "Claws" "Crossbows" "Daggers" "Flails" "Quarterstaves" "Spears" "Talismans" "One Hand Axes" "One Hand Maces" "One Hand Swords" "Two Hand Axes" "Two Hand Maces" "Two Hand Swords" "Sceptres" "Staves" "Wands" "Bucklers" "Foci" "Shields" "Quivers"
 	Rarity Rare
 	AreaLevel <= 64
 	SetFontSize 35
