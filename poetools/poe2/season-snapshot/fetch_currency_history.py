@@ -11,6 +11,12 @@ POE2 커런시 일별 가격(Exalted 기준) 수집 - poe2scout API
   python fetch_currency_history.py --use-cache                  # 이미 받은 응답은 재요청하지 않음(중단 후 이어받기)
   python fetch_currency_history.py --dump-currencies all.txt    # API 전체 커런시를 붙여넣기용 텍스트로 저장
   python fetch_currency_history.py --leagues "리그 이름,2025-08-29"   # LEAGUES 대신 수집할 리그를 직접 지정
+
+저장 위치(기본값: 이 스크립트가 있는 폴더):
+  currency_data.js                        가격 이력 결과(HTML에서 <script src>로 읽음)
+  raw_data/                               API 원본 응답
+    ├ 리그__커런시.json                      커런시별 가격 이력
+    └ catalog_id.json                       커런시 이름 -> item id 목록
 """
 
 import argparse
@@ -23,6 +29,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent  # 결과 파일의 기본 저장 위치(스크립트와 같은 폴더)
 
 # =============================================================================
 # 사용자 설정 - 이 구간만 수정하면 됩니다
@@ -265,16 +273,17 @@ def fetch_leagues():
 
 
 _catalog_cache = {}
-_catalog_dir = None   # main()에서 지정
+_catalog_path = None    # main()에서 지정: <출력 폴더>/raw_data/catalog_id.json
+_catalog_league = None  # catalog_id.json 에 저장되는 기준 리그(나머지 리그는 메모리에만 보관)
 _use_cache = False
 
 
 def fetch_catalog(league):
     """리그의 모든 커런시 -> {소문자 이름: {name, id, category}}. 리그당 1회만 조회.
-    --use-cache 이면 디스크에 저장된 카탈로그를 재사용한다."""
+    기준 리그의 카탈로그는 catalog_id.json 에 저장되며, --use-cache 이면 그 파일을 재사용한다."""
     if league in _catalog_cache:
         return _catalog_cache[league]
-    cpath = (_catalog_dir / f"catalog_{safe_name(league)}.json") if _catalog_dir else None
+    cpath = _catalog_path if league == _catalog_league else None
     if cpath and _use_cache and cpath.exists():
         catalog = json.loads(cpath.read_text(encoding="utf-8"))
         _catalog_cache[league] = catalog
@@ -372,9 +381,8 @@ def fetch_history(league, currency, item_id, days, raw_dir, use_cache):
 def write_output(result, out):
     out.mkdir(parents=True, exist_ok=True)
     text = json.dumps(result, ensure_ascii=False, indent=1)
-    (out / "currency_exalted.json").write_text(text, encoding="utf-8")
-    # file:// 로 열린 HTML은 fetch()로 JSON을 못 읽으므로 <script src>용 JS도 같이 생성
-    (out / "currency_exalted.js").write_text(f"window.CURRENCY_EXALTED = {text};\n", encoding="utf-8")
+    # file:// 로 열린 HTML은 fetch()로 JSON을 못 읽으므로 <script src>로 읽는 JS 파일 하나로 저장
+    (out / "currency_data.js").write_text(f"window.CURRENCY_DATA = {text};\n", encoding="utf-8")
 
 
 class HistoryLoader:
@@ -418,8 +426,9 @@ def main():
     ap.add_argument("--leagues", nargs="+", metavar="이름,시작일",
                     help="수집할 리그를 '[패치번호,]리그 이름,YYYY-MM-DD' 형식으로 직접 지정(스크립트 상단 LEAGUES보다 우선)")
     ap.add_argument("--days", type=int, default=300, help="이력 조회 일수 최소값(시작일이 더 오래되면 자동 확장)")
-    ap.add_argument("--out", default="currency_data")
-    ap.add_argument("--use-cache", action="store_true", help="raw/에 이미 받은 응답은 재요청하지 않음")
+    ap.add_argument("--out", default=str(SCRIPT_DIR),
+                    help="결과 저장 폴더(기본: 스크립트가 있는 폴더). 원본 응답은 그 안의 raw_data/ 에 저장")
+    ap.add_argument("--use-cache", action="store_true", help="raw_data/에 이미 받은 응답은 재요청하지 않음")
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(line_buffering=True)
@@ -448,9 +457,7 @@ def main():
         return
 
     out = Path(args.out)
-    raw_dir = out / "raw"
-    global _catalog_dir, _use_cache
-    _catalog_dir, _use_cache = out, args.use_cache
+    raw_dir = out / "raw_data"
 
     starts, patches = {}, {}  # {API 정식 리그 이름: 시작일 / 패치 번호}
     if requested:
@@ -479,6 +486,9 @@ def main():
         if ref_league is None:
             sys.exit("현재 리그를 찾지 못했습니다. 스크립트 상단 LEAGUES 에 리그를 적어 주세요.")
 
+    global _catalog_path, _catalog_league, _use_cache
+    _catalog_path, _catalog_league, _use_cache = raw_dir / "catalog_id.json", ref_league, args.use_cache
+
     log(f"[{ref_league}] 커런시 목록 조회 중...")
     catalog = fetch_catalog(ref_league)
 
@@ -502,7 +512,9 @@ def main():
     loader = HistoryLoader(days, raw_dir, args.use_cache, starts)
 
     todo = len(targets) * len(currencies)
-    log(f"\n수집 리그: " + ", ".join(f"{lg} (시작일 {starts[lg]})" for lg in targets))
+    log(f"\n수집 리그 {len(targets)}개:")
+    for lg in targets:
+        log(f"  - {lg} (시작일 {starts[lg]})")
     log(f"수집 커런시 {len(currencies)}개 / 요청 약 {todo}회 (최소 {todo * MIN_INTERVAL / 60:.1f}분 소요)\n")
 
     result = {
@@ -538,7 +550,7 @@ def main():
         log("\n중단됨. 지금까지 받은 결과는 저장되어 있습니다. --use-cache 로 다시 실행하면 이어받습니다.")
     write_output(result, out)
     state = "완료" if result["complete"] else "부분 저장(중단됨)"
-    log(f"\n{state}: {out / 'currency_exalted.json'}, {out / 'currency_exalted.js'}")
+    log(f"\n{state}: {out / 'currency_data.js'}")
 
 
 if __name__ == "__main__":

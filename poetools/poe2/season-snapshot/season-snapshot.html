@@ -37,15 +37,13 @@
 .sw-i{display:inline-block;vertical-align:middle;margin-right:8px}
 .phead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
 .phead h2{margin:0}
-.pick input{position:absolute;opacity:0;width:1px;height:1px}
-.pick:focus-within{outline:2px solid var(--g);outline-offset:2px}
 </style>
 </head>
 <body>
 <button class="skip" id="skip" type="button"></button>
 <main class="wrap" id="app" tabindex="-1"></main>
-<!-- 데이터: fetch_currency_history.py --out poetools/poe2/season-snapshot/data 로 생성 (currency_exalted.js / .json) -->
-<script src="data/currency_exalted.js"></script>
+<!-- 데이터: fetch_currency_history.py 가 스크립트와 같은 폴더에 생성 (currency_data.js). 스크립트를 data/ 폴더에 두고 실행하세요 -->
+<script src="data/currency_data.js"></script>
 <script>
 /* 언어·테마는 site-bar.js 가 관리합니다. 현재 언어는 PoEPrefs.lang, 바뀌면 "sitebar:lang" 이벤트가 옵니다. */
 let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||document.documentElement.lang||"ko";
@@ -54,7 +52,7 @@ const $=id=>document.getElementById(id);
 const T=(ko,en)=>LANG==="en"?en:ko;
 
 /* ========== 한글 이름표 (표시용) ==========
-   키는 데이터(json)의 영어 이름과 정확히 같아야 합니다. 새 리그·아이템이 생기면 한 줄 추가하세요. */
+   키는 데이터의 영어 이름과 정확히 같아야 합니다. 새 리그·아이템이 생기면 한 줄 추가하세요. */
 const NAME_KO={
   /* 리그: 따옴표 안에 한글 이름을 적으세요. 비워 두면("") 영어 그대로 표시됩니다. 왼쪽 영어 이름은 수정하지 마세요. */
   leagues:{
@@ -210,14 +208,6 @@ function noteText(){
   else if(UEFF!=="exalted")s+=" "+T(`같은 날의 ${u} 오브 가격으로 환산했습니다.`,`Converted with the same day's ${u} Orb price.`);
   return s+" "+T("속이 빈 점은 아직 진행 중인 날입니다.","Hollow points are days still in progress.");
 }
-function loadFile(f){
-  if(!f)return;
-  f.text().then(t=>{
-    const j=JSON.parse(t);
-    if(!j||!j.leagues)throw new Error("leagues");
-    DATA=j;prep();build();
-  }).catch(()=>alert(T("올바른 currency_exalted.json 형식이 아닙니다.","Not a valid currency_exalted.json file.")));
-}
 
 /* ---------- 화면 ---------- */
 function build(){
@@ -227,7 +217,7 @@ function build(){
   $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
   const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1><p class="sub">${cn?T(`시즌별 ${cn} 가격을 일별로 겹쳐 봅니다.`,`Overlay daily ${cn} prices from each season.`):T("시즌별 커런시 가격을 일별로 겹쳐 봅니다.","Overlay daily currency prices from each season.")}</p></div></div>`;
   if(!CUR.length){
-    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>data/currency_exalted.js</code> 파일을 이 페이지 폴더에 두거나, 아래에서 <code>currency_exalted.json</code>을 직접 선택하세요.","Put <code>data/currency_exalted.js</code> in this page's folder, or choose <code>currency_exalted.json</code> below.")}</p><label class="btn pick">${T("JSON 파일 선택","Choose JSON file")}<input type="file" id="file" accept=".json,application/json"></label></section>`;
+    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>fetch_currency_history.py</code>를 실행해 만든 <code>currency_data.js</code> 파일을 이 페이지 폴더의 <code>data/</code>에 두세요.","Run <code>fetch_currency_history.py</code> and put the generated <code>currency_data.js</code> in the <code>data/</code> folder next to this page.")}</p></section>`;
     return;
   }
   const chips=LG.map((l,i)=>{const st=styleOf(i);return `<label class="chip" style="--sw:${st.color}"><input type="checkbox" data-lg="${esc(l.name)}">${swatch(st.color)}${esc(nm("leagues",l.name))}<small>${l.patch?esc(l.patch)+" · ":""}${l.start.slice(0,7)}</small></label>`}).join("");
@@ -334,7 +324,6 @@ $("app").addEventListener("change",e=>{
   else if(t.id==="unit"){S.unit=t.value;update()}
   else if(t.id==="metric"){S.metric=t.value;update()}
   else if(t.id==="low"){S.hideLow=t.checked;update()}
-  else if(t.id==="file"){loadFile(t.files[0])}
 });
 $("app").addEventListener("click",e=>{
   const b=e.target.closest("button[data-x],button[data-sc]");if(!b)return;
@@ -346,7 +335,7 @@ new ResizeObserver(()=>{const b=$("chart");if(b&&SR.length&&b.clientWidth!==draw
 /* 언어가 바뀌면 site-bar.js 가 이 이벤트를 보냅니다 (상단 바 버튼, 다른 탭, 뒤로가기 모두) */
 addEventListener("sitebar:lang",e=>{if(e.detail!==LANG){LANG=e.detail;build()}});
 
-DATA=window.CURRENCY_EXALTED||null;
+DATA=window.CURRENCY_DATA||null;
 prep();build();
 </script>
 </body>
