@@ -36,6 +36,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .chart svg#svg{width:100%;height:auto;display:block;touch-action:pan-y}
 .grid line{stroke:var(--ln)}
 .ax text{fill:var(--mute);font-size:11.5px}
+.ax .xl,.ax .xu{font-size:12.5px} /* 가로축(일) 숫자·단위: 11.5 → 12.5px */
 .ax .yu,.ax .xu{text-anchor:start}.ax .yl{text-anchor:end}.ax .xl{text-anchor:middle}
 #hl{stroke:var(--ln2);stroke-dasharray:3 3}
 .tip{position:absolute;display:none;pointer-events:none;z-index:2;padding:0;font-size:13px;line-height:1.5;white-space:nowrap;width:max-content;max-width:none}
@@ -57,24 +58,32 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .phead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
 .phead h2{margin:0}
 .nav{position:relative;margin-top:10px;user-select:none;-webkit-user-select:none}
-.nav-track{position:relative;height:32px;border-radius:6px;background:color-mix(in oklab,var(--mute) 18%,transparent);cursor:pointer;touch-action:none}
-.nav-win{position:absolute;top:0;bottom:0;box-sizing:border-box;border:1px solid var(--g);border-radius:6px;background:color-mix(in oklab,var(--g) 26%,transparent);cursor:grab}
+.nav-track{position:relative;height:44px;border-radius:6px;background:color-mix(in oklab,var(--mute) 18%,transparent);cursor:pointer;touch-action:none}
+.nav-win{position:absolute;top:0;bottom:0;box-sizing:border-box;border:1px solid var(--g);border-radius:6px;background:color-mix(in oklab,var(--g) 9%,transparent);cursor:grab} /* 뒤의 배경 그래프가 비쳐 보이도록 옅게 */
 .nav-win.drag{cursor:grabbing}
+.nav-bg{position:absolute;inset:0;width:100%;height:100%;border-radius:6px;pointer-events:none;overflow:hidden} /* 시간 바 배경 그래프 (바 창 뒤에 투명하게) */
+.nav-bg .a{fill:var(--g);fill-opacity:.12}
+.nav-bg .l{fill:none;stroke:var(--g);stroke-opacity:.5;stroke-width:1.5;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .nav-h{position:absolute;top:-2px;bottom:-2px;width:12px;display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none}
 .nav-h[data-h="l"]{left:-6px}.nav-h[data-h="r"]{right:-6px}
-.nav-h::after{content:"";width:4px;height:20px;border-radius:2px;background:var(--g)}
+.nav-h::after{content:"";width:4px;height:min(28px,70%);border-radius:2px;background:var(--g)}
 .nav .tip{background:var(--sf);border:1px solid var(--ln2);border-radius:var(--r);padding:8px 11px}
 .nav .tip .th{margin:0}
 
 .v{color:var(--g);font-weight:600;font-variant-numeric:tabular-nums} /* 가변 텍스트(숫자·선택값): 고정 문구와 구분 */
-.fold>h2{cursor:pointer;user-select:none;-webkit-user-select:none}
+.foot{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-start;justify-content:space-between;margin-top:14px} /* 맨 아래: 좌측 미표시 화폐 목록, 우측 데이터 일자 */
+.foot .note{margin:0}
+.foot .unused{flex:1 1 320px;min-width:0;text-align:left;line-height:1.7}
+.foot .unused b{font-weight:600;margin-right:6px}
+.foot .gen{margin-left:auto;text-align:right;white-space:nowrap}
+.fold>h2{cursor:text} /* 제목 텍스트를 드래그해 선택·복사할 수 있음 (더블클릭은 접기/펼치기) */
 .fold.folded>*:not(h2){display:none}
 .fold.folded>h2{margin-bottom:-16px;border-bottom:0} /* 접었을 때 제목 아래 빈 공간 제거 (theme.css 패널 여백 기준) */
 /* 진입 시점별 추천: 진입 구간마다 독립된 표 */
 .recg{display:grid;grid-template-columns:repeat(auto-fit,minmax(188px,1fr));gap:10px;align-items:start}
 .rec table{font-size:calc(var(--fs) - 1px);table-layout:auto;width:100%;min-width:0;border-collapse:separate;border-spacing:0;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf2)}
-.rec th{text-align:left;padding:8px 10px;font:600 14px/1.4 var(--serif);color:var(--g);border-bottom:1px solid var(--g);white-space:nowrap}
-.rec th small{font:400 11.5px var(--sans);color:var(--mute)}
+.rec th{text-align:left;padding:8px 10px;font:600 15px/1.4 var(--serif);color:var(--g);border-bottom:1px solid var(--g);white-space:nowrap}
+.rec th small{font:400 12.5px var(--sans);color:var(--mute)}
 .rec td{padding:7px 10px;border-bottom:1px solid var(--ln);vertical-align:baseline;word-break:keep-all}
 .rec tr:last-child td{border-bottom:0}
 .rec tr.sep td{border-bottom:2px solid var(--ln2)} /* 고정 항목(디바인·카오스)과 추천 목록 구분선 */
@@ -85,7 +94,8 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .rec td.rx{width:1%;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:0;padding-right:4px}
 .rec td.rx.up{color:var(--pos)}.rec td.rx.dn{color:var(--bad)} /* 배율: 디바인·카오스보다 높으면 녹색, 낮으면 적색, 사이는 기본색 */
 .rec td.mn{padding-right:3px;font-size:calc(var(--fs) - 3px);color:color-mix(in oklab,var(--mute) 60%,var(--sf2))} /* 괄호 값은 더 흐리게 */
-.rec th small.sub{display:block;margin-top:1px;white-space:normal} /* 투자 기간 표 머리글: 둘째 줄에 진입→종료 일차 */
+.rec th small.sub{display:inline;margin-left:2px;white-space:normal} /* 투자 기간 표 머리글: 같은 줄에 진입→종료 일차 (일차 숫자는 줄바꿈 안 함, 뒤의 리그 수만 필요 시 줄바꿈) */
+.rec th small.sub .nw{white-space:nowrap} /* 투자 기간 표 머리글: 둘째 줄에 진입→종료 일차 */
 .rec td.na{color:var(--mute);text-align:center}
 </style>
 </head>
@@ -107,14 +117,17 @@ const CFG={
   bandWeights:[6,7,12,25,50], /* 진입 구간의 개수와 비율 (5개). 합이 100이 아니어도 자동으로 비율 계산됨. 개수를 바꾸면 구간 수도 바뀜 */
   minDaysPerBand:3,        /* 구간 하나에 최소 이 일수가 있어야 함. 후보일이 적으면 구간 수를 줄임 */
   minCandidates:3,         /* 진입 후보일이 이보다 적으면 "구간이 너무 짧음"으로 표시 */
-  listSize:8,              /* 구간별 추천 목록 개수 (디바인·카오스 오브 고정 줄 제외) */
+  listSize:7,              /* 구간별 추천 목록 개수 (디바인·카오스 오브 고정 줄 제외) */
   pin:["Divine Orb","Chaos Orb"], /* 목록 맨 위에 고정할 화폐 (영어 이름, 순위 계산에서는 제외) */
   priceTolDays:1,          /* 해당 일차에 가격이 없을 때 앞뒤 며칠까지 대체값으로 쓸지 */
   iconDir:"../icon/",      /* 화폐 아이콘 폴더 (이 HTML 기준 상대경로). poetools/poe2/icon/ */
   iconExt:".webp",         /* 아이콘 확장자 */
   iconSize:28,             /* 추천 표의 아이콘 크기(px) */
+  chartRatio:0.33,         /* 그래프 높이 = 폭 × 이 값 (최소 250px, 최대 500px). 이전 값 0.4 */
+  navHeight:44,            /* 하단 시간 바 세로 길이(px). 이전 값 32 */
+  minDays:60,              /* 데이터가 이 일수 미만인 리그는 처음에 선택 해제된 상태로 시작 (칩을 눌러 직접 켤 수 있음). 0 = 사용 안 함 */
   lowVolRatio:0.01,        /* 거래량이 중앙값의 이 비율 미만인 날은 "거래 거의 없음"으로 보고 제외 (0.01 = 1%) */
-  invPeriods:[7,14,30,60,Infinity], /* 투자 기간(일) 목록. 숫자 하나가 표 하나. Infinity = 시즌 종료(마지막 데이터 일차)까지 */
+  invPeriods:[5,9,14,30,60], /* 투자 기간(일) 목록. 숫자 하나가 표 하나. Infinity = 시즌 종료(마지막 데이터 일차)까지 */
   invWindow:2,             /* 진입일(바 시작 일차) 앞뒤 며칠을 함께 볼지. 2 = ±2일(5일)의 중앙값을 써서 하루치 가격 흔들림을 줄임 */
 };
 const $=id=>document.getElementById(id);
@@ -145,7 +158,7 @@ const NAME_KO={
     "Chaos Orb":                   "카오스 오브",
 	"Fracturing Orb":              "분열의 오브",
     "Orb of Annulment":            "소멸의 오브",
-	"Perfect Jewellers Orb"        "완벽한 주얼러의 오브",
+	"Perfect Jewellers Orb":       "완벽한 주얼러의 오브",
 	
     /* Abyss */
     "Preserved Collarbone":        "보존된 빗장뼈",
@@ -247,7 +260,11 @@ function prepLeagues(){
       rates:{divine:dayMap(cs[UNITS.divine.n]),chaos:dayMap(cs[UNITS.chaos.n])}};
   }).filter(Boolean).sort((a,b)=>a.start<b.start?1:-1); /* 최신 시즌이 앞 */
   const keep=[...S.sel].filter(n=>LG.some(l=>l.name===n));
-  S.sel=new Set(keep.length?keep:LG.filter(l=>l.name!=="Dawn of the Hunt").map(l=>l.name));
+  if(keep.length)S.sel=new Set(keep);
+  else{ /* 처음 상태: Dawn of the Hunt와 데이터가 CFG.minDays일 미만인 리그는 기본 해제. 전부 해제되면 비어 보이지 않게 전체 선택 */
+    const def=LG.filter(l=>l.name!=="Dawn of the Hunt"&&l.days.length>=CFG.minDays).map(l=>l.name);
+    S.sel=new Set(def.length?def:LG.map(l=>l.name));
+  }
 }
 /* 같은 날 Divine/Chaos 가격(Exalted)으로 나눠 환산. 시가·종가·평균은 같은 항목, 고가·저가는 평균을 사용 */
 function rateOf(lg,u,d){
@@ -334,7 +351,7 @@ function build(){
  <p class="note" id="recnote"></p>
  <div class="rec" id="rec"></div>
 </section>
-${gen?`<p class="note">${T("데이터","Data")}: ${gen}</p>`:""}`;
+<div class="foot"><div class="note unused" id="unused"></div>${gen?`<p class="note gen">${T("데이터","Data")}: ${gen}</p>`:""}</div>`;
   document.querySelectorAll("[data-fold]").forEach(el=>el.classList.toggle("folded",FOLD.has(el.dataset.fold)));
   update();
 }
@@ -349,6 +366,7 @@ function update(){
   drawChart();
   renderRec();
   renderInv();
+  renderUnused();
 }
 
 function niceStep(range,n){const raw=range/n,p=10**Math.floor(Math.log10(raw)),f=raw/p;return(f<1.5?1:f<3?2:f<7?5:10)*p}
@@ -372,11 +390,30 @@ function syncNav(){
 /* 구간 [a,b] 안의 점 + 양옆으로 한 점씩(구간 경계를 가로지르는 선분을 그리기 위해) */
 const around=(pts,a,b)=>{let i=0,j=pts.length-1;while(i<pts.length&&pts[i].x<a)i++;while(j>=0&&pts[j].x>b)j--;return pts.slice(Math.max(0,i-1),Math.min(pts.length,j+2))};
 
+/* 시간 바 배경 그래프: 선택한 리그들의 일별 가격을 각 리그의 기하평균으로 나눠(규모 차이 제거) 같은 일차끼리 기하평균한 값.
+   모양(언제 비싸고 언제 싼지)만 보여 주며, 세로 스케일은 본 차트(S.scale)를 따릅니다. 하단 바의 좌우 범위와 같은 x축을 씁니다. */
+function navBg(){
+  if(!LAY||!SR.length)return "";
+  const {X0,X1}=LAY,span=X1-X0,log=S.scale==="log";
+  const gm=new Map(SR.map(o=>[o,o.pts.reduce((a,p)=>a+Math.log(p.y),0)/o.pts.length]));
+  const xs=[...new Set(SR.flatMap(o=>o.pts.map(p=>p.x)))].sort((a,b)=>a-b);
+  let lv=xs.map(x=>{let sum=0,n=0;for(const o of SR){const p=o.map.get(x);if(p){sum+=Math.log(p.y)-gm.get(o);n++}}return n?sum/n:null});
+  lv=lv.map((v,i)=>{ /* 앞뒤 한 점씩 평균내 하루짜리 튐을 완화 */
+    let sum=0,n=0;for(let k=i-1;k<=i+1;k++)if(lv[k]!=null){sum+=lv[k];n++}return sum/n});
+  if(xs.length<2||lv.some(v=>!isFinite(v)))return "";
+  const vs=lv.map(Math.exp),mx=Math.max(...vs),mn=Math.min(...vs),W=1000,H=100,pad=8;
+  const t=log?(mx>mn?v=>Math.log(v/mn*1.05)/Math.log(mx/mn*1.1):()=>.5):v=>v/(mx*1.05);
+  const P=xs.map((x,i)=>((x-X0)/span*W).toFixed(1)+","+(H-(H-pad)*Math.max(0,Math.min(1,t(vs[i])))).toFixed(1));
+  const line="M"+P.join("L");
+  const x0=P[0].split(",")[0],x1=P[P.length-1].split(",")[0];
+  return `<svg class="nav-bg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="${line}L${x1},${H}L${x0},${H}Z"/><path class="l" d="${line}"/></svg>`;
+}
+
 function drawChart(){
   const box=$("chart");if(!box)return;
   if(!SR.length){LAY=null;box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
   drawnW=box.clientWidth;
-  const W=Math.max(320,drawnW),H=Math.round(Math.min(600,Math.max(300,W*.4)));
+  const W=Math.max(320,drawnW),H=Math.round(Math.min(500,Math.max(250,W*CFG.chartRatio)));
   const M={l:60,r:48,t:28,b:36},unit=S.x==="day"?1:DAY;
   let X0=Infinity,X1=-Infinity;
   for(const s of SR)for(const p of s.pts){X0=Math.min(X0,p.x);X1=Math.max(X1,p.x)}
@@ -388,7 +425,7 @@ function drawChart(){
     S.view=(b-a<minW-1e-9||(a<=X0&&b>=X1))?null:{a,b};
   }
   const k=drawnW?drawnW/W:1; /* 바를 본 차트의 x축 영역과 맞추기 위한 여백 */
-  box.innerHTML=`<div id="plot"></div><div class="nav" id="nav" style="margin-left:${(M.l*k).toFixed(1)}px;margin-right:${(M.r*k).toFixed(1)}px"><div class="nav-track" id="ntrack"><div class="nav-win" id="nwin"><span class="nav-h" data-h="l"></span><span class="nav-h" data-h="r"></span></div></div><div class="tip" id="ntip"></div></div>`;
+  box.innerHTML=`<div id="plot"></div><div class="nav" id="nav" style="margin-left:${(M.l*k).toFixed(1)}px;margin-right:${(M.r*k).toFixed(1)}px"><div class="nav-track" id="ntrack" style="height:${CFG.navHeight}px">${navBg()}<div class="nav-win" id="nwin"><span class="nav-h" data-h="l"></span><span class="nav-h" data-h="r"></span></div></div><div class="tip" id="ntip"></div></div>`;
   const pn=$("pnote");if(pn){pn.style.marginLeft=(M.l*k).toFixed(1)+"px";pn.style.marginRight=(M.r*k).toFixed(1)+"px"} /* 안내 문구 시작 위치를 하단 바와 맞춤 */
   drawPlot();syncNav();bindNav();
 }
@@ -595,11 +632,13 @@ function recCalc(){
 }
 function renderRec(){
   const host=$("rec"),note=$("recnote");if(!host||!note)return;
+  SHOWN.rec=new Set();
   const R=recCalc();
   if(!R){note.textContent="";host.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
   note.innerHTML=T(`각 진입 시점 대비 ${V(R.b)}일차까지의 가격 배수의 리그별 중앙값의 기하평균. 선택한 리그 ${V(R.names.length)}개 · 아래 바 ${V(R.a+"~"+R.b)}일차 · 공통 화폐 ${V(R.items)}종 기준. 괄호 안은 최저 리그 값.`,
     `Geometric mean of the per-league medians of the price multiple from each entry time to day ${V(R.b)}. Based on ${V(R.names.length)} selected league(s), day ${V(R.a+"–"+R.b)} of the bar below, ${V(R.items)} shared currencies. Parentheses: lowest league value.`);
   if(R.short){host.innerHTML=`<p class="emptyc">${T("구간이 너무 짧거나 공통 화폐가 없습니다. 아래 바에서 구간을 넓혀 보세요.","The range is too short or there are no shared currencies. Widen it with the bar below.")}</p>`;return}
+  R.bands.forEach(bd=>[...bd.pin,...bd.top].forEach(o=>SHOWN.rec.add(o.name)));
   const lab=bd=>bd.s===bd.e?T(`${bd.s}일차`,`Day ${bd.s}`):T(`${bd.s}~${bd.e}일차`,`Day ${bd.s}–${bd.e}`);
   const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v.toFixed(1));
     const rc=(bd,o)=>{ /* 디바인·카오스 오브 배율과 비교: 둘 다보다 높으면 up, 둘 다보다 낮으면 dn */
@@ -610,7 +649,7 @@ function renderRec(){
     host.innerHTML=`<div class="recg">${R.bands.map(bd=>`<table><thead><tr><th colspan="3">${lab(bd)}${bd.nl&&bd.nl<R.names.length?` <small>${T(`(${bd.nl}/${R.names.length}개 리그)`,`(${bd.nl}/${R.names.length} leagues)`)}</small>`:""}</th></tr></thead><tbody>${[...bd.pin.map((o,i)=>[o,bd.top.length&&i===bd.pin.length-1]),...bd.top.map(o=>[o,false])].map(([o,sep])=>`<tr${sep?' class="sep"':""}><td>${icon(o.name)}${esc(nm("items",o.name))}</td><td class="rx${rc(bd,o)}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td></tr>`).join("")}</tbody></table>`).join("")}</div>`;
 }
 let recRaf=0;
-function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;renderRec();renderInv()})}
+function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;renderRec();renderInv();renderUnused()})}
 /* REC-END */
 
 /* ---------- 투자 기간에 따른 보유 화폐 ---------- */
@@ -656,9 +695,11 @@ function invCalc(){
 }
 function renderInv(){
   const host=$("inv"),note=$("invnote");if(!host||!note)return;
+  SHOWN.inv=new Set();
   const R=invCalc(),msg=(ko,en)=>{note.textContent="";host.innerHTML=`<p class="emptyc">${T(ko,en)}</p>`};
   if(!R)return msg("표시할 데이터가 없습니다. 리그를 선택하세요.","Nothing to show. Select a league above.");
   if(!R.items)return msg("선택한 리그들에 공통 화폐가 없습니다.","The selected leagues share no currencies.");
+  R.cols.forEach(c=>[...c.pin,...c.top].forEach(o=>SHOWN.inv.add(o.name)));
   const m=R.names.length,a=R.a,lo=Math.max(CFG.firstDay,a-CFG.invWindow),hi=a+CFG.invWindow;
   note.innerHTML=T(`아래 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균. 선택한 리그 ${V(m)}개 · 공통 화폐 ${V(R.items)}종 기준. 괄호 안은 최저 리그 값.`,
     `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the bar below, ${V("day "+a)} (${V("day "+lo+"–"+hi)}). Based on ${V(m)} selected league(s), ${V(R.items)} shared currencies. Parentheses: lowest league value.`);
@@ -670,9 +711,9 @@ function renderInv(){
   };
   const head=col=>{
     const lab=col.N===Infinity?T("시즌 끝까지","Until season end"):T(`${col.N}일`,`${col.N} days`);
-    let sub=col.N===Infinity?T(`${a}일차 → 종료`,`Day ${a} → end`):T(`${a}→${a+col.N}일차`,`Day ${a}→${a+col.N}`);
-    if(col.nl&&col.nl<m)sub+=T(` (${col.nl}/${m}개 리그)`,` (${col.nl}/${m} leagues)`);
-    return `<th colspan="3">${lab}<small class="sub">${sub}</small></th>`;
+    const sub=col.N===Infinity?T(`${a}일차 → 종료`,`Day ${a} → end`):T(`${a}→${a+col.N}일차`,`Day ${a}→${a+col.N}`);
+    const cnt=col.nl&&col.nl<m?T(` (${col.nl}/${m}개 리그)`,` (${col.nl}/${m} leagues)`):"";
+    return `<th colspan="3">${lab} <small class="sub"><span class="nw">${sub}</span>${cnt}</small></th>`;
   };
   host.innerHTML=`<div class="recg">${R.cols.map(col=>{
     const list=[...col.pin.map((o,i)=>[o,col.top.length&&i===col.pin.length-1]),...col.top.map(o=>[o,false])];
@@ -683,6 +724,17 @@ function renderInv(){
   }).join("")}</div>`;
 }
 /* INV-END */
+
+/* 맨 아래 좌측: 위의 추천 표(투자 기간·진입 시점) 어디에도 한 번도 나오지 않은 모든 화폐 */
+const SHOWN={rec:new Set(),inv:new Set()};
+function renderUnused(){
+  const el=$("unused");if(!el)return;
+  if(!SHOWN.rec.size&&!SHOWN.inv.size){el.innerHTML="";return} /* 표가 하나도 없으면 전체 목록이 무의미하므로 숨김 */
+  const rest=CUR.filter(c=>!SHOWN.rec.has(c.name)&&!SHOWN.inv.has(c.name));
+  el.innerHTML=rest.length
+    ?`<b>${T("추천 표에 나오지 않은 화폐","Not shown in the tables above")} (${rest.length})</b>`+rest.map(c=>esc(nm("items",c.name))).join(" · ")
+    :"";
+}
 
 /* ---------- 이벤트 ---------- */
 $("app").addEventListener("change",e=>{

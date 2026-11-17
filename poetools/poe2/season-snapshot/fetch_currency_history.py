@@ -118,11 +118,11 @@ Crystallised Corruption
 Vaal Catalysing Infuser
 
 [Key]
-Ancient Crisis Fragment
-Weathered Crisis Fragment
-Faded Crisis Fragment
-Origin Cradle
-Origin Spark
+# Ancient Crisis Fragment
+# Weathered Crisis Fragment
+# Faded Crisis Fragment
+# Origin Cradle
+# Origin Spark
 
 """
 
