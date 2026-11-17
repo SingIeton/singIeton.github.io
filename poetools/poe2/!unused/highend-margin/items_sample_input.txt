@@ -1,0 +1,140 @@
+아이템 종류: 육척봉
+아이템 희귀도: 희귀
+소름 끼치는 몰이 막대
+험악한 육척봉
+--------
+퀄리티: +22% (augmented)
+물리 피해: 67-111 (augmented)
+원소 피해: 124-173 (cold), 18-332 (lightning)
+치명타 명중 확률: 17.00% (augmented)
+초당 공격 횟수: 1.40
+--------
+요구 사항: 레벨 67, 104 민첩, 41 지능
+--------
+홈: S S S 
+--------
+아이템 레벨: 81
+--------
+피해의 13%를 추가 카오스 피해로 획득 (rune)
+희귀 또는 고유 적에게 주는 공격 피해 50% 증가 (rune)
+피해의 5%를 모든 원소의 추가 피해로 획득 (rune)
+--------
+{ 접두어 속성 부여 "결정화하는" (등급: 1) — 피해, 원소, 냉기, 공격 }
+냉기 피해 124(112-124)~173(168-189) 추가
+{ 접두어 속성 부여 "파괴적인" (등급: 1) — 피해, 원소, 화염, 냉기, 번개 }
+공격 스킬의 원소 피해 128(120-139)% 증가
+{ 접두어 속성 부여 "증발의" (등급: 1) — 피해, 원소, 번개, 공격 }
+번개 피해 18(1-19)~332(310-358) 추가
+{ 분열된 접미어 속성 부여 "- 멸망" (등급: 1) — 공격, 치명타 }
+치명타 확률 +5(4.41-5)%
+{ 접미어 속성 부여 "- 전쟁" (등급: 1) — 공격 }
+모든 근접 스킬 레벨 +5
+{ 접미어 속성 부여 "- 흉포함" (등급: 2) — 피해, 공격, 치명타 }
+치명타 피해 보너스 +22(20-22)%
+--------
+분열된 아이템
+
+
+Item Class: Quarterstaves
+Rarity: Rare
+Morbid Goad
+Sinister Quarterstaff
+--------
+Quality: +22% (augmented)
+Physical Damage: 67-111 (augmented)
+Elemental Damage: 124-173 (cold), 18-332 (lightning)
+Critical Hit Chance: 17.00% (augmented)
+Attacks per Second: 1.40
+--------
+Requires: Level 67, 104 Dex, 41 Int
+--------
+Sockets: S S S 
+--------
+Item Level: 81
+--------
+Gain 13% of Damage as Extra Chaos Damage (rune)
+50% increased Attack Damage against Rare or Unique Enemies (rune)
+Gain 5% of Damage as Extra Damage of all Elements (rune)
+--------
+{ Prefix Modifier "Crystalising" (Tier: 1) — Damage, Elemental, Cold, Attack }
+Adds 124(112-124) to 173(168-189) Cold Damage
+{ Prefix Modifier "Devastating" (Tier: 1) — Damage, Elemental, Fire, Cold, Lightning }
+128(120-139)% increased Elemental Damage with Attacks
+{ Prefix Modifier "Vapourising" (Tier: 1) — Damage, Elemental, Lightning, Attack }
+Adds 18(1-19) to 332(310-358) Lightning Damage
+{ Fractured Suffix Modifier "of Unmaking" (Tier: 1) — Attack, Critical }
++5(4.41-5)% to Critical Hit Chance
+{ Suffix Modifier "of War" (Tier: 1) — Attack }
++5 to Level of all Melee Skills
+{ Suffix Modifier "of Ferocity" (Tier: 2) — Damage, Attack, Critical }
++22(20-22)% to Critical Damage Bonus
+--------
+Fractured Item
+
+아이템 종류: 방패
+아이템 희귀도: 희귀
+키메라의 탑
+타호아의 거대 방패
+--------
+퀄리티: +30% (augmented)
+막기 확률: 26%
+방어도: 1749 (augmented)
+--------
+요구 사항: 레벨 80, 115 힘
+--------
+홈: S S 
+--------
+아이템 레벨: 81
+--------
+방어도, 회피, 에너지 보호막 40% 증가 (rune)
+--------
+스킬 부여: 방패 올리기
+--------
+{ 접두어 속성 부여 "중갑의" (등급: 1) — 방어도 }
+방어도 110(101-110)% 증가
+{ 접두어 속성 부여 "부동의" (등급: 1) — 방어도 }
+방어도 +274(249-277)
+{ 접두어 속성 부여 "정력적인" (등급: 1) — 생명력 }
+생명력 최대치 +186(175-189)
+{ 분열된 접미어 속성 부여 "- 보존자" (등급: 1) — 물리 }
+받는 물리 피해 8% 추가 감소
+{ 접미어 속성 부여 "- 태양 폭풍" (등급: 1) — 원소, 화염, 저항 }
+화염 저항 최대치 +3%
+{ 훼손된 접미어 속성 부여 "- 태양 폭풍" (등급: 1) — 원소, 화염, 저항 }
+화염 저항 최대치 +3%
+--------
+분열된 아이템
+
+Item Class: Shields
+Rarity: Rare
+Chimeric Tower
+Tawhoan Tower Shield
+--------
+Quality: +30% (augmented)
+Block chance: 26%
+Armour: 1749 (augmented)
+--------
+Requires: Level 80, 115 Str
+--------
+Sockets: S S 
+--------
+Item Level: 81
+--------
+40% increased Armour, Evasion and Energy Shield (rune)
+--------
+Grants Skill: Raise Shield
+--------
+{ Prefix Modifier "Impenetrable" (Tier: 1) — Armour }
+110(101-110)% increased Armour
+{ Prefix Modifier "Unmoving" (Tier: 1) — Armour }
++274(249-277) to Armour
+{ Prefix Modifier "Vigorous" (Tier: 1) — Life }
++186(175-189) to maximum Life
+{ Fractured Suffix Modifier "of the Conservator" (Tier: 1) — Physical }
+8% additional Physical Damage Reduction
+{ Suffix Modifier "of the Solar Storm" (Tier: 1) — Elemental, Fire, Resistance }
++3% to Maximum Fire Resistance
+{ Desecrated Suffix Modifier "of the Solar Storm" (Tier: 1) — Elemental, Fire, Resistance }
++3% to Maximum Fire Resistance
+--------
+Fractured Item

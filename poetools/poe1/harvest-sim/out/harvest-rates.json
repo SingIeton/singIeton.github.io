@@ -1,56 +1,46 @@
 {
  "version": 2,
  "source": "poe.ninja",
- "updatedAt": "2026-11-17T12:08:39Z",
+ "updatedAt": "2026-11-09T17:52:50Z",
  "order": [
-  "Covens",
   "Allflame"
  ],
  "leagues": {
-  "Covens": {
-   "ratio": 153.0,
-   "lifeforce": {
-    "yellow": 84.39,
-    "blue": 82.37,
-    "purple": 91.83
-   },
-   "updatedAt": "2026-11-17T12:08:39Z"
-  },
   "Allflame": {
-   "ratio": 514.5,
+   "ratio": 516.3,
    "lifeforce": {
-    "yellow": 3.29,
-    "blue": 16.71,
-    "purple": 23.36
+    "yellow": 3.09,
+    "blue": 18.8,
+    "purple": 30.81
    },
    "scarab": {
-    "doubling": 30.5,
-    "lineage": 6.0
+    "doubling": 37.1,
+    "lineage": 5.6
    },
-   "updatedAt": "2026-11-10T20:30:31Z",
+   "updatedAt": "2026-11-09T17:52:50Z",
    "fragment": {
-    "sacrifice": 0.87,
-    "mortal": 33.41,
+    "sacrifice": 0.76,
+    "mortal": 14.61,
     "sacrificeItem": "Sacrifice at Dusk",
-    "mortalItem": "Mortal Grief"
+    "mortalItem": "Mortal Rage"
    }
   },
   "Standard": {
-   "ratio": 921.9,
+   "ratio": 626.8,
    "lifeforce": {
-    "yellow": 3.94,
-    "blue": 5.43,
-    "purple": 6.56
+    "yellow": 2.16,
+    "blue": 15.19,
+    "purple": 17.96
    },
    "scarab": {
-    "doubling": 11.9,
-    "lineage": 3.0
+    "doubling": 9.2,
+    "lineage": 8.6
    },
-   "updatedAt": "2026-11-17T12:08:39Z",
+   "updatedAt": "2026-11-09T17:52:50Z",
    "fragment": {
-    "sacrifice": 0.33,
-    "mortal": 32.95,
-    "sacrificeItem": "Sacrifice at Dawn",
+    "sacrifice": 0.79,
+    "mortal": 41.79,
+    "sacrificeItem": "Sacrifice at Dusk",
     "mortalItem": "Mortal Grief"
    }
   }

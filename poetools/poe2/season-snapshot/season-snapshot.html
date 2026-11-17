@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Season Snapshot | PoE Tools</title>
-<meta name="description" content="PoE 2 시즌별 커런시 일별 가격 비교">
+<meta name="description" content="PoE 2 시즌별 화폐 일별 가격 비교">
 <!-- 위치: poetools/poe2/season-snapshot/season-snapshot.html
      상단 바·푸터·배경·언어/테마는 site-bar.js가 처리합니다 (경로는 poetools/style/ 기준). -->
 <link rel="stylesheet" href="../../style/theme.css">
@@ -17,6 +17,9 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .fld{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
 .fld>.lbl{font-size:12px;margin:0}
 .fld select{min-width:150px}
+.row .fld:has(select){flex-direction:row;align-items:center;gap:10px}
+.row .fld:has(select)>.lbl{white-space:nowrap}
+.row .fld:has(#unit){margin-left:auto} /* 표시 단위: 오른쪽 끝 정렬 */
 .fld .grp{gap:6px}
 .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .lbl{color:var(--mute);font-size:13px}
@@ -88,7 +91,7 @@ const NAME_KO={
     "Dawn of the Hunt":            "",   /* 0.2.0, 2025-04-04 */
     "Early Access":                "",   /* 0.1.0, 2024-12-06 */
   },
-  /* 아이템(커런시) */
+  /* 아이템(화폐) */
   items:{
     /* 기본 */
     "Mirror of Kalandra":          "칼란드라의 거울",
@@ -155,7 +158,7 @@ const cmp=v=>v==null?"-":v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?Math.round(v/1e3)+
 const swatch=(c,w=24)=>`<svg class="sw-i" width="${w}" height="8" aria-hidden="true"><line x1="0" y1="4" x2="${w}" y2="4" stroke="${c}" stroke-width="3"/></svg>`;
 
 /* ---------- 데이터 ---------- */
-/* DATA.leagues[리그].currencies[커런시].days[] 구조 (fetch_currency_history.py 출력). 가격은 모두 Exalted 기준 */
+/* DATA.leagues[리그].currencies[화폐].days[] 구조 (fetch_currency_history.py 출력). 가격은 모두 Exalted 기준 */
 const dayMap=c=>new Map(((c&&c.days)||[]).map(d=>[d.date,d]));
 function prep(){
   const seen=new Map();
@@ -253,9 +256,9 @@ function build(){
   $("app").innerHTML=head+`
 <section class="panel"><div class="phead"><h2>${T("일별 가격 추이","Daily price trend")}</h2></div>
  <div class="ctrls">
-  <div class="row"><div class="fld"><span class="lbl">${T("시즌","Seasons")}</span><div class="grp" role="group" aria-label="${T("리그 선택","Leagues")}">${chips}</div></div></div>
+  <div class="row"><div class="fld"><div class="grp" role="group" aria-label="${T("리그 선택","Leagues")}">${chips}</div></div></div>
   <div class="row">
-   <div class="fld"><label class="lbl" for="cur">${T("커런시","Currency")}</label><select id="cur">${curOpts}</select></div>
+   <div class="fld"><label class="lbl" for="cur">${T("화폐","Currency")}</label><select id="cur">${curOpts}</select></div>
    <div class="fld"><label class="lbl" for="unit">${T("표시 단위","Unit")}</label><select id="unit">${unitOpts}</select></div>
   </div>
  </div>
@@ -339,7 +342,7 @@ function drawPlot(){
   if(S.x==="day"){const st=Math.max(1,niceStep(x1-x0,Math.max(3,Math.floor(iw/80))));for(let v=Math.ceil(x0/st)*st;v<=x1;v+=st)xt.push(v)}
   else if(S.view){const st=Math.max(1,Math.round(niceStep((x1-x0)/DAY,Math.max(2,Math.floor(iw/120)))))*DAY;for(let v=Math.ceil(x0/st)*st;v<=x1;v+=st)xt.push(v)}
   else{const n=Math.max(2,Math.floor(iw/120));for(let k=0;k<=n;k++)xt.push(Math.round((x0+(x1-x0)*k/n)/DAY)*DAY)}
-  let g=`<svg id="svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T("시즌별 커런시 가격 추이 차트","Chart of currency price by season"))}"><defs><clipPath id="clipP"><rect x="${M.l}" y="${M.t}" width="${iw}" height="${ih}"/></clipPath></defs><g class="grid">`;
+  let g=`<svg id="svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T("시즌별 화폐 가격 추이 차트","Chart of currency price by season"))}"><defs><clipPath id="clipP"><rect x="${M.l}" y="${M.t}" width="${iw}" height="${ih}"/></clipPath></defs><g class="grid">`;
   for(const v of yt)g+=`<line x1="${M.l}" x2="${W-M.r}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}"/>`;
   g+=`</g><g class="ax">`;
   for(const v of yt)g+=`<text class="yl" x="${M.l-8}" y="${(py(v)+4).toFixed(1)}">${axf(v)}</text>`;

@@ -27,7 +27,7 @@
   st.textContent = "#site-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .6s;filter:grayscale(var(--bg-gray,0.7));background:center/cover no-repeat}"
     + "#site-bg.on{opacity:var(--bg-opacity,.065)}"
     + ':root[data-theme="light"] #site-bg{filter:grayscale(var(--bg-gray-light,0.8)) brightness(1.2)}'
-    + ':root[data-theme="light"] #site-bg.on{opacity:var(--bg-opacity-light,.04)}';
+    + ':root[data-theme="light"] #site-bg.on{opacity:var(--bg-opacity-light,.06)}';
   (doc.head || root).appendChild(st);
   var layer = doc.createElement("div");
   layer.id = "site-bg";

@@ -1,0 +1,71 @@
+기존 파일에서 유사한 내용을 참고해서 poe.ninja에서 '핵 불안정화기 Core Destabiliser'와 모든(47개) soulcore의 가격을 받아와 soulcore-prices.json에 저장하는 soulcore-prices.py를 작성 Latest league only (for now)
+
+[프로젝트 개요]
+핵 불안정화기 Core Destabiliser를 사용한 Soul Core 플리핑의 평균적인 수익을 계산하는 프로젝트
+1. Core Destabiliser 적용이 가능한 poe.ninja 최근 시세 기준 가장 저렴한 Soul Core에 Core Destabiliser를 사용했을 때 얻어지는 평균적인 수익을 계산
+2. to do that, Core Destabiliser를 사용했을 때 Soul Core, Endgame Soul Core, Ancient Soul Core, 그리고 적용한 soul core가 파괴되는 분포를 확인해야 하며, 이것은 사용자가 확인해줄 것.
+
+[Mechanics]
+Using this item can result in the following outcomes:
+   - Double the Soul Core
+   - Transform the Soul Core into another random Soul Core of the same tier
+   - Transform the Soul Core into an ancient soul core
+   - Destroy the Soul Core
+
+[List of Soul Cores]
+[Soul Cores] (15)
+Soul Core of Atmohua | 앗모후아의 영혼 핵
+Soul Core of Azcapa | 아즈카파의 영혼 핵
+Soul Core of Cholotl | 촐로틀의 영혼 핵
+Soul Core of Citaqualotl | 시타콰로틀의 영혼 핵
+Soul Core of Jiquani | 지콰니의 영혼 핵
+Soul Core of Opiloti | 오필로티의 영혼 핵
+Soul Core of Puhuarte | 푸후알테의 영혼 핵
+Soul Core of Quipolatl | 퀴폴라틀의 영혼 핵
+Soul Core of Tacati | 타카티의 영혼 핵
+Soul Core of Ticaba | 티카바의 영혼 핵
+Soul Core of Topotante | 토포탄테의 영혼 핵
+Soul Core of Tzamoto | 자모토의 영혼 핵
+Soul Core of Xopec | 조펙의 영혼 핵
+Soul Core of Zalatl | 잘라틀의 영혼 핵
+Soul Core of Zantipi | 잔티피의 영혼 핵
+
+[Endgame Soul Cores] (32)
+Atmohua's Soul Core of Retreat | 앗모후아의 후퇴의 영혼 핵
+Atziri's Soul Core of Alacrity | 앗지리의 기민성 영혼 핵
+Atziri's Soul Core of Devotion | 앗지리의 현신 영혼 핵
+Atziri's Soul Core of Inoculation | 앗지리의 접종 영혼 핵
+Atziri's Soul Core of Vitality | 앗지리의 활력 영혼 핵
+Cholotl's Soul Core of War | 촐로틀의 전쟁의 영혼 핵
+Citaqualotl's Soul Core of Foulness | 시타콰로틀의 부정의 영혼 핵
+Estazunti's Soul Core of Convalescence | 에스타준티의 요양의 영혼 핵
+Guatelitzi's Soul Core of Endurance | 과텔리치의 인내의 영혼 핵
+Hayoxi's Soul Core of Heatproofing | 하욕시의 내열의 영혼 핵
+Jiquani's Soul Core of Abundance | 지콰니의 풍부 영혼 핵
+Jiquani's Soul Core of Automation | 지콰니의 자동화 영혼 핵
+Jiquani's Soul Core of Malediction | 지콰니의 악담 영혼 핵
+Jiquani's Soul Core of Munitions | 지콰니의 군수품 영혼 핵
+Jiquani's Soul Core of Quaking | 지콰니의 진동 영혼 핵
+Jiquani's Soul Core of Radiance | 지콰니의 광휘 영혼 핵
+Jiquani's Soul Core of Rallying | 지콰니의 재집결 영혼 핵
+Jiquani's Soul Core of Rippling | 지콰니의 물결 영혼 핵
+Jiquani's Soul Core of Severing | 지콰니의 단절 영혼 핵
+Jiquani's Soul Core of Snares | 지콰니의 올가미 영혼 핵
+Jiquani's Soul Core of Squalls | 지콰니의 돌풍 영혼 핵
+Jiquani's Soul Core of Targeting | 지콰니의 대상 지정 영혼 핵
+Jiquani's Soul Core of Thundering | 지콰니의 천둥 영혼 핵
+Opiloti's Soul Core of Assault | 오필로티의 맹공의 영혼 핵
+Quipolatl's Soul Core of Flow | 퀴폴라틀의 흐름의 영혼 핵
+Tacati's Soul Core of Affliction | 타카티의 수난의 영혼 핵
+Topotante's Soul Core of Dampening | 토포탄테의 완화의 영혼 핵
+Tzamoto's Soul Core of Ferocity | 자모토의 흉포함의 영혼 핵
+Uromoti's Soul Core of Attenuation | 우로모티의 감쇠의 영혼 핵
+Xipocado's Soul Core of Dominion | 지포카도의 지배의 영혼 핵
+Xopec's Soul Core of Power | 조펙의 힘의 영혼 핵
+Zalatl's Soul Core of Insulation | 잘라틀의 절연의 영혼 핵
+
+[Ancient Soul Cores] (4)
+Citaqualotl's Thesis | 시타콰로틀의 명제
+Guatelitzi's Thesis | 과텔리치의 명제
+Jiquani's Thesis | 지콰니의 명제
+Quipolatl's Thesis | 퀴폴라틀의 명제

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko" data-game="poe2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PoE 2 Mageblood 리롤 플리핑 수익 계산</title>
+<link rel="stylesheet" href="../../style/theme.css">
+<script src="../../style/site-bar.js"></script>
+<style>
+/* 이 파일에는 Mageblood 플리핑 계산기에만 필요한 스타일만 둡니다. 폰트·색·버튼·패널 등 공통 모양은 style/theme.css */
+main.wrap{max-width:1100px}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.row .btn,.row button{margin:0;font-size:13.5px;line-height:1.2;min-height:38px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+label>span:first-child{white-space:nowrap}
+.in{display:flex;align-items:center;gap:6px}.in em{font-style:normal;color:var(--mute);font-size:12.5px}
+.in input.ov{border-color:var(--g)}  /* 직접 수정한 값: 자동 추정값 대신 이 값을 사용 중 */
+.stats{margin-bottom:20px}
+#src,#fit{margin:6px 0 0}
+.tbl{overflow-x:auto;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));border-radius:var(--r);margin-bottom:16px}
+table{min-width:560px}
+th,td{padding:8px 12px;white-space:nowrap}
+thead th{background:var(--sf2);border-bottom-color:var(--ln2)}
+tbody tr:hover td{background:color-mix(in oklab,var(--g) 6%,transparent)}
+.en{display:block;font-size:12px;color:var(--mute);font-weight:400;font-family:var(--sans)}
+td small{display:block;color:var(--mute);font-size:12px}
+td.cb{white-space:normal;min-width:240px}
+.lg{display:inline-block;margin:0 10px 0 0}
+.lg i{font-style:normal;color:var(--g);margin-left:2px;font-size:12.5px}
+.pos{color:var(--pos)}.neg{color:var(--bad)}.dim{color:var(--mute)}
+.stat b.pos{color:color-mix(in oklab,var(--pos) 60%,var(--mute))}
+.stat b.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute))}
+#more{margin:0 0 16px}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Mageblood Reroll Flipping Profit Calculator">Mageblood 리롤 플리핑 수익 계산</h1><p class="sub" data-en="Buy a Mageblood, reroll it with Divine Orbs and resell it: shows which Mage's Legacy combinations to stop rerolling at and the average profit per flip. Data is updated periodically but may differ from the current market. Per-legacy values are estimated from listing prices and can be edited.">Mageblood를 구매해 Divine Orb로 리롤하고 재판매할 때, 어떤 Mage's Legacy 조합에서 리롤을 멈출지와 1건당 평균 수익을 계산. 데이터는 일정 주기로 업데이트되지만 현재 시장과 다를 수 있음에 유의. 모드별 가치는 매물 가격으로 추정한 값이며 직접 수정할 수 있음.</p><p class="note" id="src"></p><p class="note" id="fit"></p></div></div>
+<p id="err" class="note" hidden style="color:var(--bad)"></p>
+<noscript><p class="note">(JavaScript required) 이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
+<div class="grid">
+<div><div class="panel" id="set"></div></div>
+<div>
+<div class="stats" id="stats"></div>
+<p class="note" id="rule"></p>
+<div class="tbl"><table><thead><tr><th data-en="Stop at (legacies)">멈출 조합</th><th data-en="Effect needed">필요 효과</th><th data-en="Est. resale price">예상 시세</th><th data-en="Chance per reroll">리롤 1회당 확률</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="row" id="more" hidden><button class="sec" id="moreb" type="button"></button></div>
+</div>
+</div>
+</main>
+<script>
+(()=>{const show=m=>{const e=document.getElementById("err");if(e){e.hidden=false;e.textContent=(document.documentElement.lang==="en"?"Error: ":"오류: ")+m}};
+window.addEventListener("error",ev=>show(ev.message));
+window.addEventListener("unhandledrejection",ev=>show(String(ev.reason&&ev.reason.message||ev.reason)))})();
+/* 언어: 저장·동기화는 style/site-bar.js 가 담당. 여기서는 현재 언어를 읽고 "sitebar:lang" 이벤트만 구독 */
+let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||(document.documentElement.lang==="en"?"en":"ko");
+const tt=(ko,en)=>LANG==="en"?en:ko;
+function applyStatic(){document.querySelectorAll("[data-en]").forEach(e=>{if(e.dataset.ko===undefined)e.dataset.ko=e.textContent;e.textContent=LANG==="en"?e.dataset.en:e.dataset.ko});
+document.title=tt("PoE 2 Mageblood 리롤 플리핑 수익 계산","PoE 2 Mageblood Reroll Flipping Profit Calculator")}
+window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyStatic();panel();render()});
+/* Mage's Legacy 14종: [id, 영문 이름, 한글 효과, 영문 효과]. id 는 수집기(poe2_mageblood-flip.py)의 LEGACIES 와 같아야 함 */
+const LEG=[["amethyst","Amethyst","카오스 저항 +45%","+45% Chaos Resistance"],["basalt","Basalt","방어도 150% 증가","150% increased Armour"],["bismuth","Bismuth","모든 원소 저항 +45%","+45% all Elemental Resistances"],
+["diamond","Diamond","치명타 확률 75% 증가","75% increased Critical Hit Chance"],["gold","Gold","아이템 희귀도 45% 증가","45% increased Item Rarity"],["granite","Granite","방어도 +2000","+2000 Armour"],["jade","Jade","회피 +2000","+2000 Evasion Rating"],
+["quicksilver","Quicksilver","이동 속도 30% 증가","30% increased Movement Speed"],["ruby","Ruby","화염 저항 +60%, 최대 +5%","+60% Fire Resistance, +5% max"],["sapphire","Sapphire","냉기 저항 +60%, 최대 +5%","+60% Cold Resistance, +5% max"],
+["silver","Silver","스킬 속도 30% 증가","30% increased Skill Speed"],["stibnite","Stibnite","회피 150% 증가","150% increased Evasion Rating"],["sulphur","Sulphur","피해 60% 증가, 정지 시 신성한 땅","60% increased Damage, Consecrated Ground"],["topaz","Topaz","번개 저항 +60%, 최대 +5%","+60% Lightning Resistance, +5% max"]];
+const LIDX={};LEG.forEach((l,i)=>LIDX[l[0]]=i);
+//M
+/* 모델. 벨트 하나는 Mage's Legacy 4칸(각 14종 중 균등) + 중복 1개당 효과 E%(25~50 균등). Divine Orb 는 이 전부를 다시 굴린다.
+   판매 가능한 조합은 1+1+1+1 과 2+1+1 뿐이다. 그 밖(2+2, 3+1, 4)은 못 파는 벨트라 정지 후보에서 빠지고 항상 리롤한다 (확률 질량은 그대로 유지).
+   시세 V = 기본가 + (서로 다른 Legacy 가치 합) × (1 + 중복수 × E/100), 중복수 = 4 − 서로 다른 Legacy 수.
+   최적 정지: 리롤 1회 비용 D 일 때 기준 시세 K 는 E[(V−K)+] = D 의 해이고, V ≥ K 인 조합에서 멈춘다.
+   (정지 집합을 V 큰 순으로 늘려 가며 (합−D)/확률 을 계산했을 때의 최댓값과 같다.) 첫 리롤을 포함한 평균 리롤 횟수 = 1/p, 평균 수익 = K − 구매가. */
+const NL=14,E_LO=25,E_HI=50,NE=E_HI-E_LO+1;
+function buildOutcomes(){const out=[],f=[1,1,2,6,24],tot=Math.pow(NL,4);
+for(let a=0;a<NL;a++)for(let b=a;b<NL;b++)for(let c=b;c<NL;c++)for(let d=c;d<NL;d++){const ids=[a,b,c,d],cnt={};ids.forEach(x=>cnt[x]=(cnt[x]||0)+1);
+let m=24;for(const k in cnt)m/=f[cnt[k]];const set=Object.keys(cnt).map(Number);if(set.length<3)continue;out.push({ids,set,dup:4-set.length,w:m/tot})}
+return out}
+const OUTC=buildOutcomes();
+const sumA=(o,A)=>{let s=0;for(const l of o.set)s+=A[l];return s};
+const val=(o,E,A,base)=>base+sumA(o,A)*(1+o.dup*E/100);
+function solve(A,base,D){const it=[];
+for(let i=0;i<OUTC.length;i++){const o=OUTC[i];if(o.dup===0)it.push([val(o,0,A,base),o.w]);else for(let E=E_LO;E<=E_HI;E++)it.push([val(o,E,A,base),o.w/NE])}
+it.sort((x,y)=>y[0]-x[0]);let P=0,S=0,K=-Infinity;
+for(const [v,w] of it){P+=w;S+=v*w;const k=(S-D)/P;if(k>K)K=k}
+let p=0,s=0;for(const [v,w] of it){if(v>=K-1e-9){p+=w;s+=v*w}else break}
+return{K,p,avg:p>0?s/p:0}}
+function stopRows(K,A,base){const rows=[];
+for(const o of OUTC){const s=sumA(o,A);
+ if(o.dup===0){const v=base+s;if(v>=K-1e-9)rows.push({o,lo:v,hi:v,emin:null,p:o.w});continue}
+ const hi=base+s*(1+o.dup*E_HI/100);if(hi<K-1e-9)continue;
+ let e=E_LO;if(base+s*(1+o.dup*E_LO/100)<K-1e-9)e=Math.max(E_LO,Math.ceil(((K-base)/s-1)*100/o.dup-1e-9));
+ if(e>E_HI)continue;rows.push({o,lo:base+s*(1+o.dup*e/100),hi,emin:e,p:o.w*(E_HI-e+1)/NE})}
+rows.sort((a,b)=>b.hi-a.hi||b.p-a.p);return rows}
+/* 매물 가격(D)으로 모드 가치를 추정: y ≈ b + Σ a_L·z_L (a,b ≥ 0), z_L = [L 포함]·(1+중복수·E/100).
+   상대 오차 가중 + Huber 반복 + 약한 릿지, 비음수 좌표하강. rows: [{y, set, dup, E}] */
+function fitModel(rows){const n=rows.length,m=NL+1;if(n<2)return null;
+const F=rows.map(r=>{const f=new Array(m).fill(0);f[0]=1;const mu=1+r.dup*r.E/100;for(const l of r.set)f[l+1]=mu;return f});
+const w0=rows.map(r=>1/Math.pow(Math.max(r.y,.5),2));let w=w0.slice(),th=new Array(m).fill(0);
+for(let pass=0;pass<5;pass++){const Q=Array.from({length:m},()=>new Array(m).fill(0)),g=new Array(m).fill(0);
+ for(let i=0;i<n;i++){const f=F[i];for(let a=0;a<m;a++){if(!f[a])continue;g[a]+=w[i]*f[a]*rows[i].y;for(let b=0;b<m;b++)if(f[b])Q[a][b]+=w[i]*f[a]*f[b]}}
+ for(let sw=0;sw<400;sw++){for(let k=0;k<m;k++){let r=g[k];for(let j=0;j<m;j++)if(j!==k)r-=Q[k][j]*th[j];const dn=Q[k][k]*(k?1.01:1);th[k]=dn>0?Math.max(0,r/dn):0}}
+ w=rows.map((r,i)=>{let yh=0;for(let a=0;a<m;a++)yh+=th[a]*F[i][a];const rel=Math.abs(r.y-yh)/Math.max(r.y,.5);return w0[i]*(rel<=.5?1:.5/rel)})}
+const rel=rows.map((r,i)=>{let yh=0;for(let a=0;a<m;a++)yh+=th[a]*F[i][a];return Math.abs(r.y-yh)/Math.max(r.y,.5)}).sort((a,b)=>a-b);
+const cnt=new Array(NL).fill(0);rows.forEach(r=>r.set.forEach(l=>cnt[l]++));
+return{base:th[0],a:th.slice(1),n,mape:rel[rel.length>>1],cnt}}
+//M
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);const x=v?JSON.parse(v):d;return x==null?d:x}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const MIN_FIT=8,FIT_DAYS=14,MIN_RECENT=25,BASEDEF={div:515,chaos:67};
+let PRICES={leagues:{}},S={league:"",div:BASEDEF.div,chaos:BASEDEF.chaos},SAVED={league:"",by:{}},AUTO={},SHOW=50;
+const tsOf=s=>/(Z|[+-]\d\d:?\d\d)$/.test(String(s||""))?(Date.parse(s)||0):0;
+const newer=(y,x)=>{const a=tsOf(y),b=tsOf(x);return a!==b?a>b:String(y)>=String(x)};
+const fmT=s=>{const t=tsOf(s);if(!t)return s;const d=new Date(t),p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
+function merge(a,b){const o={leagues:Object.assign({},a.leagues),order:b.order||a.order};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||newer(y.collectedAt,x.collectedAt))o.leagues[k]=y}return o}
+const STD="Standard";
+const mb=l=>(((PRICES.leagues||{})[l]||{}).mageblood)||{};
+const hasData=k=>(mb(k).listings||[]).length>0;
+const seasonLeagues=()=>{const L=PRICES.leagues||{},ok=k=>k!==STD&&hasData(k);const o=(PRICES.order||[]).filter(ok);
+ const rest=Object.keys(L).filter(k=>ok(k)&&!o.includes(k)).sort((a,b)=>(tsOf(L[b].collectedAt)-tsOf(L[a].collectedAt))||String(L[b].collectedAt).localeCompare(String(L[a].collectedAt)));return[...o,...rest].slice(0,2)};
+const latestLeague=()=>seasonLeagues()[0]||"";
+const leagueList=()=>[...seasonLeagues(),...(hasData(STD)?[STD]:[])];
+const ratesFor=l=>{const r=((PRICES.leagues||{})[l]||{}).rates||{};return{div:r.div??BASEDEF.div,chaos:r.chaos??BASEDEF.chaos}};
+const OV=()=>SAVED.by[S.league]||{};
+const V=k=>OV()[k]??AUTO[k];
+function toEx(l){return l.c==="exalted"?l.a:l.c==="chaos"?l.a*S.chaos:l.c==="divine"?l.a*S.div:null}
+function listingRows(){const out=[];for(const x of mb(S.league).listings||[]){const ex=toEx(x);if(ex==null||!(S.div>0))continue;
+ const idx=(x.g||[]).map(id=>LIDX[id]);if(idx.length!==4||idx.some(v=>v==null))continue;const set=[...new Set(idx)],dup=4-set.length;if(dup>1)continue;
+ out.push({y:ex/S.div,set,dup,E:dup?(typeof x.e==="number"?x.e:(E_LO+E_HI)/2):0,t:x.t,idx})}return out}
+function refreshAuto(){const r=ratesFor(S.league),o=OV();AUTO={div:r.div,chaos:r.chaos,rr:1};S.div=o.div??r.div;S.chaos=o.chaos??r.chaos;
+ const rows=listingRows(),recent=rows.filter(x=>!x.t||!tsOf(x.t)||(Date.now()-tsOf(x.t))/864e5<=FIT_DAYS),use=recent.length>=MIN_RECENT?recent:rows;
+ const fit=use.length>=MIN_FIT?fitModel(use):null;AUTO.fit=fit;AUTO.nrows=rows.length;AUTO.base=fit?fit.base:0;LEG.forEach((l,i)=>AUTO["a."+l[0]]=fit?fit.a[i]:0);
+ const f=mb(S.league).buy;let b=null;if(f&&f.status==="ok"&&f.a!=null){const ex=toEx({a:f.a,c:f.c});if(ex!=null&&S.div>0)b=ex/S.div}
+ if(b==null&&rows.length)b=Math.min(...rows.map(x=>x.y));AUTO.buy=b==null?0:b}
+function useLeague(l){S.league=l;refreshAuto()}
+function loadSettings(){const s=LS.get("poe2mb:settings",null)||{};SAVED={league:typeof s.league==="string"?s.league:"",by:s.by&&typeof s.by==="object"?s.by:{}};useLeague(SAVED.league)}
+const saveSettings=()=>LS.set("poe2mb:settings",SAVED);
+const fixLeague=()=>useLeague(leagueList().includes(S.league)?S.league:(leagueList()[0]||""));
+const r2=v=>Math.round(v*100)/100;
+const FIELDS=()=>[[tt("구매 · 리롤 (D)","Buy · reroll (D)"),[["buy",tt("구매가 (최저 매물)","Buy price (cheapest)"),"D"],["rr",tt("리롤 1회 비용","Cost per reroll"),"D"]]],
+[tt("화폐 환율","Currency exchange rates"),[["div","Divine =","ex"],["chaos","Chaos =","ex"]]],
+[tt("Legacy 모드 가치 (D)","Legacy values (D)"),[["base",tt("기본가 (가치 0 벨트)","Base price (no value)"),"D"],...LEG.map(l=>["a."+l[0],`${l[1]}<span class="en">${LANG==="en"?l[3]:l[2]}</span>`,"D"])]]];
+function markOv(){const o=OV();$("set").querySelectorAll("input[data-k]").forEach(i=>{const k=i.dataset.k,on=o[k]!==undefined;i.classList.toggle("ov",on);i.title=on?tt("직접 수정한 값 (자동값: "+r2(AUTO[k])+")","Edited by you (auto: "+r2(AUTO[k])+")"):""})}
+function syncInputs(){$("set").querySelectorAll("input[data-k]").forEach(i=>{if(document.activeElement!==i)i.value=r2(V(i.dataset.k))});markOv()}
+function panel(){let h=`<fieldset><legend>${tt("리그","League")}</legend><label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${l}</option>`).join("")}</select></label></fieldset>`;
+for(const[t,fs]of FIELDS())h+=`<fieldset><legend>${t}</legend>${fs.map(([k,l,u])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${r2(V(k)||0)}"><em>${u}</em></span></label>`).join("")}</fieldset>`;
+h+=`<div class="row"><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button></div>`;
+$("set").innerHTML=h;
+$("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
+ if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;saveSettings();useLeague(e.value);SHOW=50;syncInputs();render();return}
+ const v=Math.max(0,parseFloat(e.value)||0),o=SAVED.by[S.league]=SAVED.by[S.league]||{};
+ if(k==="div"||k==="chaos"){if(v===AUTO[k])delete o[k];else o[k]=v;refreshAuto()}else{if(Math.abs(v-AUTO[k])<1e-9)delete o[k];else o[k]=v}
+ saveSettings();syncInputs();render()}));
+$("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2mb:prices",PRICES);fixLeague();panel();render()}catch(x){alert(tt("올바른 prices.json 형식이 아닙니다.","Not a valid prices.json file."))}});
+$("reset").addEventListener("click",()=>{LS.del("poe2mb:settings");loadSettings();fixLeague();panel();render()});
+markOv()}
+const trim=(x,d)=>x.toLocaleString(LANG==="en"?"en-US":"ko-KR",{minimumFractionDigits:0,maximumFractionDigits:d});
+const fm=x=>trim(x,Math.abs(x)>=10?0:1)+" D";
+const fp=p=>trim(p*100,p<.001?3:p<.01?2:1)+"%";
+const lname=i=>LEG[i][1];
+function comboHtml(o,A){const cnt={};o.ids.forEach(i=>cnt[i]=(cnt[i]||0)+1);
+ return Object.keys(cnt).map(Number).sort((a,b)=>A[b]-A[a]||a-b).map(i=>`<span class="lg" title="${esc(LANG==="en"?LEG[i][3]:LEG[i][2])}">${lname(i)}${cnt[i]>1?`<i>×${cnt[i]}</i>`:""}</span>`).join("")}
+function render(){const A=LEG.map(l=>V("a."+l[0])||0),base=V("base")||0,B=V("buy")||0,D=V("rr")||0,mg=mb(S.league),fit=AUTO.fit;
+ const usable=A.some(x=>x>0)||base>0,haveMarket=(mg.listings||[]).length>0;
+ /* 수집 로그 */
+ $("src").textContent=tt("경매장 데이터: ","Trade-site data: ")+(mg.collectedAt?fmT(mg.collectedAt):(((PRICES.leagues||{})[S.league]||{}).collectedAt?fmT(PRICES.leagues[S.league].collectedAt):tt("없음 (poe2_mageblood-flip.py 실행 또는 가격 파일 불러오기)","none (run poe2_mageblood-flip.py or load a price file)")))
+  +" · "+tt("환율 데이터: ","Rates data: ")+(((PRICES.leagues||{})[S.league]||{}).rates&&PRICES.leagues[S.league].rates.updatedAt?fmT(PRICES.leagues[S.league].rates.updatedAt):tt("없음 (기본값 사용)","none (using defaults)"));
+ const conf=!fit?"":(fit.n>=60&&fit.mape<=.35)?tt("신뢰 높음","High confidence"):(fit.n>=30&&fit.mape<=.5)?tt("신뢰 보통","Medium confidence"):tt("신뢰 낮음","Low confidence");
+ $("fit").textContent=haveMarket?(fit?tt(`모드 가치 추정: 매물 ${AUTO.nrows}개 사용 · 평균 오차 ${(fit.mape*100).toFixed(0)}% · ${conf}`,`Value estimate: ${AUTO.nrows} listings · typical error ${(fit.mape*100).toFixed(0)}% · ${conf}`)+(mg.partial?tt(` (전체 ${mg.total}건 중 일부만 수집)`,` (partial: ${mg.total} total)`):""):tt("모드 가치를 추정하기에 매물이 부족합니다. 왼쪽에서 직접 입력하세요.","Too few listings to estimate values. Enter them on the left.")):"";
+ if(!usable||!(D>0)){$("stats").innerHTML="";$("rule").textContent="";$("more").hidden=true;
+  $("rows").innerHTML=`<tr><td colspan="4" class="dim" style="text-align:center">${haveMarket||usable?tt("모드 가치와 리롤 비용을 입력하세요.","Enter legacy values and reroll cost."):tt("수집 데이터 없음","No data collected")}</td></tr>`;return}
+ const R=solve(A,base,D),rows=stopRows(R.K,A,base),profit=R.K-B,rerolls=R.p>0?1/R.p:Infinity,rrCost=rerolls*D,invest=B+rrCost,roi=invest>0?profit/invest:0;
+ const cards=[[tt("멈춤 기준 시세","Stop threshold"),fm(R.K)],[tt("리롤 1회당 멈춤 확률","Chance to stop per reroll"),fp(R.p)],[tt("평균 리롤 횟수","Avg. rerolls"),trim(rerolls,1)+tt("회","")],
+ [tt("평균 재판매가","Avg. resale price"),fm(R.avg)],[tt("평균 투입 비용 (구매+리롤)","Avg. cost (buy + rerolls)"),fm(invest)],
+ [tt("1건당 평균 수익","Avg. profit per flip"),`<span class="${profit>=0?"pos":"neg"}">${profit>=0?"+":"−"}${fm(Math.abs(profit))}</span> <small>${tt("수익률","ROI")} ${(roi*100).toFixed(0)}%</small>`]];
+ $("stats").innerHTML=cards.map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
+ $("rule").textContent=profit<0?tt("현재 입력값으로는 평균적으로 손해입니다. 아래는 이론상 멈출 조합입니다.","On average this loses money with the current inputs. Below are the theoretical stop combinations.")
+  :tt(`리롤 결과의 시세가 ${fm(R.K)} 이상인 아래 조합이 나오면 멈추고 판매, 그 외에는 Divine Orb로 다시 리롤합니다. (구매하는 벨트는 시세가 가장 낮은 매물로 가정)`,`Stop and sell when a reroll is worth ${fm(R.K)} or more (combinations below); otherwise reroll again. (Assumes you buy the cheapest listing.)`);
+ const shown=rows.slice(0,SHOW);
+ $("rows").innerHTML=shown.map(r=>`<tr><td class="cb">${comboHtml(r.o,A)}</td><td>${r.emin==null?`<span class="dim">-</span>`:(r.emin<=E_LO?tt("무관","Any"):"≥ "+r.emin+"%")}</td><td>${r.lo<r.hi-.05?fm(r.lo)+" ~ "+fm(r.hi):fm(r.hi)}</td><td>${fp(r.p)}</td></tr>`).join("")||`<tr><td colspan="4" class="dim" style="text-align:center">${tt("멈출 조합이 없습니다.","No stop combinations.")}</td></tr>`;
+ $("more").hidden=rows.length<=SHOW;$("moreb").textContent=tt(`더 보기 (${shown.length} / ${rows.length})`,`Show more (${shown.length} / ${rows.length})`)}
+async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
+(async()=>{
+ $("moreb").addEventListener("click",()=>{SHOW+=100;render()});
+ applyStatic();loadSettings();panel();
+ const cached=LS.get("poe2mb:prices",{leagues:{}}),fresh=await jget("out/prices.json");
+ if(fresh&&fresh.leagues)for(const k of Object.keys(cached.leagues||{}))if(!fresh.leagues[k])delete cached.leagues[k];  /* 서버의 prices.json 이 있으면 그 파일이 기준 */
+ PRICES=merge(cached,fresh||{leagues:{}});
+ fixLeague();panel();LS.set("poe2mb:prices",PRICES);render();
+})();
+</script>
+</body>
+</html>

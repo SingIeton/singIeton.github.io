@@ -1,3 +1,5 @@
+[How to Use]
+
 # 모든 리그 전체 수집
 python poe2_overquality-flip.py all --league all
 
@@ -21,6 +23,8 @@ python poe2_overquality-flip.py --rates-only --league all
 --rates-only	환율만 갱신하고 끝냅니다. GGG 검색이 없어 몇 초면 끝납니다.N=not implemented (do not read these data)
 
 
+
+
 X=unsed  (do not read these data)
 []=Required Level (do not sort gears or data by required level)
 No need to read one's that are marked N and X (even if there is data)
@@ -35,6 +39,9 @@ Vaal Catalysing Infuser 바알 촉진시키는 주입기
 Blacksmith's Whetstone 대장장이의 숫돌
 Armourer's Scrap 방어구 장인의 고철
 Arcanist's Etcher 신비학자의 식각기
+
+[기타 룰]
+- 타락한 베이스 아이템의 잔존가치는 0
 
 [검색 조건]
 1 Lastest PoE2 League (by defualt, later selected by user from two lastest league + standard)
