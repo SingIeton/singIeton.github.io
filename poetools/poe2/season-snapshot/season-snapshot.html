@@ -11,7 +11,13 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 폰트·색·패널·표·버튼 등 공통 모양은 style/theme.css. 여기에는 이 서비스 전용 스타일만 둡니다. */
-.ctrls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-bottom:16px}
+main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그래프 포함) 폭: 기존 1800px의 80% */
+.ctrls{display:flex;flex-direction:column;gap:14px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--ln)}
+.row{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end}
+.fld{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+.fld>.lbl{font-size:12px;margin:0}
+.fld select{min-width:150px}
+.fld .grp{gap:6px}
 .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .lbl{color:var(--mute);font-size:13px}
 .grp>label.lbl{margin:0}
@@ -26,24 +32,42 @@
 .chart svg#svg{width:100%;height:auto;display:block;touch-action:pan-y}
 .grid line{stroke:var(--ln)}
 .ax text{fill:var(--mute);font-size:11.5px}
-.ax .yl{text-anchor:end}.ax .xl{text-anchor:middle}
+.ax .yu,.ax .xu{text-anchor:start}.ax .yl{text-anchor:end}.ax .xl{text-anchor:middle}
 #hl{stroke:var(--ln2);stroke-dasharray:3 3}
-.tip{position:absolute;display:none;pointer-events:none;z-index:2;background:var(--sf);border:1px solid var(--ln2);border-radius:var(--r);padding:8px 11px;font-size:13px;line-height:1.5;white-space:nowrap}
+.tip{position:absolute;display:none;pointer-events:none;z-index:2;padding:0;font-size:13px;line-height:1.5;white-space:nowrap;width:max-content;max-width:none}
+.tip .tg{display:grid;grid-template-columns:auto auto minmax(3.5em,auto) auto;column-gap:12px;row-gap:3px;align-items:center}
+#tip{font-size:14px}                 /* 좌측 상단 범례: 13px → 14px */
+#tip .u{font-size:13px}
+.htip{background:var(--sf);border:1px solid var(--ln2);border-radius:var(--r);padding:9px 12px;box-shadow:0 4px 14px rgba(0,0,0,.28);z-index:3}
+.htip .tg{grid-template-columns:auto auto minmax(3.5em,auto) auto auto}
+.tip .tr{display:contents}
+.tip .tr>*{white-space:nowrap}
+.tip .tn,.tip .tv{text-align:left}
+.tip .tv{text-align:right;font-variant-numeric:tabular-nums}
+.tip .u{color:var(--mute);font-size:12px}
 .tip .th{font-weight:600;margin-bottom:4px}
-.tip .tr{display:flex;gap:8px;align-items:center;margin-top:2px}
 .tip .tr b{font-variant-numeric:tabular-nums}
 .tip .m{color:var(--mute);font-size:12px}
 .emptyc{margin:30px 0;text-align:center;color:var(--mute)}
 .sw-i{display:inline-block;vertical-align:middle;margin-right:8px}
 .phead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
 .phead h2{margin:0}
+.nav{position:relative;margin-top:10px;user-select:none;-webkit-user-select:none}
+.nav-track{position:relative;height:32px;border-radius:6px;background:color-mix(in oklab,var(--mute) 18%,transparent);cursor:pointer;touch-action:none}
+.nav-win{position:absolute;top:0;bottom:0;box-sizing:border-box;border:1px solid var(--g);border-radius:6px;background:color-mix(in oklab,var(--g) 26%,transparent);cursor:grab}
+.nav-win.drag{cursor:grabbing}
+.nav-h{position:absolute;top:-2px;bottom:-2px;width:12px;display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none}
+.nav-h[data-h="l"]{left:-6px}.nav-h[data-h="r"]{right:-6px}
+.nav-h::after{content:"";width:4px;height:20px;border-radius:2px;background:var(--g)}
+.nav .tip{background:var(--sf);border:1px solid var(--ln2);border-radius:var(--r);padding:8px 11px}
+.nav .tip .th{margin:0}
 </style>
 </head>
 <body>
 <button class="skip" id="skip" type="button"></button>
 <main class="wrap" id="app" tabindex="-1"></main>
-<!-- 데이터: fetch_currency_history.py 가 스크립트와 같은 폴더에 생성 (currency_data.js). 스크립트를 data/ 폴더에 두고 실행하세요 -->
-<script src="data/currency_data.js"></script>
+<!-- 데이터: fetch_currency_history.py 가 스크립트와 같은 폴더에 생성 (currency_data.js). 이 HTML과 같은 폴더에 두고 실행하세요 -->
+<script src="currency_data.js"></script>
 <script>
 /* 언어·테마는 site-bar.js 가 관리합니다. 현재 언어는 PoEPrefs.lang, 바뀌면 "sitebar:lang" 이벤트가 옵니다. */
 let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||document.documentElement.lang||"ko";
@@ -116,11 +140,12 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 
 const PAL=["var(--g)","var(--b)","var(--p)","var(--y)","var(--gem)","#f97316","#ec4899","#06b6d4"]; /* 앞 5개는 theme.css 변수, 나머지는 리그가 많을 때 쓰는 고정색 */
 const DAY=864e5;
-const S={sel:new Set(),cur:null,metric:"close",x:"day",scale:"lin",hideLow:true,unit:"auto"};
+const S={sel:new Set(),cur:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",view:null}; /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
 let DATA=null,CUR=[],LG=[],SR=[],drawnW=0,UEFF="exalted",HAVE={divine:false,chaos:false};
 const UNITS={exalted:{n:"Exalted Orb",ko:"엑잘티드",en:"Exalted"},chaos:{n:"Chaos Orb",ko:"카오스",en:"Chaos"},divine:{n:"Divine Orb",ko:"디바인",en:"Divine"}};
 const uname=u=>T(UNITS[u].ko,UNITS[u].en);
-const styleOf=i=>({color:PAL[i%PAL.length]});
+const LCOLOR={"Forbidden Rites":"var(--p)","Fate of the Vaal":"#d4414b","Rise of the Abyssal":"#3d9a5f"}; /* 시즌별 고정색, 없으면 순서대로 PAL */
+const styleOf=i=>({color:(LG[i]&&LCOLOR[LG[i].name])||PAL[i%PAL.length]});
 
 const ts=s=>Date.parse(s+"T00:00:00Z");
 const fmtDate=ms=>new Date(ms).toISOString().slice(0,10);
@@ -158,7 +183,7 @@ function prepLeagues(){
       rates:{divine:dayMap(cs[UNITS.divine.n]),chaos:dayMap(cs[UNITS.chaos.n])}};
   }).filter(Boolean).sort((a,b)=>a.start<b.start?1:-1); /* 최신 시즌이 앞 */
   const keep=[...S.sel].filter(n=>LG.some(l=>l.name===n));
-  S.sel=new Set(keep.length?keep:LG.slice(0,3).map(l=>l.name));
+  S.sel=new Set(keep.length?keep:LG.filter(l=>l.name!=="Dawn of the Hunt").map(l=>l.name));
 }
 /* 같은 날 Divine/Chaos 가격(Exalted)으로 나눠 환산. 시가·종가·평균은 같은 항목, 고가·저가는 평균을 사용 */
 function rateOf(lg,u,d){
@@ -203,10 +228,10 @@ function getSeries(){
 }
 function noteText(){
   const cn=esc(nm("items",S.cur)),u=uname(UEFF);
-  let s=T(`${cn} 1개의 가격, 단위는 ${u}입니다.`,`Price of one ${cn}, in ${u}.`);
+  let s="";
   if(S.unit!=="auto"&&S.unit!==UEFF)s+=" "+T("선택한 단위로 환산할 수 없어 Exalted로 표시합니다.","Can't convert to the selected unit, so Exalted is shown.");
   else if(UEFF!=="exalted")s+=" "+T(`같은 날의 ${u} 오브 가격으로 환산했습니다.`,`Converted with the same day's ${u} Orb price.`);
-  return s+" "+T("속이 빈 점은 아직 진행 중인 날입니다.","Hollow points are days still in progress.");
+  return (s?s+" ":"")+T("마우스 휠로 확대·축소하고, 아래 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다.","Scroll to zoom. Drag the ends of the bar below to set how many days are shown, or drag the bar to move the range.");
 }
 
 /* ---------- 화면 ---------- */
@@ -215,57 +240,90 @@ function build(){
   document.documentElement.lang=LANG;
   document.title=T("시즌 스냅샷","Season Snapshot")+" | PoE Tools";
   $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
-  const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1><p class="sub">${cn?T(`시즌별 ${cn} 가격을 일별로 겹쳐 봅니다.`,`Overlay daily ${cn} prices from each season.`):T("시즌별 커런시 가격을 일별로 겹쳐 봅니다.","Overlay daily currency prices from each season.")}</p></div></div>`;
+  const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1></div></div>`;
   if(!CUR.length){
-    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>fetch_currency_history.py</code>를 실행해 만든 <code>currency_data.js</code> 파일을 이 페이지 폴더의 <code>data/</code>에 두세요.","Run <code>fetch_currency_history.py</code> and put the generated <code>currency_data.js</code> in the <code>data/</code> folder next to this page.")}</p></section>`;
+    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>fetch_currency_history.py</code>를 실행해 만든 <code>currency_data.js</code> 파일을 이 페이지와 같은 폴더에 두세요.","Run <code>fetch_currency_history.py</code> and put the generated <code>currency_data.js</code> in the same folder as this page.")}</p></section>`;
     return;
   }
-  const chips=LG.map((l,i)=>{const st=styleOf(i);return `<label class="chip" style="--sw:${st.color}"><input type="checkbox" data-lg="${esc(l.name)}">${swatch(st.color)}${esc(nm("leagues",l.name))}<small>${l.patch?esc(l.patch)+" · ":""}${l.start.slice(0,7)}</small></label>`}).join("");
-  const unitOpts=`<option value="auto">${T("자동","Auto")}</option>`+["exalted","chaos","divine"].map(u=>`<option value="${u}"${u!=="exalted"&&!HAVE[u]?" disabled":""}>${uname(u)}</option>`).join("");
+  const chips=LG.map((l,i)=>{const st=styleOf(i);return `<label class="chip" style="--sw:${st.color}"><input type="checkbox" data-lg="${esc(l.name)}">${swatch(st.color)}${esc(nm("leagues",l.name))}<small>${l.patch?esc(l.patch):""}</small></label>`}).join("");
+  const unitOpts=`<option value="auto">${uname("exalted")} ${T("(자동)","(Auto)")}</option>`+["exalted","chaos","divine"].map(u=>`<option value="${u}"${u!=="exalted"&&!HAVE[u]?" disabled":""}>${uname(u)}</option>`).join("");
   const cats=[...new Set(CUR.map(c=>c.category))];
   const curOpts=cats.map(cat=>`<optgroup label="${esc(nm("categories",cat))}">${CUR.filter(c=>c.category===cat).map(c=>`<option value="${esc(c.name)}">${esc(nm("items",c.name))}</option>`).join("")}</optgroup>`).join("");
-  const metrics=[["close","종가","Close"],["average","평균","Average"],["open","시가","Open"],["high","고가","High"],["low","저가","Low"]].map(([v,ko,en])=>`<option value="${v}">${T(ko,en)}</option>`).join("");
   const gen=DATA.generated_at?DATA.generated_at.replace("T"," ").slice(0,16)+" UTC":"";
   $("app").innerHTML=head+`
-<section class="panel"><div class="phead"><h2>${T("일별 가격 추이","Daily price trend")}</h2><div class="grp"><label class="lbl" for="unit">${T("표시 단위","Unit")}</label><select id="unit">${unitOpts}</select></div></div>
+<section class="panel"><div class="phead"><h2>${T("일별 가격 추이","Daily price trend")}</h2></div>
  <div class="ctrls">
-  <div class="grp"><label class="lbl" for="cur">${T("커런시","Currency")}</label><select id="cur">${curOpts}</select></div>
-  <div class="grp" role="group" aria-label="${T("리그 선택","Leagues")}">${chips}</div>
-  <div class="grp"><label class="lbl" for="metric">${T("가격 기준","Price")}</label><select id="metric">${metrics}</select></div>
-  <div class="grp"><span class="lbl">${T("가로축","X axis")}</span><div class="seg" role="group"><button type="button" data-x="day">${T("경과일","Day")}</button><button type="button" data-x="date">${T("날짜","Date")}</button></div></div>
-  <div class="grp"><span class="lbl">${T("세로축","Y axis")}</span><div class="seg" role="group"><button type="button" data-sc="lin">${T("선형","Linear")}</button><button type="button" data-sc="log">${T("로그","Log")}</button></div></div>
-  <label class="chk"><input type="checkbox" id="low">${T("거래량 적은 날 제외","Hide low-volume days")}<small>${T("(리그 중앙값의 1% 미만)","(under 1% of league median)")}</small></label>
+  <div class="row"><div class="fld"><span class="lbl">${T("시즌","Seasons")}</span><div class="grp" role="group" aria-label="${T("리그 선택","Leagues")}">${chips}</div></div></div>
+  <div class="row">
+   <div class="fld"><label class="lbl" for="cur">${T("커런시","Currency")}</label><select id="cur">${curOpts}</select></div>
+   <div class="fld"><label class="lbl" for="unit">${T("표시 단위","Unit")}</label><select id="unit">${unitOpts}</select></div>
+  </div>
  </div>
  <div class="chart" id="chart"></div>
  <p class="note" id="pnote"></p>
 </section>
-<p class="note">${T("출처","Source")}: poe2scout${gen?`. ${T("데이터 기준","As of")} ${gen}.`:"."} ${T("시즌 첫날과 마지막 날은 거래가 적어 가격이 튈 수 있습니다.","Prices on a season's first and last days can jump because few trades happen.")}</p>`;
+${gen?`<p class="note">${T("데이터","Data")}: ${gen}</p>`:""}`;
   update();
 }
 
 function update(){
   if(!$("chart"))return;
   document.querySelectorAll("[data-lg]").forEach(i=>i.checked=S.sel.has(i.dataset.lg));
-  document.querySelectorAll("[data-x]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.x===S.x)));
-  document.querySelectorAll("[data-sc]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sc===S.scale)));
-  $("cur").value=S.cur;$("metric").value=S.metric;$("low").checked=S.hideLow;
+  $("cur").value=S.cur;
   SR=getSeries();
-  $("unit").value=S.unit;$("unit").options[0].textContent=T("자동","Auto")+" · "+uname(UEFF);
+  $("unit").value=S.unit;$("unit").options[0].textContent=uname(UEFF)+" "+T("(자동)","(Auto)");
   $("pnote").innerHTML=noteText();
   drawChart();
 }
 
 function niceStep(range,n){const raw=range/n,p=10**Math.floor(Math.log10(raw)),f=raw/p;return(f<1.5?1:f<3?2:f<7?5:10)*p}
 
+/* ---------- 차트 ---------- */
+/* LAY: 현재 차트의 크기와 전체 x 범위. 본 차트(#plot)와 하단 범위 바(#nav)는 따로 그립니다.
+   바를 끄는 동안 바 요소가 교체되면 드래그가 끊기므로, 드래그 중에는 본 차트만 다시 그립니다. */
+let LAY=null;
+const curView=()=>S.view?[S.view.a,S.view.b]:[LAY.X0,LAY.X1];
+function setView(a,b){
+  const {X0,X1}=LAY;
+  a=Math.max(X0,a);b=Math.min(X1,b);
+  S.view=(a<=X0&&b>=X1)?null:{a,b};
+  drawPlot();syncNav();
+}
+function syncNav(){
+  const w=$("nwin");if(!w||!LAY)return;
+  const [a,b]=curView(),{X0,X1}=LAY,span=X1-X0;
+  w.style.left=((a-X0)/span*100)+"%";w.style.width=((b-a)/span*100)+"%";
+}
+/* 구간 [a,b] 안의 점 + 양옆으로 한 점씩(구간 경계를 가로지르는 선분을 그리기 위해) */
+const around=(pts,a,b)=>{let i=0,j=pts.length-1;while(i<pts.length&&pts[i].x<a)i++;while(j>=0&&pts[j].x>b)j--;return pts.slice(Math.max(0,i-1),Math.min(pts.length,j+2))};
+
 function drawChart(){
   const box=$("chart");if(!box)return;
-  if(!SR.length){box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
+  if(!SR.length){LAY=null;box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
   drawnW=box.clientWidth;
-  const W=Math.max(320,drawnW),H=Math.round(Math.min(460,Math.max(300,W*.46)));
-  const M={l:60,r:16,t:14,b:36},iw=W-M.l-M.r,ih=H-M.t-M.b,log=S.scale==="log",unit=S.x==="day"?1:DAY;
-  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
-  for(const s of SR)for(const p of s.pts){x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
-  if(x0===x1){x0-=unit;x1+=unit}
+  const W=Math.max(320,drawnW),H=Math.round(Math.min(600,Math.max(300,W*.4)));
+  const M={l:60,r:48,t:28,b:36},unit=S.x==="day"?1:DAY;
+  let X0=Infinity,X1=-Infinity;
+  for(const s of SR)for(const p of s.pts){X0=Math.min(X0,p.x);X1=Math.max(X1,p.x)}
+  if(X0===X1){X0-=unit;X1+=unit}
+  const minW=Math.min(2*unit,X1-X0); /* 최소 3일 */
+  LAY={W,H,M,iw:W-M.l-M.r,ih:H-M.t-M.b,X0,X1,unit,minW};
+  if(S.view){ /* 리그·단위가 바뀌어 전체 범위가 달라졌으면 보이는 구간을 새 범위 안으로 맞춤 */
+    const a=Math.max(S.view.a,X0),b=Math.min(S.view.b,X1);
+    S.view=(b-a<minW-1e-9||(a<=X0&&b>=X1))?null:{a,b};
+  }
+  const k=drawnW?drawnW/W:1; /* 바를 본 차트의 x축 영역과 맞추기 위한 여백 */
+  box.innerHTML=`<div id="plot"></div><div class="nav" id="nav" style="margin-left:${(M.l*k).toFixed(1)}px;margin-right:${(M.r*k).toFixed(1)}px"><div class="nav-track" id="ntrack"><div class="nav-win" id="nwin"><span class="nav-h" data-h="l"></span><span class="nav-h" data-h="r"></span></div></div><div class="tip" id="ntip"></div></div>`;
+  const pn=$("pnote");if(pn){pn.style.marginLeft=(M.l*k).toFixed(1)+"px";pn.style.marginRight=(M.r*k).toFixed(1)+"px"} /* 안내 문구 시작 위치를 하단 바와 맞춤 */
+  drawPlot();syncNav();bindNav();
+}
+
+function drawPlot(){
+  const host=$("plot");if(!host||!LAY)return;
+  const {W,H,M,iw,ih}=LAY,log=S.scale==="log",[x0,x1]=curView();
+  let y0=Infinity,y1=-Infinity; /* 세로축은 보이는 구간의 값에 맞춤 */
+  for(const s of SR)for(const p of s.pts)if(p.x>=x0&&p.x<=x1){y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
+  if(y0===Infinity)for(const s of SR)for(const p of around(s.pts,x0,x1)){y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
   let Y0,Y1;const yt=[];
   if(log){
     Y0=y0/1.15;Y1=y1*1.15;
@@ -278,42 +336,112 @@ function drawChart(){
   const px=x=>M.l+(x-x0)/(x1-x0)*iw;
   const py=log?y=>M.t+(1-(Math.log(y)-Math.log(Y0))/(Math.log(Y1)-Math.log(Y0)))*ih:y=>M.t+(1-(y-Y0)/(Y1-Y0))*ih;
   const xt=[];
-  if(S.x==="day"){const st=niceStep(x1-x0,Math.max(3,Math.floor(iw/80)));for(let v=Math.ceil(x0/st)*st;v<=x1;v+=st)xt.push(v)}
+  if(S.x==="day"){const st=Math.max(1,niceStep(x1-x0,Math.max(3,Math.floor(iw/80))));for(let v=Math.ceil(x0/st)*st;v<=x1;v+=st)xt.push(v)}
+  else if(S.view){const st=Math.max(1,Math.round(niceStep((x1-x0)/DAY,Math.max(2,Math.floor(iw/120)))))*DAY;for(let v=Math.ceil(x0/st)*st;v<=x1;v+=st)xt.push(v)}
   else{const n=Math.max(2,Math.floor(iw/120));for(let k=0;k<=n;k++)xt.push(Math.round((x0+(x1-x0)*k/n)/DAY)*DAY)}
-  let g=`<svg id="svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T("시즌별 커런시 가격 추이 차트","Chart of currency price by season"))}"><g class="grid">`;
+  let g=`<svg id="svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T("시즌별 커런시 가격 추이 차트","Chart of currency price by season"))}"><defs><clipPath id="clipP"><rect x="${M.l}" y="${M.t}" width="${iw}" height="${ih}"/></clipPath></defs><g class="grid">`;
   for(const v of yt)g+=`<line x1="${M.l}" x2="${W-M.r}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}"/>`;
   g+=`</g><g class="ax">`;
   for(const v of yt)g+=`<text class="yl" x="${M.l-8}" y="${(py(v)+4).toFixed(1)}">${axf(v)}</text>`;
+  g+=`<text class="yu" x="4" y="${M.t-12}">(${UNITS[UEFF].n})</text>`; /* 세로축 끝: 가격 단위 */
+  if(S.x==="day")g+=`<text class="xu" x="${W-M.r+14}" y="${H-M.b+20}">(${T("일","Day")})</text>`; /* 가로축 끝: 경과일 단위 */
   for(const v of xt)g+=`<text class="xl" x="${px(v).toFixed(1)}" y="${H-M.b+20}">${S.x==="day"?v:fmtDate(v)}</text>`;
-  g+=`</g>`;
+  g+=`</g><g${S.view?' clip-path="url(#clipP)"':""}>`; /* 확대했을 때만 영역 밖을 잘라냄 */
   for(const s of SR){
-    g+=`<path d="${s.pts.map((p,k)=>(k?"L":"M")+px(p.x).toFixed(1)+","+py(p.y).toFixed(1)).join("")}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
-    for(const p of s.pts)if(p.d.partial)g+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="var(--sf)" stroke="${s.color}" stroke-width="2"/>`;
+    const pts=around(s.pts,x0,x1);
+    g+=`<path d="${pts.map((p,k)=>(k?"L":"M")+px(p.x).toFixed(1)+","+py(p.y).toFixed(1)).join("")}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
+    for(const p of pts)if(p.d.partial)g+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="var(--sf)" stroke="${s.color}" stroke-width="2"/>`;
   }
-  g+=`<line id="hl" x1="0" x2="0" y1="${M.t}" y2="${H-M.b}" visibility="hidden"/><g id="hd"></g><rect id="cap" x="${M.l}" y="${M.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="tip"></div>`;
-  box.innerHTML=g;
+  g+=`</g><line id="hl" x1="0" x2="0" y1="${M.t}" y2="${H-M.b}" visibility="hidden"/><g id="hd"></g><rect id="cap" x="${M.l}" y="${M.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="tip"></div><div class="tip htip" id="htip"></div>`;
+  host.innerHTML=g;
 
-  const svg=$("svg"),tip=$("tip"),hl=$("hl"),hd=$("hd");
-  const XS=[...new Set(SR.flatMap(s=>s.pts.map(p=>p.x)))].sort((a,b)=>a-b);
+  const svg=$("svg"),tip=$("tip"),htip=$("htip"),hl=$("hl"),hd=$("hd");
+  const XS=[...new Set(SR.flatMap(s=>s.pts.map(p=>p.x)))].filter(v=>v>=x0&&v<=x1).sort((a,b)=>a-b);
   const nearest=v=>{let lo=0,hi=XS.length-1;while(hi-lo>1){const m=(lo+hi)>>1;XS[m]<v?lo=m:hi=m}return Math.abs(XS[lo]-v)<=Math.abs(XS[hi]-v)?XS[lo]:XS[hi]};
-  const hide=()=>{hl.setAttribute("visibility","hidden");hd.innerHTML="";tip.style.display="none"};
+  /* 좌측 상단 범례: 항상 표시. 마우스를 올리면 그 날 값, 아니면 보이는 구간의 마지막 값 */
+  const showLegend=xv=>{
+    const r=svg.getBoundingClientRect();
+    tip.innerHTML=`<div class="tg">`+SR.map(s=>{
+      const p=xv==null?[...s.pts].reverse().find(q=>q.x>=x0&&q.x<=x1):s.map.get(xv);
+      return `<div class="tr">${swatch(s.color,18)}<span class="tn">${esc(nm("leagues",s.lg.name))}</span><b class="tv">${p?fmt(p.y):"–"}</b><span class="u">${p?UNITS[UEFF].n:""}</span></div>`}).join("")+`</div>`;
+    tip.style.display=SR.length?"block":"none";
+    tip.style.left=(M.l*(r.width/W)+8).toFixed(0)+"px";tip.style.top=(M.t*(r.height/H)+6).toFixed(0)+"px";
+  };
+  /* 마우스 오버 툴팁: 강조선 옆(커서 높이)에 날짜/경과일과 시즌별 값을 표시 */
+  const showHover=(xv,rows,X,ey)=>{
+    const day=S.x==="day";
+    htip.innerHTML=`<div class="th">${day?T(`${xv}일차`,`Day ${xv}`):fmtDate(xv)}</div><div class="tg">`+rows.map(({s,p})=>{
+      const meta=[];
+      if(day)meta.push(p.d.date);
+      if(p.d.volume!=null)meta.push(T("거래량","Vol")+" "+cmp(p.d.volume));
+      return `<div class="tr">${swatch(s.color,18)}<span class="tn">${esc(nm("leagues",s.lg.name))}</span><b class="tv">${fmt(p.y)}</b><span class="u">${UNITS[UEFF].n}</span><span class="m">${meta.join(" · ")}</span></div>`}).join("")+`</div>`;
+    htip.style.display="block";
+    const r=svg.getBoundingClientRect(),cb=$("chart").getBoundingClientRect();
+    const tw=htip.offsetWidth,th=htip.offsetHeight,ox=r.left-cb.left,oy=r.top-cb.top;
+    const lx=ox+X*(r.width/W);
+    let left=lx+14;if(left+tw>cb.width)left=lx-14-tw; /* 오른쪽이 모자라면 왼쪽에 표시 */
+    let top=ey-cb.top+14;if(top+th>oy+r.height)top=ey-cb.top-14-th;
+    htip.style.left=Math.max(0,left).toFixed(0)+"px";htip.style.top=Math.max(0,top).toFixed(0)+"px";
+  };
+  const hide=()=>{hl.setAttribute("visibility","hidden");hd.innerHTML="";htip.style.display="none";showLegend(null)};
   svg.addEventListener("pointerleave",hide);
   svg.addEventListener("pointermove",e=>{
     const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width);
-    if(sx<M.l-4||sx>W-M.r+4){hide();return}
+    if(!XS.length||sx<M.l-4||sx>W-M.r+4){hide();return}
     const xv=nearest(x0+(sx-M.l)/iw*(x1-x0));
     const rows=SR.map(s=>({s,p:s.map.get(xv)})).filter(o=>o.p);
     if(!rows.length){hide();return}
     const X=px(xv);
     hl.setAttribute("x1",X);hl.setAttribute("x2",X);hl.setAttribute("visibility","visible");
     hd.innerHTML=rows.map(({s,p})=>`<circle cx="${X}" cy="${py(p.y)}" r="4.5" fill="${s.color}"/>`).join("");
-    tip.innerHTML=`<div class="th">${S.x==="day"?T(`${xv}일차`,`Day ${xv}`):fmtDate(xv)}</div>`+rows.map(({s,p})=>`<div class="tr">${swatch(s.color,18)}<span>${esc(nm("leagues",s.lg.name))}</span><b>${fmt(p.y)}</b><span class="m">${S.x==="day"?p.d.date:T(`${p.d.n}일차`,`Day ${p.d.n}`)}, ${T("거래량","vol")} ${cmp(p.d.volume)}${p.d.partial?`, ${T("진행 중","in progress")}`:""}</span></div>`).join("");
-    tip.style.display="block";
-    const tw=tip.offsetWidth,th=tip.offsetHeight,xp=X*(r.width/W);
-    let left=xp+14;if(left+tw>r.width)left=xp-tw-14;
-    tip.style.left=Math.max(0,left)+"px";
-    tip.style.top=Math.max(0,Math.min(e.clientY-r.top-th/2,r.height-th))+"px";
+    showLegend(xv);
+    showHover(xv,rows,X,e.clientY);
   });
+  showLegend(null);
+}
+
+/* ---------- 하단 범위 바 ---------- */
+/* 양 끝(핸들)을 끌면 표시할 날짜 폭 조절, 바 자체를 끌면 전체 범위 안에서 구간 이동,
+   바 밖의 트랙을 누르면 그 위치로 구간을 옮긴 뒤 계속 끌 수 있습니다. 누르고 있는 동안 일수를 툴팁으로 보여줍니다. */
+function bindNav(){
+  const tr=$("ntrack"),win=$("nwin"),nav=$("nav"),ntip=$("ntip");
+  if(!tr||!LAY)return;
+  let drag=null;
+  const showTip=cx=>{
+    const [a,b]=curView(),n=Math.round((b-a)/LAY.unit)+1;
+    ntip.innerHTML=`<div class="th">${T(`${n}일`,`${n} ${n===1?"day":"days"}`)}</div>`;
+    ntip.style.display="block";
+    const r=nav.getBoundingClientRect(),tw=ntip.offsetWidth;
+    ntip.style.left=Math.max(tw/2,Math.min(r.width-tw/2,cx-r.left))+"px";
+    ntip.style.transform="translateX(-50%)";ntip.style.top="auto";ntip.style.bottom="calc(100% + 6px)";
+  };
+  const end=()=>{if(!drag)return;drag=null;win.classList.remove("drag");ntip.style.display="none"};
+  tr.addEventListener("pointerdown",e=>{
+    if(e.button!==0)return;
+    const {X0,X1,unit}=LAY,r=tr.getBoundingClientRect(),hd=e.target.closest(".nav-h");
+    let [a,b]=curView(),mode=hd?hd.dataset.h:"m";
+    if(!hd&&!e.target.closest("#nwin")){ /* 트랙 클릭: 클릭한 위치가 구간의 중앙이 되도록 이동 */
+      const w=b-a,c=X0+(e.clientX-r.left)/r.width*(X1-X0);
+      a=Math.min(Math.max(X0+Math.round((c-w/2-X0)/unit)*unit,X0),X1-w);b=a+w;
+      setView(a,b);
+    }
+    drag={mode,sx:e.clientX,a,b,r};
+    tr.setPointerCapture(e.pointerId);
+    win.classList.add("drag");e.preventDefault();showTip(e.clientX);
+  });
+  tr.addEventListener("pointermove",e=>{
+    if(!drag)return;
+    const {X0,X1,unit,minW}=LAY,snap=v=>X0+Math.round((v-X0)/unit)*unit;
+    const dx=(e.clientX-drag.sx)/drag.r.width*(X1-X0);
+    let a=drag.a,b=drag.b;
+    if(drag.mode==="l")a=Math.min(Math.max(snap(drag.a+dx),X0),b-minW);
+    else if(drag.mode==="r")b=Math.max(Math.min(snap(drag.b+dx),X1),a+minW);
+    else{const w=drag.b-drag.a;a=Math.min(Math.max(snap(drag.a+dx),X0),X1-w);b=a+w}
+    setView(a,b);showTip(e.clientX);
+  });
+  tr.addEventListener("pointerup",end);
+  tr.addEventListener("pointercancel",end);
+  tr.addEventListener("lostpointercapture",end);
 }
 
 /* ---------- 이벤트 ---------- */
@@ -322,14 +450,19 @@ $("app").addEventListener("change",e=>{
   if(t.dataset.lg!==undefined){t.checked?S.sel.add(t.dataset.lg):S.sel.delete(t.dataset.lg);update()}
   else if(t.id==="cur"){S.cur=t.value;prepLeagues();build();const c=$("cur");if(c)c.focus()}
   else if(t.id==="unit"){S.unit=t.value;update()}
-  else if(t.id==="metric"){S.metric=t.value;update()}
-  else if(t.id==="low"){S.hideLow=t.checked;update()}
 });
-$("app").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-x],button[data-sc]");if(!b)return;
-  if(b.dataset.x)S.x=b.dataset.x;else S.scale=b.dataset.sc;
-  update();
-});
+/* 휠: 커서 위치를 기준으로 확대/축소. 이미 전체 범위에서 축소하려는 휠은 페이지 스크롤에 양보합니다. */
+$("app").addEventListener("wheel",e=>{
+  if(!LAY||!e.target.closest||!e.target.closest("#svg"))return;
+  const dy=e.deltaY*(e.deltaMode===1?33:e.deltaMode===2?400:1);
+  if(!dy||(!S.view&&dy>0))return;
+  e.preventDefault();
+  const {X0,X1,W,M,iw,minW}=LAY,[a,b]=curView(),r=$("svg").getBoundingClientRect();
+  const f=Math.min(1,Math.max(0,((e.clientX-r.left)*(W/r.width)-M.l)/iw)); /* 커서가 플롯 안에서 차지하는 비율 */
+  const nw=Math.min(X1-X0,Math.max(minW,(b-a)*Math.exp(Math.max(-300,Math.min(300,dy))*0.0015)));
+  const na=Math.min(Math.max(a+(b-a)*f-nw*f,X0),X1-nw);
+  setView(na,na+nw);
+},{passive:false});
 $("skip").addEventListener("click",()=>$("app").focus());
 new ResizeObserver(()=>{const b=$("chart");if(b&&SR.length&&b.clientWidth!==drawnW)drawChart()}).observe(document.body);
 /* 언어가 바뀌면 site-bar.js 가 이 이벤트를 보냅니다 (상단 바 버튼, 다른 탭, 뒤로가기 모두) */
