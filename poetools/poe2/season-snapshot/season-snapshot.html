@@ -85,6 +85,8 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .rec td.rx{width:1%;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:0;padding-right:4px}
 .rec td.rx.up{color:var(--pos)}.rec td.rx.dn{color:var(--bad)} /* 배율: 디바인·카오스보다 높으면 녹색, 낮으면 적색, 사이는 기본색 */
 .rec td.mn{padding-right:3px;font-size:calc(var(--fs) - 3px);color:color-mix(in oklab,var(--mute) 60%,var(--sf2))} /* 괄호 값은 더 흐리게 */
+.rec th small.sub{display:block;margin-top:1px;white-space:normal} /* 투자 기간 표 머리글: 둘째 줄에 진입→종료 일차 */
+.rec td.na{color:var(--mute);text-align:center}
 </style>
 </head>
 <body>
@@ -112,6 +114,8 @@ const CFG={
   iconExt:".webp",         /* 아이콘 확장자 */
   iconSize:28,             /* 추천 표의 아이콘 크기(px) */
   lowVolRatio:0.01,        /* 거래량이 중앙값의 이 비율 미만인 날은 "거래 거의 없음"으로 보고 제외 (0.01 = 1%) */
+  invPeriods:[7,14,30,60,Infinity], /* 투자 기간(일) 목록. 숫자 하나가 표 하나. Infinity = 시즌 종료(마지막 데이터 일차)까지 */
+  invWindow:2,             /* 진입일(바 시작 일차) 앞뒤 며칠을 함께 볼지. 2 = ±2일(5일)의 중앙값을 써서 하루치 가격 흔들림을 줄임 */
 };
 const $=id=>document.getElementById(id);
 const T=(ko,en)=>LANG==="en"?en:ko;
@@ -131,7 +135,8 @@ const NAME_KO={
   },
   /* 아이템(화폐) */
   items:{
-    /* 기본 */
+  
+    /* General */
     "Mirror of Kalandra":          "칼란드라의 거울",
     "Hinekora's Lock":             "히네코라의 머리카락",
     "Divine Orb":                  "디바인 오브",
@@ -140,7 +145,8 @@ const NAME_KO={
     "Chaos Orb":                   "카오스 오브",
 	"Fracturing Orb":              "분열의 오브",
     "Orb of Annulment":            "소멸의 오브",
-
+	"Perfect Jewellers Orb"        "완벽한 주얼러의 오브",
+	
     /* Abyss */
     "Preserved Collarbone":        "보존된 빗장뼈",
     "Preserved Cranium":           "보존된 두개골",
@@ -148,28 +154,40 @@ const NAME_KO={
     "Ancient Rib":                 "고대 갈비뼈",
     "Ancient Collarbone":          "고대 빗장뼈",
     "Altered Collarbone":          "뒤바뀐 빗장뼈",
-
-    /* Omen */
-    "Omen of Light":               "빛의 징조",
+	"Omen of Light":               "빛의 징조",
+	
+    /* Ritual */
     "Omen of Whittling":           "절사의 징조",
     "Omen of Sinistral Annulment": "좌측 소멸의 징조",
     "Omen of Sinistral Erasure":   "좌측 말소의 징조",
     "Omen of Dextral Annulment":   "우측 소멸의 징조",
     "Omen of Dextral Erasure":     "우측 말소의 징조",
 
-    /* Essences */
+    /* Essence */
     "Essence of the Breach":       "균열 에센스",
 
     /* Lineage Gem */
     "Uul-Netol's Embrace":         "울네톨의 포옹",
     "Uhtred's Exodus":             "우트레드의 탈출",
     "Uhtred's Augury":             "우트레드의 징조",
+	"Garukhan's Resolve":          "가루칸의 투지",
+	"Dialla's Desire":             "디알라의 갈망",
+	"Rakiata's Flow":              "라키아타의 흐름",
+	"Rigwald's Ferocity":          "리그왈드의 흉포함",
 
     /* Temple */
     "Architect's Orb":             "건축가의 오브",
     "Vaal Cultivation Orb":        "바알 함양 오브",
     "Crystallised Corruption":     "결정화된 타락",
 	"Vaal Catalysing Infuser":     "바알 촉진시키는 주입기",
+	
+	/* Key */
+	"Ancient Crisis Fragment":     "고대 위기 조각",
+	"Weathered Crisis Fragment":   "풍화된 위기 조각",
+	"Faded Crisis Fragment":       "빛바랜 위기 조각",
+	"Origin Cradle":               "",
+	"Origin Spark":                "",
+
   },
   /* 카테고리(드롭다운 그룹 제목): API가 주는 id가 영어 소문자로 보입니다. 필요하면 아래에 "id":"한글" 형태로 추가하세요. */
   categories:{
@@ -309,7 +327,8 @@ function build(){
  <p class="note" id="pnote"></p>
 </section>
 <section class="panel fold" data-fold="inv"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("투자 기간에 따른 보유 화폐 추천 (현재 시점 기준)","Currency to hold by investment period (from now)")}</h2>
- <div id="inv"></div>
+ <p class="note" id="invnote"></p>
+ <div class="rec" id="inv"></div>
 </section>
 <section class="panel fold" data-fold="rec"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("진입 시점에 따른 보유 화폐 추천 (리그 시점 기준)","Currency to hold by entry timing (by league day)")}</h2>
  <p class="note" id="recnote"></p>
@@ -329,6 +348,7 @@ function update(){
   $("pnote").innerHTML=noteText();
   drawChart();
   renderRec();
+  renderInv();
 }
 
 function niceStep(range,n){const raw=range/n,p=10**Math.floor(Math.log10(raw)),f=raw/p;return(f<1.5?1:f<3?2:f<7?5:10)*p}
@@ -590,8 +610,79 @@ function renderRec(){
     host.innerHTML=`<div class="recg">${R.bands.map(bd=>`<table><thead><tr><th colspan="3">${lab(bd)}${bd.nl&&bd.nl<R.names.length?` <small>${T(`(${bd.nl}/${R.names.length}개 리그)`,`(${bd.nl}/${R.names.length} leagues)`)}</small>`:""}</th></tr></thead><tbody>${[...bd.pin.map((o,i)=>[o,bd.top.length&&i===bd.pin.length-1]),...bd.top.map(o=>[o,false])].map(([o,sep])=>`<tr${sep?' class="sep"':""}><td>${icon(o.name)}${esc(nm("items",o.name))}</td><td class="rx${rc(bd,o)}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td></tr>`).join("")}</tbody></table>`).join("")}</div>`;
 }
 let recRaf=0;
-function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;renderRec()})}
+function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;renderRec();renderInv()})}
 /* REC-END */
+
+/* ---------- 투자 기간에 따른 보유 화폐 ---------- */
+/* INV-START */
+/* 그래프 아래 범위 바의 시작 일차(a)를 진입일로 보고, 선택한 리그들에서 "a일차에 사서 N일 뒤(또는 시즌 끝)에 팔았을 때"의
+   가격 배수를 계산합니다. N일은 그래프의 일차 기준입니다. 리그별 중앙값 → 리그 간 기하평균으로 순위를 매기는 방식은 진입 시점별 추천과 같습니다. */
+function invCalc(){
+  if(!LAY||!DATA||S.x!=="day")return null;
+  const names=[...S.sel].filter(n=>DATA.leagues[n]);
+  if(!names.length)return null;
+  const [va]=curView(),a=Math.max(CFG.firstDay,Math.ceil(va-1e-9));
+  const R={names,a,items:0,cols:[]};
+  let items=null;
+  for(const n of names){const ks=Object.keys(DATA.leagues[n].currencies||{});items=items?items.filter(k=>ks.includes(k)):ks}
+  R.items=items.length;
+  if(!items.length)return R;
+  const t0=Math.max(CFG.firstDay,a-CFG.invWindow),t1=a+CFG.invWindow;
+  for(const N of CFG.invPeriods){
+    const rows=[];
+    for(const it of items){
+      const lgv=[];
+      for(const ln of names){
+        const r=pxOf(ln,it);if(!r)continue;
+        const rt=[];
+        for(let t=t0;t<=t1;t++){
+          const e=N===Infinity?r.last:t+N; /* 팔 날: 투자 기간 뒤, 또는 그 시즌의 마지막 데이터 일차 */
+          if(e<=t||e>r.last)continue;      /* 그 시즌이 그만큼 길지 않으면 이 진입일은 건너뜀 */
+          const p0=priceAt(r,t),p1=priceAt(r,e);
+          if(p0&&p1)rt.push(p1/p0);
+        }
+        if(rt.length)lgv.push(median(rt)); /* 이 기간을 계산할 데이터가 없는 리그는 건너뜀 */
+      }
+      if(!lgv.length)continue;
+      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv)});
+    }
+    const rest=rows.filter(o=>!PIN.includes(o.name));
+    const col={N,nl:rest.length?Math.max(...rest.map(o=>o.nl)):0};
+    col.top=rest.filter(o=>o.nl===col.nl).sort((x,y)=>y.gm-x.gm).slice(0,CFG.listSize); /* 같은 리그 수로 비교되는 품목만 */
+    col.pin=PIN.map(n=>rows.find(o=>o.name===n)).filter(Boolean);
+    R.cols.push(col);
+  }
+  return R;
+}
+function renderInv(){
+  const host=$("inv"),note=$("invnote");if(!host||!note)return;
+  const R=invCalc(),msg=(ko,en)=>{note.textContent="";host.innerHTML=`<p class="emptyc">${T(ko,en)}</p>`};
+  if(!R)return msg("표시할 데이터가 없습니다. 리그를 선택하세요.","Nothing to show. Select a league above.");
+  if(!R.items)return msg("선택한 리그들에 공통 화폐가 없습니다.","The selected leagues share no currencies.");
+  const m=R.names.length,a=R.a,lo=Math.max(CFG.firstDay,a-CFG.invWindow),hi=a+CFG.invWindow;
+  note.innerHTML=T(`아래 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균. 선택한 리그 ${V(m)}개 · 공통 화폐 ${V(R.items)}종 기준. 괄호 안은 최저 리그 값.`,
+    `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the bar below, ${V("day "+a)} (${V("day "+lo+"–"+hi)}). Based on ${V(m)} selected league(s), ${V(R.items)} shared currencies. Parentheses: lowest league value.`);
+  const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v>=1?v.toFixed(1):v.toFixed(2));
+  const rc=(col,o)=>{ /* 디바인·카오스 오브 배율과 비교: 둘 다보다 높으면 up, 둘 다보다 낮으면 dn */
+    if(PIN.includes(o.name)||!col.pin.length)return "";
+    const h=Math.max(...col.pin.map(q=>q.gm)),l=Math.min(...col.pin.map(q=>q.gm));
+    return o.gm>h?" up":o.gm<l?" dn":"";
+  };
+  const head=col=>{
+    const lab=col.N===Infinity?T("시즌 끝까지","Until season end"):T(`${col.N}일`,`${col.N} days`);
+    let sub=col.N===Infinity?T(`${a}일차 → 종료`,`Day ${a} → end`):T(`${a}→${a+col.N}일차`,`Day ${a}→${a+col.N}`);
+    if(col.nl&&col.nl<m)sub+=T(` (${col.nl}/${m}개 리그)`,` (${col.nl}/${m} leagues)`);
+    return `<th colspan="3">${lab}<small class="sub">${sub}</small></th>`;
+  };
+  host.innerHTML=`<div class="recg">${R.cols.map(col=>{
+    const list=[...col.pin.map((o,i)=>[o,col.top.length&&i===col.pin.length-1]),...col.top.map(o=>[o,false])];
+    const body=list.length
+      ?list.map(([o,sep])=>`<tr${sep?' class="sep"':""}><td>${icon(o.name)}${esc(nm("items",o.name))}</td><td class="rx${rc(col,o)}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td></tr>`).join("")
+      :`<tr><td class="na" colspan="3">${T("데이터 없음 (시즌이 이 기간보다 짧음)","No data (leagues are shorter than this period)")}</td></tr>`;
+    return `<table><thead><tr>${head(col)}</tr></thead><tbody>${body}</tbody></table>`;
+  }).join("")}</div>`;
+}
+/* INV-END */
 
 /* ---------- 이벤트 ---------- */
 $("app").addEventListener("change",e=>{

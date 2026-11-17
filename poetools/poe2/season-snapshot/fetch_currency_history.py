@@ -76,11 +76,12 @@ CURRENCIES_INCLUDE = """
 Mirror of Kalandra
 Hinekora's Lock
 Divine Orb
-Fracturing Orb
-Orb of Annulment
 Perfect Chaos Orb
 Greater Chaos Orb
 Chaos Orb
+Fracturing Orb
+Orb of Annulment
+Perfect Jewellers Orb
 
 [Abyss]
 Preserved Collarbone
@@ -89,9 +90,9 @@ Ancient Jawbone
 Ancient Rib
 Ancient Collarbone
 Altered Collarbone
+Omen of Light
 
 [Omen]
-Omen of Light
 Omen of Whittling
 Omen of Sinistral Annulment
 Omen of Sinistral Erasure
@@ -99,18 +100,29 @@ Omen of Dextral Annulment
 Omen of Dextral Erasure
 
 [Essences]
-Essence of the Breach
+#Essence of the Breach
 
 [Lineage Gem]
 Uul-Netol's Embrace
 Uhtred's Exodus
 Uhtred's Augury
+Garukhan's Resolve
+Dialla's Desire
+Rakiata's Flow
+#Rigwald's Ferocity
 
 [Temple]
 Architect's Orb
 Vaal Cultivation Orb
 Crystallised Corruption
 Vaal Catalysing Infuser
+
+[Key]
+Ancient Crisis Fragment
+Weathered Crisis Fragment
+Faded Crisis Fragment
+Origin Cradle
+Origin Spark
 
 """
 
