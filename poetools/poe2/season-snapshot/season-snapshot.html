@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko" data-game="poe2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Season Snapshot | PoE Tools</title>
+<meta name="description" content="PoE 2 시즌별 커런시 일별 가격 비교">
+<!-- 위치: poetools/poe2/season-snapshot/season-snapshot.html
+     상단 바·푸터·배경·언어/테마는 site-bar.js가 처리합니다 (경로는 poetools/style/ 기준). -->
+<link rel="stylesheet" href="../../style/theme.css">
+<script src="../../style/site-bar.js"></script>
+<style>
+/* 폰트·색·패널·표·버튼 등 공통 모양은 style/theme.css. 여기에는 이 서비스 전용 스타일만 둡니다. */
+.ctrls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-bottom:16px}
+.grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lbl{color:var(--mute);font-size:13px}
+.grp>label.lbl{margin:0}
+.chip{position:relative;display:inline-flex;justify-content:flex-start;gap:8px;margin:0;padding:5px 12px;border:1px solid var(--ln2);border-radius:999px;cursor:pointer;user-select:none;font-size:13.5px}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip:has(input:checked){border-color:var(--sw);background:color-mix(in oklab,var(--sw) 12%,transparent)}
+.chip:focus-within{outline:2px solid var(--g);outline-offset:2px}
+.chip small{color:var(--mute);font-size:12px}
+.chk{display:inline-flex;justify-content:flex-start;gap:8px;margin:0}
+.chk small{color:var(--mute)}
+.chart{position:relative}
+.chart svg#svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.grid line{stroke:var(--ln)}
+.ax text{fill:var(--mute);font-size:11.5px}
+.ax .yl{text-anchor:end}.ax .xl{text-anchor:middle}
+#hl{stroke:var(--ln2);stroke-dasharray:3 3}
+.tip{position:absolute;display:none;pointer-events:none;z-index:2;background:var(--sf);border:1px solid var(--ln2);border-radius:var(--r);padding:8px 11px;font-size:13px;line-height:1.5;white-space:nowrap}
+.tip .th{font-weight:600;margin-bottom:4px}
+.tip .tr{display:flex;gap:8px;align-items:center;margin-top:2px}
+.tip .tr b{font-variant-numeric:tabular-nums}
+.tip .m{color:var(--mute);font-size:12px}
+.emptyc{margin:30px 0;text-align:center;color:var(--mute)}
+.sw-i{display:inline-block;vertical-align:middle;margin-right:8px}
+.phead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.phead h2{margin:0}
+.pick input{position:absolute;opacity:0;width:1px;height:1px}
+.pick:focus-within{outline:2px solid var(--g);outline-offset:2px}
+</style>
+</head>
+<body>
+<button class="skip" id="skip" type="button"></button>
+<main class="wrap" id="app" tabindex="-1"></main>
+<!-- 데이터: fetch_currency_history.py --out poetools/poe2/season-snapshot/data 로 생성 (currency_exalted.js / .json) -->
+<script src="data/currency_exalted.js"></script>
+<script>
+/* 언어·테마는 site-bar.js 가 관리합니다. 현재 언어는 PoEPrefs.lang, 바뀌면 "sitebar:lang" 이벤트가 옵니다. */
+let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||document.documentElement.lang||"ko";
+if(LANG!=="en")LANG="ko";
+const $=id=>document.getElementById(id);
+const T=(ko,en)=>LANG==="en"?en:ko;
+
+/* ========== 한글 이름표 (표시용) ==========
+   키는 데이터(json)의 영어 이름과 정확히 같아야 합니다. 새 리그·아이템이 생기면 한 줄 추가하세요. */
+const NAME_KO={
+  /* 리그: 따옴표 안에 한글 이름을 적으세요. 비워 두면("") 영어 그대로 표시됩니다. 왼쪽 영어 이름은 수정하지 마세요. */
+  leagues:{
+    "Conquerors of Wraeclast":     "",   /* 1.0.0, 2026-12-11 */
+    "Forbidden Rites":             "",   /* 0.5.5, 2026-09-04 */
+    "Runes of Aldur":              "",   /* 0.5.0, 2026-05-29 */
+    "Fate of the Vaal":            "",   /* 0.4.0, 2025-12-12 */
+    "Rise of the Abyssal":         "",   /* 0.3.0, 2025-08-29 */
+    "Dawn of the Hunt":            "",   /* 0.2.0, 2025-04-04 */
+    "Early Access":                "",   /* 0.1.0, 2024-12-06 */
+  },
+  /* 아이템(커런시) */
+  items:{
+    /* 기본 */
+    "Mirror of Kalandra":          "칼란드라의 거울",
+    "Hinekora's Lock":             "히네코라의 머리카락",
+    "Divine Orb":                  "디바인 오브",
+    "Perfect Chaos Orb":           "완벽한 카오스 오브",
+    "Greater Chaos Orb":           "상위 카오스 오브",
+    "Chaos Orb":                   "카오스 오브",
+	"Fracturing Orb":              "분열의 오브",
+    "Orb of Annulment":            "소멸의 오브",
+
+    /* Abyss */
+    "Preserved Collarbone":        "보존된 빗장뼈",
+    "Preserved Cranium":           "보존된 두개골",
+    "Ancient Jawbone":             "고대 턱뼈",
+    "Ancient Rib":                 "고대 갈비뼈",
+    "Ancient Collarbone":          "고대 빗장뼈",
+    "Altered Collarbone":          "뒤바뀐 빗장뼈",
+
+    /* Omen */
+    "Omen of Light":               "빛의 징조",
+    "Omen of Whittling":           "절사의 징조",
+    "Omen of Sinistral Annulment": "좌측 소멸의 징조",
+    "Omen of Sinistral Erasure":   "좌측 말소의 징조",
+    "Omen of Dextral Annulment":   "우측 소멸의 징조",
+    "Omen of Dextral Erasure":     "우측 말소의 징조",
+
+    /* Essences */
+    "Essence of the Breach":       "균열 에센스",
+
+    /* Lineage Gem */
+    "Uul-Netol's Embrace":         "울네톨의 포옹",
+    "Uhtred's Exodus":             "우트레드의 탈출",
+    "Uhtred's Augury":             "우트레드의 징조",
+
+    /* Temple */
+    "Architect's Orb":             "건축가의 오브",
+    "Vaal Cultivation Orb":        "바알 함양 오브",
+    "Crystallised Corruption":     "결정화된 타락",
+	"Vaal Catalysing Infuser":     "바알 촉진시키는 주입기",
+  },
+  /* 카테고리(드롭다운 그룹 제목): API가 주는 id가 영어 소문자로 보입니다. 필요하면 아래에 "id":"한글" 형태로 추가하세요. */
+  categories:{
+  },
+};
+const nm=(kind,name)=>(LANG!=="en"&&NAME_KO[kind][name])||name; /* 한글 이름이 있으면 한글, 없으면 영어 */
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const PAL=["var(--g)","var(--b)","var(--p)","var(--y)","var(--gem)","#f97316","#ec4899","#06b6d4"]; /* 앞 5개는 theme.css 변수, 나머지는 리그가 많을 때 쓰는 고정색 */
+const DAY=864e5;
+const S={sel:new Set(),cur:null,metric:"close",x:"day",scale:"lin",hideLow:true,unit:"auto"};
+let DATA=null,CUR=[],LG=[],SR=[],drawnW=0,UEFF="exalted",HAVE={divine:false,chaos:false};
+const UNITS={exalted:{n:"Exalted Orb",ko:"엑잘티드",en:"Exalted"},chaos:{n:"Chaos Orb",ko:"카오스",en:"Chaos"},divine:{n:"Divine Orb",ko:"디바인",en:"Divine"}};
+const uname=u=>T(UNITS[u].ko,UNITS[u].en);
+const styleOf=i=>({color:PAL[i%PAL.length]});
+
+const ts=s=>Date.parse(s+"T00:00:00Z");
+const fmtDate=ms=>new Date(ms).toISOString().slice(0,10);
+const fmt=v=>v==null?"-":v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(1):v>=1?v.toFixed(2):String(+v.toPrecision(2));
+const axf=v=>v>=100?Math.round(v).toLocaleString("en-US"):String(+v.toPrecision(2));
+const cmp=v=>v==null?"-":v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?Math.round(v/1e3)+"k":String(Math.round(v));
+const swatch=(c,w=24)=>`<svg class="sw-i" width="${w}" height="8" aria-hidden="true"><line x1="0" y1="4" x2="${w}" y2="4" stroke="${c}" stroke-width="3"/></svg>`;
+
+/* ---------- 데이터 ---------- */
+/* DATA.leagues[리그].currencies[커런시].days[] 구조 (fetch_currency_history.py 출력). 가격은 모두 Exalted 기준 */
+const dayMap=c=>new Map(((c&&c.days)||[]).map(d=>[d.date,d]));
+function prep(){
+  const seen=new Map();
+  HAVE={divine:false,chaos:false};
+  for(const lv of Object.values((DATA&&DATA.leagues)||{})){
+    const cs=lv.currencies||{};
+    for(const [cn,cv] of Object.entries(cs))
+      if(!seen.has(cn))seen.set(cn,String((cv&&cv.category)||""));
+    for(const u of ["divine","chaos"])if(((cs[UNITS[u].n]||{}).days||[]).length)HAVE[u]=true;
+  }
+  CUR=[...seen].map(([name,category])=>({name,category}));
+  if(!seen.has(S.cur))S.cur=seen.has("Divine Orb")?"Divine Orb":(CUR[0]?CUR[0].name:null);
+  prepLeagues();
+}
+function prepLeagues(){
+  LG=Object.entries((DATA&&DATA.leagues)||{}).map(([name,v])=>{
+    const cs=v.currencies||{},c=cs[S.cur];
+    const days=c?(c.days||[]).slice().sort((a,b)=>a.date<b.date?-1:1):[];
+    if(!days.length)return null;
+    const start=v.start_date||days[0].date,t0=ts(start); /* 1일차 = 시즌 시작일 */
+    const vols=days.map(d=>d.volume).filter(x=>x>0).sort((a,b)=>a-b);
+    const med=vols.length?vols[vols.length>>1]:0;
+    days.forEach(d=>{d.t=ts(d.date);d.n=Math.round((d.t-t0)/DAY)+1;d.lowv=med>0&&(d.volume||0)<med*0.01});
+    return {name,days,start,patch:v.patch||"",first:days[0].date,last:days[days.length-1].date,
+      rates:{divine:dayMap(cs[UNITS.divine.n]),chaos:dayMap(cs[UNITS.chaos.n])}};
+  }).filter(Boolean).sort((a,b)=>a.start<b.start?1:-1); /* 최신 시즌이 앞 */
+  const keep=[...S.sel].filter(n=>LG.some(l=>l.name===n));
+  S.sel=new Set(keep.length?keep:LG.slice(0,3).map(l=>l.name));
+}
+/* 같은 날 Divine/Chaos 가격(Exalted)으로 나눠 환산. 시가·종가·평균은 같은 항목, 고가·저가는 평균을 사용 */
+function rateOf(lg,u,d){
+  if(u==="exalted")return 1;
+  const r=lg.rates[u]&&lg.rates[u].get(d.date);
+  if(!r)return null;
+  const k=(S.metric==="open"||S.metric==="close"||S.metric==="average")?S.metric:"average";
+  return [r[k],r.average,r.close].find(x=>x>0)||null;
+}
+/* 실제로 쓸 단위. 자동 = 모든 리그의 중앙값이 1 Divine 이상이면 Divine, 아니면 Exalted */
+function unitFor(){
+  const self=Object.keys(UNITS).find(k=>UNITS[k].n===S.cur);
+  let u=S.unit;
+  if(u==="auto"){
+    u="exalted";
+    if(HAVE.divine&&self!=="divine"){
+      const vals=[];
+      for(const lg of LG)for(const d of lg.days){
+        const y=d[S.metric],r=rateOf(lg,"divine",d);
+        if(y>0&&r&&!(S.hideLow&&d.lowv))vals.push(y/r);
+      }
+      vals.sort((a,b)=>a-b);
+      if(vals.length&&vals[vals.length>>1]>=1)u="divine";
+    }
+  }
+  if(u!=="exalted"&&(u===self||!HAVE[u]))u="exalted"; /* 자기 자신 단위이거나 환산 데이터가 없으면 Exalted */
+  return u;
+}
+function getSeries(){
+  UEFF=unitFor();
+  return LG.map((lg,i)=>({lg,i})).filter(o=>S.sel.has(o.lg.name)).map(o=>{
+    const pts=[];
+    for(const d of o.lg.days){
+      const v=d[S.metric];
+      if(!(v>0)||(S.hideLow&&d.lowv))continue;
+      const r=rateOf(o.lg,UEFF,d);
+      if(!r)continue;
+      pts.push({x:S.x==="day"?d.n:d.t,y:v/r,d});
+    }
+    return {...o,pts,...styleOf(o.i),map:new Map(pts.map(p=>[p.x,p]))};
+  }).filter(s=>s.pts.length);
+}
+function noteText(){
+  const cn=esc(nm("items",S.cur)),u=uname(UEFF);
+  let s=T(`${cn} 1개의 가격, 단위는 ${u}입니다.`,`Price of one ${cn}, in ${u}.`);
+  if(S.unit!=="auto"&&S.unit!==UEFF)s+=" "+T("선택한 단위로 환산할 수 없어 Exalted로 표시합니다.","Can't convert to the selected unit, so Exalted is shown.");
+  else if(UEFF!=="exalted")s+=" "+T(`같은 날의 ${u} 오브 가격으로 환산했습니다.`,`Converted with the same day's ${u} Orb price.`);
+  return s+" "+T("속이 빈 점은 아직 진행 중인 날입니다.","Hollow points are days still in progress.");
+}
+function loadFile(f){
+  if(!f)return;
+  f.text().then(t=>{
+    const j=JSON.parse(t);
+    if(!j||!j.leagues)throw new Error("leagues");
+    DATA=j;prep();build();
+  }).catch(()=>alert(T("올바른 currency_exalted.json 형식이 아닙니다.","Not a valid currency_exalted.json file.")));
+}
+
+/* ---------- 화면 ---------- */
+function build(){
+  const cn=S.cur?esc(nm("items",S.cur)):"";
+  document.documentElement.lang=LANG;
+  document.title=T("시즌 스냅샷","Season Snapshot")+" | PoE Tools";
+  $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
+  const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1><p class="sub">${cn?T(`시즌별 ${cn} 가격을 일별로 겹쳐 봅니다.`,`Overlay daily ${cn} prices from each season.`):T("시즌별 커런시 가격을 일별로 겹쳐 봅니다.","Overlay daily currency prices from each season.")}</p></div></div>`;
+  if(!CUR.length){
+    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>data/currency_exalted.js</code> 파일을 이 페이지 폴더에 두거나, 아래에서 <code>currency_exalted.json</code>을 직접 선택하세요.","Put <code>data/currency_exalted.js</code> in this page's folder, or choose <code>currency_exalted.json</code> below.")}</p><label class="btn pick">${T("JSON 파일 선택","Choose JSON file")}<input type="file" id="file" accept=".json,application/json"></label></section>`;
+    return;
+  }
+  const chips=LG.map((l,i)=>{const st=styleOf(i);return `<label class="chip" style="--sw:${st.color}"><input type="checkbox" data-lg="${esc(l.name)}">${swatch(st.color)}${esc(nm("leagues",l.name))}<small>${l.patch?esc(l.patch)+" · ":""}${l.start.slice(0,7)}</small></label>`}).join("");
+  const unitOpts=`<option value="auto">${T("자동","Auto")}</option>`+["exalted","chaos","divine"].map(u=>`<option value="${u}"${u!=="exalted"&&!HAVE[u]?" disabled":""}>${uname(u)}</option>`).join("");
+  const cats=[...new Set(CUR.map(c=>c.category))];
+  const curOpts=cats.map(cat=>`<optgroup label="${esc(nm("categories",cat))}">${CUR.filter(c=>c.category===cat).map(c=>`<option value="${esc(c.name)}">${esc(nm("items",c.name))}</option>`).join("")}</optgroup>`).join("");
+  const metrics=[["close","종가","Close"],["average","평균","Average"],["open","시가","Open"],["high","고가","High"],["low","저가","Low"]].map(([v,ko,en])=>`<option value="${v}">${T(ko,en)}</option>`).join("");
+  const gen=DATA.generated_at?DATA.generated_at.replace("T"," ").slice(0,16)+" UTC":"";
+  $("app").innerHTML=head+`
+<section class="panel"><div class="phead"><h2>${T("일별 가격 추이","Daily price trend")}</h2><div class="grp"><label class="lbl" for="unit">${T("표시 단위","Unit")}</label><select id="unit">${unitOpts}</select></div></div>
+ <div class="ctrls">
+  <div class="grp"><label class="lbl" for="cur">${T("커런시","Currency")}</label><select id="cur">${curOpts}</select></div>
+  <div class="grp" role="group" aria-label="${T("리그 선택","Leagues")}">${chips}</div>
+  <div class="grp"><label class="lbl" for="metric">${T("가격 기준","Price")}</label><select id="metric">${metrics}</select></div>
+  <div class="grp"><span class="lbl">${T("가로축","X axis")}</span><div class="seg" role="group"><button type="button" data-x="day">${T("경과일","Day")}</button><button type="button" data-x="date">${T("날짜","Date")}</button></div></div>
+  <div class="grp"><span class="lbl">${T("세로축","Y axis")}</span><div class="seg" role="group"><button type="button" data-sc="lin">${T("선형","Linear")}</button><button type="button" data-sc="log">${T("로그","Log")}</button></div></div>
+  <label class="chk"><input type="checkbox" id="low">${T("거래량 적은 날 제외","Hide low-volume days")}<small>${T("(리그 중앙값의 1% 미만)","(under 1% of league median)")}</small></label>
+ </div>
+ <div class="chart" id="chart"></div>
+ <p class="note" id="pnote"></p>
+</section>
+<p class="note">${T("출처","Source")}: poe2scout${gen?`. ${T("데이터 기준","As of")} ${gen}.`:"."} ${T("시즌 첫날과 마지막 날은 거래가 적어 가격이 튈 수 있습니다.","Prices on a season's first and last days can jump because few trades happen.")}</p>`;
+  update();
+}
+
+function update(){
+  if(!$("chart"))return;
+  document.querySelectorAll("[data-lg]").forEach(i=>i.checked=S.sel.has(i.dataset.lg));
+  document.querySelectorAll("[data-x]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.x===S.x)));
+  document.querySelectorAll("[data-sc]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sc===S.scale)));
+  $("cur").value=S.cur;$("metric").value=S.metric;$("low").checked=S.hideLow;
+  SR=getSeries();
+  $("unit").value=S.unit;$("unit").options[0].textContent=T("자동","Auto")+" · "+uname(UEFF);
+  $("pnote").innerHTML=noteText();
+  drawChart();
+}
+
+function niceStep(range,n){const raw=range/n,p=10**Math.floor(Math.log10(raw)),f=raw/p;return(f<1.5?1:f<3?2:f<7?5:10)*p}
+
+function drawChart(){
+  const box=$("chart");if(!box)return;
+  if(!SR.length){box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
+  drawnW=box.clientWidth;
+  const W=Math.max(320,drawnW),H=Math.round(Math.min(460,Math.max(300,W*.46)));
+  const M={l:60,r:16,t:14,b:36},iw=W-M.l-M.r,ih=H-M.t-M.b,log=S.scale==="log",unit=S.x==="day"?1:DAY;
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+  for(const s of SR)for(const p of s.pts){x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
+  if(x0===x1){x0-=unit;x1+=unit}
+  let Y0,Y1;const yt=[];
+  if(log){
+    Y0=y0/1.15;Y1=y1*1.15;
+    const r=Y1/Y0,mult=r>300?[1]:r>12?[1,2,5]:[1,1.5,2,3,4,5,6,7,8,9];
+    for(let e=Math.floor(Math.log10(Y0));e<=Math.ceil(Math.log10(Y1));e++)for(const m of mult){const v=m*10**e;if(v>=Y0&&v<=Y1)yt.push(v)}
+  }else{
+    const st=niceStep(y1*1.06,5);Y0=0;Y1=Math.ceil(y1*1.06/st)*st;
+    for(let v=0;v<=Y1+1e-9;v+=st)yt.push(v);
+  }
+  const px=x=>M.l+(x-x0)/(x1-x0)*iw;
+  const py=log?y=>M.t+(1-(Math.log(y)-Math.log(Y0))/(Math.log(Y1)-Math.log(Y0)))*ih:y=>M.t+(1-(y-Y0)/(Y1-Y0))*ih;
+  const xt=[];
+  if(S.x==="day"){const st=niceStep(x1-x0,Math.max(3,Math.floor(iw/80)));for(let v=Math.ceil(x0/st)*st;v<=x1;v+=st)xt.push(v)}
+  else{const n=Math.max(2,Math.floor(iw/120));for(let k=0;k<=n;k++)xt.push(Math.round((x0+(x1-x0)*k/n)/DAY)*DAY)}
+  let g=`<svg id="svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T("시즌별 커런시 가격 추이 차트","Chart of currency price by season"))}"><g class="grid">`;
+  for(const v of yt)g+=`<line x1="${M.l}" x2="${W-M.r}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}"/>`;
+  g+=`</g><g class="ax">`;
+  for(const v of yt)g+=`<text class="yl" x="${M.l-8}" y="${(py(v)+4).toFixed(1)}">${axf(v)}</text>`;
+  for(const v of xt)g+=`<text class="xl" x="${px(v).toFixed(1)}" y="${H-M.b+20}">${S.x==="day"?v:fmtDate(v)}</text>`;
+  g+=`</g>`;
+  for(const s of SR){
+    g+=`<path d="${s.pts.map((p,k)=>(k?"L":"M")+px(p.x).toFixed(1)+","+py(p.y).toFixed(1)).join("")}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
+    for(const p of s.pts)if(p.d.partial)g+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="var(--sf)" stroke="${s.color}" stroke-width="2"/>`;
+  }
+  g+=`<line id="hl" x1="0" x2="0" y1="${M.t}" y2="${H-M.b}" visibility="hidden"/><g id="hd"></g><rect id="cap" x="${M.l}" y="${M.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="tip"></div>`;
+  box.innerHTML=g;
+
+  const svg=$("svg"),tip=$("tip"),hl=$("hl"),hd=$("hd");
+  const XS=[...new Set(SR.flatMap(s=>s.pts.map(p=>p.x)))].sort((a,b)=>a-b);
+  const nearest=v=>{let lo=0,hi=XS.length-1;while(hi-lo>1){const m=(lo+hi)>>1;XS[m]<v?lo=m:hi=m}return Math.abs(XS[lo]-v)<=Math.abs(XS[hi]-v)?XS[lo]:XS[hi]};
+  const hide=()=>{hl.setAttribute("visibility","hidden");hd.innerHTML="";tip.style.display="none"};
+  svg.addEventListener("pointerleave",hide);
+  svg.addEventListener("pointermove",e=>{
+    const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width);
+    if(sx<M.l-4||sx>W-M.r+4){hide();return}
+    const xv=nearest(x0+(sx-M.l)/iw*(x1-x0));
+    const rows=SR.map(s=>({s,p:s.map.get(xv)})).filter(o=>o.p);
+    if(!rows.length){hide();return}
+    const X=px(xv);
+    hl.setAttribute("x1",X);hl.setAttribute("x2",X);hl.setAttribute("visibility","visible");
+    hd.innerHTML=rows.map(({s,p})=>`<circle cx="${X}" cy="${py(p.y)}" r="4.5" fill="${s.color}"/>`).join("");
+    tip.innerHTML=`<div class="th">${S.x==="day"?T(`${xv}일차`,`Day ${xv}`):fmtDate(xv)}</div>`+rows.map(({s,p})=>`<div class="tr">${swatch(s.color,18)}<span>${esc(nm("leagues",s.lg.name))}</span><b>${fmt(p.y)}</b><span class="m">${S.x==="day"?p.d.date:T(`${p.d.n}일차`,`Day ${p.d.n}`)}, ${T("거래량","vol")} ${cmp(p.d.volume)}${p.d.partial?`, ${T("진행 중","in progress")}`:""}</span></div>`).join("");
+    tip.style.display="block";
+    const tw=tip.offsetWidth,th=tip.offsetHeight,xp=X*(r.width/W);
+    let left=xp+14;if(left+tw>r.width)left=xp-tw-14;
+    tip.style.left=Math.max(0,left)+"px";
+    tip.style.top=Math.max(0,Math.min(e.clientY-r.top-th/2,r.height-th))+"px";
+  });
+}
+
+/* ---------- 이벤트 ---------- */
+$("app").addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.lg!==undefined){t.checked?S.sel.add(t.dataset.lg):S.sel.delete(t.dataset.lg);update()}
+  else if(t.id==="cur"){S.cur=t.value;prepLeagues();build();const c=$("cur");if(c)c.focus()}
+  else if(t.id==="unit"){S.unit=t.value;update()}
+  else if(t.id==="metric"){S.metric=t.value;update()}
+  else if(t.id==="low"){S.hideLow=t.checked;update()}
+  else if(t.id==="file"){loadFile(t.files[0])}
+});
+$("app").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-x],button[data-sc]");if(!b)return;
+  if(b.dataset.x)S.x=b.dataset.x;else S.scale=b.dataset.sc;
+  update();
+});
+$("skip").addEventListener("click",()=>$("app").focus());
+new ResizeObserver(()=>{const b=$("chart");if(b&&SR.length&&b.clientWidth!==drawnW)drawChart()}).observe(document.body);
+/* 언어가 바뀌면 site-bar.js 가 이 이벤트를 보냅니다 (상단 바 버튼, 다른 탭, 뒤로가기 모두) */
+addEventListener("sitebar:lang",e=>{if(e.detail!==LANG){LANG=e.detail;build()}});
+
+DATA=window.CURRENCY_EXALTED||null;
+prep();build();
+</script>
+</body>
+</html>
