@@ -622,7 +622,7 @@ function recCalc(){
       if(!lgv.length)continue;
       rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv)});
     }
-    const rest=rows.filter(o=>!PIN.includes(o.name)); /* 디바인·카오스 오브는 순위에서 빼고 맨 위에 따로 표시 */
+    const rest=rows; /* 디바인·카오스 오브도 순위에 포함 (맨 위 고정 행과 중복 표시 가능) */
     bd.nl=rest.length?Math.max(...rest.map(o=>o.nl)):0;
     const same=rest.filter(o=>o.nl===bd.nl); /* 같은 리그 수로 비교되는 품목만 */
     same.sort((x,y)=>y.gm-x.gm);
@@ -686,7 +686,7 @@ function invCalc(){
       if(!lgv.length)continue;
       rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv)});
     }
-    const rest=rows.filter(o=>!PIN.includes(o.name));
+    const rest=rows; /* 디바인·카오스 오브도 순위에 포함 */
     const col={N,nl:rest.length?Math.max(...rest.map(o=>o.nl)):0};
     col.top=rest.filter(o=>o.nl===col.nl).sort((x,y)=>y.gm-x.gm).slice(0,CFG.listSize); /* 같은 리그 수로 비교되는 품목만 */
     col.pin=PIN.map(n=>rows.find(o=>o.name===n)).filter(Boolean);
@@ -704,7 +704,7 @@ function renderInv(){
   const m=R.names.length,a=R.a,lo=Math.max(CFG.firstDay,a-CFG.invWindow),hi=a+CFG.invWindow;
   note.innerHTML=T(`아래 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균. 선택한 리그 ${V(m)}개 · 화폐 ${V(R.items)}종 기준. 괄호 안은 최저 리그 값.`,
     `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the bar below, ${V("day "+a)} (${V("day "+lo+"–"+hi)}). Based on ${V(m)} selected league(s), ${V(R.items)} currencies. Parentheses: lowest league value.`);
-  const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v>=1?v.toFixed(1):v.toFixed(2));
+  const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v.toFixed(1));
   const rc=(col,o)=>{ /* 디바인·카오스 오브 배율과 비교: 둘 다보다 높으면 up, 둘 다보다 낮으면 dn */
     if(PIN.includes(o.name)||!col.pin.length)return "";
     const h=Math.max(...col.pin.map(q=>q.gm)),l=Math.min(...col.pin.map(q=>q.gm));
