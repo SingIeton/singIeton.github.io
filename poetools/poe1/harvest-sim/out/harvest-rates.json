@@ -1,20 +1,20 @@
 {
  "version": 2,
  "source": "poe.ninja",
- "updatedAt": "2026-11-16T18:42:23Z",
+ "updatedAt": "2026-11-17T02:32:07Z",
  "order": [
   "Covens",
   "Allflame"
  ],
  "leagues": {
   "Covens": {
-   "ratio": 146.3,
+   "ratio": 155.0,
    "lifeforce": {
-    "yellow": 80.78,
-    "blue": 79.24,
-    "purple": 85.62
+    "yellow": 78.06,
+    "blue": 72.1,
+    "purple": 82.64
    },
-   "updatedAt": "2026-11-16T18:42:23Z"
+   "updatedAt": "2026-11-17T02:32:07Z"
   },
   "Allflame": {
    "ratio": 514.5,
