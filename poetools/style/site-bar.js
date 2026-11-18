@@ -11,6 +11,8 @@
  * 언어(lang)·테마(theme) 설정의 단일 관리자입니다.
  *   - 저장: localStorage "lang" / "theme" (사이트 전체 공통 키)
  *   - 어느 페이지에서 바꿔도 다른 탭, 뒤로가기로 돌아온 페이지에 즉시 반영됩니다.
+ *   - 스타일(화면 디자인): localStorage "style". 상단 바의 드롭다운으로 고르면 theme.css 대신 해당 CSS 를 즉시 적용합니다.
+ *     스타일 목록은 아래 STYLES 배열에서 관리하며, CSS 파일은 모두 style/ 폴더에 둡니다. 바뀌면 "sitebar:style" 이벤트를 보냅니다.
  *   - 언어가 바뀌면 window 에 "sitebar:lang" 이벤트(detail = "ko" | "en")를 보냅니다.
  *     페이지는 이 이벤트만 구독하면 됩니다. 현재 언어는 window.PoEPrefs.lang, <html lang> 에서도 읽을 수 있습니다.
  *   - 상단 바 없이 설정 동기화만 필요한 페이지(허브)는 태그에 data-nobar 를 붙입니다.
@@ -25,12 +27,33 @@
   var TOOLS = new URL("../", src || location.href).href;
 
   /* 공용 테마 (poetools/style/theme.css): 아직 없으면 불러오기 */
+  var themeLink = doc.querySelector('link[rel~="stylesheet"][href*="style/theme"]'); /* 페이지가 넣은 테마 <link> (스타일 교체 대상) */
   var themed = false;
   try { themed = !!getComputedStyle(root).getPropertyValue("--g0").trim(); } catch (e) {}
-  if (!themed && !doc.querySelector('link[href$="style/theme.css"]')) {
+  if (!themed && !themeLink) {
     var tl = doc.createElement("link"); tl.rel = "stylesheet"; tl.href = TOOLS + "style/theme.css";
     doc.head.appendChild(tl);
+    themeLink = tl;
   }
+
+  /* 스타일 목록: 첫 번째가 기본값(원래 theme.css). 파일을 추가하고 한 줄만 더하면 드롭다운에 나타납니다. */
+  var STYLES = [
+    { id: "default",  file: "theme.css",              ko: "기본",     en: "Default" },
+	{ id: "default2",  file: "theme2.css",              ko: "기본2",     en: "Default" },
+  ];
+  function readStyle() {
+    var v = null; try { v = localStorage.getItem("style"); } catch (e) {}
+    for (var i = 0; i < STYLES.length; i++) if (STYLES[i].id === v) return v;
+    return STYLES[0].id;
+  }
+  function styleHref(id) {
+    var f = STYLES[0].file;
+    STYLES.forEach(function (s) { if (s.id === id) f = s.file; });
+    return TOOLS + "style/" + f;
+  }
+  var STYLE = readStyle();
+  /* 첫 화면: 페이지가 그려지기 전에 저장된 스타일로 바로 교체 (깜빡임 최소화) */
+  if (STYLE !== STYLES[0].id && themeLink) themeLink.href = styleHref(STYLE);
   /* 공용 파비콘 */
   if (!doc.querySelector('link[rel~="icon"]')) {
     var fi = doc.createElement("link"); fi.rel = "icon";
@@ -80,7 +103,8 @@
           return '<a href="' + TOOLS + g.id + '/' + g.id + '.html" data-game="' + g.id + '"' + (cur === g.id ? ' aria-current="true"' : '') + '><i></i>' + g.short + '</a>';
         }).join("")
       + '</nav>'
-      + '<div class="tools"><div class="seg" role="group" aria-label="Language">'
+      + '<div class="tools">'
+      + '<div class="seg" role="group" aria-label="Language">'
       + '<button type="button" data-lang="ko" aria-pressed="' + (LANG === "ko") + '">한국어</button>'
       + '<button type="button" data-lang="en" aria-pressed="' + (LANG === "en") + '">EN</button></div>'
       + '<button class="ibtn" id="sb-theme" type="button" aria-label="' + T("화면 테마 바꾸기", "Toggle theme") + '">' + (dk() === "dark" ? SUN : MOON) + '</button></div>'
@@ -103,9 +127,35 @@
   }
   function setLang(l) { l = l === "en" ? "en" : "ko"; try { localStorage.setItem("lang", l); } catch (x) {} applyLang(l); }
   function setTheme(t) { t = t === "light" ? "light" : "dark"; try { localStorage.setItem("theme", t); } catch (x) {} applyTheme(t); }
+  /* 스타일 교체: 새 CSS 를 먼저 불러온 뒤 이전 것을 제거해서, 바뀌는 동안 화면이 풀리지 않게 합니다. */
+  function applyStyle(id) {
+    STYLE = id;
+    var sel = doc.getElementById("sb-style"); if (sel) sel.value = id;
+    if (!themeLink) return;
+    var href = styleHref(id);
+    if (themeLink.href === href) return;
+    var old = themeLink, nl = doc.createElement("link");
+    nl.rel = "stylesheet"; nl.href = href;
+    nl.onload = function () {
+      if (old.parentNode) old.parentNode.removeChild(old);
+      window.dispatchEvent(new CustomEvent("sitebar:style", { detail: id }));
+    };
+    nl.onerror = function () { /* 파일을 못 찾으면 원래 스타일을 유지 */
+      if (nl.parentNode) nl.parentNode.removeChild(nl);
+      themeLink = old; STYLE = readStyleOfLink(old);
+      var s2 = doc.getElementById("sb-style"); if (s2) s2.value = STYLE;
+    };
+    old.parentNode.insertBefore(nl, old.nextSibling); /* 페이지 자체 <style> 보다 앞 순서 유지 */
+    themeLink = nl;
+  }
+  function readStyleOfLink(l) {
+    for (var i = 0; i < STYLES.length; i++) if (l.href === TOOLS + "style/" + STYLES[i].file) return STYLES[i].id;
+    return STYLES[0].id;
+  }
+  function setStyle(id) { try { localStorage.setItem("style", id); } catch (x) {} applyStyle(id); }
   window.PoEPrefs = {
-    get lang() { return LANG; }, get theme() { return root.dataset.theme; },
-    setLang: setLang, setTheme: setTheme
+    get lang() { return LANG; }, get theme() { return root.dataset.theme; }, get style() { return STYLE; },
+    setLang: setLang, setTheme: setTheme, setStyle: setStyle
   };
 
   function mount() {
@@ -136,11 +186,12 @@
   /* 동기화: 다른 탭에서 바꿨을 때, 뒤로가기/앞으로가기로 예전 화면이 복원됐을 때, 탭으로 다시 돌아왔을 때
    * 저장된 값과 "지금 화면에 보이는 값(<html lang>, data-theme)"을 비교해서 다르면 따라갑니다. */
   function sync() {
-    var t = readTheme(), l = readLang();
+    var t = readTheme(), l = readLang(), st = readStyle();
+    if (st !== STYLE) applyStyle(st);
     if (t !== root.dataset.theme) applyTheme(t);
     if (l !== root.lang) applyLang(l);
   }
-  window.addEventListener("storage", function (e) { if (e.key === "lang" || e.key === "theme" || e.key === null) sync(); });
+  window.addEventListener("storage", function (e) { if (e.key === "lang" || e.key === "theme" || e.key === "style" || e.key === null) sync(); });
   window.addEventListener("pageshow", function (e) { if (e.persisted) sync(); });
   doc.addEventListener("visibilitychange", function () { if (!doc.hidden) sync(); });
 

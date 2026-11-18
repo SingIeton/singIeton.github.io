@@ -4,9 +4,9 @@
  *   poetools/poe1/poe1_bg.*      poe1/ 아래 페이지 (있으면 poetools_bg 대신 사용)
  *   poetools/poe2/poe2_bg.*      poe2/ 아래 페이지 (있으면 poetools_bg 대신 사용)
  * 사용법: <script src="…/style/bg.js"></script> (site-bar.js 를 쓰는 페이지는 자동 로드)
- * 진하기: CSS 변수 --bg-opacity (기본 0.12) 를 :root 에 지정하면 바뀝니다.
- * 흑백 정도: CSS 변수 --bg-gray (0 = 원본 색, 1 = 완전 흑백, 기본 0)
- * 낮 테마는 따로: --bg-opacity-light (기본 0.07), --bg-gray-light (기본 1)
+ * 진하기: CSS 변수 --bg-opacity 를 :root 에 지정하면 바뀝니다.
+ * 흑백 정도: CSS 변수 --bg-gray (0 = 원본 색, 1 = 완전 흑백)
+ * 낮 테마는 따로: --bg-opacity-light, --bg-gray-light
  */
 (function () {
   if (window.__sitebg) return;
@@ -25,9 +25,9 @@
 
   var st = doc.createElement("style");
   st.textContent = "#site-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .6s;filter:grayscale(var(--bg-gray,0.7));background:center/cover no-repeat}"
-    + "#site-bg.on{opacity:var(--bg-opacity,.065)}"
-    + ':root[data-theme="light"] #site-bg{filter:grayscale(var(--bg-gray-light,0.8)) brightness(1.2)}'
-    + ':root[data-theme="light"] #site-bg.on{opacity:var(--bg-opacity-light,.06)}';
+    + "#site-bg.on{opacity:var(--bg-opacity,.09)}"
+    + ':root[data-theme="light"] #site-bg{filter:grayscale(var(--bg-gray-light,0.6)) brightness(1.2)}'
+    + ':root[data-theme="light"] #site-bg.on{opacity:var(--bg-opacity-light,.11)}';
   (doc.head || root).appendChild(st);
   var layer = doc.createElement("div");
   layer.id = "site-bg";
