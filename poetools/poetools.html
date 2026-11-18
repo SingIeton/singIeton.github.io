@@ -65,8 +65,10 @@ const SERVICES=[
 {dir:"harvest-sim",games:["poe1"],live:true,icon:"harvest",
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
  desc:{ko:"수확 생기 기댓값 시뮬레이션\n작물 감소 아틀라스 패시브 추천\n갑충석·조각 효율 분석",en:"Expected lifeforce simulation\nCrop-reduction Atlas passive suggestions\nScarab and fragment efficiency analysis"}},
-{dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"베이스 퀄리티 플리핑",en:"Base Quality Flipping"},
- desc:{ko:"오버소켓 베이스 오버퀄리티 플리핑 수익 계산",en:"Calculates profit from flipping oversocketed bases with overquality"}}];
+{dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"오버퀄리티 플리핑",en:"Overquality Flipping"},
+ desc:{ko:"오버소켓 베이스 오버퀄리티 플리핑 수익 예상",en:"Projected profit from flipping oversocketed bases with overquality"}},
+{dir:"season-snapshot",games:["poe2"],live:true,icon:"snapshot",name:{ko:"시즌 스냅샷",en:"Season Snapshot"},
+ desc:{ko:"이전 시즌 통계 정보를 바탕으로 시즌 시점과 투자 기간에 따른 보유 화폐 추천",en:"Currency-holding recommendations by season timing and investment period, based on past season statistics"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 if(LANG!=="en")LANG="ko";
@@ -80,7 +82,8 @@ const ICON={sun:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" str
 moon:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'};
 const ART={
 harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--y"],[48,10,26,13,"--b"],[76,2,22,15,"--p"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
-quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--gem"],[48,10,26,13,"--b"],[76,2,22,15,"--mod"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>'};
+quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--gem"],[48,10,26,13,"--b"],[76,2,22,15,"--mod"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
+snapshot:'<svg viewBox="0 0 96 56" width="96" height="56" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 50H90" stroke="var(--ln2)" stroke-width="1.5"/><path d="M6 46L24 42L40 34L56 36L72 22L90 26" stroke="var(--b)" stroke-width="2" stroke-dasharray="5 4"/><path d="M6 44L22 38L36 40L52 24L68 28L90 8" stroke="currentColor" stroke-width="2.5"/></svg>'};
 
 const dk=()=>document.documentElement.dataset.theme;
 {let t=null;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"}
