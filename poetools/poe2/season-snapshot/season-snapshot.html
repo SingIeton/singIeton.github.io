@@ -831,7 +831,7 @@ const pfmt=(ex,dv)=>dv>0&&ex>=dv
 function rxCells(o,val,price,cls,mx,dv){ /* val: 표시할 예상 가격(Exalted) */
   if(!price)return `<td class="rx${cls}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td>`;
   if(!(val>0))return `<td class="rx${cls}">-</td><td class="rx mn"></td>`;
-  return `<td class="rx${cls}">${pfmt(val,dv)}</td><td class="rx mn"></td>`;
+  return `<td class="rx${cls}">${pfmt(val,o.name==="Divine Orb"?null:dv)}</td><td class="rx mn"></td>`; /* 디바인 오브 행은 항상 Exalted 단위로 표시 (자기 자신은 1d로 환산되지 않게) */
 }
 
 /* 맨 아래 좌측: 위의 추천 표(투자 기간·진입 시점) 어디에도 한 번도 나오지 않은 모든 화폐 */
