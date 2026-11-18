@@ -85,7 +85,7 @@ Perfect Jewellers Orb
 
 [Abyss]
 Preserved Collarbone
-Preserved Cranium
+# Preserved Cranium
 Ancient Jawbone
 Ancient Rib
 Ancient Collarbone
@@ -100,7 +100,7 @@ Omen of Dextral Annulment
 Omen of Dextral Erasure
 
 [Essences]
-#Essence of the Breach
+# Essence of the Breach
 
 [Lineage Gem]
 Uul-Netol's Embrace
@@ -109,7 +109,7 @@ Uhtred's Augury
 Garukhan's Resolve
 Dialla's Desire
 Rakiata's Flow
-#Rigwald's Ferocity
+# Rigwald's Ferocity
 
 [Temple]
 Architect's Orb

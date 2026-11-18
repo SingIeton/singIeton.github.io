@@ -33,7 +33,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .chk{display:inline-flex;justify-content:flex-start;gap:8px;margin:0}
 .chk small{color:var(--mute)}
 .chart{position:relative}
-.chart svg#svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.chart svg#svg{width:100%;height:auto;display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .grid line{stroke:var(--ln)}
 .ax text{fill:var(--mute);font-size:11.5px}
 .ax .xl,.ax .xu{font-size:12.5px} /* 가로축(일) 숫자·단위: 11.5 → 12.5px */
@@ -61,7 +61,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .nav-track{position:relative;height:38px;border-radius:6px;background:color-mix(in oklab,var(--mute) 18%,transparent);cursor:pointer;touch-action:none}
 .nav-win{position:absolute;top:0;bottom:0;box-sizing:border-box;border:1px solid var(--g);border-radius:6px;background:color-mix(in oklab,var(--g) 9%,transparent);cursor:grab} /* 뒤의 배경 그래프가 비쳐 보이도록 옅게 */
 .nav-win.drag{cursor:grabbing}
-.nav-bg{position:absolute;inset:0;width:100%;height:100%;border-radius:6px;pointer-events:none;overflow:hidden} /* 시간 바 배경 그래프 (바 창 뒤에 투명하게) */
+.nav-bg{position:absolute;inset:0;width:100%;height:100%;border-radius:6px;pointer-events:none;overflow:hidden} /* 기간 바 배경 그래프 (바 창 뒤에 투명하게) */
 .nav-bg .a{fill:var(--g);fill-opacity:.12}
 .nav-bg .l{fill:none;stroke:var(--g);stroke-opacity:.5;stroke-width:1.5;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .nav-h{position:absolute;top:-2px;bottom:-2px;width:12px;display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none}
@@ -91,13 +91,25 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .rec .ci{margin-right:6px;vertical-align:middle;object-fit:contain} /* 화폐 아이콘 */
 .rec td.rx .xm{font-size:calc(var(--fs) - 4px)}
 .rec td.mn .xm{font-size:calc(var(--fs) - 6px)}
-.rec td.rx{width:1%;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:0;padding-right:4px}
+.rec td.rx{font-size:calc(var(--fs) - .5px);width:1%;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:0;padding-right:4px}
 .rec td.rx.up{color:var(--pos)}.rec td.rx.dn{color:var(--bad)} /* 배율: 디바인·카오스보다 높으면 녹색, 낮으면 적색, 사이는 기본색 */
 .rec td.mn{padding-right:3px;font-size:calc(var(--fs) - 3px);color:color-mix(in oklab,var(--mute) 60%,var(--sf2))} /* 괄호 값은 더 흐리게 */
 .rec th small.sub{display:inline;margin-left:2px;white-space:normal} /* 투자 기간 표 머리글: 같은 줄에 진입→종료 일차 (일차 숫자는 줄바꿈 안 함, 뒤의 리그 수만 필요 시 줄바꿈) */
 .rec th .hl{color:var(--g)} /* 머리글 제목(7일, 31~40일차 등): 포인트색 */
 .rec th .dr{font:400 13.5px var(--sans);white-space:nowrap} /* 진입→종료 일차: 아이템 이름과 같은 글자색(상속), 13.5px */
 .rec td.na{color:var(--mute);text-align:center}
+.rec tr[data-cur]{cursor:pointer} /* 행 클릭 → 위 그래프·화폐 선택이 그 화폐로 전환 */
+.rec tr[data-cur]:hover td{background:color-mix(in oklab,var(--g) 14%,transparent)} /* 연한 투명 하이라이트 */
+.rec tbody tr:last-child[data-cur]:hover td:first-child{border-bottom-left-radius:calc(var(--r) - 1px)}
+.rec tbody tr:last-child[data-cur]:hover td:last-child{border-bottom-right-radius:calc(var(--r) - 1px)}
+/* 배율 ↔ 예상 가격 전환 버튼: 섹션 제목 줄의 오른쪽 끝 */
+.fold>h2{display:flow-root} /* 제목 레이아웃은 그대로(좌측 정렬), 안에 float 된 버튼만 감쌈 */
+.swp{float:right;display:inline-flex;align-items:center;gap:6px;margin:-1px 0 -1px 14px;padding:3px 11px 3px 9px;border:1px solid var(--ln2);border-radius:999px;background:transparent;color:var(--mute);font:500 12.5px/1.4 var(--sans);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.swp svg{flex:none;transition:transform .25s}
+.swp:hover{color:var(--g);border-color:var(--g)}
+.swp:hover svg{transform:rotate(180deg)}
+.swp:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.rec td.rx .pu{margin-left:2px;font-size:calc(var(--fs) - 3px);color:var(--mute)} /* 예상 가격의 단위(ex) */
 </style>
 </head>
 <body>
@@ -110,7 +122,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||document.documentElement.lang||"ko";
 if(LANG!=="en")LANG="ko";
 /* ================= 설정값 (여기 숫자만 고치면 됩니다) =================
-   진입 시점별 추천 계산에 쓰는 값들. 아래 설명은 하단 바가 1~100일차인 경우를 예로 듭니다. */
+   진입 시점별 추천 계산에 쓰는 값들. 아래 설명은 기간 바가 1~100일차인 경우를 예로 듭니다. */
 const CFG={
   firstDay:2,              /* 진입 가능한 가장 이른 일차. 1일차는 가격이 불안정해서 2부터 */
   endTrimRatio:0.20,       /* 구간 끝에서 제외할 비율. 0.20 = 끝 20% (100일 → 약 20일) */
@@ -124,8 +136,8 @@ const CFG={
   iconDir:"../icon/",      /* 화폐 아이콘 폴더 (이 HTML 기준 상대경로). poetools/poe2/icon/ */
   iconExt:".webp",         /* 아이콘 확장자 */
   iconSize:28,             /* 추천 표의 아이콘 크기(px) */
-  chartRatio:0.33,         /* 그래프 높이 = 폭 × 이 값 (최소 250px, 최대 500px). 이전 값 0.4 */
-  navHeight:38,            /* 하단 시간 바 세로 길이(px). 이전 값 32 */
+  chartRatio:0.28,         /* 그래프 높이 = 폭 × 이 값 (최소 220px, 최대 440px). 이전 값 0.33 */
+  navHeight:38,            /* 기간 바 세로 길이(px). 이전 값 32 */
   minDays:60,              /* 데이터가 이 일수 미만인 리그는 처음에 선택 해제된 상태로 시작 (칩을 눌러 직접 켤 수 있음). 0 = 사용 안 함 */
   lowVolRatio:0.01,        /* 거래량이 중앙값의 이 비율 미만인 날은 "거래 거의 없음"으로 보고 제외 (0.01 = 1%) */
   invPeriods:[3,7,15,30,60], /* 투자 기간(일) 목록. 숫자 하나가 표 하나. Infinity = 시즌 종료(마지막 데이터 일차)까지 */
@@ -218,7 +230,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const PAL=["var(--g)","var(--b)","var(--p)","var(--y)","var(--gem)","#f97316","#ec4899","#06b6d4"]; /* 앞 5개는 theme.css 변수, 나머지는 리그가 많을 때 쓰는 고정색 */
 const DAY=864e5;
 const FOLD=new Set(); /* 접힌 섹션 */
-const S={sel:new Set(),cur:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",view:null}; /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
+const S={sel:new Set(),cur:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",view:null,pr:{inv:false,rec:false}}; /* pr: 섹션별로 예상 가격(true) / 배율(false) 표시 */ /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
 let DATA=null,CUR=[],LG=[],SR=[],drawnW=0,UEFF="exalted",HAVE={divine:false,chaos:false};
 const UNITS={exalted:{n:"Exalted Orb",ko:"엑잘티드",en:"Exalted"},chaos:{n:"Chaos Orb",ko:"카오스",en:"Chaos"},divine:{n:"Divine Orb",ko:"디바인",en:"Divine"}};
 const uname=u=>T(UNITS[u].ko,UNITS[u].en);
@@ -313,10 +325,12 @@ function noteText(){
   let s="";
   if(S.unit!=="auto"&&S.unit!==UEFF)s+=" "+T("선택한 단위로 환산할 수 없어 Exalted로 표시합니다.","Can't convert to the selected unit, so Exalted is shown.");
   else if(UEFF!=="exalted")s+=" "+T(`같은 날의 ${V(u)} 오브 가격으로 환산했습니다.`,`Converted with the same day's ${V(u)} Orb price.`);
-  return (s?s+" ":"")+T("마우스 휠로 확대·축소하고, 아래 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 하단 추천 화폐 정보도 함께 변경됩니다.","Scroll to zoom. Drag the ends of the bar below to set how many days are shown, or drag the bar to move the range. Adjusting the bar also updates the recommended currencies below.");
+  return (s?s+" ":"")+T("마우스 휠로 확대·축소하고, 기간 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 하단 추천 화폐 정보도 함께 변경됩니다. 그래프를 드래그하여 가격 변화(%)를 확인할 수 있습니다.","Scroll to zoom. Drag the ends of the period bar to set how many days are shown, or drag the bar to move the range. Adjusting the period bar also updates the recommended currencies below. Drag across the chart to check the % price change.");
 }
 
 /* ---------- 화면 ---------- */
+const refreshChips=()=>{const g=document.querySelector('.grp[role="group"]');if(g)g.innerHTML=chipsHtml()}; /* 화폐가 바뀌면 데이터가 있는 리그가 달라지므로 칩만 다시 그림 */
+const chipsHtml=()=>LG.map((l,i)=>{const st=styleOf(i);return `<label class="chip" style="--sw:${st.color}"><input type="checkbox" data-lg="${esc(l.name)}">${swatch(st.color)}${esc(nm("leagues",l.name))}<small>${l.patch?esc(l.patch):""}</small></label>`}).join("");
 function build(){
   const cn=S.cur?esc(nm("items",S.cur)):"";
   document.documentElement.lang=LANG;
@@ -327,7 +341,7 @@ function build(){
     $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>fetch_currency_history.py</code>를 실행해 만든 <code>currency_data.js</code> 파일을 이 페이지와 같은 폴더에 두세요.","Run <code>fetch_currency_history.py</code> and put the generated <code>currency_data.js</code> in the same folder as this page.")}</p></section>`;
     return;
   }
-  const chips=LG.map((l,i)=>{const st=styleOf(i);return `<label class="chip" style="--sw:${st.color}"><input type="checkbox" data-lg="${esc(l.name)}">${swatch(st.color)}${esc(nm("leagues",l.name))}<small>${l.patch?esc(l.patch):""}</small></label>`}).join("");
+  const chips=chipsHtml();
   const unitOpts=`<option value="auto">${uname("exalted")} ${T("(자동)","(Auto)")}</option>`+["exalted","chaos","divine"].map(u=>`<option value="${u}"${u!=="exalted"&&!HAVE[u]?" disabled":""}>${uname(u)}</option>`).join("");
   const cats=[...new Set(CUR.map(c=>c.category))];
   const curOpts=cats.map(cat=>`<optgroup label="${esc(nm("categories",cat))}">${CUR.filter(c=>c.category===cat).map(c=>`<option value="${esc(c.name)}">${esc(nm("items",c.name))}</option>`).join("")}</optgroup>`).join("");
@@ -344,11 +358,11 @@ function build(){
  <div class="chart" id="chart"></div>
  <p class="note" id="pnote"></p>
 </section>
-<section class="panel fold" data-fold="inv"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("투자 기간에 따른 보유 화폐 추천 (현재 시점 기준)","Currency to hold by investment period (from now)")}</h2>
+<section class="panel fold" data-fold="inv"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("투자 기간에 따른 보유 화폐 추천 (현재 시점 기준)","Currency to hold by investment period (from now)")}${swHtml("inv")}</h2>
  <p class="note" id="invnote"></p>
  <div class="rec" id="inv"></div>
 </section>
-<section class="panel fold" data-fold="rec"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("진입 시점에 따른 보유 화폐 추천 (리그 시점 기준)","Currency to hold by entry timing (by league day)")}</h2>
+<section class="panel fold" data-fold="rec"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("진입 시점에 따른 보유 화폐 추천 (리그 시점 기준)","Currency to hold by entry timing (by league day)")}${swHtml("rec")}</h2>
  <p class="note" id="recnote"></p>
  <div class="rec" id="rec"></div>
 </section>
@@ -373,7 +387,7 @@ function update(){
 function niceStep(range,n){const raw=range/n,p=10**Math.floor(Math.log10(raw)),f=raw/p;return(f<1.5?1:f<3?2:f<7?5:10)*p}
 
 /* ---------- 차트 ---------- */
-/* LAY: 현재 차트의 크기와 전체 x 범위. 본 차트(#plot)와 하단 범위 바(#nav)는 따로 그립니다.
+/* LAY: 현재 차트의 크기와 전체 x 범위. 본 차트(#plot)와 기간 바(#nav)는 따로 그립니다.
    바를 끄는 동안 바 요소가 교체되면 드래그가 끊기므로, 드래그 중에는 본 차트만 다시 그립니다. */
 let LAY=null;
 const curView=()=>S.view?[S.view.a,S.view.b]:[LAY.X0,LAY.X1];
@@ -391,8 +405,8 @@ function syncNav(){
 /* 구간 [a,b] 안의 점 + 양옆으로 한 점씩(구간 경계를 가로지르는 선분을 그리기 위해) */
 const around=(pts,a,b)=>{let i=0,j=pts.length-1;while(i<pts.length&&pts[i].x<a)i++;while(j>=0&&pts[j].x>b)j--;return pts.slice(Math.max(0,i-1),Math.min(pts.length,j+2))};
 
-/* 시간 바 배경 그래프: 선택한 리그들의 일별 가격을 각 리그의 기하평균으로 나눠(규모 차이 제거) 같은 일차끼리 기하평균한 값.
-   모양(언제 비싸고 언제 싼지)만 보여 주며, 세로 스케일은 본 차트(S.scale)를 따릅니다. 하단 바의 좌우 범위와 같은 x축을 씁니다. */
+/* 기간 바 배경 그래프: 선택한 리그들의 일별 가격을 각 리그의 기하평균으로 나눠(규모 차이 제거) 같은 일차끼리 기하평균한 값.
+   모양(언제 비싸고 언제 싼지)만 보여 주며, 세로 스케일은 본 차트(S.scale)를 따릅니다. 기간 바의 좌우 범위와 같은 x축을 씁니다. */
 function navBg(){
   if(!LAY||!SR.length)return "";
   const {X0,X1}=LAY,span=X1-X0,log=S.scale==="log";
@@ -414,7 +428,7 @@ function drawChart(){
   const box=$("chart");if(!box)return;
   if(!SR.length){LAY=null;box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
   drawnW=box.clientWidth;
-  const W=Math.max(320,drawnW),H=Math.round(Math.min(500,Math.max(250,W*CFG.chartRatio)));
+  const W=Math.max(320,drawnW),H=Math.round(Math.min(440,Math.max(220,W*CFG.chartRatio)));
   const M={l:60,r:48,t:28,b:36},unit=S.x==="day"?1:DAY;
   let X0=Infinity,X1=-Infinity;
   for(const s of SR)for(const p of s.pts){X0=Math.min(X0,p.x);X1=Math.max(X1,p.x)}
@@ -427,7 +441,7 @@ function drawChart(){
   }
   const k=drawnW?drawnW/W:1; /* 바를 본 차트의 x축 영역과 맞추기 위한 여백 */
   box.innerHTML=`<div id="plot"></div><div class="nav" id="nav" style="margin-left:${(M.l*k).toFixed(1)}px;margin-right:${(M.r*k).toFixed(1)}px"><div class="nav-track" id="ntrack" style="height:${CFG.navHeight}px">${navBg()}<div class="nav-win" id="nwin"><span class="nav-h" data-h="l"></span><span class="nav-h" data-h="r"></span></div></div><div class="tip" id="ntip"></div></div>`;
-  const pn=$("pnote");if(pn){pn.style.marginLeft=(M.l*k).toFixed(1)+"px";pn.style.marginRight=(M.r*k).toFixed(1)+"px"} /* 안내 문구 시작 위치를 하단 바와 맞춤 */
+  const pn=$("pnote");if(pn){pn.style.marginLeft=(M.l*k).toFixed(1)+"px";pn.style.marginRight=(M.r*k).toFixed(1)+"px"} /* 안내 문구 시작 위치를 기간 바와 맞춤 */
   drawPlot();syncNav();bindNav();
 }
 
@@ -465,7 +479,7 @@ function drawPlot(){
     g+=`<path d="${pts.map((p,k)=>(k?"L":"M")+px(p.x).toFixed(1)+","+py(p.y).toFixed(1)).join("")}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
     for(const p of pts)if(p.d.partial)g+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="var(--sf)" stroke="${s.color}" stroke-width="2"/>`;
   }
-  g+=`</g><line id="hl" x1="0" x2="0" y1="${M.t}" y2="${H-M.b}" visibility="hidden"/><g id="hd"></g><rect id="cap" x="${M.l}" y="${M.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="tip"></div><div class="tip htip" id="htip"></div>`;
+  g+=`</g><line id="hl" x1="0" x2="0" y1="${M.t}" y2="${H-M.b}" visibility="hidden"/><g id="hd"></g><g id="sel" pointer-events="none"></g><rect id="cap" x="${M.l}" y="${M.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="tip"></div><div class="tip htip" id="htip"></div>`;
   host.innerHTML=g;
 
   const svg=$("svg"),tip=$("tip"),htip=$("htip"),hl=$("hl"),hd=$("hd");
@@ -481,13 +495,7 @@ function drawPlot(){
     tip.style.left=(M.l*(r.width/W)+8).toFixed(0)+"px";tip.style.top=(M.t*(r.height/H)+6).toFixed(0)+"px";
   };
   /* 마우스 오버 툴팁: 강조선 옆(커서 높이)에 날짜/경과일과 시즌별 값을 표시 */
-  const showHover=(xv,rows,X,ey)=>{
-    const day=S.x==="day";
-    htip.innerHTML=`<div class="th">${day?T(`${xv}일차`,`Day ${xv}`):fmtDate(xv)}</div><div class="tg">`+rows.map(({s,p})=>{
-      const meta=[];
-      if(day)meta.push(p.d.date);
-      if(p.d.volume!=null)meta.push(T("거래량","Vol")+" "+cmp(p.d.volume));
-      return `<div class="tr">${swatch(s.color,18)}<span class="tn">${esc(nm("leagues",s.lg.name))}</span><b class="tv">${fmt(p.y)}</b><span class="u">${UNITS[UEFF].n}</span><span class="m">${meta.join(" · ")}</span></div>`}).join("")+`</div>`;
+  const placeTip=(X,ey)=>{
     htip.style.display="block";
     const r=svg.getBoundingClientRect(),cb=$("chart").getBoundingClientRect();
     const tw=htip.offsetWidth,th=htip.offsetHeight,ox=r.left-cb.left,oy=r.top-cb.top;
@@ -496,10 +504,54 @@ function drawPlot(){
     let top=ey-cb.top+14;if(top+th>oy+r.height)top=ey-cb.top-14-th;
     htip.style.left=Math.max(0,left).toFixed(0)+"px";htip.style.top=Math.max(0,top).toFixed(0)+"px";
   };
+  const showHover=(xv,rows,X,ey)=>{
+    const day=S.x==="day";
+    htip.innerHTML=`<div class="th">${day?T(`${xv}일차`,`Day ${xv}`):fmtDate(xv)}</div><div class="tg">`+rows.map(({s,p})=>{
+      const meta=[];
+      if(day)meta.push(p.d.date);
+      if(p.d.volume!=null)meta.push(T("거래량","Vol")+" "+cmp(p.d.volume));
+      return `<div class="tr">${swatch(s.color,18)}<span class="tn">${esc(nm("leagues",s.lg.name))}</span><b class="tv">${fmt(p.y)}</b><span class="u">${UNITS[UEFF].n}</span><span class="m">${meta.join(" · ")}</span></div>`}).join("")+`</div>`;
+    placeTip(X,ey);
+  };
   const hide=()=>{hl.setAttribute("visibility","hidden");hd.innerHTML="";htip.style.display="none";showLegend(null)};
-  svg.addEventListener("pointerleave",hide);
+  /* 클릭하고 드래그: 시작~현재 위치 구간을 음영으로 표시하고, 리그별 가격 변화(%)를 툴팁에 보여줌 (구글 파이낸스 방식). 놓으면 사라짐 */
+  const sel=$("sel");let dr=null;
+  const pct=v=>{const a=Math.abs(v);return (v<0?"−":"+")+(a>=1000?Math.round(a).toLocaleString("en-US"):a>=100?a.toFixed(0):a.toFixed(1))+"%"};
+  const endDrag=()=>{if(!dr)return;const id=dr.id;dr=null;sel.innerHTML="";htip.style.display="none";try{svg.releasePointerCapture(id)}catch(_){}};
+  const dragMove=(sx,ey)=>{
+    sx=Math.min(W-M.r,Math.max(M.l,sx));
+    const xc=nearest(x0+(sx-M.l)/iw*(x1-x0));
+    hl.setAttribute("visibility","hidden");hd.innerHTML="";
+    if(xc===dr.xa){sel.innerHTML="";htip.style.display="none";return}
+    const lo=Math.min(dr.xa,xc),hi=Math.max(dr.xa,xc),tol=3*LAY.unit,day=S.x==="day";
+    const near=(s,v)=>{let best=null,bd=Infinity;for(const p of s.pts){const d=Math.abs(p.x-v);if(d<bd){bd=d;best=p}}return bd<=tol?best:null}; /* 그 리그에서 가장 가까운 날 */
+    const rows=SR.map(s=>({s,a:near(s,lo),b:near(s,hi)})).filter(o=>o.a&&o.b&&o.a!==o.b);
+    const Xa=px(lo),Xb=px(hi);
+    sel.innerHTML=`<rect x="${Xa}" y="${M.t}" width="${Xb-Xa}" height="${ih}" fill="var(--g)" fill-opacity=".12"/><line x1="${Xa}" x2="${Xa}" y1="${M.t}" y2="${H-M.b}" stroke="var(--g)" stroke-opacity=".6"/><line x1="${Xb}" x2="${Xb}" y1="${M.t}" y2="${H-M.b}" stroke="var(--g)" stroke-opacity=".6"/>`
+      +rows.map(({s,a,b})=>`<circle cx="${px(a.x)}" cy="${py(a.y)}" r="4" fill="${s.color}"/><circle cx="${px(b.x)}" cy="${py(b.y)}" r="4.5" fill="${s.color}"/>`).join("");
+    const nd=Math.round((hi-lo)/LAY.unit);
+    const th=day?T(`${lo}→${hi}일차 (${nd}일)`,`Day ${lo}→${hi} (${nd} days)`):`${fmtDate(lo)} → ${fmtDate(hi)} (${T(`${nd}일`,`${nd} days`)})`;
+    htip.innerHTML=`<div class="th">${th}</div>`+(rows.length
+      ?`<div class="tg">`+rows.map(({s,a,b})=>{const ch=(b.y/a.y-1)*100;
+        return `<div class="tr">${swatch(s.color,18)}<span class="tn">${esc(nm("leagues",s.lg.name))}</span><b class="tv" style="color:${ch<0?"var(--bad)":"var(--pos)"}">${pct(ch)}</b><span class="u">${fmt(a.y)} → ${fmt(b.y)} ${UNITS[UEFF].n}</span><span class="m"></span></div>`}).join("")+`</div>`
+      :`<div class="m">${T("이 구간에 비교할 데이터가 없습니다","No data to compare in this range")}</div>`);
+    showLegend(xc);
+    placeTip(px(xc),ey);
+  };
+  svg.addEventListener("pointerdown",e=>{
+    if(e.button!==0||!XS.length)return;
+    const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width);
+    if(sx<M.l||sx>W-M.r)return;
+    dr={xa:nearest(x0+(sx-M.l)/iw*(x1-x0)),id:e.pointerId};
+    try{svg.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  svg.addEventListener("pointerup",endDrag);
+  svg.addEventListener("pointercancel",endDrag);
+  svg.addEventListener("lostpointercapture",endDrag);
+  svg.addEventListener("pointerleave",()=>{if(!dr)hide()});
   svg.addEventListener("pointermove",e=>{
     const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width);
+    if(dr&&XS.length){dragMove(sx,e.clientY);return}
     if(!XS.length||sx<M.l-4||sx>W-M.r+4){hide();return}
     const xv=nearest(x0+(sx-M.l)/iw*(x1-x0));
     const rows=SR.map(s=>({s,p:s.map.get(xv)})).filter(o=>o.p);
@@ -513,7 +565,7 @@ function drawPlot(){
   showLegend(null);
 }
 
-/* ---------- 하단 범위 바 ---------- */
+/* ---------- 기간 바 ---------- */
 /* 양 끝(핸들)을 끌면 표시할 날짜 폭 조절, 바 자체를 끌면 전체 범위 안에서 구간 이동,
    바 밖의 트랙을 누르면 그 위치로 구간을 옮긴 뒤 계속 끌 수 있습니다. 누르고 있는 동안 일수를 툴팁으로 보여줍니다. */
 function bindNav(){
@@ -559,7 +611,7 @@ function bindNav(){
 
 /* ---------- 진입 시점별 추천 ---------- */
 /* REC-START */
-/* 선택한 리그들에서, 하단 바 구간 [a,b] 안의 각 진입일 가격 대비 b일차 가격의 배수를 계산합니다.
+/* 선택한 리그들에서, 기간 바 구간 [a,b] 안의 각 진입일 가격 대비 b일차 가격의 배수를 계산합니다.
    진입일을 구간 길이에 비례한 여러 구간(비율은 CFG.bandWeights)으로 나누고, 리그별 중앙값 → 리그 간 기하평균으로 순위를 매깁니다. */
 const PX=new Map(); /* "리그|화폐|…" -> {pr:일차→가격, last:마지막 일차} */
 function pxOf(ln,item){
@@ -582,13 +634,25 @@ function pxOf(ln,item){
   PX.set(key,r);return r;
 }
 const priceAt=(r,n)=>{for(let k=0;k<=CFG.priceTolDays;k++)for(const o of(k?[-k,k]:[0])){const v=r.pr.get(n+o);if(v)return v}return null}; /* 같은 날 → ±1일 → ±2일 … 순서 */
+/* 표(투자 기간·진입 시점)가 쓰는 리그와 범위.
+   표의 행을 눌러 화폐만 바꾸면 화폐마다 데이터가 있는 리그·일차 범위가 달라 그래프 범위가 바뀌고, 그러면 표 순위도 달라집니다.
+   그래서 행을 누른 시점의 리그·범위를 그대로 유지하고, 기간 바·리그 선택·화폐 드롭다운을 조작하면 해제합니다. */
+let HOLD=null;
+const holdSig=()=>S.cur+"|"+[...S.sel].sort().join(",")+"|"+(S.view?S.view.a+","+S.view.b:"-");
+function tblCtx(){
+  if(HOLD&&HOLD.sig===null)HOLD.sig=holdSig(); /* 행 클릭 직후 첫 계산: 그래프가 새 화폐로 그려진 뒤의 상태를 기준으로 삼음 */
+  if(HOLD&&HOLD.sig!==holdSig())HOLD=null;
+  if(HOLD)return HOLD;
+  const [va,vb]=curView();
+  return {names:[...S.sel],va,vb};
+}
 const PIN=CFG.pin; /* 목록 맨 위에 항상 표시할 화폐 */
 const median=a=>{const s=a.slice().sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
 function recCalc(){
   if(!LAY||!DATA||S.x!=="day")return null;
-  const names=[...S.sel].filter(n=>DATA.leagues[n]);
+  const cx=tblCtx(),names=cx.names.filter(n=>DATA.leagues[n]);
   if(!names.length)return null;
-  const [va,vb]=curView(),a=Math.ceil(va-1e-9),b=Math.floor(vb+1e-9);
+  const va=cx.va,vb=cx.vb,a=Math.ceil(va-1e-9),b=Math.floor(vb+1e-9);
   const first=Math.max(a,CFG.firstDay),last=b-Math.max(CFG.endTrimMin,Math.round((b-a)*CFG.endTrimRatio)),cnt=last-first+1; /* 진입 가능한 날: 1일차(가격 불안정)와 끝 며칠은 제외 */
   let items=null;
   for(const n of names){const ks=Object.keys(DATA.leagues[n].currencies||{});items=items?items.filter(k=>ks.includes(k)):ks}
@@ -608,19 +672,19 @@ function recCalc(){
   for(const bd of R.bands){
     const rows=[];
     for(const it of items){
-      const lgv=[];
+      const lgv=[],lgb=[]; /* lgb: 리그별 진입 구간 가격(Exalted) 중앙값 → 예상 가격 계산용 */
       for(const ln of names){
         const r=pxOf(ln,it);if(!r)continue;
         const exD=Math.min(b,r.last),pe=priceAt(r,exD);if(!pe)continue;
-        const rt=[];
+        const rt=[],p0s=[];
         for(let t=bd.s;t<=bd.e;t++){
           if(t>=exD)continue;
-          const p0=priceAt(r,t);if(p0)rt.push(pe/p0);
+          const p0=priceAt(r,t);if(p0){rt.push(pe/p0);p0s.push(p0)}
         }
-        if(rt.length)lgv.push(median(rt)); /* 이 진입 구간에 데이터가 없는 리그는 건너뜀 */
+        if(rt.length){lgv.push(median(rt));lgb.push(median(p0s))} /* 이 진입 구간에 데이터가 없는 리그는 건너뜀 */
       }
       if(!lgv.length)continue;
-      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv)});
+      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv),pb:Math.exp(lgb.reduce((s,x)=>s+Math.log(x),0)/lgb.length)});
     }
     const rest=rows; /* 디바인·카오스 오브도 순위에 포함 (맨 위 고정 행과 중복 표시 가능) */
     bd.nl=rest.length?Math.max(...rest.map(o=>o.nl)):0;
@@ -636,9 +700,14 @@ function renderRec(){
   SHOWN.rec=new Set();
   const R=recCalc();
   if(!R){note.textContent="";host.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
-  note.innerHTML=T(`각 진입 시점 대비 ${V(R.b)}일차까지의 가격 배수의 리그별 중앙값의 기하평균. 선택한 리그 ${V(R.names.length)}개 · 아래 바 ${V(R.a+"~"+R.b)}일차 · 화폐 ${V(R.items)}종 기준. 괄호 안은 최저 리그 값.`,
-    `Geometric mean of the per-league medians of the price multiple from each entry time to day ${V(R.b)}. Based on ${V(R.names.length)} selected league(s), day ${V(R.a+"–"+R.b)} of the bar below, ${V(R.items)} currencies. Parentheses: lowest league value.`);
-  if(R.short){host.innerHTML=`<p class="emptyc">${T("구간이 너무 짧거나 화폐가 없습니다. 아래 바에서 구간을 넓혀 보세요.","The range is too short or there are no currencies. Widen it with the bar below.")}</p>`;return}
+  note.innerHTML=S.pr.rec
+    ?T(`각 진입 시점 대비 ${V(R.b)}일차까지의 가격의 기하평균에 배율을 곱한 값.`,
+      `Geometric mean of the prices multiplied by the multiple, from each entry time to day ${V(R.b)}.`)
+    :T(`각 진입 시점 대비 ${V(R.b)}일차까지의 가격 배수의 리그별 중앙값의 기하평균.`,
+      `Geometric mean of the per-league medians of the price multiple from each entry time to day ${V(R.b)}.`);
+  note.innerHTML+=T(` 선택한 리그 ${V(R.names.length)}개 · ${V(R.a+"~"+R.b)}일차 · 화폐 ${V(R.items)}종 기준.${S.pr.rec?"":" 괄호 안은 최저 리그 값."}`,
+    ` Based on ${V(R.names.length)} selected league(s), day ${V(R.a+"–"+R.b)}, ${V(R.items)} currencies.${S.pr.rec?"":" Parentheses: lowest league value."}`);
+  if(R.short){host.innerHTML=`<p class="emptyc">${T("구간이 너무 짧거나 화폐가 없습니다. 기간 바에서 구간을 넓혀 보세요.","The range is too short or there are no currencies. Widen it with the period bar.")}</p>`;return}
   R.bands.forEach(bd=>[...bd.pin,...bd.top].forEach(o=>SHOWN.rec.add(o.name)));
   const lab=bd=>bd.s===bd.e?T(`${bd.s}일차`,`Day ${bd.s}`):T(`${bd.s}~${bd.e}일차`,`Day ${bd.s}–${bd.e}`);
   const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v.toFixed(1));
@@ -647,7 +716,7 @@ function renderRec(){
     const hi=Math.max(...bd.pin.map(q=>q.gm)),lo=Math.min(...bd.pin.map(q=>q.gm));
     return o.gm>hi?" up":o.gm<lo?" dn":"";
   };
-    host.innerHTML=`<div class="recg">${R.bands.map(bd=>`<table><thead><tr><th colspan="3"><span class="hl">${lab(bd)}</span>${bd.nl&&bd.nl<R.names.length?` <small>${T(`(${bd.nl}/${R.names.length}개 리그)`,`(${bd.nl}/${R.names.length} leagues)`)}</small>`:""}</th></tr></thead><tbody>${[...bd.pin.map((o,i)=>[o,bd.top.length&&i===bd.pin.length-1]),...bd.top.map(o=>[o,false])].map(([o,sep])=>`<tr${sep?' class="sep"':""}><td>${icon(o.name)}${esc(nm("items",o.name))}</td><td class="rx${rc(bd,o)}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td></tr>`).join("")}</tbody></table>`).join("")}</div>`;
+    host.innerHTML=`<div class="recg">${R.bands.map(bd=>`<table><thead><tr><th colspan="3"><span class="hl">${lab(bd)}</span>${bd.nl&&bd.nl<R.names.length?` <small>${T(`(${bd.nl}/${R.names.length}개 리그)`,`(${bd.nl}/${R.names.length} leagues)`)}</small>`:""}</th></tr></thead><tbody>${[...bd.pin.map((o,i)=>[o,bd.top.length&&i===bd.pin.length-1]),...bd.top.map(o=>[o,false])].map(([o,sep])=>`<tr${sep?' class="sep"':""} data-cur="${esc(o.name)}"><td>${icon(o.name)}${esc(nm("items",o.name))}</td>${rxCells(o,S.pr.rec?o.pb:null,S.pr.rec,rc(bd,o),mx,S.pr.rec?dvExp(bd.pin,q=>q.pb):null)}</tr>`).join("")}</tbody></table>`).join("")}</div>`;
 }
 let recRaf=0;
 function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;renderRec();renderInv();renderUnused()})}
@@ -655,13 +724,13 @@ function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;
 
 /* ---------- 투자 기간에 따른 보유 화폐 ---------- */
 /* INV-START */
-/* 그래프 아래 범위 바의 시작 일차(a)를 진입일로 보고, 선택한 리그들에서 "a일차에 사서 N일 뒤(또는 시즌 끝)에 팔았을 때"의
+/* 그래프 기간 바의 시작 일차(a)를 진입일로 보고, 선택한 리그들에서 "a일차에 사서 N일 뒤(또는 시즌 끝)에 팔았을 때"의
    가격 배수를 계산합니다. N일은 그래프의 일차 기준입니다. 리그별 중앙값 → 리그 간 기하평균으로 순위를 매기는 방식은 진입 시점별 추천과 같습니다. */
 function invCalc(){
   if(!LAY||!DATA||S.x!=="day")return null;
-  const names=[...S.sel].filter(n=>DATA.leagues[n]);
+  const cx=tblCtx(),names=cx.names.filter(n=>DATA.leagues[n]);
   if(!names.length)return null;
-  const [va]=curView(),a=Math.max(CFG.firstDay,Math.ceil(va-1e-9));
+  const va=cx.va,a=Math.max(CFG.firstDay,Math.ceil(va-1e-9));
   const R={names,a,items:0,cols:[]};
   let items=null;
   for(const n of names){const ks=Object.keys(DATA.leagues[n].currencies||{});items=items?items.filter(k=>ks.includes(k)):ks}
@@ -671,20 +740,20 @@ function invCalc(){
   for(const N of CFG.invPeriods){
     const rows=[];
     for(const it of items){
-      const lgv=[];
+      const lgv=[],lgb=[]; /* lgb: 리그별 진입 가격(Exalted) 중앙값 → 예상 가격 계산용 */
       for(const ln of names){
         const r=pxOf(ln,it);if(!r)continue;
-        const rt=[];
+        const rt=[],p0s=[];
         for(let t=t0;t<=t1;t++){
           const e=N===Infinity?r.last:t+N; /* 팔 날: 투자 기간 뒤, 또는 그 시즌의 마지막 데이터 일차 */
           if(e<=t||e>r.last)continue;      /* 그 시즌이 그만큼 길지 않으면 이 진입일은 건너뜀 */
           const p0=priceAt(r,t),p1=priceAt(r,e);
-          if(p0&&p1)rt.push(p1/p0);
+          if(p0&&p1){rt.push(p1/p0);p0s.push(p0)}
         }
-        if(rt.length)lgv.push(median(rt)); /* 이 기간을 계산할 데이터가 없는 리그는 건너뜀 */
+        if(rt.length){lgv.push(median(rt));lgb.push(median(p0s))} /* 이 기간을 계산할 데이터가 없는 리그는 건너뜀 */
       }
       if(!lgv.length)continue;
-      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv)});
+      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv),pb:Math.exp(lgb.reduce((s,x)=>s+Math.log(x),0)/lgb.length)});
     }
     const rest=rows; /* 디바인·카오스 오브도 순위에 포함 */
     const col={N,nl:rest.length?Math.max(...rest.map(o=>o.nl)):0};
@@ -702,8 +771,13 @@ function renderInv(){
   if(!R.items)return msg("선택한 리그들에 화폐가 없습니다.","The selected leagues have no currencies.");
   R.cols.forEach(c=>[...c.pin,...c.top].forEach(o=>SHOWN.inv.add(o.name)));
   const m=R.names.length,a=R.a,lo=Math.max(CFG.firstDay,a-CFG.invWindow),hi=a+CFG.invWindow;
-  note.innerHTML=T(`아래 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균. 선택한 리그 ${V(m)}개 · 화폐 ${V(R.items)}종 기준. 괄호 안은 최저 리그 값.`,
-    `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the bar below, ${V("day "+a)} (${V("day "+lo+"–"+hi)}). Based on ${V(m)} selected league(s), ${V(R.items)} currencies. Parentheses: lowest league value.`);
+  note.innerHTML=S.pr.inv
+    ?T(`기간 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격의 기하평균에 배율을 곱한 값.`,
+      `Geometric mean of the prices multiplied by the multiple after each investment period, entering at the start of the period bar, ${V("day "+a)} (${V("day "+lo+"–"+hi)}).`)
+    :T(`기간 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균.`,
+      `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the period bar, ${V("day "+a)} (${V("day "+lo+"–"+hi)}).`);
+  note.innerHTML+=T(` 선택한 리그 ${V(m)}개 · 화폐 ${V(R.items)}종 기준.${S.pr.inv?"":" 괄호 안은 최저 리그 값."}`,
+    ` Based on ${V(m)} selected league(s), ${V(R.items)} currencies.${S.pr.inv?"":" Parentheses: lowest league value."}`);
   const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v.toFixed(1));
   const rc=(col,o)=>{ /* 디바인·카오스 오브 배율과 비교: 둘 다보다 높으면 up, 둘 다보다 낮으면 dn */
     if(PIN.includes(o.name)||!col.pin.length)return "";
@@ -719,12 +793,38 @@ function renderInv(){
   host.innerHTML=`<div class="recg">${R.cols.map(col=>{
     const list=[...col.pin.map((o,i)=>[o,col.top.length&&i===col.pin.length-1]),...col.top.map(o=>[o,false])];
     const body=list.length
-      ?list.map(([o,sep])=>`<tr${sep?' class="sep"':""}><td>${icon(o.name)}${esc(nm("items",o.name))}</td><td class="rx${rc(col,o)}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td></tr>`).join("")
+      ?list.map(([o,sep])=>`<tr${sep?' class="sep"':""} data-cur="${esc(o.name)}"><td>${icon(o.name)}${esc(nm("items",o.name))}</td>${rxCells(o,S.pr.inv?o.pb:null,S.pr.inv,rc(col,o),mx,S.pr.inv?dvExp(col.pin,q=>q.pb):null)}</tr>`).join("")
       :`<tr><td class="na" colspan="3">${T("데이터 없음 (시즌이 이 기간보다 짧음)","No data (leagues are shorter than this period)")}</td></tr>`;
     return `<table><thead><tr>${head(col)}</tr></thead><tbody>${body}</tbody></table>`;
   }).join("")}</div>`;
 }
 /* INV-END */
+
+/* ---------- 표시 전환: 예상 배율 ↔ 예상 가격 ---------- */
+/* 예상 가격 = 선택한 리그들의 진입 시점 가격(Exalted)(리그별 중앙값)의 기하평균 × 배율.
+   진입 시점 가격은 배율 계산에 쓴 진입일(투자 기간: 바 시작일 ±invWindow, 진입 시점: 각 구간의 진입일들)의 중앙값입니다.
+   해당 일차 데이터가 없는 리그는 건너뜁니다. */
+const swText=t=>S.pr[t]
+  ?{lab:T("예상 배율","Expected multiple"),tip:T("예상 배율로 표시","Show as expected multiple")}
+  :{lab:T("예상 가격","Expected price"),tip:T("예상 가격으로 표시","Show as expected price")};
+const swHtml=t=>{const x=swText(t);return `<button type="button" class="swp" data-sw="${t}" title="${x.tip}" aria-label="${x.tip}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><span>${x.lab}</span></button>`};
+function syncSw(){
+  document.querySelectorAll("[data-sw]").forEach(b=>{const x=swText(b.dataset.sw);b.title=x.tip;b.setAttribute("aria-label",x.tip);b.querySelector("span").textContent=x.lab});
+}
+/* 1 디바인의 예상 가격(Exalted). 표의 디바인 행에서 같은 방식으로 계산 */
+const dvExp=(pin,bf)=>{const q=pin.find(x=>x.name==="Divine Orb");if(!q)return null;const b=bf(q);return b>0?b*q.gm:null};
+/* ex: 예상 가격(Exalted), dv: 1 디바인의 예상 가격(Exalted). 1디바인 이상이면 d(정수), 아니면 e */
+const kfmt=v=>{ /* 한 자리 수는 소수 한 자리, 10 이상은 정수(반올림). 천 단위는 쉼표로 구분 */
+  if(v<10){const t=v.toFixed(1);if(parseFloat(t)<10)return t}
+  return Math.round(v).toLocaleString("en-US")};
+const pfmt=(ex,dv)=>dv>0&&ex>=dv
+  ?kfmt(ex/dv)+`<span class="pu">d</span>`
+  :kfmt(ex)+`<span class="pu">e</span>`;
+function rxCells(o,base,price,cls,mx,dv){
+  if(!price)return `<td class="rx${cls}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td>`;
+  if(!(base>0))return `<td class="rx${cls}">-</td><td class="rx mn"></td>`;
+  return `<td class="rx${cls}">${pfmt(base*o.gm,dv)}</td><td class="rx mn"></td>`;
+}
 
 /* 맨 아래 좌측: 위의 추천 표(투자 기간·진입 시점) 어디에도 한 번도 나오지 않은 모든 화폐 */
 const SHOWN={rec:new Set(),inv:new Set()};
@@ -741,7 +841,7 @@ function renderUnused(){
 $("app").addEventListener("change",e=>{
   const t=e.target;
   if(t.dataset.lg!==undefined){t.checked?S.sel.add(t.dataset.lg):S.sel.delete(t.dataset.lg);update()}
-  else if(t.id==="cur"){S.cur=t.value;prepLeagues();build();const c=$("cur");if(c)c.focus()}
+  else if(t.id==="cur"){S.cur=t.value;prepLeagues();refreshChips();update()} /* build()로 화면 전체를 다시 만들면 스크롤이 맨 위로 튀므로 쓰지 않음 */
   else if(t.id==="unit"){S.unit=t.value;update()}
 });
 /* 휠: 커서 위치를 기준으로 확대/축소. 이미 전체 범위에서 축소하려는 휠은 페이지 스크롤에 양보합니다. */
@@ -758,11 +858,30 @@ $("app").addEventListener("wheel",e=>{
 },{passive:false});
 /* 섹션 제목을 더블클릭하면 접기/펼치기 (build()로 다시 그려도 상태 유지) */
 $("app").addEventListener("dblclick",e=>{
+  if(e.target.closest&&e.target.closest(".swp"))return; /* 전환 버튼을 빠르게 두 번 눌러도 접히지 않게 */
   const h=e.target.closest&&e.target.closest(".fold>h2");if(!h)return;
   const sec=h.parentElement,k=sec.dataset.fold;
   FOLD.has(k)?FOLD.delete(k):FOLD.add(k);
   sec.classList.toggle("folded",FOLD.has(k));
   getSelection().removeAllRanges();
+});
+/* 배율 ↔ 예상 가격 전환 (섹션별) */
+$("app").addEventListener("click",e=>{
+  const row=e.target.closest&&e.target.closest("[data-cur]"); /* 추천 표의 행: 해당 화폐로 그래프·드롭다운 전환 */
+  if(row){
+    const c=row.dataset.cur;
+    if(c&&c!==S.cur&&CUR.some(x=>x.name===c)){
+      const cx=tblCtx();HOLD={names:cx.names,va:cx.va,vb:cx.vb,sig:null}; /* 표는 지금 상태 그대로 유지 */
+      S.cur=c;prepLeagues();
+      refreshChips();
+      update(); /* 그래프·드롭다운·표 갱신 */
+    }
+    return;
+  }
+  const b=e.target.closest&&e.target.closest("[data-sw]");if(!b)return;
+  const t=b.dataset.sw;S.pr[t]=!S.pr[t];
+  syncSw();
+  t==="inv"?renderInv():renderRec();
 });
 $("skip").addEventListener("click",()=>$("app").focus());
 new ResizeObserver(()=>{const b=$("chart");if(b&&SR.length&&b.clientWidth!==drawnW)drawChart()}).observe(document.body);
