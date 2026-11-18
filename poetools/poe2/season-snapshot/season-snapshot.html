@@ -58,8 +58,8 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .phead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
 .phead h2{margin:0}
 .nav{position:relative;margin-top:10px;user-select:none;-webkit-user-select:none}
-.nav-track{position:relative;height:38px;border-radius:6px;background:color-mix(in oklab,var(--mute) 18%,transparent);cursor:pointer;touch-action:none}
-.nav-win{position:absolute;top:0;bottom:0;box-sizing:border-box;border:1px solid var(--g);border-radius:6px;background:color-mix(in oklab,var(--g) 9%,transparent);cursor:grab} /* 뒤의 배경 그래프가 비쳐 보이도록 옅게 */
+.nav-track{position:relative;height:38px;border-radius:6px;background:color-mix(in oklab,var(--mute) 12%,transparent);cursor:pointer;touch-action:none}
+.nav-win{position:absolute;top:0;bottom:0;box-sizing:border-box;border:1px solid var(--g);border-radius:6px;background:color-mix(in oklab,var(--g) 4%,transparent);cursor:grab} /* 뒤의 배경 그래프가 비쳐 보이도록 옅게 */
 .nav-win.drag{cursor:grabbing}
 .nav-bg{position:absolute;inset:0;width:100%;height:100%;border-radius:6px;pointer-events:none;overflow:hidden} /* 기간 바 배경 그래프 (바 창 뒤에 투명하게) */
 .nav-bg .a{fill:var(--g);fill-opacity:.12}
@@ -91,7 +91,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .rec .ci{margin-right:6px;vertical-align:middle;object-fit:contain} /* 화폐 아이콘 */
 .rec td.rx .xm{font-size:calc(var(--fs) - 4px)}
 .rec td.mn .xm{font-size:calc(var(--fs) - 6px)}
-.rec td.rx{font-size:calc(var(--fs) - .5px);width:1%;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:0;padding-right:4px}
+.rec td.rx{font-size:calc(var(--fs) - 1px);width:1%;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:0;padding-right:4px}
 .rec td.rx.up{color:var(--pos)}.rec td.rx.dn{color:var(--bad)} /* 배율: 디바인·카오스보다 높으면 녹색, 낮으면 적색, 사이는 기본색 */
 .rec td.mn{padding-right:3px;font-size:calc(var(--fs) - 3px);color:color-mix(in oklab,var(--mute) 60%,var(--sf2))} /* 괄호 값은 더 흐리게 */
 .rec th small.sub{display:inline;margin-left:2px;white-space:normal} /* 투자 기간 표 머리글: 같은 줄에 진입→종료 일차 (일차 숫자는 줄바꿈 안 함, 뒤의 리그 수만 필요 시 줄바꿈) */
@@ -99,7 +99,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .rec th .dr{font:400 13.5px var(--sans);white-space:nowrap} /* 진입→종료 일차: 아이템 이름과 같은 글자색(상속), 13.5px */
 .rec td.na{color:var(--mute);text-align:center}
 .rec tr[data-cur]{cursor:pointer} /* 행 클릭 → 위 그래프·화폐 선택이 그 화폐로 전환 */
-.rec tr[data-cur]:hover td{background:color-mix(in oklab,var(--g) 14%,transparent)} /* 연한 투명 하이라이트 */
+.rec tr[data-cur]:hover td{background:color-mix(in oklab,var(--g) 8%,transparent)} /* 연한 투명 하이라이트 */
 .rec tbody tr:last-child[data-cur]:hover td:first-child{border-bottom-left-radius:calc(var(--r) - 1px)}
 .rec tbody tr:last-child[data-cur]:hover td:last-child{border-bottom-right-radius:calc(var(--r) - 1px)}
 /* 배율 ↔ 예상 가격 전환 버튼: 섹션 제목 줄의 오른쪽 끝 */
