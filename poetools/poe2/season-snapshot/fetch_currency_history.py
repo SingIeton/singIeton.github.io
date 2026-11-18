@@ -130,6 +130,18 @@ CURRENCIES_EXCLUDE = """
 # 수집하지 않을 커런시를 여기에 붙여넣으세요
 """
 
+# ---- 카테고리 표시 이름 -------------------------------------------------------
+# API가 주는 카테고리 id(예: currency, abyss, lineagesupportgems)를 currency_data.js 에 기록하기 전에 바꿉니다.
+#   · 왼쪽 키워드가 카테고리 id에 들어 있으면(대소문자·기호 무시) 오른쪽 이름으로 바꿉니다. 위에서부터 먼저 맞는 것을 씁니다.
+#   · 같은 이름으로 바꾸면 한 카테고리로 합쳐집니다(incursion, vaal -> Temple).
+#   · 아래 키워드에 걸리지 않는 카테고리는 첫 글자만 대문자로 바꿔 기록합니다(currency -> Currency, abyss -> Abyss).
+#   · 한글 이름은 season-snapshot.html 의 NAME_KO.categories 에서 이 영어 이름을 키로 지정합니다.
+CATEGORY_RENAME = {
+    "incursion": "Temple",
+    "vaal": "Temple",
+    "lineage": "Gem",
+}
+
 # =============================================================================
 # 여기부터는 수정할 필요 없는 코드
 # =============================================================================
@@ -330,6 +342,16 @@ def fetch_catalog(league):
 
 
 # ---------------------------------------------------------------- 커런시 목록
+def display_category(cat):
+    """API 카테고리 id -> 표시용 영어 이름. CATEGORY_RENAME 에 걸리면 그 이름, 아니면 첫 글자만 대문자."""
+    s = str(cat)
+    key = re.sub(r"[^a-z0-9]", "", s.lower())
+    for kw, label in CATEGORY_RENAME.items():
+        if re.sub(r"[^a-z0-9]", "", kw.lower()) in key:
+            return label
+    return " ".join(w[:1].upper() + w[1:] for w in re.split(r"[_\-\s]+", s) if w)
+
+
 def resolve_currencies(names, catalog):
     resolved = []
     for name in names:
@@ -337,7 +359,7 @@ def resolve_currencies(names, catalog):
         if hit is None:
             warn(f"  경고: '{name}' 을(를) 카탈로그에서 찾지 못해 건너뜁니다.")
             continue
-        resolved.append({"name": hit["name"], "id": hit["id"], "category": hit["category"]})
+        resolved.append({"name": hit["name"], "id": hit["id"], "category": display_category(hit["category"])})
     return resolved
 
 

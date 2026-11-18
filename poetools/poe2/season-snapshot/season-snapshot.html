@@ -96,7 +96,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .rec td.mn{padding-right:3px;font-size:calc(var(--fs) - 3px);color:color-mix(in oklab,var(--mute) 60%,var(--sf2))} /* 괄호 값은 더 흐리게 */
 .rec th small.sub{display:inline;margin-left:2px;white-space:normal} /* 투자 기간 표 머리글: 같은 줄에 진입→종료 일차 (일차 숫자는 줄바꿈 안 함, 뒤의 리그 수만 필요 시 줄바꿈) */
 .rec th .hl{color:var(--g)} /* 머리글 제목(7일, 31~40일차 등): 포인트색 */
-.rec th .dr{font:400 13.5px var(--sans);white-space:nowrap} /* 진입→종료 일차: 아이템 이름과 같은 글자색(상속), 13.5px */
+.rec th .dr{font:400 12.5px var(--sans);white-space:nowrap} /* 진입→종료 일차: 아이템 이름과 같은 글자색(상속), 12.5px */
 .rec td.na{color:var(--mute);text-align:center}
 .rec tr[data-cur]{cursor:pointer} /* 행 클릭 → 위 그래프·화폐 선택이 그 화폐로 전환 */
 .rec tr[data-cur]:hover td{background:color-mix(in oklab,var(--g) 8%,transparent)} /* 연한 투명 하이라이트 */
@@ -215,8 +215,13 @@ const NAME_KO={
 	"Origin Spark":                "",
 
   },
-  /* 카테고리(드롭다운 그룹 제목): API가 주는 id가 영어 소문자로 보입니다. 필요하면 아래에 "id":"한글" 형태로 추가하세요. */
+  /* 카테고리(드롭다운 그룹 제목): 키는 fetch_currency_history.py 가 기록하는 영어 이름(첫 글자 대문자)과 같아야 합니다. */
   categories:{
+    "Currency": "화폐",
+    "Abyss":    "심연",
+    "Ritual":   "의식",
+    "Gem":      "젬",
+    "Temple":   "사원",
   },
 };
 const nm=(kind,name)=>(LANG!=="en"&&NAME_KO[kind][name])||name; /* 한글 이름이 있으면 한글, 없으면 영어 */
@@ -274,8 +279,9 @@ function prepLeagues(){
   }).filter(Boolean).sort((a,b)=>a.start<b.start?1:-1); /* 최신 시즌이 앞 */
   const keep=[...S.sel].filter(n=>LG.some(l=>l.name===n));
   if(keep.length)S.sel=new Set(keep);
-  else{ /* 처음 상태: Dawn of the Hunt와 데이터가 CFG.minDays일 미만인 리그는 기본 해제. 전부 해제되면 비어 보이지 않게 전체 선택 */
-    const def=LG.filter(l=>l.name!=="Dawn of the Hunt"&&l.days.length>=CFG.minDays).map(l=>l.name);
+  else{ /* 처음 상태: Dawn of the Hunt, Fate of the Vaal과 데이터가 CFG.minDays일 미만인 리그는 기본 해제. 전부 해제되면 비어 보이지 않게 전체 선택 */
+    const off=["Dawn of the Hunt","Fate of the Vaal"];
+    const def=LG.filter(l=>!off.includes(l.name)&&l.days.length>=CFG.minDays).map(l=>l.name);
     S.sel=new Set(def.length?def:LG.map(l=>l.name));
   }
 }
@@ -321,11 +327,7 @@ function getSeries(){
   }).filter(s=>s.pts.length);
 }
 function noteText(){
-  const cn=esc(nm("items",S.cur)),u=uname(UEFF);
-  let s="";
-  if(S.unit!=="auto"&&S.unit!==UEFF)s+=" "+T("선택한 단위로 환산할 수 없어 Exalted로 표시합니다.","Can't convert to the selected unit, so Exalted is shown.");
-  else if(UEFF!=="exalted")s+=" "+T(`같은 날의 ${V(u)} 오브 가격으로 환산했습니다.`,`Converted with the same day's ${V(u)} Orb price.`);
-  return (s?s+" ":"")+T("마우스 휠로 확대·축소하고, 기간 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 하단 추천 화폐 정보도 함께 변경됩니다. 그래프를 드래그하여 가격 변화(%)를 확인할 수 있습니다.","Scroll to zoom. Drag the ends of the period bar to set how many days are shown, or drag the bar to move the range. Adjusting the period bar also updates the recommended currencies below. Drag across the chart to check the % price change.");
+  return T("마우스 휠로 확대·축소하고, 기간 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 하단 추천 화폐 정보도 함께 변경됩니다. 그래프를 드래그하여 가격 변화(%)를 확인할 수 있습니다.","Scroll to zoom. Drag the ends of the period bar to set how many days are shown, or drag the bar to move the range. Adjusting the period bar also updates the recommended currencies below. Drag across the chart to check the % price change.");
 }
 
 /* ---------- 화면 ---------- */

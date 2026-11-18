@@ -1,5 +1,5 @@
 window.CURRENCY_DATA = {
- "generated_at": "2026-11-18T00:36:05+00:00",
+ "generated_at": "2026-11-18T02:52:08+00:00",
  "source": "api.poe2scout.com",
  "quote_currency": "Exalted Orb",
  "complete": true,
@@ -10,7 +10,7 @@ window.CURRENCY_DATA = {
    "currencies": {
     "Mirror of Kalandra": {
      "item_id": 295,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-06",
      "last_date": "2026-11-17",
      "days": [
@@ -675,7 +675,7 @@ window.CURRENCY_DATA = {
     },
     "Hinekora's Lock": {
      "item_id": 4287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -1349,7 +1349,7 @@ window.CURRENCY_DATA = {
     },
     "Divine Orb": {
      "item_id": 291,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-04",
      "last_date": "2026-11-17",
      "days": [
@@ -2032,7 +2032,7 @@ window.CURRENCY_DATA = {
     },
     "Perfect Chaos Orb": {
      "item_id": 4277,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -2706,7 +2706,7 @@ window.CURRENCY_DATA = {
     },
     "Greater Chaos Orb": {
      "item_id": 4275,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -3380,7 +3380,7 @@ window.CURRENCY_DATA = {
     },
     "Chaos Orb": {
      "item_id": 287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-04",
      "last_date": "2026-11-17",
      "days": [
@@ -4063,7 +4063,7 @@ window.CURRENCY_DATA = {
     },
     "Fracturing Orb": {
      "item_id": 294,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -4737,7 +4737,7 @@ window.CURRENCY_DATA = {
     },
     "Orb of Annulment": {
      "item_id": 292,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -5411,7 +5411,7 @@ window.CURRENCY_DATA = {
     },
     "Preserved Collarbone": {
      "item_id": 4383,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -6085,7 +6085,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Jawbone": {
      "item_id": 4373,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -6759,7 +6759,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Rib": {
      "item_id": 4379,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -7433,7 +7433,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Collarbone": {
      "item_id": 4385,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -8107,7 +8107,7 @@ window.CURRENCY_DATA = {
     },
     "Altered Collarbone": {
      "item_id": 13977,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -8781,7 +8781,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Light": {
      "item_id": 4351,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -9455,7 +9455,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Whittling": {
      "item_id": 420,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -10129,7 +10129,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Annulment": {
      "item_id": 432,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -10803,7 +10803,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Erasure": {
      "item_id": 421,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -11477,7 +11477,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Annulment": {
      "item_id": 433,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -12151,7 +12151,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Erasure": {
      "item_id": 422,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -12825,7 +12825,7 @@ window.CURRENCY_DATA = {
     },
     "Uul-Netol's Embrace": {
      "item_id": 4641,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-09-06",
      "last_date": "2026-11-17",
      "days": [
@@ -13490,7 +13490,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Exodus": {
      "item_id": 4651,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -14164,7 +14164,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Augury": {
      "item_id": 4655,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -14838,7 +14838,7 @@ window.CURRENCY_DATA = {
     },
     "Garukhan's Resolve": {
      "item_id": 4645,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -15512,7 +15512,7 @@ window.CURRENCY_DATA = {
     },
     "Dialla's Desire": {
      "item_id": 4629,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -16186,7 +16186,7 @@ window.CURRENCY_DATA = {
     },
     "Rakiata's Flow": {
      "item_id": 4643,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -16860,7 +16860,7 @@ window.CURRENCY_DATA = {
     },
     "Architect's Orb": {
      "item_id": 5184,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -17534,7 +17534,7 @@ window.CURRENCY_DATA = {
     },
     "Vaal Cultivation Orb": {
      "item_id": 5192,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -18208,7 +18208,7 @@ window.CURRENCY_DATA = {
     },
     "Crystallised Corruption": {
      "item_id": 5186,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -18882,7 +18882,7 @@ window.CURRENCY_DATA = {
     },
     "Vaal Catalysing Infuser": {
      "item_id": 13877,
-     "category": "vaal",
+     "category": "Temple",
      "first_date": "2026-09-05",
      "last_date": "2026-11-17",
      "days": [
@@ -19562,7 +19562,7 @@ window.CURRENCY_DATA = {
    "currencies": {
     "Mirror of Kalandra": {
      "item_id": 295,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-31",
      "last_date": "2026-11-17",
      "days": [
@@ -21109,7 +21109,7 @@ window.CURRENCY_DATA = {
     },
     "Hinekora's Lock": {
      "item_id": 4287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -22665,7 +22665,7 @@ window.CURRENCY_DATA = {
     },
     "Divine Orb": {
      "item_id": 291,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-29",
      "last_date": "2026-11-17",
      "days": [
@@ -24230,7 +24230,7 @@ window.CURRENCY_DATA = {
     },
     "Perfect Chaos Orb": {
      "item_id": 4277,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -25786,7 +25786,7 @@ window.CURRENCY_DATA = {
     },
     "Greater Chaos Orb": {
      "item_id": 4275,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -27342,7 +27342,7 @@ window.CURRENCY_DATA = {
     },
     "Chaos Orb": {
      "item_id": 287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-29",
      "last_date": "2026-11-17",
      "days": [
@@ -28907,7 +28907,7 @@ window.CURRENCY_DATA = {
     },
     "Fracturing Orb": {
      "item_id": 294,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -30463,7 +30463,7 @@ window.CURRENCY_DATA = {
     },
     "Orb of Annulment": {
      "item_id": 292,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -32019,7 +32019,7 @@ window.CURRENCY_DATA = {
     },
     "Preserved Collarbone": {
      "item_id": 4383,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -33575,7 +33575,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Jawbone": {
      "item_id": 4373,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -35131,7 +35131,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Rib": {
      "item_id": 4379,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -36687,7 +36687,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Collarbone": {
      "item_id": 4385,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -38243,7 +38243,7 @@ window.CURRENCY_DATA = {
     },
     "Altered Collarbone": {
      "item_id": 13977,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -39799,7 +39799,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Light": {
      "item_id": 4351,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -41355,7 +41355,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Whittling": {
      "item_id": 420,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -42911,7 +42911,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Annulment": {
      "item_id": 432,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -44467,7 +44467,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Erasure": {
      "item_id": 421,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -46023,7 +46023,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Annulment": {
      "item_id": 433,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -47579,7 +47579,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Erasure": {
      "item_id": 422,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -49135,7 +49135,7 @@ window.CURRENCY_DATA = {
     },
     "Uul-Netol's Embrace": {
      "item_id": 4641,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-05-31",
      "last_date": "2026-11-17",
      "days": [
@@ -50682,7 +50682,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Exodus": {
      "item_id": 4651,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-05-31",
      "last_date": "2026-11-17",
      "days": [
@@ -52229,7 +52229,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Augury": {
      "item_id": 4655,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-05-31",
      "last_date": "2026-11-17",
      "days": [
@@ -53776,7 +53776,7 @@ window.CURRENCY_DATA = {
     },
     "Garukhan's Resolve": {
      "item_id": 4645,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -55332,7 +55332,7 @@ window.CURRENCY_DATA = {
     },
     "Dialla's Desire": {
      "item_id": 4629,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -56888,7 +56888,7 @@ window.CURRENCY_DATA = {
     },
     "Rakiata's Flow": {
      "item_id": 4643,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -58444,7 +58444,7 @@ window.CURRENCY_DATA = {
     },
     "Architect's Orb": {
      "item_id": 5184,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -60000,7 +60000,7 @@ window.CURRENCY_DATA = {
     },
     "Vaal Cultivation Orb": {
      "item_id": 5192,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -61556,7 +61556,7 @@ window.CURRENCY_DATA = {
     },
     "Crystallised Corruption": {
      "item_id": 5186,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2026-05-30",
      "last_date": "2026-11-17",
      "days": [
@@ -63112,7 +63112,7 @@ window.CURRENCY_DATA = {
     },
     "Vaal Catalysing Infuser": {
      "item_id": 13877,
-     "category": "vaal",
+     "category": "Temple",
      "first_date": "2026-05-31",
      "last_date": "2026-11-17",
      "days": [
@@ -64665,7 +64665,7 @@ window.CURRENCY_DATA = {
    "currencies": {
     "Mirror of Kalandra": {
      "item_id": 295,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-14",
      "last_date": "2026-05-25",
      "days": [
@@ -66140,7 +66140,7 @@ window.CURRENCY_DATA = {
     },
     "Hinekora's Lock": {
      "item_id": 4287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -67624,7 +67624,7 @@ window.CURRENCY_DATA = {
     },
     "Divine Orb": {
      "item_id": 291,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-12",
      "last_date": "2026-05-25",
      "days": [
@@ -69117,7 +69117,7 @@ window.CURRENCY_DATA = {
     },
     "Perfect Chaos Orb": {
      "item_id": 4277,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -70601,7 +70601,7 @@ window.CURRENCY_DATA = {
     },
     "Greater Chaos Orb": {
      "item_id": 4275,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -72085,7 +72085,7 @@ window.CURRENCY_DATA = {
     },
     "Chaos Orb": {
      "item_id": 287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-12",
      "last_date": "2026-05-25",
      "days": [
@@ -73578,7 +73578,7 @@ window.CURRENCY_DATA = {
     },
     "Fracturing Orb": {
      "item_id": 294,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -75062,7 +75062,7 @@ window.CURRENCY_DATA = {
     },
     "Orb of Annulment": {
      "item_id": 292,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -76546,7 +76546,7 @@ window.CURRENCY_DATA = {
     },
     "Preserved Collarbone": {
      "item_id": 4383,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -78030,7 +78030,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Jawbone": {
      "item_id": 4373,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -79514,7 +79514,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Rib": {
      "item_id": 4379,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -80998,7 +80998,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Collarbone": {
      "item_id": 4385,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -82482,7 +82482,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Light": {
      "item_id": 4351,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -83966,7 +83966,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Whittling": {
      "item_id": 420,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -85450,7 +85450,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Annulment": {
      "item_id": 432,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-12-14",
      "last_date": "2026-05-25",
      "days": [
@@ -86925,7 +86925,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Erasure": {
      "item_id": 421,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -88409,7 +88409,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Annulment": {
      "item_id": 433,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-12-14",
      "last_date": "2026-05-25",
      "days": [
@@ -89884,7 +89884,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Erasure": {
      "item_id": 422,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -91368,7 +91368,7 @@ window.CURRENCY_DATA = {
     },
     "Uul-Netol's Embrace": {
      "item_id": 4641,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -92852,7 +92852,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Exodus": {
      "item_id": 4651,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-12-14",
      "last_date": "2026-05-25",
      "days": [
@@ -94327,7 +94327,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Augury": {
      "item_id": 4655,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-12-14",
      "last_date": "2026-05-25",
      "days": [
@@ -95802,7 +95802,7 @@ window.CURRENCY_DATA = {
     },
     "Garukhan's Resolve": {
      "item_id": 4645,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -97286,7 +97286,7 @@ window.CURRENCY_DATA = {
     },
     "Dialla's Desire": {
      "item_id": 4629,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -98770,7 +98770,7 @@ window.CURRENCY_DATA = {
     },
     "Rakiata's Flow": {
      "item_id": 4643,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -100254,7 +100254,7 @@ window.CURRENCY_DATA = {
     },
     "Architect's Orb": {
      "item_id": 5184,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -101738,7 +101738,7 @@ window.CURRENCY_DATA = {
     },
     "Vaal Cultivation Orb": {
      "item_id": 5192,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -103222,7 +103222,7 @@ window.CURRENCY_DATA = {
     },
     "Crystallised Corruption": {
      "item_id": 5186,
-     "category": "incursion",
+     "category": "Temple",
      "first_date": "2025-12-13",
      "last_date": "2026-05-25",
      "days": [
@@ -104712,7 +104712,7 @@ window.CURRENCY_DATA = {
    "currencies": {
     "Mirror of Kalandra": {
      "item_id": 295,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-31",
      "last_date": "2025-12-08",
      "days": [
@@ -105620,7 +105620,7 @@ window.CURRENCY_DATA = {
     },
     "Hinekora's Lock": {
      "item_id": 4287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -106537,7 +106537,7 @@ window.CURRENCY_DATA = {
     },
     "Divine Orb": {
      "item_id": 291,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -107454,7 +107454,7 @@ window.CURRENCY_DATA = {
     },
     "Perfect Chaos Orb": {
      "item_id": 4277,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -108371,7 +108371,7 @@ window.CURRENCY_DATA = {
     },
     "Greater Chaos Orb": {
      "item_id": 4275,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -109288,7 +109288,7 @@ window.CURRENCY_DATA = {
     },
     "Chaos Orb": {
      "item_id": 287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -110205,7 +110205,7 @@ window.CURRENCY_DATA = {
     },
     "Fracturing Orb": {
      "item_id": 294,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -111122,7 +111122,7 @@ window.CURRENCY_DATA = {
     },
     "Orb of Annulment": {
      "item_id": 292,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -112039,7 +112039,7 @@ window.CURRENCY_DATA = {
     },
     "Preserved Collarbone": {
      "item_id": 4383,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -112956,7 +112956,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Jawbone": {
      "item_id": 4373,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -113873,7 +113873,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Rib": {
      "item_id": 4379,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -114790,7 +114790,7 @@ window.CURRENCY_DATA = {
     },
     "Ancient Collarbone": {
      "item_id": 4385,
-     "category": "abyss",
+     "category": "Abyss",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -115707,7 +115707,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Light": {
      "item_id": 4351,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -116624,7 +116624,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Whittling": {
      "item_id": 420,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -117541,7 +117541,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Annulment": {
      "item_id": 432,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-08-31",
      "last_date": "2025-12-08",
      "days": [
@@ -118449,7 +118449,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Erasure": {
      "item_id": 421,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-08-31",
      "last_date": "2025-12-08",
      "days": [
@@ -119357,7 +119357,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Annulment": {
      "item_id": 433,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -120274,7 +120274,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Erasure": {
      "item_id": 422,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-08-31",
      "last_date": "2025-12-08",
      "days": [
@@ -121182,7 +121182,7 @@ window.CURRENCY_DATA = {
     },
     "Uul-Netol's Embrace": {
      "item_id": 4641,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-08-31",
      "last_date": "2025-12-08",
      "days": [
@@ -122090,7 +122090,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Exodus": {
      "item_id": 4651,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -123007,7 +123007,7 @@ window.CURRENCY_DATA = {
     },
     "Uhtred's Augury": {
      "item_id": 4655,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-08-31",
      "last_date": "2025-12-08",
      "days": [
@@ -123915,7 +123915,7 @@ window.CURRENCY_DATA = {
     },
     "Garukhan's Resolve": {
      "item_id": 4645,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -124832,7 +124832,7 @@ window.CURRENCY_DATA = {
     },
     "Dialla's Desire": {
      "item_id": 4629,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -125749,7 +125749,7 @@ window.CURRENCY_DATA = {
     },
     "Rakiata's Flow": {
      "item_id": 4643,
-     "category": "lineagesupportgems",
+     "category": "Gem",
      "first_date": "2025-08-30",
      "last_date": "2025-12-08",
      "days": [
@@ -126672,7 +126672,7 @@ window.CURRENCY_DATA = {
    "currencies": {
     "Mirror of Kalandra": {
      "item_id": 295,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-04-07",
      "last_date": "2025-08-26",
      "days": [
@@ -127958,7 +127958,7 @@ window.CURRENCY_DATA = {
     },
     "Divine Orb": {
      "item_id": 291,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-04-05",
      "last_date": "2025-08-27",
      "days": [
@@ -129271,7 +129271,7 @@ window.CURRENCY_DATA = {
     },
     "Chaos Orb": {
      "item_id": 287,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-04-05",
      "last_date": "2025-08-27",
      "days": [
@@ -130584,7 +130584,7 @@ window.CURRENCY_DATA = {
     },
     "Fracturing Orb": {
      "item_id": 294,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-04-05",
      "last_date": "2025-08-26",
      "days": [
@@ -131888,7 +131888,7 @@ window.CURRENCY_DATA = {
     },
     "Orb of Annulment": {
      "item_id": 292,
-     "category": "currency",
+     "category": "Currency",
      "first_date": "2025-04-05",
      "last_date": "2025-08-26",
      "days": [
@@ -133192,7 +133192,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Whittling": {
      "item_id": 420,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-04-06",
      "last_date": "2025-08-26",
      "days": [
@@ -134487,7 +134487,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Annulment": {
      "item_id": 432,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-04-06",
      "last_date": "2025-08-26",
      "days": [
@@ -135782,7 +135782,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Sinistral Erasure": {
      "item_id": 421,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-04-07",
      "last_date": "2025-08-26",
      "days": [
@@ -137068,7 +137068,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Annulment": {
      "item_id": 433,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-04-07",
      "last_date": "2025-08-26",
      "days": [
@@ -138354,7 +138354,7 @@ window.CURRENCY_DATA = {
     },
     "Omen of Dextral Erasure": {
      "item_id": 422,
-     "category": "ritual",
+     "category": "Ritual",
      "first_date": "2025-04-07",
      "last_date": "2025-08-26",
      "days": [
