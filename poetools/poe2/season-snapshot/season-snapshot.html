@@ -76,7 +76,7 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .foot .unused{flex:1 1 320px;min-width:0;text-align:left;line-height:1.7}
 .foot .unused b{font-weight:600;margin-right:6px}
 .foot .gen{margin-left:auto;text-align:right;white-space:nowrap}
-.fold>h2{cursor:text} /* 제목 텍스트를 드래그해 선택·복사할 수 있음 (더블클릭은 접기/펼치기) */
+.fold>h2{cursor:default}.fold>h2 .ht{cursor:text} /* 제목 글자 위에서만 I 커서(드래그해 선택·복사 가능), 빈 곳은 기본 화살표. 더블클릭은 접기/펼치기 */
 .fold.folded>*:not(h2){display:none}
 .fold.folded>h2{margin-bottom:-16px;border-bottom:0} /* 접었을 때 제목 아래 빈 공간 제거 (theme.css 패널 여백 기준) */
 /* 진입 시점별 추천: 진입 구간마다 독립된 표 */
@@ -130,7 +130,7 @@ const CFG={
   bandWeights:[6,7,12,25,50], /* 진입 구간의 개수와 비율 (5개). 합이 100이 아니어도 자동으로 비율 계산됨. 개수를 바꾸면 구간 수도 바뀜 */
   minDaysPerBand:3,        /* 구간 하나에 최소 이 일수가 있어야 함. 후보일이 적으면 구간 수를 줄임 */
   minCandidates:3,         /* 진입 후보일이 이보다 적으면 "구간이 너무 짧음"으로 표시 */
-  listSize:7,              /* 구간별 추천 목록 개수 (디바인·카오스 오브 고정 줄 제외) */
+  listSize:8,              /* 구간별 추천 목록 개수 (디바인·카오스 오브 고정 줄 제외) */
   pin:["Divine Orb","Chaos Orb"], /* 목록 맨 위에 고정할 화폐 (영어 이름, 순위 계산에서는 제외) */
   priceTolDays:1,          /* 해당 일차에 가격이 없을 때 앞뒤 며칠까지 대체값으로 쓸지 */
   iconDir:"../icon/",      /* 화폐 아이콘 폴더 (이 HTML 기준 상대경로). poetools/poe2/icon/ */
@@ -360,11 +360,11 @@ function build(){
  <div class="chart" id="chart"></div>
  <p class="note" id="pnote"></p>
 </section>
-<section class="panel fold" data-fold="inv"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("투자 기간에 따른 보유 화폐 추천 (현재 시점 기준)","Currency to hold by investment period (from now)")}${swHtml("inv")}</h2>
+<section class="panel fold" data-fold="inv"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}"><span class="ht">${T("투자 기간에 따른 보유 화폐 추천 (현재 시점 기준)","Currency to hold by investment period (from now)")}</span>${swHtml("inv")}</h2>
  <p class="note" id="invnote"></p>
  <div class="rec" id="inv"></div>
 </section>
-<section class="panel fold" data-fold="rec"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}">${T("진입 시점에 따른 보유 화폐 추천 (리그 시점 기준)","Currency to hold by entry timing (by league day)")}${swHtml("rec")}</h2>
+<section class="panel fold" data-fold="rec"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}"><span class="ht">${T("진입 시점에 따른 보유 화폐 추천 (리그 시점 기준)","Currency to hold by entry timing (by league day)")}</span>${swHtml("rec")}</h2>
  <p class="note" id="recnote"></p>
  <div class="rec" id="rec"></div>
 </section>
@@ -576,7 +576,10 @@ function bindNav(){
   let drag=null;
   const showTip=cx=>{
     const [a,b]=curView(),n=Math.round((b-a)/LAY.unit)+1;
-    ntip.innerHTML=`<div class="th">${T(`${n}일`,`${n} ${n===1?"day":"days"}`)}</div>`;
+    const nd=T(`${n}일`,`${n} ${n===1?"day":"days"}`),mode=drag&&drag.mode;
+    const sd=S.x==="day"?T(`${Math.ceil(a-1e-9)}일차`,`Day ${Math.ceil(a-1e-9)}`):fmtDate(a);
+    /* 왼쪽 핸들: 시작 일차 / 가운데 이동: 시작 일차 · 일수 / 오른쪽 핸들: 일수 */
+    ntip.innerHTML=`<div class="th">${mode==="l"?sd:mode==="m"?sd+" · "+nd:nd}</div>`;
     ntip.style.display="block";
     const r=nav.getBoundingClientRect(),tw=ntip.offsetWidth;
     ntip.style.left=Math.max(tw/2,Math.min(r.width-tw/2,cx-r.left))+"px";
@@ -674,7 +677,7 @@ function recCalc(){
   for(const bd of R.bands){
     const rows=[];
     for(const it of items){
-      const lgv=[],lgb=[]; /* lgb: 리그별 진입 구간 가격(Exalted) 중앙값 → 예상 가격 계산용 */
+      const lgv=[],lgb=[]; /* lgb: 리그별 진입 구간 가격(Exalted) 중앙값 → 예상 가격(그 구간에 거래된 가격) */
       for(const ln of names){
         const r=pxOf(ln,it);if(!r)continue;
         const exD=Math.min(b,r.last),pe=priceAt(r,exD);if(!pe)continue;
@@ -703,8 +706,8 @@ function renderRec(){
   const R=recCalc();
   if(!R){note.textContent="";host.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
   note.innerHTML=S.pr.rec
-    ?T(`각 진입 시점 대비 ${V(R.b)}일차까지의 가격의 기하평균에 배율을 곱한 값.`,
-      `Geometric mean of the prices multiplied by the multiple, from each entry time to day ${V(R.b)}.`)
+    ?T(`각 진입 구간에 거래된 가격의 리그별 중앙값의 기하평균.`,
+      `Geometric mean of the per-league median prices traded during each entry period.`)
     :T(`각 진입 시점 대비 ${V(R.b)}일차까지의 가격 배수의 리그별 중앙값의 기하평균.`,
       `Geometric mean of the per-league medians of the price multiple from each entry time to day ${V(R.b)}.`);
   note.innerHTML+=T(` 선택한 리그 ${V(R.names.length)}개 · ${V(R.a+"~"+R.b)}일차 · 화폐 ${V(R.items)}종 기준.${S.pr.rec?"":" 괄호 안은 최저 리그 값."}`,
@@ -738,24 +741,25 @@ function invCalc(){
   for(const n of names){const ks=Object.keys(DATA.leagues[n].currencies||{});items=items?items.filter(k=>ks.includes(k)):ks}
   R.items=items.length;
   if(!items.length)return R;
-  const t0=Math.max(CFG.firstDay,a-CFG.invWindow),t1=a+CFG.invWindow;
+  const w=Math.min(CFG.invWindow,a-CFG.firstDay),t0=a-w,t1=a+w; /* 진입일 앞뒤 창은 좌우 대칭. 시즌 초반(firstDay 근처)에서는 창을 줄여 한쪽으로 치우치지 않게 함 (예: 2일차 진입 → 2일차만) */
+  R.lo=t0;R.hi=t1;
   for(const N of CFG.invPeriods){
     const rows=[];
     for(const it of items){
-      const lgv=[],lgb=[]; /* lgb: 리그별 진입 가격(Exalted) 중앙값 → 예상 가격 계산용 */
+      const lgv=[],lgp=[]; /* lgp: 리그별 매도 시점 가격(Exalted) 중앙값 → 예상 가격(진입일+투자 기간일의 시장 가격) */
       for(const ln of names){
         const r=pxOf(ln,it);if(!r)continue;
-        const rt=[],p0s=[];
+        const rt=[],p1s=[];
         for(let t=t0;t<=t1;t++){
           const e=N===Infinity?r.last:t+N; /* 팔 날: 투자 기간 뒤, 또는 그 시즌의 마지막 데이터 일차 */
           if(e<=t||e>r.last)continue;      /* 그 시즌이 그만큼 길지 않으면 이 진입일은 건너뜀 */
           const p0=priceAt(r,t),p1=priceAt(r,e);
-          if(p0&&p1){rt.push(p1/p0);p0s.push(p0)}
+          if(p0&&p1){rt.push(p1/p0);p1s.push(p1)}
         }
-        if(rt.length){lgv.push(median(rt));lgb.push(median(p0s))} /* 이 기간을 계산할 데이터가 없는 리그는 건너뜀 */
+        if(rt.length){lgv.push(median(rt));lgp.push(median(p1s))} /* 이 기간을 계산할 데이터가 없는 리그는 건너뜀 */
       }
       if(!lgv.length)continue;
-      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv),pb:Math.exp(lgb.reduce((s,x)=>s+Math.log(x),0)/lgb.length)});
+      rows.push({nl:lgv.length,name:it,gm:Math.exp(lgv.reduce((s,x)=>s+Math.log(x),0)/lgv.length),mn:Math.min(...lgv),pe:Math.exp(lgp.reduce((s,x)=>s+Math.log(x),0)/lgp.length)});
     }
     const rest=rows; /* 디바인·카오스 오브도 순위에 포함 */
     const col={N,nl:rest.length?Math.max(...rest.map(o=>o.nl)):0};
@@ -772,12 +776,13 @@ function renderInv(){
   if(!R)return msg("표시할 데이터가 없습니다. 리그를 선택하세요.","Nothing to show. Select a league above.");
   if(!R.items)return msg("선택한 리그들에 화폐가 없습니다.","The selected leagues have no currencies.");
   R.cols.forEach(c=>[...c.pin,...c.top].forEach(o=>SHOWN.inv.add(o.name)));
-  const m=R.names.length,a=R.a,lo=Math.max(CFG.firstDay,a-CFG.invWindow),hi=a+CFG.invWindow;
+  const m=R.names.length,a=R.a,lo=R.lo,hi=R.hi;
+  const winKo=lo===hi?"":`(${V(lo+"~"+hi+"일차")})`,winEn=lo===hi?"":` (${V("day "+lo+"–"+hi)})`;
   note.innerHTML=S.pr.inv
-    ?T(`기간 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격의 기하평균에 배율을 곱한 값.`,
-      `Geometric mean of the prices multiplied by the multiple after each investment period, entering at the start of the period bar, ${V("day "+a)} (${V("day "+lo+"–"+hi)}).`)
-    :T(`기간 바 시작 지점 ${V(a+"일차")}(${V(lo+"~"+hi+"일차")}) 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균.`,
-      `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the period bar, ${V("day "+a)} (${V("day "+lo+"–"+hi)}).`);
+    ?T(`기간 바 시작 지점 ${V(a+"일차")}${winKo} 진입 후 투자 기간이 지난 시점의 가격의 리그별 중앙값의 기하평균.`,
+      `Geometric mean of the per-league median prices at the end of each investment period, entering at the start of the period bar, ${V("day "+a)}${winEn}.`)
+    :T(`기간 바 시작 지점 ${V(a+"일차")}${winKo} 진입 후 투자 기간이 지난 뒤의 가격 배수의 리그별 중앙값의 기하평균.`,
+      `Geometric mean of the per-league medians of the price multiple after each investment period, entering at the start of the period bar, ${V("day "+a)}${winEn}.`);
   note.innerHTML+=T(` 선택한 리그 ${V(m)}개 · 화폐 ${V(R.items)}종 기준.${S.pr.inv?"":" 괄호 안은 최저 리그 값."}`,
     ` Based on ${V(m)} selected league(s), ${V(R.items)} currencies.${S.pr.inv?"":" Parentheses: lowest league value."}`);
   const mx=v=>`<span class="xm">x</span>`+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v.toFixed(1));
@@ -795,7 +800,7 @@ function renderInv(){
   host.innerHTML=`<div class="recg">${R.cols.map(col=>{
     const list=[...col.pin.map((o,i)=>[o,col.top.length&&i===col.pin.length-1]),...col.top.map(o=>[o,false])];
     const body=list.length
-      ?list.map(([o,sep])=>`<tr${sep?' class="sep"':""} data-cur="${esc(o.name)}"><td>${icon(o.name)}${esc(nm("items",o.name))}</td>${rxCells(o,S.pr.inv?o.pb:null,S.pr.inv,rc(col,o),mx,S.pr.inv?dvExp(col.pin,q=>q.pb):null)}</tr>`).join("")
+      ?list.map(([o,sep])=>`<tr${sep?' class="sep"':""} data-cur="${esc(o.name)}"><td>${icon(o.name)}${esc(nm("items",o.name))}</td>${rxCells(o,S.pr.inv?o.pe:null,S.pr.inv,rc(col,o),mx,S.pr.inv?dvExp(col.pin,q=>q.pe):null)}</tr>`).join("")
       :`<tr><td class="na" colspan="3">${T("데이터 없음 (시즌이 이 기간보다 짧음)","No data (leagues are shorter than this period)")}</td></tr>`;
     return `<table><thead><tr>${head(col)}</tr></thead><tbody>${body}</tbody></table>`;
   }).join("")}</div>`;
@@ -803,8 +808,9 @@ function renderInv(){
 /* INV-END */
 
 /* ---------- 표시 전환: 예상 배율 ↔ 예상 가격 ---------- */
-/* 예상 가격 = 선택한 리그들의 진입 시점 가격(Exalted)(리그별 중앙값)의 기하평균 × 배율.
-   진입 시점 가격은 배율 계산에 쓴 진입일(투자 기간: 바 시작일 ±invWindow, 진입 시점: 각 구간의 진입일들)의 중앙값입니다.
+/* 예상 가격(Exalted) = 선택한 리그들의 가격(리그별 중앙값)의 기하평균.
+   - 투자 기간 표: 매도 시점(진입일 + 투자 기간일)의 시장 가격. 진입일은 바 시작일 ±invWindow(시즌 초반에는 대칭으로 줄임)
+   - 진입 시점 표: 그 진입 구간(일차 범위)에 거래된 가격
    해당 일차 데이터가 없는 리그는 건너뜁니다. */
 const swText=t=>S.pr[t]
   ?{lab:T("예상 배율","Expected multiple"),tip:T("예상 배율로 표시","Show as expected multiple")}
@@ -814,18 +820,18 @@ function syncSw(){
   document.querySelectorAll("[data-sw]").forEach(b=>{const x=swText(b.dataset.sw);b.title=x.tip;b.setAttribute("aria-label",x.tip);b.querySelector("span").textContent=x.lab});
 }
 /* 1 디바인의 예상 가격(Exalted). 표의 디바인 행에서 같은 방식으로 계산 */
-const dvExp=(pin,bf)=>{const q=pin.find(x=>x.name==="Divine Orb");if(!q)return null;const b=bf(q);return b>0?b*q.gm:null};
+const dvExp=(pin,bf)=>{const q=pin.find(x=>x.name==="Divine Orb");if(!q)return null;const b=bf(q);return b>0?b:null};
 /* ex: 예상 가격(Exalted), dv: 1 디바인의 예상 가격(Exalted). 1디바인 이상이면 d(정수), 아니면 e */
-const kfmt=v=>{ /* 한 자리 수는 소수 한 자리, 10 이상은 정수(반올림). 천 단위는 쉼표로 구분 */
-  if(v<10){const t=v.toFixed(1);if(parseFloat(t)<10)return t}
+const kfmt=v=>{ /* 한 자리 수는 소수 한 자리(소수부가 0이면 정수), 10 이상은 정수(반올림). 천 단위는 쉼표로 구분 */
+  if(v<10){const t=v.toFixed(1);if(parseFloat(t)<10)return t.replace(/\.0$/,"")}
   return Math.round(v).toLocaleString("en-US")};
 const pfmt=(ex,dv)=>dv>0&&ex>=dv
   ?kfmt(ex/dv)+`<span class="pu">d</span>`
   :kfmt(ex)+`<span class="pu">e</span>`;
-function rxCells(o,base,price,cls,mx,dv){
+function rxCells(o,val,price,cls,mx,dv){ /* val: 표시할 예상 가격(Exalted) */
   if(!price)return `<td class="rx${cls}">${mx(o.gm)}</td><td class="rx mn">(${mx(o.mn)})</td>`;
-  if(!(base>0))return `<td class="rx${cls}">-</td><td class="rx mn"></td>`;
-  return `<td class="rx${cls}">${pfmt(base*o.gm,dv)}</td><td class="rx mn"></td>`;
+  if(!(val>0))return `<td class="rx${cls}">-</td><td class="rx mn"></td>`;
+  return `<td class="rx${cls}">${pfmt(val,dv)}</td><td class="rx mn"></td>`;
 }
 
 /* 맨 아래 좌측: 위의 추천 표(투자 기간·진입 시점) 어디에도 한 번도 나오지 않은 모든 화폐 */
@@ -846,14 +852,19 @@ $("app").addEventListener("change",e=>{
   else if(t.id==="cur"){S.cur=t.value;prepLeagues();refreshChips();update()} /* build()로 화면 전체를 다시 만들면 스크롤이 맨 위로 튀므로 쓰지 않음 */
   else if(t.id==="unit"){S.unit=t.value;update()}
 });
-/* 휠: 커서 위치를 기준으로 확대/축소. 이미 전체 범위에서 축소하려는 휠은 페이지 스크롤에 양보합니다. */
+/* 휠: 커서 위치를 기준으로 확대/축소. 이미 전체 범위에서 축소하려는 휠은 페이지 스크롤에 양보합니다.
+   그래프 위에서도, 기간 바의 구간(#nwin) 안쪽에서도 같은 방식으로 동작합니다. */
 $("app").addEventListener("wheel",e=>{
-  if(!LAY||!e.target.closest||!e.target.closest("#svg"))return;
+  if(!LAY||!e.target.closest)return;
+  const nw0=e.target.closest("#nwin");
+  if(!nw0&&!e.target.closest("#svg"))return;
   const dy=e.deltaY*(e.deltaMode===1?33:e.deltaMode===2?400:1);
   if(!dy||(!S.view&&dy>0))return;
   e.preventDefault();
-  const {X0,X1,W,M,iw,minW}=LAY,[a,b]=curView(),r=$("svg").getBoundingClientRect();
-  const f=Math.min(1,Math.max(0,((e.clientX-r.left)*(W/r.width)-M.l)/iw)); /* 커서가 플롯 안에서 차지하는 비율 */
+  const {X0,X1,W,M,iw,minW}=LAY,[a,b]=curView();
+  let f; /* 커서가 현재 보이는 구간 안에서 차지하는 비율 (그래프: 플롯 기준, 기간 바: 구간 박스 기준) */
+  if(nw0){const wr=nw0.getBoundingClientRect();f=Math.min(1,Math.max(0,(e.clientX-wr.left)/wr.width))}
+  else{const r=$("svg").getBoundingClientRect();f=Math.min(1,Math.max(0,((e.clientX-r.left)*(W/r.width)-M.l)/iw))}
   const nw=Math.min(X1-X0,Math.max(minW,(b-a)*Math.exp(Math.max(-300,Math.min(300,dy))*0.0015)));
   const na=Math.min(Math.max(a+(b-a)*f-nw*f,X0),X1-nw);
   setView(na,na+nw);
