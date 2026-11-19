@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko" data-game="poe2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crafting Sheet | PoE Tools</title>
+<link rel="stylesheet" href="../../style/theme.css">
+<script src="../../style/site-bar.js"></script>
+<style>
+/* 공통 모양은 style/theme.css. 여기에는 크래프팅 시트 전용 스타일만 둡니다. */
+.bar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:4px 0 8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar .rn{flex:1 1 260px;min-width:0;width:auto;max-width:none;padding:4px 0 6px;border:0;border-bottom:1px solid var(--ln2);border-radius:0;background:none;font:600 24px/1.3 var(--serif)}
+.grp{display:inline-flex;align-items:stretch;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);overflow:hidden}
+.grp>*{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border:0;border-right:1px solid var(--ln);border-radius:0;background:none;color:var(--ink);font:500 14px/1 var(--sans);letter-spacing:-.01em;white-space:nowrap}
+.grp>:last-child{border-right:0}
+.grp button{cursor:pointer;transition:background .15s,color .15s}
+.grp button:hover:not(:disabled){background:color-mix(in oklab,var(--g) 14%,transparent);color:var(--g)}
+.grp button:focus-visible{outline-offset:-3px}
+.grp svg{flex:none;opacity:.8}
+.grp.split{gap:4px;border:0;background:none;overflow:visible}
+.grp.split>*,.grp.split>:last-child{border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf)}
+.grp select{max-width:190px;padding:0 10px;color:var(--mute)}
+#msg{min-height:1.6em;margin:6px 0 14px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start}
+.side{position:sticky;top:calc(var(--bar-h) + 16px);margin:0}
+@media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.side{position:static}}
+.steps{position:relative}
+.steps::before{content:"";position:absolute;left:15px;top:18px;bottom:48px;width:1px;background:var(--ln2)}
+.step{position:relative;margin:0 0 16px 46px;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) var(--pbd),var(--ln));border-radius:var(--r)}
+.no{position:absolute;left:-46px;top:7px;width:31px;height:31px;display:grid;place-items:center;border:1px solid var(--g);border-radius:50%;background:var(--bg);color:var(--g);font:600 14px var(--serif)}
+.sh{display:flex;align-items:center;gap:4px;padding:6px 8px 6px 14px;border-bottom:1px solid var(--ln);background:color-mix(in oklab,var(--g) var(--pht),transparent)}
+.step .t{flex:1;min-width:0;width:auto;max-width:none;padding:4px 0;border:0;border-bottom:1px solid transparent;border-radius:0;background:none;font:600 17px var(--serif)}
+.it input{border-color:var(--ln2)}
+.step .t:focus,.step .t:focus-visible,.it input:focus,.it input:focus-visible,.step textarea:focus,.step textarea:focus-visible{outline:none;box-shadow:none}
+.it input:focus,.it input:focus-visible{border-color:var(--ln2)}
+.sc2{margin-right:8px;color:var(--g);font:600 14px var(--serif);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ib{width:28px;height:28px;border:0;background:none;color:var(--mute);border-radius:var(--r);cursor:pointer;line-height:1}
+.ib:hover:not(:disabled){color:var(--ink);background:var(--sf2)}
+.sb{padding:10px 14px 12px}
+.it{display:grid;grid-template-columns:170px 28px 84px minmax(70px,1fr) 28px;gap:8px;align-items:center;margin:0 0 6px}
+.it input[type=text],.it input[type=number]{width:100%;max-width:none}
+.ci{width:28px;height:28px;display:grid;place-items:center}.ci img{max-width:28px;max-height:28px;object-fit:contain}
+.ic{text-align:right;color:var(--mute);font-size:13px;font-variant-numeric:tabular-nums}
+.add{background:none;border:0;padding:2px 0;color:var(--g);font:600 13px var(--sans);cursor:pointer}
+.add:hover{text-decoration:underline}
+.step textarea{display:block;width:100%;min-height:44px;margin-top:10px;padding:6px 8px;border:1px dashed var(--ln2);border-radius:var(--r);background:none;color:var(--ink);font:inherit;font-size:14px;resize:vertical}
+.addstep{width:100%;margin-left:46px;width:calc(100% - 46px);padding:10px;border:1px dashed var(--ln2);border-radius:var(--r);background:none;color:var(--mute);font:600 14px var(--sans);cursor:pointer}
+.addstep:hover{color:var(--g);border-color:var(--g)}
+.big{padding:2px 0 4px}
+.big b{font:300 46px/1.15 var(--serif);color:var(--g);font-variant-numeric:tabular-nums}.big b u{text-decoration:none;font:600 15px var(--serif);margin-left:6px}
+.sc{position:relative;display:flex;justify-content:space-between;gap:10px;padding:6px 0 7px;font-size:14px;font-variant-numeric:tabular-nums}
+.sc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc i{position:absolute;left:0;bottom:0;height:2px;background:var(--g);opacity:.7}
+.ti img{max-width:28px;max-height:28px;object-fit:contain;vertical-align:middle}
+.side fieldset{margin-top:16px}
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<datalist id="cur"></datalist>
+<script src="crafting-currency-prices.js"></script>
+<script src="recipe/index.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let LANG=(window.PoEPrefs&&PoEPrefs.lang)||document.documentElement.lang||"ko";
+const T=(ko,en)=>LANG==="en"?en:ko;
+const fmt=n=>{n=+n;const a=Math.abs(n);return n.toLocaleString(LANG==="en"?"en-US":"ko-KR",{maximumFractionDigits:a>0&&a<0.01?6:a<1?3:2})};
+
+/* 재화 목록(자동완성용, 직접 입력도 가능). 시세 파일을 읽으면 그 안의 재화도 목록에 추가됩니다. 한글 이름은 아래 KO_LOCAL 에 적거나, 시세 파일(names_ko)로 받아옵니다. */
+const CUR=["Divine Orb","Exalted Orb","Chaos Orb","Orb of Annulment","Regal Orb","Orb of Alchemy","Orb of Augmentation","Orb of Transmutation","Vaal Orb","Orb of Chance"];
+/* 이름 정규화: 대소문자·공백·하이픈·아포스트로피 차이를 무시 ("Greater Exalted Orb" = "greater-exalted-orb") */
+const nk=n=>String(n).trim().toLowerCase().replace(/['’]/g,"").replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
+const SPECIAL={"hinekoras-lock":"Hinekora's Lock","uul-netols-catalyst":"Uul-Netol's Catalyst","xophs-catalyst":"Xoph's Catalyst","tuls-catalyst":"Tul's Catalyst","eshs-catalyst":"Esh's Catalyst","chayulas-catalyst":"Chayula's Catalyst"};
+/* 시세 파일의 슬러그 키(greater-exalted-orb)를 표시 이름(Greater Exalted Orb)으로 */
+const pretty=k=>/[A-Z\s]/.test(k)?k:SPECIAL[k]||k.split("-").map((w,i)=>i&&(w==="of"||w==="the")?w:w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
+/* 한글 이름: 영어 이름 → 한글 이름.
+   · 시세 파일(crafting-currency-prices.js 의 names_ko)에 들어 있는 한글명이 자동으로 쓰입니다 (파이썬 스크립트 CURRENCIES 에서 영어 이름 오른쪽에 적은 것).
+   · 파일 없이 직접 추가하려면 KO_LOCAL 에 적으세요. 같은 이름이면 KO_LOCAL 이 우선합니다.
+     예) const KO_LOCAL={"Divine Orb":"디바인 오브","Chaos Orb":"카오스 오브"};
+   한글 이름으로 입력해도 같은 재화로 인식되고(단가·아이콘 포함), 소모 재화 표와 자동완성에 한글이 표시됩니다. */
+const KO_LOCAL={};
+let KO_FILE={},KO={},KO2EN=new Map();
+function buildKo(){
+  KO={};KO2EN=new Map();
+  Object.entries({...KO_FILE,...KO_LOCAL}).forEach(([en,ko])=>{ko=String(ko||"").trim();if(!ko)return;KO[nk(en)]=ko;KO2EN.set(nk(ko),pretty(en))});
+}
+const koName=c=>KO[nk(c)]||"";
+const canon=c=>{c=String(c).trim();return KO2EN.get(nk(c))||c}; /* 한글 이름이면 영어 이름으로 */
+const disp=c=>LANG==="en"?c:(koName(c)||c);
+let EXTRA=[];
+function fillCur(extra){
+  if(extra)EXTRA=extra;
+  const m=new Map();[...CUR,...EXTRA].forEach(c=>{const k=nk(c);if(k&&!m.has(k))m.set(k,c)});
+  $("cur").innerHTML=[...m.values()].map(c=>{const ko=LANG==="en"?"":koName(c);return `<option value="${esc(c)}"${ko?` label="${esc(ko)}"`:""}>`}).join("");
+}
+buildKo();fillCur();
+
+/* 가격: 재화 이름 → 디바인 단가.
+   AUTO   = 시세 파일(crafting-currency-prices.json)에서 읽은 값 (이름은 nk()로 정규화)
+   PRICES = 사용자가 직접 입력한 값 (브라우저에 저장, AUTO보다 우선) */
+const PRICE_URL="crafting-currency-prices.json"; /* 이 HTML 기준 상대 경로 */
+let PRICES={};try{PRICES=JSON.parse(localStorage.getItem("craftPrices")||"{}")}catch(e){}
+let AUTO={},META=null,PERR="";
+const manual=c=>{c=canon(c);return typeof PRICES[c]==="number"&&PRICES[c]>0?PRICES[c]:null};
+const auto=c=>{const v=AUTO[nk(canon(c))];return typeof v==="number"&&v>0?v:null};
+const price=c=>nk(canon(c))==="divine-orb"?1:(manual(c)??auto(c));
+function setPrices(o){
+  if(!o||typeof o.prices!=="object"||!o.prices)throw new Error(T("시세 파일 형식이 올바르지 않습니다.","Invalid price file."));
+  if(o.quote_currency&&nk(o.quote_currency)!=="divine-orb")throw new Error(T("디바인 오브 기준 시세가 아닙니다.","Prices are not quoted in Divine Orbs."));
+  const a={};Object.entries(o.prices).forEach(([k,v])=>{if(typeof v==="number"&&v>0)a[nk(k)]=v});
+  AUTO=a;META={source:o.source||"",league:o.league||"",at:o.generated_at||""};PERR="";
+  KO_FILE=o.names_ko&&typeof o.names_ko==="object"?o.names_ko:{};buildKo();
+  fillCur([...Object.keys(o.prices).map(pretty),...Object.keys(KO_FILE).map(pretty),...(Array.isArray(o.missing)?o.missing:[])]);
+}
+function priceInfo(){
+  const el=$("pinfo");if(!el)return;
+  if(META){
+    const t=new Date(META.at),d=META.at&&!isNaN(t)?t.toLocaleString(LANG==="en"?"en-US":"ko-KR",{dateStyle:"medium",timeStyle:"short"}):"";
+    const src=[META.source,META.league,d].filter(Boolean).join(" · ");
+    el.textContent=T(`시세: ${src}`,`Prices: ${src}`);
+  }else el.textContent=PERR?T(`시세 파일을 읽지 못했습니다 (${PERR})`,`Could not read the price file (${PERR})`):T("시세를 불러오는 중…","Loading prices…");
+}
+async function loadPrices(){
+  try{
+    if(window.CRAFT_PRICES)setPrices(window.CRAFT_PRICES); /* crafting-currency-prices.js (file:// 에서도 동작) */
+    else{const r=await fetch(PRICE_URL,{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);setPrices(await r.json())}
+  }catch(e){PERR=e.message||"error"}
+  priceInfo();upd();
+}
+
+const newStep=()=>({title:"",note:"",items:[{c:"",n:1}]});
+let R={name:"",steps:[newStep()]},LIST=null;
+
+const totals=items=>{const m=new Map();items.forEach(it=>{const c=canon(it.c);if(c&&it.n>0)m.set(c,(m.get(c)||0)+it.n)});return m};
+const cost=m=>{let sum=0;m.forEach((n,c)=>{const p=price(c);if(p!=null)sum+=n*p});return{sum}};
+const cs=g=>`${fmt(g.sum)} Div`;
+const line=s=>{const m=totals(s.items);return m.size?[...m].map(([c,n])=>`${c} ×${fmt(n)}`).join(" · ")+" = "+cs(cost(m)):T("입력된 재화 없음","No currency yet")};
+const IC=d=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICO={reset:IC('<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>'),plus:IC('<path d="M12 5v14M5 12h14"/>'),dl:IC('<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'),folder:IC('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),up:IC('<path d="M12 16V5M7 9l5-4 5 4M5 20h14"/>'),file:IC('<path d="M6 3h8l4 4v14H6zM14 3v5h4"/>')};
+const isl=n=>n.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
+const IMG=new Map();
+function iconUrl(n){ /* poetools\poe2\icon\<소문자-하이픈 이름>.webp|png|svg|jpg  예: divine-orb.webp */
+  n=canon(n);const k=isl(n);if(!k)return Promise.resolve(null);
+  const ks=[...new Set([k,nk(n)])];
+  if(!IMG.has(k))IMG.set(k,Promise.all(ks.flatMap(q=>["webp","png","svg","jpg"].map(e=>new Promise(ok=>{const u="../icon/"+encodeURIComponent(q)+"."+e,im=new Image();im.onload=()=>ok(u);im.onerror=()=>ok(null);im.src=u})))).then(r=>r.find(Boolean)||null));
+  return IMG.get(k);
+}
+function setIcon(el,n){el.dataset.n=n;iconUrl(n).then(u=>{if(el.dataset.n===n)el.innerHTML=u?`<img src="${u}" alt="">`:""})}
+const icons=()=>document.querySelectorAll(".it").forEach(r=>setIcon(r.querySelector(".ci"),R.steps[+r.closest(".step").dataset.i].items[+r.dataset.j].c));
+const msg=t=>{$("msg").textContent=t};
+
+function renderAll(){
+  document.title=T("크래프팅 시트","Crafting Sheet")+" | PoE 2 | PoE Tools";
+  $("app").innerHTML=`<div class="ghead sm"><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><p class="sub">${T("레시피를 단계별로 쌓고, 단계별·전체 소모 재화와 디바인 환산 비용을 확인하세요.","Add a recipe step by step and see per-step and total currency cost in Divine Orbs.")}</p></div></div>
+<div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}">
+<div class="acts"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div>
+<div class="grp split" role="group" aria-label="${T("파일","File")}"><button type="button" data-a="dl">${ICO.dl}${T("파일로 저장","Save as file")}</button><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button>${window.showDirectoryPicker?`<button type="button" data-a="folder">${ICO.folder}${T("폴더에 저장","Save to folder")}</button>`:""}</div>
+<div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("목록 불러오기","Load from list")}</button></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden></div>
+<p class="note" id="msg" role="status"></p>
+<div class="layout"><div><div class="steps" id="steps"></div><button type="button" class="addstep" data-a="addStep">+ ${T("단계 추가","Add step")}</button></div>
+<aside class="panel side"><h2>${T("총 비용","Total cost")}</h2><div class="big"><b id="gv"></b></div>
+<fieldset><legend>${T("단계별","Per step")}</legend><div id="stepcost"></div></fieldset>
+<fieldset><legend>${T("소모 재화","Currency used")}</legend><div class="scroll" id="tot"></div><p class="note" id="pinfo"></p></fieldset></aside></div>`;
+  fillList();refresh();priceInfo();
+}
+function renderSteps(){
+  const n=R.steps.length;
+  $("steps").innerHTML=R.steps.map((s,i)=>`<div class="step" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><div class="sh"><input type="text" class="t" data-f="title" value="${esc(s.title)}" placeholder="${T("단계 이름","Step name")} ${i+1}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib" data-a="up"${i?"":" disabled"} aria-label="${T("위로","Up")}">↑</button><button type="button" class="ib" data-a="down"${i<n-1?"":" disabled"} aria-label="${T("아래로","Down")}">↓</button><button type="button" class="ib" data-a="delStep"${n>1?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">✕</button></div>
+<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text" list="cur" data-f="c" value="${esc(it.c)}" placeholder="${T("재화","Currency")}" aria-label="${T("재화","Currency")}"><span class="ci"></span><input type="number" min="0" step="any" data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="ic"></span><button type="button" class="ib" data-a="delItem" aria-label="${T("재화 삭제","Remove")}">✕</button></div>`).join("")}<button type="button" class="add" data-a="addItem">+ ${T("추가","Add")}</button>
+<textarea data-f="note" placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea></div></div>`).join("");
+}
+/* 소모 재화 표의 재화 칸: 아이콘 이미지만 표시 (아이콘 파일이 없는 재화만 이름 텍스트로 대신 표시) */
+const TIC=new Map(); /* 재화 이름 → 아이콘 주소 (없으면 null) */
+const totCell=c=>{if(!TIC.has(c))return "";const u=TIC.get(c),nm=disp(c);return u?`<img src="${u}" alt="${esc(nm)}" title="${esc(nm)}">`:esc(nm)};
+function totIcons(){
+  clearTimeout(totIcons.t);
+  totIcons.t=setTimeout(()=>document.querySelectorAll("#tot .ti").forEach(el=>{
+    const c=el.dataset.n;if(TIC.has(c))return;
+    iconUrl(c).then(u=>{TIC.set(c,u);document.querySelectorAll("#tot .ti").forEach(e=>{if(e.dataset.n===c)e.innerHTML=totCell(c)})});
+  }),250);
+}
+function renderTot(){
+  const tot=totals(R.steps.flatMap(s=>s.items));
+  $("tot").innerHTML=tot.size?`<table><thead><tr><th>${T("재화","Currency")}</th><th>${T("수량","Qty")}</th><th>${T("단가 (Div)","Unit (Div)")}</th></tr></thead><tbody>${[...tot].map(([c,n])=>{const p=price(c);return `<tr><td class="ti" data-n="${esc(c)}">${totCell(c)}</td><td>${fmt(n)}</td><td>${p==null?"—":fmt(p)}</td></tr>`}).join("")}</tbody></table>`:`<p class="note">${T("재화를 입력하면 여기에 표시됩니다.","Currencies you add will appear here.")}</p>`;
+  totIcons();
+}
+/* 입력값에 따라 숫자만 갱신 (입력 중인 칸은 건드리지 않음) */
+function sums(){
+  const tot=totals(R.steps.flatMap(s=>s.items)),g=cost(tot);
+  $("gv").innerHTML=`${fmt(g.sum)}<u>Div</u>`;
+  const costs=R.steps.map(s=>cost(totals(s.items)));
+  document.querySelectorAll(".step").forEach((el,i)=>{
+    el.querySelector(".sc2").textContent=cs(costs[i]);
+    el.querySelectorAll(".it").forEach((r,j)=>{const it=R.steps[i].items[j],p=price(it.c.trim());r.querySelector(".ic").textContent=it.c.trim()&&it.n>0&&p!=null?fmt(it.n*p)+" Div":""});
+  });
+  $("stepcost").innerHTML=R.steps.map((s,i)=>`<div class="sc"><span>${i+1}. ${esc(s.title||T("단계","Step")+" "+(i+1))}</span><b>${fmt(costs[i].sum)} Div</b><i style="width:${g.sum>0?Math.round(costs[i].sum/g.sum*100):0}%"></i></div>`).join("");
+}
+const refresh=()=>{renderSteps();renderTot();sums();icons()};
+const upd=()=>{renderTot();sums()};
+
+/* 저장 / 불러오기 */
+const slug=n=>(n||"").trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"")||"recipe";
+const json=()=>JSON.stringify({v:1,name:R.name,steps:R.steps},null,2);
+/* 레시피 파일과 목록 파일은 <script> 로 읽는 .js 형식입니다 (file:// 로 열어도 동작).
+   recipe/<이름>.js : window.CRAFT_RECIPE = {레시피};
+   recipe/index.js  : window.CRAFT_RECIPE_INDEX = [{"file":"<이름>.js","name":"표시 이름"}, ...]; */
+const recipeJs=()=>"window.CRAFT_RECIPE = "+json()+";\n";
+const indexJs=idx=>"window.CRAFT_RECIPE_INDEX = "+JSON.stringify(idx,null,2)+";\n";
+/* "window.X = {...};" 형태 또는 순수 JSON 텍스트 → 값 (코드를 실행하지 않고 JSON 으로만 해석) */
+const parseJs=t=>{t=String(t).replace(/^\uFEFF/,"").trim();const m=t.match(/^window\.\w+\s*=\s*([\s\S]*?);?$/);return JSON.parse(m?m[1]:t)};
+const recipeFile=()=>{const f=slug(R.name);return (f==="index"?"index-recipe":f)+".js"}; /* index.js(목록)를 덮어쓰지 않도록 */
+function download(){
+  const file=recipeFile(),a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([recipeJs()],{type:"text/javascript"}));a.download=file;a.click();URL.revokeObjectURL(a.href);
+  msg(T(`${file} 을(를) 내려받았습니다.`,`Downloaded ${file}.`));
+}
+async function toFolder(){
+  try{
+    const d=await showDirectoryPicker({mode:"readwrite"}),file=recipeFile();
+    let w=await(await d.getFileHandle(file,{create:true})).createWritable();await w.write(recipeJs());await w.close();
+    let idx=[];try{idx=parseJs(await(await(await d.getFileHandle("index.js")).getFile()).text());if(!Array.isArray(idx))idx=[]}catch(e){}
+    idx=idx.filter(x=>x&&x.file&&x.file!==file);idx.push({file,name:R.name||file});idx.sort((a,b)=>a.name.localeCompare(b.name));
+    w=await(await d.getFileHandle("index.js",{create:true})).createWritable();await w.write(indexJs(idx));await w.close();
+    msg(T(`${file} 저장 완료 (${d.name})`,`Saved ${file} (${d.name})`));
+  }catch(e){if(e.name!=="AbortError")msg(T("저장하지 못했습니다: ","Could not save: ")+e.message)}
+}
+function apply(o){
+  if(!o||!Array.isArray(o.steps))return msg(T("레시피 형식이 올바르지 않습니다.","Invalid recipe file."));
+  R={name:String(o.name||""),steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.max(0,Number(it.n)||0)}))}))};
+  if(!R.steps.length)R.steps.push(newStep());
+  renderAll();
+}
+function loadList(){ /* recipe/index.js 가 <script> 로 먼저 읽혀 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
+  const a=window.CRAFT_RECIPE_INDEX;
+  LIST=Array.isArray(a)?a.filter(x=>x&&x.file):null;
+  fillList();
+}
+function fillList(){
+  const s=$("list");if(!s)return;
+  s.disabled=!LIST||!LIST.length;
+  s.innerHTML=LIST&&LIST.length?LIST.map(x=>`<option value="${esc(x.file)}">${esc(x.name||x.file)}</option>`).join(""):`<option>${LIST?T("저장된 레시피 없음","No saved recipes"):"-"}</option>`;
+}
+
+function loadScript(src){
+  return new Promise((ok,fail)=>{
+    const el=document.createElement("script");el.charset="utf-8";
+    el.src=location.protocol==="file:"?src:src+"?_="+Date.now(); /* http 에서는 캐시된 옛 파일을 피함 */
+    el.onload=()=>{el.remove();ok()};el.onerror=()=>{el.remove();fail(new Error(src))};
+    document.head.appendChild(el);
+  });
+}
+async function loadSel(){
+  if(!LIST||!LIST.length)return msg(T("저장된 레시피가 없습니다.","No saved recipes."));
+  const f=$("list").value;
+  try{
+    window.CRAFT_RECIPE=undefined;
+    await loadScript("recipe/"+encodeURIComponent(f));
+    const o=window.CRAFT_RECIPE;window.CRAFT_RECIPE=undefined;
+    if(!o)throw new Error("empty");
+    apply(o);
+  }catch(e){msg(T(`레시피 파일을 읽지 못했습니다: recipe/${f}`,`Could not read recipe file: recipe/${f}`))}
+}
+$("app").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-a]");if(!b)return;
+  const a=b.dataset.a,st=b.closest(".step"),i=st?+st.dataset.i:-1,it=b.closest(".it"),j=it?+it.dataset.j:-1;
+  if(a==="addStep"){R.steps.push(newStep());refresh()}
+  else if(a==="delStep"){R.steps.splice(i,1);refresh()}
+  else if(a==="up"&&i>0||a==="down"&&i>=0&&i<R.steps.length-1){const k=a==="up"?i-1:i+1;[R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];refresh()}
+  else if(a==="addItem"){R.steps[i].items.push({c:"",n:1});refresh()}
+  else if(a==="delItem"){R.steps[i].items.splice(j,1);refresh()}
+  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",steps:[newStep()]};renderAll()}}
+  else if(a==="dl")download();
+  else if(a==="folder")toFolder();
+  else if(a==="pick")$("file").click();
+  else if(a==="loadsel")loadSel();
+});
+$("app").addEventListener("input",e=>{
+  const t=e.target;
+  if(t.id==="rname"){R.name=t.value;return}
+  if(t.dataset.p!==undefined){const v=parseFloat(t.value);if(v>0)PRICES[t.dataset.p]=v;else delete PRICES[t.dataset.p];try{localStorage.setItem("craftPrices",JSON.stringify(PRICES))}catch(x){}sums();return}
+  const st=t.closest(".step");if(!st)return;
+  const s=R.steps[+st.dataset.i],f=t.dataset.f;
+  if(f==="title")s.title=t.value;else if(f==="note")s.note=t.value;
+  else{const it=s.items[+t.closest(".it").dataset.j];if(f==="c")it.c=t.value;else it.n=Math.max(0,parseFloat(t.value)||0)}
+  if(f==="c"){clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
+  f==="c"||f==="n"?upd():sums();
+});
+$("app").addEventListener("change",e=>{
+  if(e.target.id!=="file"||!e.target.files[0])return;
+  e.target.files[0].text().then(t=>{const o=parseJs(t);if(o&&o.prices&&!o.steps){setPrices(o);priceInfo();upd();msg(T("시세 파일을 적용했습니다.","Price file applied."))}else apply(o)}).catch(x=>msg(x&&x.message&&!(x instanceof SyntaxError)?x.message:T("파일을 읽지 못했습니다.","Could not read the file."))).finally(()=>{e.target.value=""});
+});
+addEventListener("sitebar:lang",e=>{LANG=e.detail;fillCur();renderAll()});
+renderAll();loadList();loadPrices();
+</script>
+</body>
+</html>
