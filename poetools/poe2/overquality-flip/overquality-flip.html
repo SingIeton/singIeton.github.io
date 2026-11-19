@@ -48,8 +48,6 @@ tbody tr:not(.g):hover td{background:color-mix(in oklab,var(--g) 6%,transparent)
 tr.g td{padding-top:9.5px;padding-bottom:9.5px;background:var(--sf2);font:600 15px var(--serif);color:var(--g);text-align:left;cursor:pointer;user-select:none}  /* 배경: 포인트 색을 섞지 않고 표의 다른 바탕색(헤더)과 같은 계열로 */
 .ge{font:400 13px var(--sans);margin-left:4px;color:color-mix(in oklab,var(--mute) 75%,var(--ink))}  /* 카테고리 보조 이름(영문): 대문자·자간 없이, 표 안 영문 장비명과 같은 글꼴·크기·색 */
 tr.g:focus-visible{outline-offset:-2px}
-tr.g td::before{content:"";display:inline-block;width:6px;height:6px;margin-right:10px;background:var(--g);transform:rotate(45deg);vertical-align:2px}
-tr.g.col td::before{background:none;border:1px solid var(--g)}  /* 접힘 표시: 속 빈 마름모 */
 .en{display:block;font-size:12px;color:var(--mute);font-weight:400;font-family:var(--sans)}
 tbody tr:not(.g) .en{font-size:13px;color:color-mix(in oklab,var(--mute) 75%,var(--ink))}  /* 표 안 영문 장비명: overquality-flip_new 스타일 (카테고리·설정 패널의 영문은 12px 그대로) */
 .cnt{float:right;font:400 12px/1.8 var(--sans);color:var(--mute)}  /* 접힌 카테고리의 행 수 */
@@ -79,15 +77,11 @@ td.mg.neg,td.roi.neg{color:#b3202a;text-shadow:none}
 :root[data-theme="dark"] td.mg.neg,:root[data-theme="dark"] td.roi.neg{color:color-mix(in oklab,var(--bad) 60%,var(--mute))}
 /* 예상 마진: 설정 패널 제목(화폐)과 같은 글꼴·굵기(명조 600). ROI는 다른 숫자와 똑같이 두고 색으로만 구분 */
 .mg{font:600 16px/1.3 var(--serif)}
-.devnote{margin:14px 0 0;font-size:12px;line-height:1.4;color:var(--g)}  /* '*개발자용' 안내: 버튼 글자와 같은 포인트 색 */
-.devnote+.row{margin-top:4px}
 /* 설정 패널 카테고리 제목(legend): 더블클릭으로 접기/펼치기 (표의 카테고리 행과 같은 방식) */
 fieldset>legend{cursor:pointer;user-select:none}
-fieldset>legend::before{width:6px;height:6px}
 fieldset>legend:focus-visible{outline-offset:2px}
-fieldset.col>legend::before{background:none;border:1px solid var(--g)}  /* 접힘 표시: 속 빈 마름모 */
 fieldset.col>:not(legend){display:none}
-#reset{color:var(--ink);border-color:var(--mute)}  /* 값 초기화: 기본(보조 버튼) 색이 너무 어두워 비활성처럼 보여서 글자·테두리를 진하게 */
+#reset{color:var(--ink);border-color:var(--mute)}  /* 설정 초기화: 기본(보조 버튼) 색이 너무 어두워 비활성처럼 보여서 글자·테두리를 진하게 */
 </style>
 </head>
 <body>
@@ -257,7 +251,7 @@ const colHint=()=>TOUCH.matches?tt("탭하여 접기/펼치기","Tap to collapse
 const fsH=(i,t)=>`<fieldset data-i="${i}"${COLP.has(i)?' class="col"':""}><legend tabindex="0" role="button" aria-expanded="${!COLP.has(i)}" title="${colHint()}">${t}</legend>`;
 function panel(){let h=fsH(0,tt("리그","League"))+`<label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${esc(l)}</option>`).join("")}</select></label></fieldset>`;
 let fi=0;for(const[t,fs]of FIELDS())h+=fsH(++fi,t)+`${fs.map(([k,l])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"${OFF.includes(k)?" disabled":""}><em title="${UNITS[S.R[k].u][LANG==="en"?1:0]}">${S.R[k].u}</em></span></label>`).join("")}</fieldset>`;
-h+=`<p class="devnote">${tt("*개발자용","*For developers")}</p><div class="row"><button class="sec" id="reset" type="button">${tt("값 초기화","Reset values")}</button><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label></div>`;
+h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label></div>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
  if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;saveSettings();useLeague(e.value);autoCollapse();  /* 리그 전환: 그 리그의 설정값으로 바꾸고 전체 다시 계산 */
