@@ -1666,30 +1666,30 @@
     }
    ],
    "rates": {
-    "div": 517.2,
-    "chaos": 43.54,
+    "div": 521.4,
+    "chaos": 42.63,
     "inf": {
      "blacksmith": {
-      "v": 0.2703,
+      "v": 0.3155,
       "u": "d"
      },
      "armourer": {
-      "v": 1.466,
+      "v": 1.549,
       "u": "d"
      }
     },
     "q": {
      "whetstone": {
-      "v": 0.008696,
+      "v": 0.01029,
       "u": "d"
      },
      "scrap": {
-      "v": 0.01197,
+      "v": 0.01304,
       "u": "d"
      }
     },
     "source": "poe.ninja",
-    "updatedAt": "2026-11-19T19:10:02Z"
+    "updatedAt": "2026-11-19T20:38:49Z"
    },
    "collectedAt": "2026-11-19T19:10:24Z",
    "stopped": {
