@@ -1,0 +1,201 @@
+name: poe2 / season-snapshot prices
+
+on:
+  schedule:
+    # 하루 2회 (UTC 기준).
+    # 수집 대상은 poe2scout 의 '일 단위' 캔들(DailyStatsHistory)이라 1.5시간처럼 촘촘히 돌려도 얻는 게 거의 없습니다.
+    #   01:33 UTC (KST 10:33) : 전날(UTC) 캔들이 확정된 뒤의 값을 받음
+    #   13:33 UTC (KST 22:33) : 진행 중인 오늘 캔들(partial)을 한 번 더 갱신
+    # 평소(--use-cache) 한 번 실행에 약 10~12분 걸리므로 월 사용량은 약 600분입니다.
+    - cron: "33 1,13 * * *"
+  workflow_dispatch:             # Actions 탭의 "Run workflow" 버튼으로 수동 실행
+    inputs:
+      force_full:
+        description: "신규 리그 감지와 관계없이 이번 실행을 full fetch(--use-cache 없이 전부 새로 수집)로 실행"
+        type: boolean
+        default: false
+      allow_shrink:
+        description: "기존 currency_data.js 보다 리그/커런시 수가 줄어도 커밋 (커런시 목록을 일부러 줄였을 때만 체크)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write                # currency_data.js 를 커밋·푸시하기 위해 필요
+
+concurrency:
+  group: poe2-season-snapshot-prices     # 이전 실행이 끝나기 전에는 다음 실행을 시작하지 않음
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90          # full fetch 로 전부 다시 받아도(약 230회 × 7초 ≈ 27분) 여유 있게 끝나는 값
+    env:
+      # 수집 스크립트와 season-snapshot.html 이 있는 폴더 (리포지토리 루트 기준) ← 실제 위치에 맞게 수정하세요.
+      # 결과(currency_data.js)는 --out 을 주지 않으면 스크립트와 같은 폴더에 생기며, HTML 이 같은 폴더의 파일을 읽습니다.
+      SCRIPT_DIR: poetools/poe2/season-snapshot
+      SCRIPT_NAME: fetch_currency_history.py
+      # 평소 실행(--use-cache)은 raw_data/ 의 응답을 '영원히' 재사용하므로, 그대로 두면 진행 중인 리그 값이 갱신되지 않습니다.
+      # 그래서 실행 직전에 LEAGUES(스크립트 상단) 맨 위에서 N개 리그의 캐시만 지워 새로 받고, 나머지(끝난 리그)는 캐시를 씁니다.
+      # 2 = 최신 + 직전. (맨 위가 아직 시작 전인 리그여도 그 아래 진행 중인 리그가 포함되도록 2로 둠)
+      REFRESH_LEAGUES: "2"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 수집 스크립트는 표준 라이브러리(urllib)만 쓰므로 pip install 이 필요 없습니다.
+
+      # raw_data/ 는 리포지토리에 커밋하지 않고 Actions 캐시로 이어받습니다.
+      # '이미 본 리그 목록'(raw_data/.seen_leagues.json)도 이 캐시 안에 함께 보관합니다.
+      # (캐시는 한 번 저장하면 덮어쓸 수 없어서 key 를 매번 새로 만들고, restore-keys 로 가장 최근 것을 불러옵니다.
+      #  7일간 안 쓰이면 사라지는데, 그 경우 raw_data 도 목록도 함께 없어지므로 자동으로 full fetch 가 됩니다.)
+      - name: Restore raw_data cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.SCRIPT_DIR }}/raw_data
+          key: poe2-season-snapshot-raw-${{ github.run_id }}
+          restore-keys: |
+            poe2-season-snapshot-raw-
+
+      # --list 로 API 리그 목록을 받아, 스크립트 상단 LEAGUES 에 적힌 리그 중 '이전 실행에서 못 본' 리그가 있으면(예: Conquerors of Wraeclast
+      # 가 API 목록에 처음 나타난 실행) 그 실행만 full fetch, 그 외에는 --use-cache 로 수집합니다.
+      # (full fetch 가 끝까지 성공해 커밋될 때만 '본 리그'로 기록하므로, 실패하면 다음 실행이 full fetch 를 다시 시도합니다.
+      #  리그가 목록에 먼저 뜨고 가격 이력은 나중에 생기는 경우에도, 평소 실행이 최신 2개 리그를 매번 새로 받으니 놓치지 않습니다.)
+      - name: Check league list (--list)
+        id: mode
+        working-directory: ${{ env.SCRIPT_DIR }}
+        env:
+          FORCE_FULL: ${{ inputs.force_full }}
+        run: |
+          python -u "$SCRIPT_NAME" --list > "$RUNNER_TEMP/leagues.txt"
+          cat "$RUNNER_TEMP/leagues.txt"
+          python - <<'PY'
+          import json, os, re, sys
+          from pathlib import Path
+          import fetch_currency_history as f   # 스크립트 상단 LEAGUES 설정을 그대로 읽음 (import 만으로는 아무것도 실행되지 않음)
+
+          # --list 출력 한 줄: "  [0] 리그 이름  CURRENT 시작일 2025-12-12"  (리그 이름 뒤에 공백 2칸)
+          api = []
+          for line in Path(os.environ["RUNNER_TEMP"], "leagues.txt").read_text(encoding="utf-8").splitlines():
+              m = re.match(r"\s*\[\d+\]\s(.+?)\s{2}", line)
+              if m:
+                  api.append(m.group(1))
+          if not api:
+              sys.exit("--list 결과에서 리그를 찾지 못했습니다.")
+
+          wanted = {name.lower() for name, _, _ in f.parse_leagues(f.parse_block(f.LEAGUES))}
+          marker = Path("raw_data/.seen_leagues.json")
+          seen = set(json.loads(marker.read_text(encoding="utf-8"))) if marker.exists() else set()
+          new = [n for n in api if n.lower() in wanted and n not in seen]
+          forced = os.environ.get("FORCE_FULL") == "true"
+
+          if forced:
+              print("수동 지정: full fetch")
+          elif new:
+              print(f"새로 확인된 리그 {new} -> full fetch")
+          else:
+              print("새 리그 없음 -> --use-cache")
+
+          # 이번 실행이 끝까지 성공하면 '본 리그 목록'으로 저장할 내용(다음 단계에서 복사)
+          Path(os.environ["RUNNER_TEMP"], "seen_leagues.json").write_text(
+              json.dumps(sorted(seen | set(api)), ensure_ascii=False), encoding="utf-8")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"full={'true' if (forced or new) else 'false'}\n")
+          PY
+
+      - name: Drop cache of ongoing leagues
+        if: ${{ steps.mode.outputs.full != 'true' }}      # full fetch 면 어차피 전부 새로 받으므로 건너뜀
+        working-directory: ${{ env.SCRIPT_DIR }}
+        run: |
+          # 커런시 카탈로그(catalog_id.json)도 매번 새로 받음 (새 리그의 새 아이템을 놓치지 않기 위해, 약 2~3분)
+          rm -f raw_data/catalog_id.json
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import fetch_currency_history as f
+
+          n = int(os.environ["REFRESH_LEAGUES"])
+          raw = Path("raw_data")
+          for name, _, _ in f.parse_leagues(f.parse_block(f.LEAGUES))[:n]:
+              files = list(raw.glob(f"{f.safe_name(name)}__*.json"))
+              for p in files:
+                  p.unlink()
+              print(f"새로 받을 리그: {name} (캐시 {len(files)}개 삭제)")
+          PY
+
+      - name: Collect prices
+        working-directory: ${{ env.SCRIPT_DIR }}
+        env:
+          FULL_FETCH: ${{ steps.mode.outputs.full }}
+        run: |
+          if [ "$FULL_FETCH" = "true" ]; then
+            echo "full fetch (--use-cache 없이 전체 수집)"
+            python -u "$SCRIPT_NAME"
+          else
+            python -u "$SCRIPT_NAME" --use-cache
+          fi
+
+      # 스크립트는 리그를 위에서부터 채워 가며 매번 파일을 덮어쓰므로, 중간에 끊긴 결과를 커밋하면 아래쪽(이전) 리그가 통째로 사라집니다.
+      # 그래서 수집이 끝까지 끝났고(complete), 기존보다 줄어들지 않았을 때만 커밋합니다.
+      - name: Validate currency_data.js
+        if: ${{ success() }}
+        env:
+          ALLOW_SHRINK: ${{ inputs.allow_shrink }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess, sys
+
+          path = os.environ["SCRIPT_DIR"] + "/currency_data.js"
+
+          def load(text):
+              # "window.CURRENCY_DATA = {...};" -> dict
+              return json.loads(text.split("=", 1)[1].strip().rstrip(";"))
+
+          def counts(d):
+              return {lg: len(v["currencies"]) for lg, v in d["leagues"].items()}
+
+          new = load(open(path, encoding="utf-8").read())
+          if not new.get("complete") or not new.get("leagues"):
+              sys.exit("수집이 끝까지 완료되지 않아(complete != true) 커밋하지 않습니다.")
+
+          old = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, text=True)
+          if old.returncode == 0 and os.environ.get("ALLOW_SHRINK") != "true":
+              before, after = counts(load(old.stdout)), counts(new)
+              lost = {lg: f"{c} -> {after.get(lg, 0)}" for lg, c in before.items() if after.get(lg, 0) < c}
+              if lost:
+                  sys.exit(f"기존보다 커런시 수가 줄어든 리그가 있어 커밋하지 않습니다(API 일시 오류 의심): {lost}\n"
+                           "의도한 변경이면 수동 실행(Run workflow)에서 allow_shrink 를 체크하세요.")
+          print("검증 통과:", counts(new))
+          PY
+
+      # 검증까지 통과한 실행만 '본 리그 목록'을 갱신 (실패하면 갱신하지 않아 다음 실행이 full fetch 를 재시도)
+      - name: Record seen leagues
+        if: ${{ success() }}
+        working-directory: ${{ env.SCRIPT_DIR }}
+        run: |
+          mkdir -p raw_data
+          cp "$RUNNER_TEMP/seen_leagues.json" raw_data/.seen_leagues.json
+
+      # 중단/실패해도 이미 받은 응답은 다음 실행에서 이어받도록 캐시는 항상 저장
+      - name: Save raw_data cache
+        if: ${{ !cancelled() }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.SCRIPT_DIR }}/raw_data
+          key: poe2-season-snapshot-raw-${{ github.run_id }}
+
+      - name: Commit currency_data.js
+        if: ${{ success() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${SCRIPT_DIR}/currency_data.js"
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git commit -m "chore: update currency_data.js ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
