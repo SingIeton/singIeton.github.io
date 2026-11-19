@@ -73,9 +73,12 @@ LEAGUES = """
 # API의 전체 커런시 이름은 `--dump-currencies 파일.txt` 로 같은 형식으로 뽑아낼 수 있습니다.
 CURRENCIES_INCLUDE = """
 
+[Currency]
 Mirror of Kalandra
 Hinekora's Lock
 Divine Orb
+Perfect Exalted Orb
+# Greater Exalted Orb
 Perfect Chaos Orb
 Greater Chaos Orb
 Chaos Orb
@@ -99,9 +102,6 @@ Omen of Sinistral Erasure
 Omen of Dextral Annulment
 Omen of Dextral Erasure
 
-[Essences]
-# Essence of the Breach
-
 [Lineage Gem]
 Uul-Netol's Embrace
 Uhtred's Exodus
@@ -111,11 +111,35 @@ Dialla's Desire
 Rakiata's Flow
 # Rigwald's Ferocity
 
+[Unique]
+The Last Flame
+Temporalis
+Voices
+Mageblood
+Headhunter
+
+[Gem]
+Uncut Skill Gem (Level 20)
+Uncut Spirit Gem (Level 20)
+
+[Essences]
+# Essence of the Breach
+
+[Breach]
+Refined Sibilant Catalyst
+Refined Reaver Catalyst
+
 [Temple]
-Architect's Orb
-Vaal Cultivation Orb
-Crystallised Corruption
-Vaal Catalysing Infuser
+Jiquani's Thesis
+Quipolatl's Thesis
+Guatelitzi's Thesis
+# Architect's Orb
+# Vaal Cultivation Orb
+# Crystallised Corruption
+# Vaal Catalysing Infuser
+
+[Expedition]
+Aldur's Legacy
 
 [Key]
 # Ancient Crisis Fragment
@@ -123,6 +147,8 @@ Vaal Catalysing Infuser
 # Faded Crisis Fragment
 # Origin Cradle
 # Origin Spark
+# Breachlord Sac
+# Raven-Touched Shard
 
 """
 
