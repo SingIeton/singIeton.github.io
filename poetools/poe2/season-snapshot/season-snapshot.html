@@ -75,6 +75,10 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 .v{color:var(--g);font-weight:600;font-variant-numeric:tabular-nums} /* 가변 텍스트(숫자·선택값): 고정 문구와 구분 */
 .foot{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-start;justify-content:space-between;margin-top:14px} /* 맨 아래: 좌측 미표시 화폐 목록, 우측 데이터 일자 */
 .foot .note{margin:0}
+/* 섹션 설명 줄: 왼쪽 설명(.note) + 오른쪽 끝 혈통 젬 체크박스. 첫 줄 기준선에 맞춰 같은 높이로 정렬 */
+.nrow{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between}
+.nrow>.note{flex:1 1 320px;min-width:0}
+.nrow>.chk{flex:none;margin-left:auto}
 .foot .unused{flex:1 1 320px;min-width:0;text-align:left;line-height:1.7}
 .foot .unused b{font-weight:600;margin-right:6px}
 .foot .gen{margin-left:auto;text-align:right;white-space:nowrap}
@@ -137,6 +141,10 @@ const CFG={
   firstDay:2,              /* 진입 가능한 가장 이른 일차. 1일차는 가격이 불안정해서 2부터 */
   priceTolDays:1,          /* 해당 일차에 가격이 없을 때 앞뒤 며칠까지 대체값으로 쓸지 */
   listSize:8,              /* 구간별 추천 목록 개수 (디바인·카오스 오브 고정 줄 제외) */
+  lineageCategory:"Gem",   /* 혈통 젬으로 취급할 데이터 카테고리 이름 (체크박스로 켜고 끔) */
+  lineageNames:[           /* 카테고리와 별개로, 이름으로 혈통 젬을 직접 지정 (카테고리가 맞지 않을 때 대비) */
+    "Uul-Netol's Embrace","Uhtred's Exodus","Uhtred's Augury","Garukhan's Resolve","Dialla's Desire","Rakiata's Flow","Rigwald's Ferocity",
+  ],
   pin:["Divine Orb","Chaos Orb"], /* 목록 맨 위에 고정할 화폐 (영어 이름, 순위 계산에서는 제외) */
   iconDir:"../icon/",      /* 화폐 아이콘 폴더 (이 HTML 기준 상대경로). poetools/poe2/icon/ */
   iconExt:".webp",         /* 아이콘 확장자 */
@@ -236,6 +244,13 @@ const NAME_KO={
 };
 const nm=(kind,name)=>(LANG!=="en"&&NAME_KO[kind][name])||name; /* 한글 이름이 있으면 한글, 없으면 영어 */
 
+/* ========== 제외 목록 (수동 편집) ==========
+   여기에 적은 화폐는 두 추천 표(투자 기간 · 진입 시점)의 순위와 "추천 표에 나오지 않은 화폐" 목록에서 빠집니다.
+   데이터의 영어 이름을 따옴표로 감싸 쉼표로 구분해 한 줄에 하나씩 적으세요. 고정 줄(CFG.pin: 디바인·카오스)은 여기에 적어도 항상 표시됩니다. */
+const EXCLUDE=[
+  /*  "Preserved Cranium", */
+];
+
 const V=x=>`<span class="v">${x}</span>`; /* 가변 텍스트 표시용 */
 /* 아이콘 파일명: 영어 이름을 소문자로, 아포스트로피 제거, 나머지 기호·공백은 하이픈. 예) Hinekora's Lock → hinekoras-lock.webp */
 const iconSlug=n=>String(n).toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
@@ -245,7 +260,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const PAL=["var(--g)","var(--b)","var(--p)","var(--y)","var(--gem)","#f97316","#ec4899","#06b6d4"]; /* 앞 5개는 theme.css 변수, 나머지는 리그가 많을 때 쓰는 고정색 */
 const DAY=864e5;
 const FOLD=new Set(); /* 접힌 섹션 */
-const S={sel:new Set(),cur:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",gm:false,view:null,pr:{inv:false,rec:false}}; /* pr: 섹션별로 예상 가격(true) / 배율(false) 표시 */ /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
+const S={lin:true,sel:new Set(),cur:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",gm:false,view:null,pr:{inv:false,rec:false}}; /* pr: 섹션별로 예상 가격(true) / 배율(false) 표시 */ /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
 let DATA=null,CUR=[],LG=[],SR=[],GM=null,drawnW=0,UEFF="exalted",HAVE={divine:false,chaos:false};
 const UNITS={exalted:{n:"Exalted Orb",ko:"엑잘티드",en:"Exalted"},chaos:{n:"Chaos Orb",ko:"카오스",en:"Chaos"},divine:{n:"Divine Orb",ko:"디바인",en:"Divine"}};
 const uname=u=>T(UNITS[u].ko,UNITS[u].en);
@@ -350,7 +365,7 @@ function geoSeries(sr){
 }
 const sname=s=>s.gm?T("기하평균","Geometric mean"):esc(nm("leagues",s.lg.name));
 function noteText(){
-  return T("마우스 휠로 확대·축소하고, 기간 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 하단 추천 화폐 정보도 함께 변경됩니다. 그래프를 드래그하여 가격 변화(%)를 확인할 수 있습니다.","Scroll to zoom. Drag the ends of the period bar to set how many days are shown, or drag the bar to move the range. Adjusting the period bar also updates the recommended currencies below. Drag across the chart to check the % price change.");
+  return T("마우스 휠로 확대·축소. 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 추천 화폐 정보도 함께 변경됩니다. 그래프를 드래그하여 가격 변화(%)를 확인할 수 있습니다.","Scroll to zoom. Drag the ends of the period bar to set how many days are shown, or drag the bar to move the range. Adjusting the period bar also updates the recommended currencies below. Drag across the chart to check the % price change.");
 }
 
 /* ---------- 화면 ---------- */
@@ -385,11 +400,11 @@ function build(){
  <p class="note" id="pnote"></p>
 </section>
 <section class="panel fold" data-fold="inv"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}"><span class="ht">${T("투자 기간에 따른 보유 화폐 추천 (현재 시점 기준)","Currency to hold by investment period (from now)")}</span>${swHtml("inv")}</h2>
- <p class="note" id="invnote"></p>
+ <div class="nrow"><p class="note" id="invnote"></p>${linCb("linInv")}</div>
  <div class="rec" id="inv"></div>
 </section>
 <section class="panel fold" data-fold="rec"><h2 title="${T("더블클릭하여 접기/펼치기","Double-click to collapse/expand")}"><span class="ht">${T("진입 시점에 따른 보유 화폐 추천 (리그 시점 기준)","Currency to hold by entry timing (by league day)")}</span>${swHtml("rec")}</h2>
- <p class="note" id="recnote"></p>
+ <div class="nrow"><p class="note" id="recnote"></p>${linCb("linRec")}</div>
  <div class="rec" id="rec"></div>
 </section>
 <div class="foot"><div class="note unused" id="unused"></div>${gen?`<p class="note gen">${T("데이터","Data")}: ${gen}</p>`:""}</div>`;
@@ -687,6 +702,9 @@ function tblCtx(){
   return {names:[...S.sel],va,vb};
 }
 const PIN=CFG.pin; /* 목록 맨 위에 항상 표시할 화폐 */
+/* 표에서 뺄 화폐: 수동 제외 목록(EXCLUDE), 혈통 젬 체크 해제 시 혈통 젬. 고정 화폐(PIN)는 항상 남김 */
+const isLineage=n=>CFG.lineageNames.includes(n)||((CUR.find(c=>c.name===n)||{}).category===CFG.lineageCategory);
+const hidden=n=>!PIN.includes(n)&&(EXCLUDE.includes(n)||(!S.lin&&isLineage(n)));
 const median=a=>{const s=a.slice().sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
 function recCalc(){
   if(!LAY||!DATA||S.x!=="day")return null;
@@ -696,6 +714,7 @@ function recCalc(){
   const first=Math.max(a,CFG.firstDay),last=b-Math.max(CFG.endTrimMin,Math.round((b-a)*CFG.endTrimRatio)),cnt=last-first+1; /* 진입 가능한 날: 1일차(가격 불안정)와 끝 며칠은 제외 */
   let items=null;
   for(const n of names){const ks=Object.keys(DATA.leagues[n].currencies||{});items=items?items.filter(k=>ks.includes(k)):ks}
+  items=items.filter(k=>!hidden(k));
   const R={names,a,b,items:items.length,bands:[]};
   if(cnt<CFG.minCandidates||!items.length){R.short=true;return R}
   const BW=CFG.bandWeights,nb=Math.max(1,Math.min(BW.length,Math.floor(cnt/CFG.minDaysPerBand))),bsum=BW.reduce((x,y)=>x+y,0),w=nb===BW.length?BW.map(x=>x/bsum):Array(nb).fill(1/nb);
@@ -764,7 +783,7 @@ function recSched(){if(recRaf)return;recRaf=requestAnimationFrame(()=>{recRaf=0;
 
 /* ---------- 투자 기간에 따른 보유 화폐 ---------- */
 /* INV-START */
-/* 그래프 기간 바의 시작 일차(a)를 진입일로 보고, 선택한 리그들에서 "a일차에 사서 N일 뒤(또는 시즌 끝)에 팔았을 때"의
+/* 그래프 바의 시작 일차(a)를 진입일로 보고, 선택한 리그들에서 "a일차에 사서 N일 뒤(또는 시즌 끝)에 팔았을 때"의
    가격 배수를 계산합니다. N일은 그래프의 일차 기준입니다. 리그별 중앙값 → 리그 간 기하평균으로 순위를 매기는 방식은 진입 시점별 추천과 같습니다. */
 function invCalc(){
   if(!LAY||!DATA||S.x!=="day")return null;
@@ -774,6 +793,7 @@ function invCalc(){
   const R={names,a,items:0,cols:[]};
   let items=null;
   for(const n of names){const ks=Object.keys(DATA.leagues[n].currencies||{});items=items?items.filter(k=>ks.includes(k)):ks}
+  items=items.filter(k=>!hidden(k));
   R.items=items.length;
   if(!items.length)return R;
   const w=Math.min(CFG.invWindow,a-CFG.firstDay),t0=a-w,t1=a+w; /* 진입일 앞뒤 창은 좌우 대칭. 시즌 초반(firstDay 근처)에서는 창을 줄여 한쪽으로 치우치지 않게 함 (예: 2일차 진입 → 2일차만) */
@@ -850,6 +870,7 @@ function renderInv(){
 const swText=t=>S.pr[t]
   ?{lab:T("예상 배율","Expected multiple"),tip:T("예상 배율로 표시","Show as expected multiple")}
   :{lab:T("예상 가격","Expected price"),tip:T("예상 가격으로 표시","Show as expected price")};
+const linCb=id=>`<label class="chk" for="${id}" title="${T("끄면 두 추천 표에서 혈통 젬을 제외합니다","Uncheck to hide Lineage gems from both tables")}"><input type="checkbox" class="lincb" id="${id}"${S.lin?" checked":""}>${T("혈통 젬 포함","Include Lineage gems")}</label>`;
 const swHtml=t=>{const x=swText(t);return `<button type="button" class="swp" data-sw="${t}" title="${x.tip}" aria-label="${x.tip}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><span>${x.lab}</span></button>`};
 function syncSw(){
   document.querySelectorAll("[data-sw]").forEach(b=>{const x=swText(b.dataset.sw);b.title=x.tip;b.setAttribute("aria-label",x.tip);b.querySelector("span").textContent=x.lab});
@@ -874,7 +895,7 @@ const SHOWN={rec:new Set(),inv:new Set()};
 function renderUnused(){
   const el=$("unused");if(!el)return;
   if(!SHOWN.rec.size&&!SHOWN.inv.size){el.innerHTML="";return} /* 표가 하나도 없으면 전체 목록이 무의미하므로 숨김 */
-  const rest=CUR.filter(c=>!SHOWN.rec.has(c.name)&&!SHOWN.inv.has(c.name));
+  const rest=CUR.filter(c=>!SHOWN.rec.has(c.name)&&!SHOWN.inv.has(c.name)&&!hidden(c.name));
   el.innerHTML=rest.length
     ?`<b>${T("추천 표에 나오지 않은 화폐","Not shown in the tables above")} (${rest.length})</b>`+rest.map(c=>esc(nm("items",c.name))).join(" · ")
     :"";
@@ -887,6 +908,7 @@ $("app").addEventListener("change",e=>{
   else if(t.id==="cur"){S.cur=t.value;prepLeagues();refreshChips();update()} /* build()로 화면 전체를 다시 만들면 스크롤이 맨 위로 튀므로 쓰지 않음 */
   else if(t.id==="unit"){S.unit=t.value;update()}
   else if(t.id==="gm"){S.gm=t.checked;update()}
+  else if(t.classList.contains("lincb")){S.lin=t.checked;document.querySelectorAll(".lincb").forEach(x=>x.checked=S.lin);recSched()} /* 두 섹션 체크박스는 하나의 설정을 공유 */
 });
 /* 휠: 커서 위치를 기준으로 확대/축소. 이미 전체 범위에서 축소하려는 휠은 페이지 스크롤에 양보합니다.
    그래프 위에서도, 기간 바의 구간(#nwin) 안쪽에서도 같은 방식으로 동작합니다. */
