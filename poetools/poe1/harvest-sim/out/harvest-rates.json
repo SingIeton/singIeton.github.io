@@ -1,20 +1,20 @@
 {
  "version": 2,
  "source": "poe.ninja",
- "updatedAt": "2026-11-19T11:55:24Z",
+ "updatedAt": "2026-11-19T20:50:07Z",
  "order": [
   "Covens",
   "Allflame"
  ],
  "leagues": {
   "Covens": {
-   "ratio": 216.2,
+   "ratio": 223.8,
    "lifeforce": {
-    "yellow": 45.75,
-    "blue": 49.19,
-    "purple": 54.47
+    "yellow": 42.43,
+    "blue": 42.92,
+    "purple": 45.05
    },
-   "updatedAt": "2026-11-19T11:55:24Z"
+   "updatedAt": "2026-11-19T20:50:07Z"
   },
   "Allflame": {
    "ratio": 516.3,
@@ -36,17 +36,17 @@
    }
   },
   "Standard": {
-   "ratio": 801.7,
+   "ratio": 839.0,
    "lifeforce": {
-    "yellow": 5.19,
-    "blue": 6.75,
-    "purple": 8.94
+    "yellow": 5.52,
+    "blue": 5.73,
+    "purple": 7.19
    },
    "scarab": {
     "doubling": 9.2,
     "lineage": 8.6
    },
-   "updatedAt": "2026-11-19T02:40:36Z",
+   "updatedAt": "2026-11-19T20:50:07Z",
    "fragment": {
     "sacrifice": 0.79,
     "mortal": 41.79,
