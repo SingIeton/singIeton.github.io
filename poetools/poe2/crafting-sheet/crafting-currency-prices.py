@@ -67,13 +67,13 @@ Chaos Orb                       카오스 오브
 Greater Chaos Orb               상위 카오스 오브
 Perfect Chaos Orb               완벽한 카오스 오브
 Regal Orb                       제왕의 오브
-# Greater Regal Orb             상위 제왕의 오브
+Greater Regal Orb               상위 제왕의 오브
 Perfect Regal Orb               완벽한 제왕의 오브
-# Orb of Transmutation          진화의 오브
-# Greater Orb of Transmutation  상위 진화의 오브
+Orb of Transmutation            진화의 오브
+Greater Orb of Transmutation    상위 진화의 오브
 Perfect Orb of Transmutation    완벽한 진화의 오브
-# Orb of Augmentation           확장의 오브
-# Greater Orb of Augmentation   상위 확장의 오브
+Orb of Augmentation             확장의 오브
+Greater Orb of Augmentation     상위 확장의 오브
 Perfect Orb of Augmentation     완벽한 확장의 오브
 Orb of Annulment                소멸의 오브
 Orb of Alchemy                  연금술의 오브
@@ -91,8 +91,11 @@ Ancient Rib                     고대의 갈비뼈
 Ancient Collarbone              고대의 빗장뼈
 Omen of Light                   빛의 징조
 Omen of Abyssal Echoes          심연의 메아리의 징조
+Omen of the Liege               군왕의 징조 (아마나무)
+Omen of the Sovereign           군주의 징조 (울라만)
+Omen of the Blackblooded        검은 피의 징조 (쿠르갈)
 
-[Omen]
+[Ritual]
 Omen of Whittling                   절사의 징조
 Omen of Sinistral Annulment         좌측 소멸의 징조
 Omen of Sinistral Erasure           좌측 말소의 징조
@@ -104,9 +107,8 @@ Omen of Greater Exaltation          상위 찬미의 징조
 Omen of Sinistral Exaltation        좌측 찬미의 징조
 Omen of Dextral Exaltation          우측 찬미의 징조
 Omen of Catalysing Exaltation       촉진하는 찬미의 징조
-Omen of the Liege                   군왕의 징조 (아마나무)
-Omen of the Sovereign               군주의 징조 (울라만)
-Omen of the Blackblooded            검은 피의 징조 (쿠르갈)
+Omen of Sinistral Necromancy        좌측 강령술의 징조
+Omen of Dextral Necromancy          우측 강령술의 징조
 
 [Essences]
 Essence of the Breach               균열의 에센스
@@ -122,7 +124,7 @@ Greater Essence of Ruin             상위 폐허의 에센스
 Perfect Essence of Ruin             완벽한 폐허의 에센스
 Greater Essence of Opulence         상위 풍요의 에센스
 Perfect Essence of Opulence         완벽한 풍요의 에센스
-Perfect Essence of Enchancement     완벽한 강화의 에센스
+Perfect Essence of Enhancement      완벽한 강화의 에센스
 
 [Breach]
 Flesh Catalyst          육체 기폭제
@@ -137,6 +139,27 @@ Reaver Catalyst         강탈자 기폭제
 Sibilant Catalyst       쇳소리 기폭제
 
 """
+
+# ---- 이름 별칭 ------------------------------------------------------------------------
+# poe.ninja 는 기본 재화 등 일부를 짧은 id(annul, regal, vaal …)로만 알려 줘서, 위 목록의 영어 이름과 글자가 달라
+# 못 찾는 경우가 있습니다. 이럴 때 "목록에 적은 영어 이름": "poe.ninja id" 로 연결하세요.
+#   · 별칭으로 찾은 재화는 목록에 적은 영어 이름 그대로 결과 파일에 기록됩니다(페이지의 이름·아이콘·한글명과 같은 표기).
+#   · id 는 `--dump-currencies 파일.txt` 결과에서 확인할 수 있습니다(재화 이름 자리에 id 가 그대로 나옴).
+ALIASES = {
+    "Regal Orb": "regal",
+    "Orb of Transmutation": "transmute",
+    "Orb of Augmentation": "aug",
+    "Orb of Annulment": "annul",
+    "Orb of Alchemy": "alch",
+    "Vaal Orb": "vaal",
+    "Orb of Chance": "chance",
+    "Mirror of Kalandra": "mirror",
+    # 에센스: poe.ninja id 에는 'the' 가 들어감
+    "Greater Essence of Body": "greater-essence-of-the-body",
+    "Perfect Essence of Body": "perfect-essence-of-the-body",
+    "Greater Essence of Mind": "greater-essence-of-the-mind",
+    "Perfect Essence of Mind": "perfect-essence-of-the-mind",
+}
 
 # ---- 유니크 아이템 검색 ------------------------------------------------------------
 # True 면 위 목록 중 '재화 카테고리'에서 못 찾은 이름만 유니크 아이템 시세(stash 엔드포인트)에서 추가로 찾습니다.
@@ -183,6 +206,19 @@ def warn(msg):
 def key(s):
     """이름 비교용 키: 소문자로 바꾸고 글자·숫자 외 문자(공백, 아포스트로피 등)를 제거."""
     return re.sub(r"[\W_]+", "", str(s).lower())
+
+
+ALIAS = {key(k): v for k, v in ALIASES.items()}
+
+
+def find(index, w):
+    """목록의 이름 w -> (찾은 항목 또는 None, 별칭으로 찾았는지). 이름·id 로 먼저 찾고, 없으면 ALIASES 의 id 로 찾는다."""
+    e = index.get(key(w))
+    if e is None and key(w) in ALIAS:
+        e = index.get(key(ALIAS[key(w)]))
+        if e is not None:
+            return e, True
+    return e, False
 
 
 def safe_name(s):
@@ -484,7 +520,7 @@ def main():
         if t == "Currency":
             base_factor = factor
         add_entries(index, entries, t)
-        remaining = [w for w in wanted if key(w) not in index]
+        remaining = [w for w in wanted if find(index, w)[0] is None]
         log(f"  {t}: {len(entries)}종" + (" (캐시)" if cached else "") + (f" / 남은 이름 {len(remaining)}개" if remaining else ""))
 
     # 2) 남은 이름은 유니크 아이템 시세에서 검색
@@ -499,13 +535,13 @@ def main():
                 warn(f"  건너뜀({t}): {e}")
                 continue
             add_entries(index, entries, t)
-            remaining = [w for w in wanted if key(w) not in index]
+            remaining = [w for w in wanted if find(index, w)[0] is None]
             log(f"  {t}: {len(entries)}종" + (" (캐시)" if cached else "") + (f" / 남은 이름 {len(remaining)}개" if remaining else ""))
 
     # 3) 결과 정리(설정 목록의 순서를 유지)
     prices, details, missing, names_ko = {}, {}, [], {}
     for w in wanted:
-        e = index.get(key(w))
+        e, aliased = find(index, w)
         kor = ko_input.get(key(w), "")
         if e is None:
             missing.append(w)
@@ -515,7 +551,7 @@ def main():
             hint = ", ".join(dict.fromkeys(index[c]["name"] for c in close))
             warn(f"  경고: '{w}' 을(를) 찾지 못해 건너뜁니다." + (f" 비슷한 이름: {hint}" if hint else ""))
             continue
-        name = e["name"]
+        name = w if aliased else e["name"]  # 별칭으로 찾았으면 목록에 적은 이름으로 기록
         if kor:
             names_ko.setdefault(name, kor)
         if name in prices:
@@ -523,7 +559,7 @@ def main():
         prices[name] = round_sig(e["div"])
         details[name] = {"category": e["category"], "id": e["id"],
                          **({"volume": round_sig(e["volume"], 4)} if e.get("volume") is not None else {})}
-        note = f"  (입력 '{w}' -> 정식 이름)" if w != name else ""
+        note = f"  (입력 '{w}' -> 정식 이름)" if w != name else (f"  (별칭: {e['name']})" if aliased else "")
         log(f"  {name}{f' ({kor})' if kor else ''}: {prices[name]:g} Div  [{e['category']}]{note}")
 
     if not prices:
