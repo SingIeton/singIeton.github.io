@@ -8,9 +8,11 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 공통 모양은 style/theme.css. 여기에는 크래프팅 시트 전용 스타일만 둡니다. */
-.bar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:4px 0 8px;margin-left:46px;max-width:778px}
+.bar{display:flex;flex-wrap:wrap;gap:22px 20px;align-items:center;padding:4px 0 8px;margin-left:46px;max-width:798px}
 .acts{display:flex;flex:1 1 100%;flex-wrap:wrap;gap:8px;align-items:center}
-.dlg{margin-left:auto}
+.acts .l,.acts .r{flex:1 1 0;display:flex;gap:8px;align-items:center;min-width:max-content}
+.acts .r{justify-content:flex-end}
+.acts .c{display:flex;flex:none;gap:8px;align-items:center;margin-inline:auto}
 .bar .rn{flex:1 1 100%;min-width:0;width:auto;max-width:none;padding:4px 0 6px;border:0;border-bottom:1px solid var(--ln2);border-radius:0;background:none;font:600 24px/1.3 var(--serif)}
 .bar .rn:focus,.bar .rn:focus-visible{outline:none;box-shadow:none;background:none;border-bottom-color:var(--ln2)}
 .grp{display:inline-flex;align-items:stretch;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);overflow:hidden}
@@ -24,32 +26,52 @@
 .grp.split{gap:4px;border:0;background:none;overflow:visible}
 .grp.split>*,.grp.split>:last-child{border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf)}
 .grp select{max-width:190px;padding:0 10px;color:var(--mute)}
-#msg{min-height:1.6em;margin:6px 0 14px 46px;max-width:778px}
-main.wrap{box-sizing:border-box;max-width:972px;margin-inline:auto;padding-inline:20px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start;max-width:824px}
+#msg{min-height:1.6em;margin:6px 0 14px 46px;max-width:798px}
+main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inline:20px} /* 844px(본문 폭) + 좌우 패딩 40px — 헤더·바·본문의 좌우 끝선이 같아지고 화면 가운데에 정렬됨 */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start;max-width:844px}
 .side{position:sticky;top:calc(var(--bar-h) + 16px);margin:0}
 @media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.side{position:static}}
 .steps{position:relative}
 .steps::before{content:"";position:absolute;left:15px;top:18px;bottom:48px;width:1px;background:var(--ln2)}
-.step{position:relative;margin:0 0 16px 46px;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) var(--pbd),var(--ln));border-radius:var(--r)}
-.no{position:absolute;left:-46px;top:7px;width:31px;height:31px;display:grid;place-items:center;border:1px solid var(--g);border-radius:50%;background:var(--bg);color:var(--g);font:600 14px var(--serif)}
-.sh{display:flex;align-items:center;gap:4px;padding:6px 14px;border-bottom:1px solid var(--ln);background:color-mix(in oklab,var(--g) var(--pht),transparent)}
-.step .t{flex:1;min-width:0;width:auto;max-width:none;padding:4px 0;border:0;border-bottom:1px solid transparent;border-radius:0;background:none;font:600 17px var(--serif)}
+.step{position:relative;margin:0 0 14px 46px;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) var(--pbd),var(--ln));border-radius:var(--r)}
+.no{position:absolute;left:-46px;top:5px;width:31px;height:31px;display:grid;place-items:center;border:1px solid var(--g);border-radius:50%;background:var(--bg);color:var(--g);font:600 14px var(--serif)}
+.sh{display:flex;align-items:center;gap:4px;height:42px;box-sizing:border-box;padding:0 14px;border-bottom:1px solid var(--ln);background:color-mix(in oklab,var(--g) var(--pht),transparent)}
+.step .t{flex:1;min-width:0;width:auto;max-width:none;height:32px;min-height:0;box-sizing:border-box;padding:2px 0;border:0;border-bottom:1px solid transparent;border-radius:0;background:none;font:600 17px var(--serif)}
 .it input{border-color:var(--ln2)}
 .step .t:focus,.step .t:focus-visible,.it input:focus,.it input:focus-visible,.step textarea:focus,.step textarea:focus-visible{outline:none;box-shadow:none}
 .it input:focus,.it input:focus-visible{border-color:var(--ln2)}
 .sc2{margin-right:8px;color:var(--g);font:600 14px var(--serif);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ib{width:28px;height:28px;border:0;background:none;color:var(--mute);border-radius:var(--r);cursor:pointer;line-height:1}
 .ib:hover:not(:disabled){color:var(--ink);background:var(--sf2)}
-.sb{padding:10px 14px 12px}
-.it{display:grid;grid-template-columns:minmax(0,1fr) 32px 72px 60px 28px;gap:8px;align-items:center;margin:0 0 6px}
-.it input[type=text],.it input[type=number]{width:100%;max-width:none}
-.it input[data-f=n]{text-align:center}
+.sb{padding:9px 14px 11px}
+.it{display:grid;grid-template-columns:minmax(0,1fr) 32px 72px 60px 28px;gap:8px;align-items:center;margin:0 0 5px}
+.it input[type=text],.it input[type=number]{width:100%;max-width:none;height:34px;min-height:0;box-sizing:border-box;padding-block:0}
+/* 수량 칸: 브라우저 기본 스피너는 모양·높이를 CSS로 맞출 수 없어 숨기고, 칸 안쪽 높이를 꽉 채우는 위/아래 버튼(.qb)을 직접 둠 */
+.qty{display:block;position:relative;height:34px}
+.it input[data-f=n]{text-align:center;padding:0 22px 0 0;border-width:1px;-moz-appearance:textfield;appearance:textfield}
+.it input[data-f=n]::-webkit-inner-spin-button,.it input[data-f=n]::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}
+.qsp{position:absolute;top:1px;right:1px;bottom:1px;width:21px;display:flex;flex-direction:column;border-left:1px solid var(--ln2);border-radius:0 calc(var(--r) - 1px) calc(var(--r) - 1px) 0;overflow:hidden}
+.qb{flex:1 1 0;min-height:0;display:grid;place-items:center;padding:0;border:0;background:none;color:var(--mute);cursor:pointer;transition:background .15s,color .15s}
+.qb+.qb{border-top:1px solid var(--ln)}
+.qb:hover:not(:disabled){color:var(--ink);background:var(--sf2)}
+.qb:disabled{opacity:.4;cursor:default}
 .ci{width:32px;height:32px;display:grid;place-items:center}.ci img{max-width:32px;max-height:32px;object-fit:contain}
-.ic{text-align:right;color:var(--mute);font-size:13px;font-variant-numeric:tabular-nums}
+.it input[data-f=c],.it .pr{font-size:calc(var(--fs) - 2px)} /* 화폐 박스: theme.css 입력칸 기본(--fs-1 = 15px)보다 1px 작은 14px */
+.it .pr{text-align:right;padding-inline:8px;font-variant-numeric:tabular-nums}
 .add{background:none;border:0;padding:2px 0;color:var(--g);font:600 13px var(--sans);cursor:pointer}
-.add:hover{text-decoration:underline}
-.step textarea{display:block;width:100%;min-height:44px;margin-top:10px;padding:6px 8px;border:1px dashed var(--ln2);border-radius:var(--r);background:color-mix(in oklab,var(--ink) 4%,transparent);color:var(--ink);font:inherit;font-size:14px;resize:vertical}
+.add:hover:not(:disabled){text-decoration:underline}
+.add:disabled{opacity:.4;cursor:default}
+/* 잠긴 단계: 입력칸은 disabled(포커스 불가), 글자색은 읽기 좋게 유지, 자물쇠 버튼은 강조색 */
+.ib.lock[aria-pressed=true]{color:var(--g)}
+.step.lk input:disabled,.step.lk textarea:disabled{color:var(--ink);opacity:.75;cursor:default}
+.ib:disabled{opacity:.35;cursor:default}
+/* 단계 순서 끌기 */
+.gr{flex:none;width:24px;height:28px;margin-left:-6px;padding:0;border:0;border-radius:var(--r);background:none;color:var(--mute);cursor:grab;display:grid;place-items:center;touch-action:none}
+.gr:hover{color:var(--ink);background:var(--sf2)}
+.step{transition:transform .15s}
+.step.dragging{transition:none;z-index:5;background:linear-gradient(var(--sf),var(--sf)),var(--bg); /* 뒤 단계가 비치지 않도록 불투명 바탕 위에 */box-shadow:0 8px 24px color-mix(in oklab,#000 40%,transparent)}
+.dnd,.dnd *{cursor:grabbing!important;user-select:none!important}
+.step textarea{display:block;width:100%;min-height:40px;margin-top:8px;padding:6px 8px;border:1px dashed var(--ln2);border-radius:var(--r);background:color-mix(in oklab,var(--ink) 4%,transparent);color:var(--ink);font:inherit;font-size:14px;resize:none;overflow:hidden}
 .addstep{width:100%;margin-left:46px;width:calc(100% - 46px);padding:10px;border:1px dashed var(--ln2);border-radius:var(--r);background:none;color:var(--mute);font:600 14px var(--sans);cursor:pointer}
 .addstep:hover{color:var(--g);border-color:var(--g)}
 .big{padding:2px 0 4px}
@@ -99,10 +121,14 @@ function buildKo(){
 const koName=c=>KO[nk(c)]||"";
 const canon=c=>{c=String(c).trim();return KO2EN.get(nk(c))||c}; /* 한글 이름이면 영어 이름으로 */
 const disp=c=>LANG==="en"?c:(koName(c)||c);
-let EXTRA=[];
+let EXTRA=[],KNOWN=new Set();
+/* 입력칸의 값이 이미 목록에 있는 재화 이름(영어·한글)과 같으면 "완성된 이름" 으로 보고, 자동완성 목록(datalist)을 연결하지 않습니다. */
+const isKnown=v=>{const k=nk(v);return !!k&&KNOWN.has(k)};
+const syncList=t=>{if(isKnown(t.value)){if(t.hasAttribute("list"))t.removeAttribute("list")}else if(t.getAttribute("list")!=="cur")t.setAttribute("list","cur")};
 function fillCur(extra){
   if(extra)EXTRA=extra;
   const m=new Map();[...CUR,...EXTRA].forEach(c=>{const k=nk(c);if(k&&!m.has(k))m.set(k,c)});
+  KNOWN=new Set([...m.keys(),...KO2EN.keys()]);
   $("cur").innerHTML=[...m.values()].map(c=>{const ko=LANG==="en"?"":koName(c);return `<option value="${esc(LANG==="en"?c:(ko||c))}">`}).join("");
 }
 buildKo();fillCur();
@@ -113,7 +139,9 @@ buildKo();fillCur();
 const PRICE_URL="crafting-currency-prices.json"; /* 이 HTML 기준 상대 경로 */
 let PRICES={};try{PRICES=JSON.parse(localStorage.getItem("craftPrices")||"{}")}catch(e){}
 let AUTO={},META=null,PERR="";
-const manual=c=>{c=canon(c);return typeof PRICES[c]==="number"&&PRICES[c]>0?PRICES[c]:null};
+/* 레시피 안에 저장되는 직접 입력 단가(R.prices). 이름은 정규화(nk)해서 비교하므로 대소문자·한글/영어 이름 차이가 있어도 같은 재화로 봅니다. */
+const ovKey=c=>{const k=nk(canon(c));return Object.keys(R.prices||{}).find(x=>nk(canon(x))===k)};
+const manual=c=>{c=canon(c);const k=ovKey(c);if(k!==undefined&&R.prices[k]>0)return R.prices[k];return typeof PRICES[c]==="number"&&PRICES[c]>0?PRICES[c]:null};
 const auto=c=>{const v=AUTO[nk(canon(c))];return typeof v==="number"&&v>0?v:null};
 const price=c=>nk(canon(c))==="divine-orb"?1:(manual(c)??auto(c));
 function setPrices(o){
@@ -140,14 +168,18 @@ async function loadPrices(){
 }
 
 const newStep=()=>({title:"",note:"",items:[{c:"",n:1}]});
-let R={name:"",steps:[newStep()]},LIST=null;
+let R={name:"",prices:{},steps:[newStep()]},LIST=null;
 
 const totals=items=>{const m=new Map();items.forEach(it=>{const c=canon(it.c);if(c&&it.n>0)m.set(c,(m.get(c)||0)+it.n)});return m};
-const cost=m=>{let sum=0;m.forEach((n,c)=>{const p=price(c);if(p!=null)sum+=n*p});return{sum}};
+/* 재화 이름 없이 가격 칸에 직접 적은 비용(it.p, 디바인 정수)도 비용에 더함. 이름을 적으면 그 재화의 단가로 옮겨지고 it.p 는 지워짐(commitName) */
+const extraCost=items=>items.reduce((a,it)=>it.p>0?a+it.p:a,0);
+const cost=(m,items=[])=>{let sum=extraCost(items);m.forEach((n,c)=>{const p=price(c);if(p!=null)sum+=n*p});return{sum}};
 const cs=g=>`${fmtD(g.sum)} D`;
-const line=s=>{const m=totals(s.items);return m.size?[...m].map(([c,n])=>`${disp(c)} ×${fmt(n)}`).join(" · ")+" = "+cs(cost(m)):T("입력된 재화 없음","No currency yet")};
+const line=s=>{const m=totals(s.items);return m.size?[...m].map(([c,n])=>`${disp(c)} ×${fmt(n)}`).join(" · ")+" = "+cs(cost(m,s.items)):T("입력된 재화 없음","No currency yet")};
 const IC=d=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-const ICO={reset:IC('<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>'),plus:IC('<path d="M12 5v14M5 12h14"/>'),dl:IC('<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'),folder:IC('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),up:IC('<path d="M12 16V5M7 9l5-4 5 4M5 20h14"/>'),file:IC('<path d="M6 3h8l4 4v14H6zM14 3v5h4"/>')};
+const ICO={reset:IC('<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>'),plus:IC('<path d="M12 5v14M5 12h14"/>'),dl:IC('<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'),folder:IC('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),up:IC('<path d="M12 16V5M7 9l5-4 5 4M5 20h14"/>'),file:IC('<path d="M6 3h8l4 4v14H6zM14 3v5h4"/>'),lock:IC('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),unlock:IC('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-1.3"/>'),grip:IC('<g fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.9"/><circle cx="15" cy="6" r="1.9"/><circle cx="9" cy="12" r="1.9"/><circle cx="15" cy="12" r="1.9"/><circle cx="9" cy="18" r="1.9"/><circle cx="15" cy="18" r="1.9"/></g>')};
+const CV=d=>`<svg viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const CHV={up:CV("M1 5l4-4 4 4"),dn:CV("M1 1l4 4 4-4")};
 const isl=n=>n.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
 const IMG=new Map();
 function iconUrl(n){ /* poetools\poe2\icon\<소문자-하이픈 이름>.webp|png|svg|jpg  예: divine-orb.webp */
@@ -162,11 +194,12 @@ const msg=t=>{$("msg").textContent=t};
 
 function renderAll(){
   document.title=T("크래프팅 시트","Crafting Sheet")+" | PoE 2 | PoE Tools";
-  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("단계별로 레시피를 기록하고, 단계별·전체 소모 재화와 총 비용을 확인.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p><p class="note" id="pinfo"></p></div></div></div>
+  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("레시피를 단계별로 기록하고, 단계별·전체 소모 재화와 총 비용을 확인합니다.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p><p class="note" id="pinfo"></p></div></div></div>
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}">
-<div class="acts"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div>
-<div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("목록 불러오기","Load from list")}</button></div>
-<div class="grp split" role="group" aria-label="${T("파일","File")}"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button>${window.showDirectoryPicker?`<button type="button" data-a="folder">${ICO.folder}${T("폴더에 저장","Save to folder")}</button>`:""}</div><div class="grp dlg"><button type="button" data-a="dl">${ICO.dl}${T("파일로 저장","Save as file")}</button></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden></div>
+<div class="acts"><div class="l"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div></div>
+<div class="c"><div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("목록 불러오기","Load from list")}</button></div>
+<div class="grp"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div></div>
+<div class="r">${window.showDirectoryPicker?`<div class="grp"><button type="button" data-a="folder">${ICO.folder}${T("폴더에 저장","Save to folder")}</button></div>`:""}<div class="grp"><button type="button" data-a="dl">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden></div>
 <p class="note" id="msg" role="status"></p>
 <div class="layout"><div><div class="steps" id="steps"></div><button type="button" class="addstep" data-a="addStep">+ ${T("단계 추가","Add step")}</button></div>
 <aside class="panel side"><h2>${T("총 비용","Total cost")}</h2><div class="big"><b id="gv"></b></div>
@@ -176,9 +209,9 @@ function renderAll(){
 }
 function renderSteps(){
   const n=R.steps.length;
-  $("steps").innerHTML=R.steps.map((s,i)=>`<div class="step" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><div class="sh"><input type="text" class="t" data-f="title" value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib" data-a="up"${i?"":" disabled"} aria-label="${T("위로","Up")}">↑</button><button type="button" class="ib" data-a="down"${i<n-1?"":" disabled"} aria-label="${T("아래로","Down")}">↓</button><button type="button" class="ib" data-a="delStep"${n>1?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">✕</button></div>
-<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text" list="cur" data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" placeholder="${T("재화","Currency")}" aria-label="${T("재화","Currency")}"><span class="ci"></span><input type="number" min="0" max="9999" step="1" data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="ic"></span><button type="button" class="ib" data-a="delItem" aria-label="${T("재화 삭제","Remove")}">✕</button></div>`).join("")}<button type="button" class="add" data-a="addItem">+ ${T("추가","Add")}</button>
-<textarea data-f="note" placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea></div></div>`).join("");
+  $("steps").innerHTML=R.steps.map((s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib lock" data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button><button type="button" class="ib" data-a="delStep"${n>1&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">✕</button></div>
+<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text"${isKnown(it.c)||lk?"":' list="cur"'}${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" placeholder="${T("재화","Currency")}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="1"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">✕</button></div>`).join("")}<button type="button" class="add" data-a="addItem"${dis}>+ ${T("추가","Add")}</button>
+<textarea data-f="note" rows="1"${ro} placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea></div></div>`}).join("");
 }
 /* 소모 재화 표의 재화 칸: 아이콘 이미지만 표시 (아이콘 파일이 없는 재화만 이름 텍스트로 대신 표시) */
 const TIC=new Map(); /* 재화 이름 → 아이콘 주소 (없으면 null) */
@@ -191,27 +224,69 @@ function totIcons(){
   }),250);
 }
 function renderTot(){
-  const tot=totals(R.steps.flatMap(s=>s.items));
-  $("tot").innerHTML=tot.size?`<table><thead><tr><th>${T("재화","Currency")}</th><th>${T("수량","Qty")}</th><th>${T("비용","Cost")}</th></tr></thead><tbody>${[...tot].map(([c,n])=>{const p=price(c),v=p==null?null:n*p;if(v!=null&&v<1)return "";return `<tr><td class="ti" data-n="${esc(c)}">${totCell(c)}</td><td>${fmt(n)}</td><td>${v==null?"—":fmtD(v)}</td></tr>`}).join("")}</tbody></table>`:`<p class="note">${T("재화를 입력하면 표시됩니다.","Currencies you add will appear.")}</p>`;
+  const all=R.steps.flatMap(s=>s.items),tot=totals(all),ex=extraCost(all);
+  const other=ex>=1?`<tr><td>${T("기타","Other")}</td><td>—</td><td>${fmtD(ex)}</td></tr>`:""; /* 이름 없이 직접 적은 비용 */
+  $("tot").innerHTML=tot.size||ex>0?`<table><thead><tr><th>${T("재화","Currency")}</th><th>${T("수량","Qty")}</th><th>${T("비용","Cost")}</th></tr></thead><tbody>${[...tot].map(([c,n])=>{const p=price(c),v=p==null?null:n*p;if(v!=null&&v<1)return "";return `<tr><td class="ti" data-n="${esc(c)}">${totCell(c)}</td><td>${fmt(n)}</td><td>${v==null?"—":fmtD(v)}</td></tr>`}).join("")}${other}</tbody></table>`:`<p class="note">${T("재화를 입력하면 표시됩니다.","Currencies you add will appear.")}</p>`;
   totIcons();
 }
 /* 입력값에 따라 숫자만 갱신 (입력 중인 칸은 건드리지 않음) */
-function sums(){
-  const tot=totals(R.steps.flatMap(s=>s.items)),g=cost(tot);
+function sums(skip){
+  const all=R.steps.flatMap(s=>s.items),tot=totals(all),g=cost(tot,all);
   $("gv").innerHTML=`${fmtD(g.sum)}<u>Div</u>`;
-  const costs=R.steps.map(s=>cost(totals(s.items)));
+  const costs=R.steps.map(s=>cost(totals(s.items),s.items));
   document.querySelectorAll(".step").forEach((el,i)=>{
     el.querySelector(".sc2").textContent=cs(costs[i]);
-    el.querySelectorAll(".it").forEach((r,j)=>{const it=R.steps[i].items[j],p=price(it.c.trim());r.querySelector(".ic").textContent=it.c.trim()&&it.n>0&&p!=null&&it.n*p>=1?fmtD(it.n*p)+" D":""});
+    el.querySelectorAll(".it").forEach((r,j)=>{
+      const it=R.steps[i].items[j],c=it.c.trim(),b=r.querySelector(".pr"),p=c?price(c):null; /* 가격 칸은 항상 수정 가능 (잠긴 단계만 readonly) */
+      const rc=it.p>0?Math.round(it.p):c&&p!=null&&it.n>0?Math.round(it.n*p):0; /* 디바인은 항상 정수. it.p = 이름 없이 직접 적은 비용 */
+      if(b!==skip)b.value=rc>=1?String(rc):"";
+    });
   });
   $("stepcost").innerHTML=R.steps.map((s,i)=>`<div class="sc"><span>${esc(s.title||T("단계","Step"))}</span><b>${fmtD(costs[i].sum)} D</b><i style="width:${g.sum>0?Math.round(costs[i].sum/g.sum*100):0}%"></i></div>`).join("");
 }
-const refresh=()=>{renderSteps();renderTot();sums();icons()};
+/* 노트 칸 높이를 내용에 맞춰 자동으로 늘리고 줄입니다 (입력, 불러오기, 창 크기·글꼴 변경 시) */
+const fitNote=t=>{t.style.height="auto";t.style.height=(t.scrollHeight+t.offsetHeight-t.clientHeight)+"px"};
+const fitNotes=()=>document.querySelectorAll(".step textarea").forEach(fitNote);
+const refresh=()=>{renderSteps();renderTot();sums();icons();fitNotes()};
 const upd=()=>{renderTot();sums()};
+/* 단계 줄의 비용 입력칸(정수 디바인) → 이 재화의 단가 = 입력값 ÷ 수량 을 이 레시피(R.prices)에 저장. 비우면 직접 입력이 해제되어 시세 파일 값으로 돌아갑니다. */
+function setRowPrice(t){
+  const row=t.closest(".it"),it=R.steps[+row.closest(".step").dataset.i].items[+row.dataset.j],c=canon(it.c);
+  if($("msg").textContent===T("디바인은 정수로만 입력합니다.","Enter whole Divine amounts only."))msg("");
+  const d=t.value.replace(/,/g,"").replace(/\D.*$/,"").slice(0,7); /* 숫자 이외는 입력되지 않음 (소수점 이하는 버림) */
+  if(d!==t.value)t.value=d;
+  const v=parseInt(d,10);
+  if(!c){ /* 재화 이름 없이 비용만 적은 줄: 그 줄 자체에 저장 (이름을 적으면 commitName 이 단가로 옮김) */
+    if(v>0)it.p=v;else delete it.p;
+    renderTot();sums(t);return;
+  }
+  if(nk(c)==="divine-orb")return; /* 디바인은 단가 1 고정 → 저장할 단가 없음, 칸을 벗어나면 계산값으로 돌아감 */
+  delete it.p;
+  R.prices=R.prices||{};
+  const old=ovKey(c);if(old!==undefined)delete R.prices[old];
+  if(v>0)R.prices[c]=Math.round(v/(it.n>0?it.n:1)*1e6)/1e6;
+  renderTot();sums(t);
+}
+/* 가격을 먼저 적고 나중에 재화 이름을 적은 경우: 적어 둔 비용을 그 재화의 단가(비용 ÷ 수량)로 옮김 */
+function commitName(t){
+  const row=t.closest(".it");if(!row)return;
+  const it=R.steps[+row.closest(".step").dataset.i].items[+row.dataset.j],c=canon(it.c);
+  if(!c||!(it.p>0))return;
+  if(nk(c)!=="divine-orb"){
+    R.prices=R.prices||{};
+    const old=ovKey(c);if(old!==undefined)delete R.prices[old];
+    R.prices[c]=Math.round(it.p/(it.n>0?it.n:1)*1e6)/1e6;
+  }
+  delete it.p;upd();
+}
 
 /* 저장 / 불러오기 */
 const slug=n=>(n||"").trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"")||"recipe";
-const json=()=>JSON.stringify({v:1,name:R.name,steps:R.steps},null,2);
+const json=()=>{
+  const used=new Set(R.steps.flatMap(s=>s.items).map(it=>nk(canon(it.c))).filter(Boolean)),pr={};
+  Object.entries(R.prices||{}).forEach(([k,v])=>{if(v>0&&used.has(nk(canon(k))))pr[k]=v});
+  return JSON.stringify({v:1,name:R.name,steps:R.steps.map(({locked,...s})=>locked?{...s,locked:true}:s),...(Object.keys(pr).length?{prices:pr}:{})},null,2);
+};
 /* 레시피 파일과 목록 파일은 <script> 로 읽는 .js 형식입니다 (file:// 로 열어도 동작).
    recipe/<이름>.js : window.CRAFT_RECIPE = {레시피};
    recipe/index.js  : window.CRAFT_RECIPE_INDEX = [{"file":"<이름>.js","name":"표시 이름"}, ...]; */
@@ -223,7 +298,6 @@ const recipeFile=()=>{const f=slug(R.name);return (f==="index"?"index-recipe":f)
 function download(){
   const file=recipeFile(),a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([recipeJs()],{type:"text/javascript"}));a.download=file;a.click();URL.revokeObjectURL(a.href);
-  msg(T(`${file} 을(를) 내려받았습니다.`,`Downloaded ${file}.`));
 }
 async function toFolder(){
   try{
@@ -232,12 +306,12 @@ async function toFolder(){
     let idx=[];try{idx=parseJs(await(await(await d.getFileHandle("index.js")).getFile()).text());if(!Array.isArray(idx))idx=[]}catch(e){}
     idx=idx.filter(x=>x&&x.file&&x.file!==file);idx.push({file,name:R.name||file});idx.sort((a,b)=>a.name.localeCompare(b.name));
     w=await(await d.getFileHandle("index.js",{create:true})).createWritable();await w.write(indexJs(idx));await w.close();
-    msg(T(`${file} 저장 완료 (${d.name})`,`Saved ${file} (${d.name})`));
   }catch(e){if(e.name!=="AbortError")msg(T("저장하지 못했습니다: ","Could not save: ")+e.message)}
 }
 function apply(o){
   if(!o||!Array.isArray(o.steps))return msg(T("레시피 형식이 올바르지 않습니다.","Invalid recipe file."));
-  R={name:String(o.name||""),steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n))||0))}))}))};
+  const pr={};if(o.prices&&typeof o.prices==='object')Object.entries(o.prices).forEach(([k,v])=>{v=Number(v);if(String(k).trim()&&v>0&&isFinite(v))pr[String(k).trim()]=v});
+  R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n))||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)))}:{})}))}))};
   if(!R.steps.length)R.steps.push(newStep());
   renderAll();
 }
@@ -274,12 +348,28 @@ async function loadSel(){
 $("app").addEventListener("click",e=>{
   const b=e.target.closest("button[data-a]");if(!b)return;
   const a=b.dataset.a,st=b.closest(".step"),i=st?+st.dataset.i:-1,it=b.closest(".it"),j=it?+it.dataset.j:-1;
-  if(a==="addStep"){R.steps.push(newStep());refresh()}
-  else if(a==="delStep"){R.steps.splice(i,1);refresh()}
-  else if(a==="up"&&i>0||a==="down"&&i>=0&&i<R.steps.length-1){const k=a==="up"?i-1:i+1;[R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];refresh()}
+  if(a==="lock"){R.steps[i].locked=!R.steps[i].locked;refresh();return}
+  if(a==="qup"||a==="qdn"){ /* 수량 ▲▼ 버튼 */
+    const s=R.steps[i],o=s&&s.items[j];if(!o||s.locked)return;
+    o.n=Math.min(9999,Math.max(0,(+o.n||0)+(a==="qup"?1:-1)));
+    it.querySelector("[data-f=n]").value=o.n;upd();return;
+  }
+  if(i>=0&&R.steps[i].locked&&(a==="delStep"||a==="addItem"||a==="delItem"))return; /* 잠긴 단계는 줄·단계 추가/삭제 불가 */
+  if(a==="addStep"){
+    /* 새 단계가 생겨 버튼이 아래로 밀린 만큼 그대로 스크롤해서, 버튼이 화면에서 같은 자리에 머물게 합니다 */
+    const y0=b.getBoundingClientRect().top;
+    R.steps.push(newStep());refresh();
+    const dy=b.getBoundingClientRect().top-y0;
+    if(dy)window.scrollBy({top:dy,left:0,behavior:"instant"});
+  }
+  else if(a==="delStep"){
+    const s=R.steps[i],has=s.title.trim()||s.note.trim()||s.items.some(x=>x.c.trim()||x.p>0); /* 내용이 있을 때만 확인 */
+    if(has&&!confirm(T(`${i+1}단계를 삭제할까요?`,`Delete step ${i+1}?`)))return;
+    R.steps.splice(i,1);refresh();
+  }
   else if(a==="addItem"){R.steps[i].items.push({c:"",n:1});refresh()}
   else if(a==="delItem"){R.steps[i].items.splice(j,1);refresh()}
-  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",steps:[newStep()]};renderAll()}}
+  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};renderAll()}}
   else if(a==="dl")download();
   else if(a==="folder")toFolder();
   else if(a==="pick")$("file").click();
@@ -291,16 +381,78 @@ $("app").addEventListener("input",e=>{
   if(t.dataset.p!==undefined){const v=parseFloat(t.value);if(v>0)PRICES[t.dataset.p]=v;else delete PRICES[t.dataset.p];try{localStorage.setItem("craftPrices",JSON.stringify(PRICES))}catch(x){}sums();return}
   const st=t.closest(".step");if(!st)return;
   const s=R.steps[+st.dataset.i],f=t.dataset.f;
+  if(f==="p"){setRowPrice(t);return}
   if(f==="n"&&t.value!==""){const d=t.value.replace(/\D.*$/,"").slice(0,4);if(d!==t.value)t.value=d}
-  if(f==="title")s.title=t.value;else if(f==="note")s.note=t.value;
+  if(f==="title")s.title=t.value;else if(f==="note"){s.note=t.value;fitNote(t)}
   else{const it=s.items[+t.closest(".it").dataset.j];if(f==="c")it.c=t.value;else it.n=Math.max(0,parseFloat(t.value)||0)}
-  if(f==="c"){clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
+  if(f==="c"){syncList(t);if(isKnown(t.value))commitName(t);clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
   f==="c"||f==="n"?upd():sums();
 });
+/* 재화 칸 자동완성: 완성된 이름이면 목록을 띄우지 않고, 고치려고 키를 누르는 순간 다시 연결합니다. */
+$("app").addEventListener("focusin",e=>{if(e.target.dataset&&e.target.dataset.f==="c")syncList(e.target)});
+$("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="c"){syncList(e.target);commitName(e.target)}});
+/* 단계 순서: 손잡이(.gr)를 끌어서 변경 (포인터 이벤트라 마우스·터치 모두 동작, 화면 가장자리에서는 자동 스크롤) */
+let DND=null;
+function dndLayout(){
+  const D=DND,dy=D.y-D.y0+scrollY-D.s0,q=D.rects[D.i],mid=q.top+q.h/2+dy;
+  D.st.style.transform=`translateY(${dy}px)`;
+  let to=0;D.rects.forEach((r,k)=>{if(k!==D.i&&r.top+r.h/2<mid)to++}); /* 끌고 있는 단계 중심 위에 있는 다른 단계 수 = 놓일 위치 */
+  D.to=to;
+  D.els.forEach((el,k)=>{if(k===D.i)return;const sh=D.i<k&&k<=to?-D.step:to<=k&&k<D.i?D.step:0;el.style.transform=sh?`translateY(${sh}px)`:""});
+}
+function dndTick(){
+  const D=DND;if(!D)return;
+  const z=70;let v=0;
+  if(D.y<z)v=-Math.min(24,Math.ceil((z-D.y)/4));else if(D.y>innerHeight-z)v=Math.min(24,Math.ceil((D.y-(innerHeight-z))/4));
+  if(v){const y=scrollY;scrollBy({top:v,left:0,behavior:"instant"});if(scrollY!==y)dndLayout()}
+  D.raf=requestAnimationFrame(dndTick);
+}
+const dndMove=e=>{if(DND&&e.pointerId===DND.id){DND.y=e.clientY;dndLayout()}};
+function dndEnd(e){
+  const D=DND;if(!D||e.pointerId!==D.id)return;
+  DND=null;cancelAnimationFrame(D.raf);
+  removeEventListener("pointermove",dndMove);removeEventListener("pointerup",dndEnd);removeEventListener("pointercancel",dndEnd);
+  try{D.h.releasePointerCapture(D.id)}catch(x){}
+  document.documentElement.classList.remove("dnd");
+  D.els.forEach(el=>{el.style.transform="";el.classList.remove("dragging")});
+  if(e.type==="pointerup"&&D.to!==D.i){const[s]=R.steps.splice(D.i,1);R.steps.splice(D.to,0,s);refresh()}
+}
+$("app").addEventListener("pointerdown",e=>{
+  const h=e.target.closest(".gr");if(!h||e.button>0||DND)return;
+  const st=h.closest(".step"),els=[...document.querySelectorAll(".step")];if(els.length<2)return;
+  e.preventDefault();
+  DND={i:+st.dataset.i,to:+st.dataset.i,st,els,h,id:e.pointerId,y0:e.clientY,y:e.clientY,s0:scrollY,raf:0,
+    rects:els.map(el=>{const r=el.getBoundingClientRect();return{top:r.top+scrollY,h:r.height}}),
+    step:st.offsetHeight+(parseFloat(getComputedStyle(st).marginBottom)||0)};
+  try{h.setPointerCapture(e.pointerId)}catch(x){}
+  st.classList.add("dragging");document.documentElement.classList.add("dnd");
+  addEventListener("pointermove",dndMove);addEventListener("pointerup",dndEnd);addEventListener("pointercancel",dndEnd);
+  dndTick();
+});
+/* 키보드: 손잡이에 포커스를 두고 ↑↓ 로 이동 */
+$("app").addEventListener("keydown",e=>{
+  const h=e.target.closest&&e.target.closest(".gr");if(!h||(e.key!=="ArrowUp"&&e.key!=="ArrowDown"))return;
+  e.preventDefault();
+  const i=+h.closest(".step").dataset.i,k=e.key==="ArrowUp"?i-1:i+1;
+  if(k<0||k>=R.steps.length)return;
+  [R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];refresh();
+  const g=document.querySelector(`.step[data-i="${k}"] .gr`);if(g)g.focus();
+});
+$("app").addEventListener("keydown",e=>{
+  const t=e.target;if(!t.dataset||t.dataset.f!=="c"||t.readOnly||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.key.length===1||e.key==="Backspace"||e.key==="Delete"||e.key==="ArrowDown"||e.isComposing)t.setAttribute("list","cur");
+});
+$("app").addEventListener("beforeinput",e=>{ /* 비용 칸은 숫자만: 소수점 등은 입력 자체를 막고 안내 */
+  const t=e.target;
+  if(t.dataset&&t.dataset.f==="p"&&e.inputType==="insertText"&&/\D/.test(e.data||"")){e.preventDefault();msg(T("디바인은 정수로만 입력합니다.","Enter whole Divine amounts only."))}
+});
+$("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="p")sums()}); /* 입력을 마치면 표시 형식을 정리 */
 $("app").addEventListener("change",e=>{
   if(e.target.id!=="file"||!e.target.files[0])return;
-  e.target.files[0].text().then(t=>{const o=parseJs(t);if(o&&o.prices&&!o.steps){setPrices(o);priceInfo();upd();msg(T("시세 파일을 적용했습니다.","Price file applied."))}else apply(o)}).catch(x=>msg(x&&x.message&&!(x instanceof SyntaxError)?x.message:T("파일을 읽지 못했습니다.","Could not read the file."))).finally(()=>{e.target.value=""});
+  e.target.files[0].text().then(t=>{const o=parseJs(t);if(o&&o.prices&&!o.steps){setPrices(o);priceInfo();upd()}else apply(o)}).catch(x=>msg(x&&x.message&&!(x instanceof SyntaxError)?x.message:T("파일을 읽지 못했습니다.","Could not read the file."))).finally(()=>{e.target.value=""});
 });
+addEventListener("resize",fitNotes);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitNotes); /* 웹폰트가 늦게 적용돼 줄바꿈이 달라지는 경우 */
 addEventListener("sitebar:lang",e=>{LANG=e.detail;fillCur();renderAll()});
 renderAll();loadList();loadPrices();
 </script>
