@@ -90,6 +90,7 @@ Ancient Jawbone                 고대의 턱뼈
 Ancient Rib                     고대의 갈비뼈
 Ancient Collarbone              고대의 빗장뼈
 Omen of Light                   빛의 징조
+Omen of Abyssal Echoes          심연의 메아리의 징조
 
 [Omen]
 Omen of Whittling                   절사의 징조

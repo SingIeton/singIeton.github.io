@@ -580,6 +580,42 @@ $("app").addEventListener("change",e=>{
   if(e.target.id!=="file"||!e.target.files[0])return;
   e.target.files[0].text().then(t=>{const o=parseJs(t);if(o&&o.prices&&!o.steps){setPrices(o);priceInfo();upd()}else apply(o)}).catch(()=>{}).finally(()=>{e.target.value=""});
 });
+/* ── 노트 계산 (OneNote 방식) ──
+   노트 칸에서 "식=" 바로 뒤에 스페이스를 누르면 계산 결과를 이어서 넣습니다.  예) (3000+4000)/5=␣ → (3000+4000)/5=1400
+   "=" 앞쪽에서 숫자·연산자( + - * / × ÷ ^ ( ) )로 이어진 부분만 식으로 읽으므로 앞에 글자가 있어도 됩니다.
+   eval 은 쓰지 않고 직접 만든 계산기로 처리합니다. 결과는 execCommand 로 넣어 Ctrl+Z 로 되돌릴 수 있습니다. */
+const calc=src=>{
+  const s=src.replace(/×/g,"*").replace(/÷/g,"/").replace(/(\d),(?=\d{3}(?!\d))/g,"$1"); /* 3,000 → 3000 */
+  let i=0;
+  const ws=()=>{while(s[i]===" ")i++};
+  const add=()=>{let v=mul();for(;;){ws();const c=s[i];if(c!=="+"&&c!=="-")return v;i++;const r=mul();v=c==="+"?v+r:v-r}};
+  const mul=()=>{let v=un();for(;;){ws();const c=s[i];if(c!=="*"&&c!=="/")return v;i++;const r=un();v=c==="*"?v*r:v/r}};
+  const un=()=>{ws();if(s[i]==="-"){i++;return -un()}if(s[i]==="+"){i++;return un()}return pw()};
+  const pw=()=>{const b=at();ws();if(s[i]==="^"){i++;return Math.pow(b,un())}return b};
+  const at=()=>{ws();if(s[i]==="("){i++;const v=add();ws();if(s[i]!==")")throw 0;i++;return v}const m=/^(?:\d+\.?\d*|\.\d+)/.exec(s.slice(i));if(!m)throw 0;i+=m[0].length;return parseFloat(m[0])};
+  const v=add();ws();if(i<s.length)throw 0;return v;
+};
+const calcLine=(v,pos)=>{ /* v: 전체 글, pos: "= " 바로 뒤 커서 위치 → 결과 글자 또는 null */
+  const ls=v.lastIndexOf("\n",pos-3)+1,m=/[\d\s+\-*\/×÷().,^]+$/.exec(v.slice(ls,pos-2));if(!m)return null;
+  let ex=m[0].trim();
+  while(ex){
+    if(/^[\d(.\-]/.test(ex)&&/[+\-*\/×÷^]/.test(ex.replace(/^[\s(\-]+/,""))){ /* 연산자가 하나도 없는 "5=" 같은 건 계산하지 않음 */
+      try{const r=calc(ex);if(isFinite(r))return r===0?"0":r.toLocaleString("en-US",{maximumFractionDigits:6,useGrouping:false})}catch(x){}
+    }
+    ex=ex.slice(1).trim(); /* 앞쪽 군더더기(예: 문장 끝 마침표)를 하나씩 떼며 다시 시도 */
+  }
+  return null;
+};
+$("app").addEventListener("input",e=>{ /* 위쪽 input 처리(노트 저장·높이 맞춤)가 먼저 돌고 난 뒤 실행됨 */
+  const t=e.target;
+  if(!t.dataset||t.dataset.f!=="note"||e.inputType!=="insertText"||e.data!==" "||t.disabled||t.readOnly)return;
+  const v=t.value,pos=t.selectionStart;
+  if(pos!==t.selectionEnd||v[pos-1]!==" "||v[pos-2]!=="=")return;
+  if(pos<v.length&&!/\s/.test(v[pos]))return; /* 커서 바로 뒤에 글자가 붙어 있으면 건너뜀 (한 칸 이상 띄어져 있으면 뒤에 텍스트가 있어도 계산) */
+  const out=calcLine(v,pos);if(out==null)return;
+  t.setSelectionRange(pos-1,pos); /* 방금 입력한 스페이스를 결과로 바꿔서 "=" 바로 뒤에 붙임 */
+  if(!document.execCommand("insertText",false,out)){t.setRangeText(out,pos-1,pos,"end");t.dispatchEvent(new Event("input",{bubbles:true}))}
+});
 addEventListener("resize",fitNotes);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitNotes); /* 웹폰트가 늦게 적용돼 줄바꿈이 달라지는 경우 */
 addEventListener("sitebar:lang",e=>{LANG=e.detail;fillCur();renderAll()});
