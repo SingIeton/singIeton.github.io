@@ -23,6 +23,11 @@
   var me = doc.currentScript;
   var src = (me && me.src) || "";
   var NOBAR = !!(me && me.hasAttribute("data-nobar"));
+  /* 스타일 드롭다운 켜기/끄기: 아래 값을 true / false 로 바꾸면 사이트 전체에 적용됩니다.
+   * 끄면 드롭다운이 사라지고, 저장된 스타일이 있어도 무시하고 기본 스타일(theme.css)로 돌아갑니다.
+   * 특정 페이지만 끄려면 그 페이지의 스크립트 태그에 data-nostyle 을 붙이세요. */
+  var STYLE_PICKER = true;
+  if (me && me.hasAttribute("data-nostyle")) STYLE_PICKER = false;
   /* 스크립트 위치(poetools/style/site-bar.js) 기준으로 poetools 경로 계산 */
   var TOOLS = new URL("../", src || location.href).href;
 
@@ -38,10 +43,12 @@
 
   /* 스타일 목록: 첫 번째가 기본값(원래 theme.css). 파일을 추가하고 한 줄만 더하면 드롭다운에 나타납니다. */
   var STYLES = [
-    { id: "default",  file: "theme.css",              ko: "기본",     en: "Default" },
-	{ id: "default2",  file: "theme2.css",              ko: "기본2",     en: "Default" },
+    { id: "default",  file: "theme.css",              ko: "기본",     en: "default" },
+    // { id: "theme2", file: "theme2.css",             ko: "theme2",    en: "theme2" },
+	// { id: "theme3", file: "theme3.css",             ko: "theme3",    en: "theme2" },
   ];
   function readStyle() {
+    if (!STYLE_PICKER) return STYLES[0].id;
     var v = null; try { v = localStorage.getItem("style"); } catch (e) {}
     for (var i = 0; i < STYLES.length; i++) if (STYLES[i].id === v) return v;
     return STYLES[0].id;
@@ -104,6 +111,13 @@
         }).join("")
       + '</nav>'
       + '<div class="tools">'
+      + (STYLE_PICKER && STYLES.length > 1
+          ? '<select class="ssel" id="sb-style" aria-label="' + T("화면 스타일", "Style") + '">'
+            + STYLES.map(function (s) {
+                return '<option value="' + s.id + '"' + (s.id === STYLE ? ' selected' : '') + '>' + s[LANG] + '</option>';
+              }).join("")
+            + '</select>'
+          : '')
       + '<div class="seg" role="group" aria-label="Language">'
       + '<button type="button" data-lang="ko" aria-pressed="' + (LANG === "ko") + '">한국어</button>'
       + '<button type="button" data-lang="en" aria-pressed="' + (LANG === "en") + '">EN</button></div>'
@@ -180,6 +194,9 @@
         return;
       }
       if (b.id === "sb-theme") setTheme(dk() === "dark" ? "light" : "dark");
+    });
+    bar.addEventListener("change", function (e) {
+      if (e.target && e.target.id === "sb-style") setStyle(e.target.value);
     });
   }
 
