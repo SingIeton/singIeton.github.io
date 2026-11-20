@@ -36,12 +36,12 @@
 #msg{margin:0 0 8px 46px;max-width:798px}
 #msg:empty{display:none} /* 안내 문구가 없을 땐 자리를 차지하지 않음 */
 main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inline:20px} /* 844px(본문 폭) + 좌우 패딩 40px — 헤더·바·본문의 좌우 끝선이 같아지고 화면 가운데에 정렬됨 */
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px 16px;align-items:start;max-width:844px} /* 가로 간격 24→16px: 총 비용 위치는 그대로 두고 단계 폭만 오른쪽으로 8px 늘어남 (세로 간격 24px 유지) */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:24px 16px;align-items:start;max-width:844px} /* 가로 간격 24→16px: 총 비용 위치는 그대로 두고 단계 폭만 오른쪽으로 8px 늘어남 (세로 간격 24px 유지) */
 /* 오른쪽 묶음(.sides): 총 비용(.side) 과 총 재화(.side)를 담음. 좁은 화면에서는 세로로 쌓이고, 스크롤해도 묶음이 화면 위쪽에 붙어 있음 */
-.sides{position:sticky;top:calc(var(--bar-h) + var(--acts-h) + 8px);display:grid;grid-template-columns:260px;gap:13px;align-items:start}
+.sides{position:sticky;top:calc(var(--bar-h) + var(--acts-h) + 8px);display:grid;grid-template-columns:250px;gap:13px;align-items:start}
 .side{margin:0}
 @media(min-width:1340px){ /* 넓은 화면: 단계 목록·총 비용의 위치와 폭은 원래 그대로 두고, 재화 창만 총 비용 오른쪽 바깥에 붙임 (본문 폭을 늘리지 않으므로 전체 가로 위치가 변하지 않음) */
-  .sides>.side+.side{position:absolute;top:0;left:calc(100% + 11px);width:230px} /* 230px = 재화 폭, 11px = 총 비용과의 간격 */
+  .sides>.side+.side{position:absolute;top:0;left:calc(100% + 11px);width:240px} /* 240px = 재화 폭, 11px = 총 비용과의 간격 */
 }
 @media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.sides{position:static}}
 .steps{position:relative}
@@ -110,9 +110,9 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .addstep:hover{color:var(--g);border-color:var(--g)}
 .big{padding:2px 0 4px}
 .big b{font:300 46px/1.15 var(--serif);color:var(--g);font-variant-numeric:tabular-nums}.big b u{text-decoration:none;font:600 15px var(--serif);margin-left:6px}
-.sc{display:flex;justify-content:space-between;gap:10px;padding:6px 0 7px;font-size:14px;font-variant-numeric:tabular-nums}
+.sc{display:flex;justify-content:space-between;gap:10px;padding:5px 0 6px;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
 .sc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sc b{font-family:var(--serif);font-weight:600} /* 단계 카드 헤더의 비용(.sc2)과 같은 세리프 600 */
+.sc b{font-family:var(--serif);font-weight:400} /* 비용은 볼드 없이 */
 .ti img{max-width:28px;max-height:28px;object-fit:contain;vertical-align:middle}
 .side fieldset{margin-top:16px}
 #tot td:last-child{white-space:nowrap} /* 비용 칸(숫자 + D)은 줄바꿈하지 않음 */
