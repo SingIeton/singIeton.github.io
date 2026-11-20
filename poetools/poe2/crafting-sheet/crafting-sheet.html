@@ -102,11 +102,22 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 *:focus,*:focus-visible{outline:none!important;box-shadow:none!important}
 button::-moz-focus-inner{border:0}
 *{-webkit-tap-highlight-color:transparent}
+/* 재화 자동완성 목록: 브라우저 기본 자동완성 목록과 같은 모양 (둥근 어두운 패널, 알약형 항목, 어두운 스크롤바) */
+.ac{position:fixed;z-index:1000;width:max-content;min-width:180px;max-width:calc(100vw - 16px);overflow-y:auto;box-sizing:border-box;padding:8px;border:1px solid #3d3c4b;border-radius:16px;background:#2b2a38;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+/* 스크롤바: 위·아래를 코너 곡선에서 띄우고 막대 끝을 둥글게 */
+.ac::-webkit-scrollbar{width:14px}
+.ac::-webkit-scrollbar-track{background:transparent;margin:12px 0}
+.ac::-webkit-scrollbar-thumb{background:#8e8d9b;border:3px solid transparent;border-radius:8px;background-clip:content-box}
+@supports not selector(::-webkit-scrollbar){.ac{scrollbar-width:thin;scrollbar-color:#8e8d9b transparent}}
+.ac-o{height:31px;margin:0 0 2px;padding:0 12px;border-radius:16px;color:#ececf2;font:400 14px/31px var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default}
+.ac-o:last-child{margin-bottom:0}
+.ac-o.on{box-shadow:inset 0 0 0 2px #b79cf2} /* 자동으로 잡힌 첫 항목: 테두리 */
+.ac:hover .ac-o.on:not(:hover){box-shadow:none}
+.ac.kb .ac-o.on,.ac-o:hover{background:#7f6aa8;box-shadow:none} /* 방향키로 고른 항목·마우스를 올린 항목: 채움 */
 </style>
 </head>
 <body>
 <main class="wrap" id="app"></main>
-<datalist id="cur"></datalist>
 <script src="crafting-currency-prices.js"></script>
 <script src="recipe/index.js"></script>
 <script>
@@ -141,12 +152,21 @@ const disp=c=>LANG==="en"?c:(koName(c)||c);
 let EXTRA=[],KNOWN=new Set();
 /* 입력칸의 값이 이미 목록에 있는 재화 이름(영어·한글)과 같으면 "완성된 이름" 으로 보고, 자동완성 목록(datalist)을 연결하지 않습니다. */
 const isKnown=v=>{const k=nk(v);return !!k&&KNOWN.has(k)};
-const syncList=t=>{if(isKnown(t.value)){if(t.hasAttribute("list"))t.removeAttribute("list")}else if(t.getAttribute("list")!=="cur")t.setAttribute("list","cur")};
+/* ── 검색용 정규화 ──
+   · 대소문자·공백·하이픈·아포스트로피를 무시하고, 한글은 자모 단위로 풀어서 비교합니다.
+     (입력 도중의 "디ㅂ" 같은 조합 중 글자도 "디바인" 과 맞고, "ㄷㅂㅇ" 같은 초성 검색도 됩니다.) */
+const JI="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ",JM="ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ",JF=[""].concat([..."ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ"]);
+const JX={"ㄳ":"ㄱㅅ","ㄵ":"ㄴㅈ","ㄶ":"ㄴㅎ","ㄺ":"ㄹㄱ","ㄻ":"ㄹㅁ","ㄼ":"ㄹㅂ","ㄽ":"ㄹㅅ","ㄾ":"ㄹㅌ","ㄿ":"ㄹㅍ","ㅀ":"ㄹㅎ","ㅄ":"ㅂㅅ","ㅘ":"ㅗㅏ","ㅙ":"ㅗㅐ","ㅚ":"ㅗㅣ","ㅝ":"ㅜㅓ","ㅞ":"ㅜㅔ","ㅟ":"ㅜㅣ","ㅢ":"ㅡㅣ"};
+const jx=j=>JX[j]||j;
+const flat=s=>{let o="";for(const ch of String(s)){const c=ch.charCodeAt(0);if(c>=0xAC00&&c<=0xD7A3){const k=c-0xAC00;o+=jx(JI[(k/588)|0])+jx(JM[((k%588)/28)|0])+jx(JF[k%28])}else o+=jx(ch)}return o};
+const cho=s=>{let o="";for(const ch of String(s)){const c=ch.charCodeAt(0);if(c>=0xAC00&&c<=0xD7A3)o+=JI[((c-0xAC00)/588)|0]}return o};
+const norm=s=>flat(String(s).toLowerCase().replace(/['’]/g,"").replace(/[^\p{L}\p{N}]+/gu," ")).trim();
+let ALL=[]; /* 자동완성 후보: {en, ko, h(검색용 문자열), cho(한글 초성)} */
 function fillCur(extra){
   if(extra)EXTRA=extra;
   const m=new Map();[...CUR,...EXTRA].forEach(c=>{const k=nk(c);if(k&&!m.has(k))m.set(k,c)});
   KNOWN=new Set([...m.keys(),...KO2EN.keys()]);
-  $("cur").innerHTML=[...m.values()].map(c=>{const ko=LANG==="en"?"":koName(c);return `<option value="${esc(LANG==="en"?c:(ko||c))}">`}).join("");
+  ALL=[...m.values()].map(en=>{const ko=koName(en);return{en,ko,h:norm(en+" "+ko),cho:cho(ko)}});
 }
 buildKo();fillCur();
 
@@ -227,7 +247,7 @@ function renderAll(){
 function renderSteps(){
   const n=R.steps.length;
   $("steps").innerHTML=R.steps.map((s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><button type="button" class="ib xdel" data-a="delStep"${n>1&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">${ICO.x}</button><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib lock" data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button></div>
-<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text"${isKnown(it.c)||lk?"":' list="cur"'}${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="1"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">${ICO.x}</button></div>`).join("")}<button type="button" class="add" data-a="addItem"${dis}>+ ${T("추가","Add")}</button>
+<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text" autocomplete="off" aria-autocomplete="list"${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="1"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">${ICO.x}</button></div>`).join("")}<button type="button" class="add" data-a="addItem"${dis}>+ ${T("추가","Add")}</button>
 <textarea data-f="note" rows="1"${ro} placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea></div></div>`}).join("");
 }
 /* 소모 재화 표의 재화 칸: 아이콘 이미지만 표시 (아이콘 파일이 없는 재화만 이름 텍스트로 대신 표시) */
@@ -425,12 +445,67 @@ $("app").addEventListener("input",e=>{
   if(f==="n"&&t.value!==""){const d=t.value.replace(/\D.*$/,"").slice(0,4);if(d!==t.value)t.value=d}
   if(f==="title")s.title=t.value;else if(f==="note"){s.note=t.value;fitNote(t)}
   else{const it=s.items[+t.closest(".it").dataset.j];if(f==="c")it.c=t.value;else it.n=Math.max(0,parseFloat(t.value)||0)}
-  if(f==="c"){syncList(t);if(isKnown(t.value))commitName(t);clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
+  if(f==="c"){if(isKnown(t.value))commitName(t);clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
   f==="c"||f==="n"?upd():sums();
 });
-/* 재화 칸 자동완성: 완성된 이름이면 목록을 띄우지 않고, 고치려고 키를 누르는 순간 다시 연결합니다. */
-$("app").addEventListener("focusin",e=>{if(e.target.dataset&&e.target.dataset.f==="c")syncList(e.target)});
-$("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="c"){syncList(e.target);commitName(e.target)}});
+/* ── 재화 자동완성 ──
+   검색어를 공백으로 나눠 각 조각이 (영어 이름 + 한글 이름) 어디에든 부분 일치하면 표시합니다. 순서 무관: "res cold" → Cold Resistance.
+   화면 언어와 상관없이 영어·한글 어느 쪽으로 입력해도 같은 재화가 나오며, 다른 언어 이름은 옆에 작게 함께 보여 줍니다. */
+const AC={el:null,inp:null,items:[],act:-1,kb:false};
+const acName=e=>LANG==="en"?e.en:(e.ko||e.en);
+function acFind(q){
+  const toks=norm(q).split(" ").filter(Boolean),raw=String(q).replace(/\s+/g,""),chOnly=/^[ㄱ-ㅎ]+$/.test(raw),out=[];
+  ALL.forEach((e,idx)=>{
+    let sc=0;
+    if(toks.length){
+      sc=0;for(const t of toks){const p=e.h.indexOf(t);if(p<0){sc=null;break}sc+=p===0||e.h[p-1]===" "?0:3} /* 단어 맨 앞에서 맞으면 우선 */
+      if(sc==null&&chOnly){const p=e.cho.indexOf(raw);if(p>=0)sc=p?4:1} /* 초성 검색 */
+      if(sc==null)return;
+      if(e.h.startsWith(toks.join(" ")))sc-=1;
+    }
+    out.push([sc,idx,e]);
+  });
+  return out.sort((a,b)=>a[0]-b[0]||a[1]-b[1]).slice(0,80).map(x=>x[2]);
+}
+function acEl(){
+  if(!AC.el){
+    const d=document.createElement("div");d.className="ac";d.hidden=true;d.setAttribute("role","listbox");document.body.appendChild(d);
+    d.addEventListener("mousedown",e=>{e.preventDefault();const o=e.target.closest(".ac-o");if(o)acPick(+o.dataset.k)}); /* preventDefault: 입력칸이 포커스를 잃지 않게 */
+    AC.el=d;
+  }
+  return AC.el;
+}
+function acHide(){if(AC.el)AC.el.hidden=true;AC.inp=null}
+function acPos(){
+  const t=AC.inp,el=AC.el;if(!t||!el||el.hidden)return;
+  if(!document.body.contains(t))return acHide();
+  const r=t.getBoundingClientRect(),below=innerHeight-r.bottom-10,above=r.top-10,up=below<180&&above>below;
+  el.style.left=Math.max(8,Math.min(r.left,innerWidth-el.offsetWidth-8))+"px";
+  el.style.maxHeight=Math.min(300,up?above:below)+"px";
+  if(up){el.style.top="auto";el.style.bottom=(innerHeight-r.top+2)+"px"}else{el.style.bottom="auto";el.style.top=(r.bottom+2)+"px"}
+}
+function acMark(){
+  AC.el.classList.toggle("kb",AC.kb);
+  [...AC.el.children].forEach((c,k)=>c.classList.toggle("on",k===AC.act));
+  const c=AC.el.children[AC.act];if(c)c.scrollIntoView({block:"nearest"});
+}
+function acShow(t,all){
+  const q=all?"":t.value;AC.inp=t;AC.items=acFind(q);AC.act=AC.items.length&&q.trim()?0:-1;AC.kb=false;
+  if(!AC.items.length)return acHide();
+  const el=acEl();
+  el.innerHTML=AC.items.map((e,k)=>{const a=acName(e);return `<div class="ac-o${k===AC.act?" on":""}" role="option" data-k="${k}">${esc(a)}</div>`}).join("");
+  el.classList.remove("kb");el.hidden=false;el.scrollTop=0;acPos();
+}
+function acPick(k){
+  const e=AC.items[k],t=AC.inp;if(!e||!t)return;
+  t.value=acName(e);acHide();
+  t.dispatchEvent(new Event("input",{bubbles:true})); /* 아이콘·단가·합계 갱신은 기존 input 처리에 맡김 */
+}
+$("app").addEventListener("focusin",e=>{const t=e.target;if(t.dataset&&t.dataset.f==="c"&&!t.readOnly&&!isKnown(t.value))acShow(t)});
+$("app").addEventListener("input",e=>{const t=e.target;if(!t.dataset||t.dataset.f!=="c")return;if(isKnown(t.value))acHide();else acShow(t)});
+$("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="c")acHide()});
+addEventListener("scroll",acPos,true);addEventListener("resize",acPos);
+$("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="c"){commitName(e.target)}});
 /* 단계 순서: 손잡이(.gr)를 끌어서 변경 (포인터 이벤트라 마우스·터치 모두 동작, 화면 가장자리에서는 자동 스크롤) */
 let DND=null;
 function dndLayout(){
@@ -478,9 +553,16 @@ $("app").addEventListener("keydown",e=>{
   [R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];refresh();
   const g=document.querySelector(`.step[data-i="${k}"] .gr`);if(g)g.focus();
 });
-$("app").addEventListener("keydown",e=>{
-  const t=e.target;if(!t.dataset||t.dataset.f!=="c"||t.readOnly||e.ctrlKey||e.metaKey||e.altKey)return;
-  if(e.key.length===1||e.key==="Backspace"||e.key==="Delete"||e.key==="ArrowDown"||e.isComposing)t.setAttribute("list","cur");
+$("app").addEventListener("keydown",e=>{ /* 자동완성 키보드: ↑↓ 이동, Enter 선택, Esc 닫기 (한글 조합 중에는 건드리지 않음) */
+  const t=e.target;if(!t.dataset||t.dataset.f!=="c"||t.readOnly||e.isComposing||e.keyCode===229||e.ctrlKey||e.metaKey||e.altKey)return;
+  const open=AC.inp===t&&AC.el&&!AC.el.hidden,dn=e.key==="ArrowDown";
+  if(dn||e.key==="ArrowUp"){
+    e.preventDefault();
+    if(!open){if(dn)acShow(t,isKnown(t.value));return}
+    const n=AC.items.length;AC.kb=true;AC.act=AC.act<0?(dn?0:n-1):(AC.act+(dn?1:n-1))%n;acMark();
+  }else if(open&&e.key==="Enter"&&AC.act>=0){e.preventDefault();acPick(AC.act)}
+  else if(open&&e.key==="Escape"){e.preventDefault();acHide()}
+  else if(open&&e.key==="Tab")acHide();
 });
 $("app").addEventListener("beforeinput",e=>{ /* 비용 칸은 숫자만: 소수점 등은 입력 자체를 막고 안내 */
   const t=e.target;
