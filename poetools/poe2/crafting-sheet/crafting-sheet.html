@@ -8,9 +8,11 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 /* 공통 모양은 style/theme.css. 여기에는 크래프팅 시트 전용 스타일만 둡니다. */
-.bar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:4px 0 8px}
-.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.bar .rn{flex:1 1 260px;min-width:0;width:auto;max-width:none;padding:4px 0 6px;border:0;border-bottom:1px solid var(--ln2);border-radius:0;background:none;font:600 24px/1.3 var(--serif)}
+.bar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:4px 0 8px;margin-left:46px;max-width:778px}
+.acts{display:flex;flex:1 1 100%;flex-wrap:wrap;gap:8px;align-items:center}
+.dlg{margin-left:auto}
+.bar .rn{flex:1 1 100%;min-width:0;width:auto;max-width:none;padding:4px 0 6px;border:0;border-bottom:1px solid var(--ln2);border-radius:0;background:none;font:600 24px/1.3 var(--serif)}
+.bar .rn:focus,.bar .rn:focus-visible{outline:none;box-shadow:none;background:none;border-bottom-color:var(--ln2)}
 .grp{display:inline-flex;align-items:stretch;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);overflow:hidden}
 .grp>*{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border:0;border-right:1px solid var(--ln);border-radius:0;background:none;color:var(--ink);font:500 14px/1 var(--sans);letter-spacing:-.01em;white-space:nowrap}
 .grp>:last-child{border-right:0}
@@ -22,15 +24,16 @@
 .grp.split{gap:4px;border:0;background:none;overflow:visible}
 .grp.split>*,.grp.split>:last-child{border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf)}
 .grp select{max-width:190px;padding:0 10px;color:var(--mute)}
-#msg{min-height:1.6em;margin:6px 0 14px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start}
+#msg{min-height:1.6em;margin:6px 0 14px 46px;max-width:778px}
+main.wrap{box-sizing:border-box;max-width:972px;margin-inline:auto;padding-inline:20px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start;max-width:824px}
 .side{position:sticky;top:calc(var(--bar-h) + 16px);margin:0}
 @media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.side{position:static}}
 .steps{position:relative}
 .steps::before{content:"";position:absolute;left:15px;top:18px;bottom:48px;width:1px;background:var(--ln2)}
 .step{position:relative;margin:0 0 16px 46px;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) var(--pbd),var(--ln));border-radius:var(--r)}
 .no{position:absolute;left:-46px;top:7px;width:31px;height:31px;display:grid;place-items:center;border:1px solid var(--g);border-radius:50%;background:var(--bg);color:var(--g);font:600 14px var(--serif)}
-.sh{display:flex;align-items:center;gap:4px;padding:6px 8px 6px 14px;border-bottom:1px solid var(--ln);background:color-mix(in oklab,var(--g) var(--pht),transparent)}
+.sh{display:flex;align-items:center;gap:4px;padding:6px 14px;border-bottom:1px solid var(--ln);background:color-mix(in oklab,var(--g) var(--pht),transparent)}
 .step .t{flex:1;min-width:0;width:auto;max-width:none;padding:4px 0;border:0;border-bottom:1px solid transparent;border-radius:0;background:none;font:600 17px var(--serif)}
 .it input{border-color:var(--ln2)}
 .step .t:focus,.step .t:focus-visible,.it input:focus,.it input:focus-visible,.step textarea:focus,.step textarea:focus-visible{outline:none;box-shadow:none}
@@ -39,13 +42,14 @@
 .ib{width:28px;height:28px;border:0;background:none;color:var(--mute);border-radius:var(--r);cursor:pointer;line-height:1}
 .ib:hover:not(:disabled){color:var(--ink);background:var(--sf2)}
 .sb{padding:10px 14px 12px}
-.it{display:grid;grid-template-columns:170px 28px 84px minmax(70px,1fr) 28px;gap:8px;align-items:center;margin:0 0 6px}
+.it{display:grid;grid-template-columns:minmax(0,1fr) 32px 72px 60px 28px;gap:8px;align-items:center;margin:0 0 6px}
 .it input[type=text],.it input[type=number]{width:100%;max-width:none}
-.ci{width:28px;height:28px;display:grid;place-items:center}.ci img{max-width:28px;max-height:28px;object-fit:contain}
+.it input[data-f=n]{text-align:center}
+.ci{width:32px;height:32px;display:grid;place-items:center}.ci img{max-width:32px;max-height:32px;object-fit:contain}
 .ic{text-align:right;color:var(--mute);font-size:13px;font-variant-numeric:tabular-nums}
 .add{background:none;border:0;padding:2px 0;color:var(--g);font:600 13px var(--sans);cursor:pointer}
 .add:hover{text-decoration:underline}
-.step textarea{display:block;width:100%;min-height:44px;margin-top:10px;padding:6px 8px;border:1px dashed var(--ln2);border-radius:var(--r);background:none;color:var(--ink);font:inherit;font-size:14px;resize:vertical}
+.step textarea{display:block;width:100%;min-height:44px;margin-top:10px;padding:6px 8px;border:1px dashed var(--ln2);border-radius:var(--r);background:color-mix(in oklab,var(--ink) 4%,transparent);color:var(--ink);font:inherit;font-size:14px;resize:vertical}
 .addstep{width:100%;margin-left:46px;width:calc(100% - 46px);padding:10px;border:1px dashed var(--ln2);border-radius:var(--r);background:none;color:var(--mute);font:600 14px var(--sans);cursor:pointer}
 .addstep:hover{color:var(--g);border-color:var(--g)}
 .big{padding:2px 0 4px}
@@ -55,6 +59,10 @@
 .sc i{position:absolute;left:0;bottom:0;height:2px;background:var(--g);opacity:.7}
 .ti img{max-width:28px;max-height:28px;object-fit:contain;vertical-align:middle}
 .side fieldset{margin-top:16px}
+.ghead.sm>div:last-child{flex:1;min-width:0}
+.subrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px}
+.subrow .sub{margin:0}
+#pinfo{margin:0;margin-left:auto;text-align:right;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -67,6 +75,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let LANG=(window.PoEPrefs&&PoEPrefs.lang)||document.documentElement.lang||"ko";
 const T=(ko,en)=>LANG==="en"?en:ko;
+const fmtD=n=>Math.round(+n).toLocaleString(LANG==="en"?"en-US":"ko-KR"); /* 디바인 단위는 항상 정수 */
 const fmt=n=>{n=+n;const a=Math.abs(n);return n.toLocaleString(LANG==="en"?"en-US":"ko-KR",{maximumFractionDigits:a>0&&a<0.01?6:a<1?3:2})};
 
 /* 재화 목록(자동완성용, 직접 입력도 가능). 시세 파일을 읽으면 그 안의 재화도 목록에 추가됩니다. 한글 이름은 아래 KO_LOCAL 에 적거나, 시세 파일(names_ko)로 받아옵니다. */
@@ -94,7 +103,7 @@ let EXTRA=[];
 function fillCur(extra){
   if(extra)EXTRA=extra;
   const m=new Map();[...CUR,...EXTRA].forEach(c=>{const k=nk(c);if(k&&!m.has(k))m.set(k,c)});
-  $("cur").innerHTML=[...m.values()].map(c=>{const ko=LANG==="en"?"":koName(c);return `<option value="${esc(c)}"${ko?` label="${esc(ko)}"`:""}>`}).join("");
+  $("cur").innerHTML=[...m.values()].map(c=>{const ko=LANG==="en"?"":koName(c);return `<option value="${esc(LANG==="en"?c:(ko||c))}">`}).join("");
 }
 buildKo();fillCur();
 
@@ -119,8 +128,7 @@ function priceInfo(){
   const el=$("pinfo");if(!el)return;
   if(META){
     const t=new Date(META.at),d=META.at&&!isNaN(t)?t.toLocaleString(LANG==="en"?"en-US":"ko-KR",{dateStyle:"medium",timeStyle:"short"}):"";
-    const src=[META.source,META.league,d].filter(Boolean).join(" · ");
-    el.textContent=T(`시세: ${src}`,`Prices: ${src}`);
+    el.textContent=d?"Data: "+d:"";
   }else el.textContent=PERR?T(`시세 파일을 읽지 못했습니다 (${PERR})`,`Could not read the price file (${PERR})`):T("시세를 불러오는 중…","Loading prices…");
 }
 async function loadPrices(){
@@ -136,8 +144,8 @@ let R={name:"",steps:[newStep()]},LIST=null;
 
 const totals=items=>{const m=new Map();items.forEach(it=>{const c=canon(it.c);if(c&&it.n>0)m.set(c,(m.get(c)||0)+it.n)});return m};
 const cost=m=>{let sum=0;m.forEach((n,c)=>{const p=price(c);if(p!=null)sum+=n*p});return{sum}};
-const cs=g=>`${fmt(g.sum)} Div`;
-const line=s=>{const m=totals(s.items);return m.size?[...m].map(([c,n])=>`${c} ×${fmt(n)}`).join(" · ")+" = "+cs(cost(m)):T("입력된 재화 없음","No currency yet")};
+const cs=g=>`${fmtD(g.sum)} D`;
+const line=s=>{const m=totals(s.items);return m.size?[...m].map(([c,n])=>`${disp(c)} ×${fmt(n)}`).join(" · ")+" = "+cs(cost(m)):T("입력된 재화 없음","No currency yet")};
 const IC=d=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const ICO={reset:IC('<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>'),plus:IC('<path d="M12 5v14M5 12h14"/>'),dl:IC('<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'),folder:IC('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),up:IC('<path d="M12 16V5M7 9l5-4 5 4M5 20h14"/>'),file:IC('<path d="M6 3h8l4 4v14H6zM14 3v5h4"/>')};
 const isl=n=>n.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
@@ -154,22 +162,22 @@ const msg=t=>{$("msg").textContent=t};
 
 function renderAll(){
   document.title=T("크래프팅 시트","Crafting Sheet")+" | PoE 2 | PoE Tools";
-  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><p class="sub">${T("레시피를 단계별로 쌓고, 단계별·전체 소모 재화와 디바인 환산 비용을 확인하세요.","Add a recipe step by step and see per-step and total currency cost in Divine Orbs.")}</p></div></div>
+  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("단계별로 레시피를 기록하고, 단계별·전체 소모 재화와 총 비용을 확인.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p><p class="note" id="pinfo"></p></div></div></div>
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}">
 <div class="acts"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div>
-<div class="grp split" role="group" aria-label="${T("파일","File")}"><button type="button" data-a="dl">${ICO.dl}${T("파일로 저장","Save as file")}</button><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button>${window.showDirectoryPicker?`<button type="button" data-a="folder">${ICO.folder}${T("폴더에 저장","Save to folder")}</button>`:""}</div>
-<div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("목록 불러오기","Load from list")}</button></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden></div>
+<div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("목록 불러오기","Load from list")}</button></div>
+<div class="grp split" role="group" aria-label="${T("파일","File")}"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button>${window.showDirectoryPicker?`<button type="button" data-a="folder">${ICO.folder}${T("폴더에 저장","Save to folder")}</button>`:""}</div><div class="grp dlg"><button type="button" data-a="dl">${ICO.dl}${T("파일로 저장","Save as file")}</button></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden></div>
 <p class="note" id="msg" role="status"></p>
 <div class="layout"><div><div class="steps" id="steps"></div><button type="button" class="addstep" data-a="addStep">+ ${T("단계 추가","Add step")}</button></div>
 <aside class="panel side"><h2>${T("총 비용","Total cost")}</h2><div class="big"><b id="gv"></b></div>
-<fieldset><legend>${T("단계별","Per step")}</legend><div id="stepcost"></div></fieldset>
-<fieldset><legend>${T("소모 재화","Currency used")}</legend><div class="scroll" id="tot"></div><p class="note" id="pinfo"></p></fieldset></aside></div>`;
+<fieldset><legend>${T("단계별 비용","Cost per step")}</legend><div id="stepcost"></div></fieldset>
+<fieldset><legend>${T("재화","Currency")}</legend><div class="scroll" id="tot"></div></fieldset></aside></div>`;
   fillList();refresh();priceInfo();
 }
 function renderSteps(){
   const n=R.steps.length;
-  $("steps").innerHTML=R.steps.map((s,i)=>`<div class="step" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><div class="sh"><input type="text" class="t" data-f="title" value="${esc(s.title)}" placeholder="${T("단계 이름","Step name")} ${i+1}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib" data-a="up"${i?"":" disabled"} aria-label="${T("위로","Up")}">↑</button><button type="button" class="ib" data-a="down"${i<n-1?"":" disabled"} aria-label="${T("아래로","Down")}">↓</button><button type="button" class="ib" data-a="delStep"${n>1?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">✕</button></div>
-<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text" list="cur" data-f="c" value="${esc(it.c)}" placeholder="${T("재화","Currency")}" aria-label="${T("재화","Currency")}"><span class="ci"></span><input type="number" min="0" step="any" data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="ic"></span><button type="button" class="ib" data-a="delItem" aria-label="${T("재화 삭제","Remove")}">✕</button></div>`).join("")}<button type="button" class="add" data-a="addItem">+ ${T("추가","Add")}</button>
+  $("steps").innerHTML=R.steps.map((s,i)=>`<div class="step" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><div class="sh"><input type="text" class="t" data-f="title" value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib" data-a="up"${i?"":" disabled"} aria-label="${T("위로","Up")}">↑</button><button type="button" class="ib" data-a="down"${i<n-1?"":" disabled"} aria-label="${T("아래로","Down")}">↓</button><button type="button" class="ib" data-a="delStep"${n>1?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">✕</button></div>
+<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><input type="text" list="cur" data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" placeholder="${T("재화","Currency")}" aria-label="${T("재화","Currency")}"><span class="ci"></span><input type="number" min="0" max="9999" step="1" data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="ic"></span><button type="button" class="ib" data-a="delItem" aria-label="${T("재화 삭제","Remove")}">✕</button></div>`).join("")}<button type="button" class="add" data-a="addItem">+ ${T("추가","Add")}</button>
 <textarea data-f="note" placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea></div></div>`).join("");
 }
 /* 소모 재화 표의 재화 칸: 아이콘 이미지만 표시 (아이콘 파일이 없는 재화만 이름 텍스트로 대신 표시) */
@@ -184,19 +192,19 @@ function totIcons(){
 }
 function renderTot(){
   const tot=totals(R.steps.flatMap(s=>s.items));
-  $("tot").innerHTML=tot.size?`<table><thead><tr><th>${T("재화","Currency")}</th><th>${T("수량","Qty")}</th><th>${T("단가 (Div)","Unit (Div)")}</th></tr></thead><tbody>${[...tot].map(([c,n])=>{const p=price(c);return `<tr><td class="ti" data-n="${esc(c)}">${totCell(c)}</td><td>${fmt(n)}</td><td>${p==null?"—":fmt(p)}</td></tr>`}).join("")}</tbody></table>`:`<p class="note">${T("재화를 입력하면 여기에 표시됩니다.","Currencies you add will appear here.")}</p>`;
+  $("tot").innerHTML=tot.size?`<table><thead><tr><th>${T("재화","Currency")}</th><th>${T("수량","Qty")}</th><th>${T("비용","Cost")}</th></tr></thead><tbody>${[...tot].map(([c,n])=>{const p=price(c),v=p==null?null:n*p;if(v!=null&&v<1)return "";return `<tr><td class="ti" data-n="${esc(c)}">${totCell(c)}</td><td>${fmt(n)}</td><td>${v==null?"—":fmtD(v)}</td></tr>`}).join("")}</tbody></table>`:`<p class="note">${T("재화를 입력하면 표시됩니다.","Currencies you add will appear.")}</p>`;
   totIcons();
 }
 /* 입력값에 따라 숫자만 갱신 (입력 중인 칸은 건드리지 않음) */
 function sums(){
   const tot=totals(R.steps.flatMap(s=>s.items)),g=cost(tot);
-  $("gv").innerHTML=`${fmt(g.sum)}<u>Div</u>`;
+  $("gv").innerHTML=`${fmtD(g.sum)}<u>Div</u>`;
   const costs=R.steps.map(s=>cost(totals(s.items)));
   document.querySelectorAll(".step").forEach((el,i)=>{
     el.querySelector(".sc2").textContent=cs(costs[i]);
-    el.querySelectorAll(".it").forEach((r,j)=>{const it=R.steps[i].items[j],p=price(it.c.trim());r.querySelector(".ic").textContent=it.c.trim()&&it.n>0&&p!=null?fmt(it.n*p)+" Div":""});
+    el.querySelectorAll(".it").forEach((r,j)=>{const it=R.steps[i].items[j],p=price(it.c.trim());r.querySelector(".ic").textContent=it.c.trim()&&it.n>0&&p!=null&&it.n*p>=1?fmtD(it.n*p)+" D":""});
   });
-  $("stepcost").innerHTML=R.steps.map((s,i)=>`<div class="sc"><span>${i+1}. ${esc(s.title||T("단계","Step")+" "+(i+1))}</span><b>${fmt(costs[i].sum)} Div</b><i style="width:${g.sum>0?Math.round(costs[i].sum/g.sum*100):0}%"></i></div>`).join("");
+  $("stepcost").innerHTML=R.steps.map((s,i)=>`<div class="sc"><span>${esc(s.title||T("단계","Step"))}</span><b>${fmtD(costs[i].sum)} D</b><i style="width:${g.sum>0?Math.round(costs[i].sum/g.sum*100):0}%"></i></div>`).join("");
 }
 const refresh=()=>{renderSteps();renderTot();sums();icons()};
 const upd=()=>{renderTot();sums()};
@@ -229,7 +237,7 @@ async function toFolder(){
 }
 function apply(o){
   if(!o||!Array.isArray(o.steps))return msg(T("레시피 형식이 올바르지 않습니다.","Invalid recipe file."));
-  R={name:String(o.name||""),steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.max(0,Number(it.n)||0)}))}))};
+  R={name:String(o.name||""),steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n))||0))}))}))};
   if(!R.steps.length)R.steps.push(newStep());
   renderAll();
 }
@@ -283,6 +291,7 @@ $("app").addEventListener("input",e=>{
   if(t.dataset.p!==undefined){const v=parseFloat(t.value);if(v>0)PRICES[t.dataset.p]=v;else delete PRICES[t.dataset.p];try{localStorage.setItem("craftPrices",JSON.stringify(PRICES))}catch(x){}sums();return}
   const st=t.closest(".step");if(!st)return;
   const s=R.steps[+st.dataset.i],f=t.dataset.f;
+  if(f==="n"&&t.value!==""){const d=t.value.replace(/\D.*$/,"").slice(0,4);if(d!==t.value)t.value=d}
   if(f==="title")s.title=t.value;else if(f==="note")s.note=t.value;
   else{const it=s.items[+t.closest(".it").dataset.j];if(f==="c")it.c=t.value;else it.n=Math.max(0,parseFloat(t.value)||0)}
   if(f==="c"){clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
