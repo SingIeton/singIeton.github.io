@@ -10,7 +10,8 @@ window.CRAFT_RECIPE = {
           "c": "Absent",
           "n": 1
         }
-      ]
+      ],
+      "locked": true
     },
     {
       "title": "접미",
@@ -32,7 +33,8 @@ window.CRAFT_RECIPE = {
           "c": "상위 엑잘티드 오브",
           "n": 1
         }
-      ]
+      ],
+      "locked": true
     },
     {
       "title": "접미 수습",
@@ -42,7 +44,8 @@ window.CRAFT_RECIPE = {
           "c": "절사의 징조",
           "n": 0.3
         }
-      ]
+      ],
+      "locked": true
     },
     {
       "title": "퀄리티",
@@ -60,20 +63,13 @@ window.CRAFT_RECIPE = {
           "c": "강탈자 기폭제",
           "n": 28.4
         }
-      ]
+      ],
+      "locked": true
     },
     {
-      "title": "",
+      "title": "접두",
       "note": "",
       "items": [
-        {
-          "c": "보존된 빗장뼈",
-          "n": 1
-        },
-        {
-          "c": "검은 피의 징조 (쿠르갈)",
-          "n": 1
-        },
         {
           "c": "좌측 강령술의 징조",
           "n": 1
@@ -83,14 +79,27 @@ window.CRAFT_RECIPE = {
           "n": 1
         },
         {
-          "c": "",
+          "c": "보존된 빗장뼈",
           "n": 1
         },
         {
-          "c": "",
+          "c": "절사의 징조",
+          "n": 0.5
+        },
+        {
+          "c": "완벽한 강화의 에센스",
+          "n": 1
+        },
+        {
+          "c": "좌측 강령술의 징조",
+          "n": 1
+        },
+        {
+          "c": "보존된 빗장뼈",
           "n": 1
         }
-      ]
+      ],
+      "locked": true
     }
   ],
   "prices": {
