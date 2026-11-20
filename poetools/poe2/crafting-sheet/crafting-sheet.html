@@ -18,6 +18,7 @@
 .grp button:hover:not(:disabled){background:color-mix(in oklab,var(--g) 14%,transparent);color:var(--g)}
 .grp button:focus-visible{outline-offset:-3px}
 .grp svg{flex:none;opacity:.8}
+.panel>h2::before,legend::before,.gnav i{display:none} /* theme.css 의 마름모(◆) 모양 숨김 */
 .grp.split{gap:4px;border:0;background:none;overflow:visible}
 .grp.split>*,.grp.split>:last-child{border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf)}
 .grp select{max-width:190px;padding:0 10px;color:var(--mute)}
@@ -153,7 +154,7 @@ const msg=t=>{$("msg").textContent=t};
 
 function renderAll(){
   document.title=T("크래프팅 시트","Crafting Sheet")+" | PoE 2 | PoE Tools";
-  $("app").innerHTML=`<div class="ghead sm"><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><p class="sub">${T("레시피를 단계별로 쌓고, 단계별·전체 소모 재화와 디바인 환산 비용을 확인하세요.","Add a recipe step by step and see per-step and total currency cost in Divine Orbs.")}</p></div></div>
+  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><p class="sub">${T("레시피를 단계별로 쌓고, 단계별·전체 소모 재화와 디바인 환산 비용을 확인하세요.","Add a recipe step by step and see per-step and total currency cost in Divine Orbs.")}</p></div></div>
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}">
 <div class="acts"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div>
 <div class="grp split" role="group" aria-label="${T("파일","File")}"><button type="button" data-a="dl">${ICO.dl}${T("파일로 저장","Save as file")}</button><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button>${window.showDirectoryPicker?`<button type="button" data-a="folder">${ICO.folder}${T("폴더에 저장","Save to folder")}</button>`:""}</div>

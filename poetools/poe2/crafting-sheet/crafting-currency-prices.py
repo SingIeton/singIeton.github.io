@@ -6,7 +6,7 @@
 가격은 모두 디바인 오브(Divine Orb) 1개 기준 단가로 변환해 저장합니다(페이지의 PRICES 형식과 동일).
 
 사용법:
-  python crafting-currency-prices.py                          # CURRENCIES 목록을 받아 crafting-currency-prices.json / .js 생성
+  python crafting-currency-prices.py                          # CURRENCIES 목록을 받아 crafting-currency-prices.js 생성
   python crafting-currency-prices.py --list                   # poe.ninja가 알려주는 리그 목록 출력
   python crafting-currency-prices.py --league "Runes of Aldur"  # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
   python crafting-currency-prices.py --dump-currencies all.txt  # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
@@ -15,12 +15,11 @@
 
 저장 위치(기본값: 이 스크립트가 있는 폴더):
   crafting-currency-prices.js             결과(페이지가 <script> 로 읽음. 파일을 직접 열어도 동작)
-  crafting-currency-prices.json           같은 내용의 JSON(.js 가 없을 때 페이지가 fetch 로 읽는 대체용)
   raw_data/                               poe.ninja 원본 응답 캐시(지워도 됩니다)
 
 데이터 출처: poe.ninja 공식 이코노미 API  https://poe.ninja/docs/api
   · PoE 2 데이터는 대략 1시간마다 갱신됩니다. 그보다 자주 돌려도 새 데이터가 나오지 않습니다.
-  · 요청 실패·재화 미발견 등으로 결과가 하나도 없으면 기존 JSON/JS 는 덮어쓰지 않습니다.
+  · 요청 실패·재화 미발견 등으로 결과가 하나도 없으면 기존 JS 파일은 덮어쓰지 않습니다.
 """
 
 import argparse
@@ -51,7 +50,7 @@ LEAGUE = ""
 #   · 한 줄에 이름 하나. 앞에 '#'을 붙이면 그 줄(또는 '#' 뒤)은 무시됩니다.
 #   · 빈 줄, [카테고리] 제목 줄은 무시되므로 그룹 구분용으로 자유롭게 쓰세요(카테고리는 검색에 쓰이지 않음).
 #   · 대소문자와 기호(' - 공백 등)는 구분하지 않습니다. 예) "Perfect Jewellers Orb" = "Perfect Jeweller's Orb"
-#   · 결과 JSON 에는 poe.ninja 의 정식 영어 이름으로 기록됩니다(페이지의 재화 이름과 같은 표기).
+#   · 결과 파일에는 poe.ninja 의 정식 영어 이름으로 기록됩니다(페이지의 재화 이름과 같은 표기).
 #   · 영어 이름 오른쪽에 한글명을 적으면 결과 파일의 names_ko 에 함께 담기고, 페이지가 한글로 표시·검색합니다.
 #       Divine Orb 디바인 오브             <- 영어 뒤에 한글이 오면 자동으로 구분됩니다
 #       Chaos Orb | 카오스 오브             <- '|' · 탭 · ',' 로 구분해도 됩니다
@@ -60,81 +59,81 @@ LEAGUE = ""
 CURRENCIES = """
 
 [Currency]
-Divine Orb
-Exalted Orb
-Greater Exalted Orb
-Perfect Exalted Orb
-Chaos Orb
-Greater Chaos Orb
-Perfect Chaos Orb
-Regal Orb
-Greater Regal Orb
-Perfect Regal Orb
-Orb of Augmentation
-Greater Orb of Augmentation
-Perfect Orb of Augmentation
-Orb of Transmutation
-Greater Orb of Transmutation
-Perfect Orb of Transmutation
-Orb of Annulment
-Orb of Alchemy
-Vaal Orb
-Fracturing Orb
-Hinekora's Lock
+Divine Orb                      디바인 오브
+Exalted Orb                     엑잘티드 오브
+Greater Exalted Orb             상위 엑잘티드 오브
+Perfect Exalted Orb             완벽한 엑잘티드 오브
+Chaos Orb                       카오스 오브
+Greater Chaos Orb               상위 카오스 오브
+Perfect Chaos Orb               완벽한 카오스 오브
+Regal Orb                       제왕의 오브
+# Greater Regal Orb             상위 제왕의 오브
+Perfect Regal Orb               완벽한 제왕의 오브
+# Orb of Transmutation          진화의 오브
+# Greater Orb of Transmutation  상위 진화의 오브
+Perfect Orb of Transmutation    완벽한 진화의 오브
+# Orb of Augmentation           확장의 오브
+# Greater Orb of Augmentation   상위 확장의 오브
+Perfect Orb of Augmentation     완벽한 확장의 오브
+Orb of Annulment                소멸의 오브
+Orb of Alchemy                  연금술의 오브
+Vaal Orb                        바알 오브
+Fracturing Orb                  분열의 오브
+Hinekora's Lock                 히네코라의 머리카락
 
 [Abyss]
-Preserved Jawbone
-Preserved Ancient Rib
-Preserved Collarbone
-Preserved Cranium
-Ancient Jawbone
-Ancient Rib
-Ancient Collarbone
-Omen of Light
+Preserved Jawbone               보존된 턱뼈
+Preserved Rib                   보존된 갈비뼈
+Preserved Collarbone            보존된 빗장뼈
+Preserved Cranium               보존된 두개골
+Ancient Jawbone                 고대의 턱뼈   
+Ancient Rib                     고대의 갈비뼈
+Ancient Collarbone              고대의 빗장뼈
+Omen of Light                   빛의 징조
 
 [Omen]
-Omen of Whittling
-Omen of Sinistral Annulment
-Omen of Sinistral Erasure
-Omen of Dextral Annulment
-Omen of Dextral Erasure
-Omen of Sinistral Crystallisation
-Omen of Dextral Crystallisation
-Omen of Greater Exaltation
-Omen of Sinistral Exaltation
-Omen of Dextral Exaltation
-Omen of Catalysing Exaltation
-Omen of the Liege
-Omen of the Sovereign
-Omen of the Blackblooded
+Omen of Whittling                   절사의 징조
+Omen of Sinistral Annulment         좌측 소멸의 징조
+Omen of Sinistral Erasure           좌측 말소의 징조
+Omen of Dextral Annulment           우측 소멸의 징조
+Omen of Dextral Erasure             우측 말소의 징조
+Omen of Sinistral Crystallisation   좌측 결정화의 징조
+Omen of Dextral Crystallisation     우측 결정화의 징조
+Omen of Greater Exaltation          상위 찬미의 징조
+Omen of Sinistral Exaltation        좌측 찬미의 징조
+Omen of Dextral Exaltation          우측 찬미의 징조
+Omen of Catalysing Exaltation       촉진하는 찬미의 징조
+Omen of the Liege                   군왕의 징조 (아마나무)
+Omen of the Sovereign               군주의 징조 (울라만)
+Omen of the Blackblooded            검은 피의 징조 (쿠르갈)
 
 [Essences]
-Essence of the Breach
-Essence of the Abyss
-Greater Essence of Body
-Perfect Essence of Body
-Greater Essence of Mind
-Perfect Essence of Mind
-Greater Essence of Insulation
-Greater Essence of Thawing
-Greater Essence of Grounding
-Greater Essence of Ruin
-Perfect Essence of Ruin
-Greater Essence of Opulence
-Perfect Essence of Opulence
-Perfect Essence of Enchancement
+Essence of the Breach               균열의 에센스
+Essence of the Abyss                심연의 에센스
+Greater Essence of Body             상위 육신의 에센스
+Perfect Essence of Body             완벽한 육신의 에센스
+Greater Essence of Mind             상위 정신의 에센스
+Perfect Essence of Mind             완벽한 정신의 에센스
+Greater Essence of Insulation       상위 절연의 에센스
+Greater Essence of Thawing          상위 해동의 에센스
+Greater Essence of Grounding        상위 접지의 에센스
+Greater Essence of Ruin             상위 폐허의 에센스
+Perfect Essence of Ruin             완벽한 폐허의 에센스
+Greater Essence of Opulence         상위 풍요의 에센스
+Perfect Essence of Opulence         완벽한 풍요의 에센스
+Perfect Essence of Enchancement     완벽한 강화의 에센스
 
 [Breach]
-Flesh Catalyst
-Neural Catalyst
-Carapace Catalyst
-Uul-Netol's Catalyst
-Xoph's Catalyst
-Tul's Catalyst
-Esh's Catalyst
-Chayula's Catalyst
-Reaver Catalyst
-Sibilant Catalyst
+Flesh Catalyst          육체 기폭제
+Neural Catalyst         신경 기폭제
+Carapace Catalyst       갑각 기폭제
+Uul-Netol's Catalyst    울네툴의 기폭제
+Xoph's Catalyst         조프의 기폭제
+Tul's Catalyst          툴의 기폭제
+Esh's Catalyst          에쉬의 기폭제
+Chayula's Catalyst      차율라의 기폭제
+Reaver Catalyst         강탈자 기폭제
+Sibilant Catalyst       쇳소리 기폭제
 
 """
 
@@ -144,8 +143,7 @@ Sibilant Catalyst
 SEARCH_UNIQUES = True
 
 # ---- 기타 --------------------------------------------------------------------
-OUTPUT_FILE = "crafting-currency-prices.json"  # 결과 JSON 파일 이름
-OUTPUT_JS_FILE = "crafting-currency-prices.js"  # 결과 JS 파일 이름(페이지가 <script> 로 읽음). 빈 문자열이면 만들지 않음
+OUTPUT_JS_FILE = "crafting-currency-prices.js"  # 결과 JS 파일 이름(페이지가 <script> 로 읽음)
 JS_VARIABLE = "CRAFT_PRICES"  # JS 파일이 만드는 전역 변수 이름(window.CRAFT_PRICES). 페이지 쪽과 같아야 함
 CACHE_MINUTES = 30        # 이 시간(분) 안에 받은 원본 응답이 있으면 재사용. 0 이면 캐시 안 씀
 # poe.ninja 는 앱을 식별할 수 있는 User-Agent 와 연락처를 요청합니다. 본인 정보로 바꿔 주세요.
@@ -400,19 +398,13 @@ def write_atomic(path, text):
 
 
 def write_outputs(out_dir, result):
-    """결과를 JSON(대체용)과 JS(<script> 로 읽는 용)로 저장하고 저장한 경로 목록을 돌려준다."""
+    """결과를 JS 파일(페이지가 <script> 로 읽음)로 저장하고 저장한 경로 목록을 돌려준다."""
     out_dir.mkdir(parents=True, exist_ok=True)
     body = json.dumps(result, ensure_ascii=False, indent=1)
-    written = []
-    json_path = out_dir / OUTPUT_FILE
-    write_atomic(json_path, body + "\n")
-    written.append(json_path)
-    if OUTPUT_JS_FILE:
-        js_body = body.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")  # 구형 JS 엔진 대비
-        js_path = out_dir / OUTPUT_JS_FILE
-        write_atomic(js_path, f"window.{JS_VARIABLE} = {js_body};\n")
-        written.append(js_path)
-    return written
+    body = body.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")  # 구형 JS 엔진 대비
+    js_path = out_dir / OUTPUT_JS_FILE
+    write_atomic(js_path, f"window.{JS_VARIABLE} = {body};\n")
+    return [js_path]
 
 
 def dump_currencies(path, league_id, raw_dir, use_cache):
@@ -437,7 +429,7 @@ def dump_currencies(path, league_id, raw_dir, use_cache):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="크래프팅 시트용 재화 시세(디바인 기준)를 poe.ninja 에서 받아 JSON 으로 저장")
+    ap = argparse.ArgumentParser(description="크래프팅 시트용 재화 시세(디바인 기준)를 poe.ninja 에서 받아 JS 파일로 저장")
     ap.add_argument("--list", action="store_true", help="리그 목록만 출력")
     ap.add_argument("--league", metavar="이름 또는 id", help="수집할 리그(스크립트 상단 LEAGUE 보다 우선)")
     ap.add_argument("--dump-currencies", metavar="PATH", help="전체 재화 이름을 붙여넣기용 텍스트로 저장하고 종료")
