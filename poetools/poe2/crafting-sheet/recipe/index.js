@@ -1,6 +1,6 @@
 window.CRAFT_RECIPE_INDEX = [
   {
-    "file": "atttack_ring.js",
+    "file": "attack_ring.js",
     "name": "공격 균열 반지"
   },
   {
