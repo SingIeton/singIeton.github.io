@@ -97,6 +97,7 @@ h2{font:600 17px/1.4 var(--serif);margin:0 0 12px}
 .ghead{display:flex;align-items:center;gap:28px;padding:40px 0 8px}
 .mini{flex:none;width:88px;height:108px;display:grid;place-items:end center;padding-bottom:14px;position:relative;border:1px solid var(--g);border-radius:999px 999px var(--r) var(--r);font:300 56px/1 var(--serif);color:var(--g)}
 .mini::before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in oklab,var(--g) 25%,transparent);border-radius:999px 999px 2px 2px}
+.ghead:not(.sm) .mini{background:radial-gradient(90% 38% at 50% 0,color-mix(in oklab,var(--g) 20%,transparent),transparent 75%)} /* 게임 허브(poe1/poe2)의 큰 문 마크만 안쪽 그라데이션 (허브 .portal 과 같은 방식). 서비스 페이지(.ghead.sm)는 제외 */
 .ghead.sm{gap:24px;padding-top:36px;margin-bottom:20px}            /* 서비스 페이지용 작은 머리 */
 .ghead.sm .mini{width:64px;height:80px;padding-bottom:10px;font-size:40px}
 .ghead.sm h1{font-size:clamp(26px,3.6vw,34px)}
