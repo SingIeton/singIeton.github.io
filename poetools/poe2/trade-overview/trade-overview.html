@@ -51,22 +51,23 @@ var byId = {};                                            // 카드 번호 n(1�
 entries.forEach(function(x){ byId[String(x.id)] = x; });
 
 var COLS = 5, CARD_H = 154, GAP = 12;               // CARD_H 는 CSS .card 의 height 와 같아야 한다
+var GAP_TRIM = 10;                                  // 가격(.p)과 일자(.ls) 사이 간격을 이만큼(px) 줄인다 (가격은 오른쪽, 일자는 왼쪽으로 절반씩 민다)
 /* 카드 제목 배경색: 카드 번호(1부터, 왼쪽→오른쪽, 위→아래) 순서. 같은 색을 여러 칸에 써도 된다. 번호보다 칸이 많으면 처음부터 다시 돈다.
    (16진수 색은 # 없이 적는다. royalblue 같은 CSS 색 이름도 가능. 제목 배경에는 아래 CSS 의 38% 로 연하게 섞여 들어간다) */
 var COLORS = [
-  "b04fa8", "b04fa8", "8f5fc4", "9a67c4", "c8527f",
-  "2f95b0", "c9803a", "3f7fc0", "5a6fd2", "d0603f",
-  "3f86c8", "8f5fc4", "2f9d78", "c8527f", "2f95b0",
-  "c9803a", "5a6fd2", "b04fa8", "d0603f", "3f86c8",
-  "8f5fc4", "2f9d78", "c8527f", "2f95b0", "c9803a"
+  "c8527f", "c8527f", "c8527f", "9a67c4", "8f5fc4",
+  "2f95b0", "9a67c4", "3f7fc0", "5a6fd2", "2f95b0",
+  "3f86c8", "8f5fc4", "2f9d78", "c8527f", "2f9d78",
+  "c9803a", "c9803a", "c9803a", "c9803a", "c9803a",
+  "8f5fc4", "d0603f", "3f86c8", "3f86c8", "3f86c8"
 ];
-function ago(iso){                                        // 등록(마지막 갱신) 시각 -> "3시간 전" / "3h ago"
+function ago(iso){                                        // 등록(마지막 갱신) 시각 -> "3시간 전" / "3h"
   var t = Date.parse(iso || ""); if(isNaN(t)) return "";
   var m = Math.max(0, Math.floor((Date.now() - t) / 60000));
   if(m < 1) return pick("방금", "just now");
-  if(m < 60) return pick(m + "분 전", m + "m ago");
-  if(m < 1440) return pick(Math.floor(m/60) + "시간 전", Math.floor(m/60) + "h ago");
-  return pick(Math.floor(m/1440) + "일 전", Math.floor(m/1440) + "d ago");
+  if(m < 60) return pick(m + "분 전", m + "m");
+  if(m < 1440) return pick(Math.floor(m/60) + "시간 전", Math.floor(m/60) + "h");
+  return pick(Math.floor(m/1440) + "일 전", Math.floor(m/1440) + "d");
 }
 function colorOf(n){                                                      // 16진수만 적으면 앞에 # 를 붙여 쓴다 (royalblue 같은 색 이름은 그대로)
   var c = COLORS.length ? String(COLORS[(n-1) % COLORS.length]).trim() : "";
@@ -113,7 +114,7 @@ function alignCols(){
     ["p","ls"].forEach(function(c){
       var els = uls[i].querySelectorAll("." + c), max = 0, k;
       for(k = 0; k < els.length; k++){ var r = document.createRange(); r.selectNodeContents(els[k]); max = Math.max(max, r.getBoundingClientRect().width); }
-      for(k = 0; k < els.length; k++) els[k].style.marginRight = (-max/2) + "px";
+      for(k = 0; k < els.length; k++) els[k].style.marginRight = (-max/2 + (c === "p" ? -GAP_TRIM/2 : GAP_TRIM/2)) + "px";
     });
   }
 }

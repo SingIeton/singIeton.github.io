@@ -133,36 +133,34 @@ TARGETS = [
 
     {"id": "2", "name": "Absent Amulet (Melee, Eternal)", "category": "",
      "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACq1X247bIBD9F56jiJu55FeqFWIx7qLFOAK83WqVf6-ctInrmNhO-5TEcM7czkw8XyBlnfsEDl-gO2bXBXAAyZo-6ldvwWl3Pk_g8O0L5J9HCw5AhxrsQON8tvFy4GpwAMdk-7rbXz5U6NtXG1XXKN007lO1XZ3ADnxo39vBVqs_wQGddqB2abBUg0OjfbKnl9Puasl0fchzttK7835vdMqqC8pEl53RXqUc3bsFY9IcezswzsDqrv6-eDn1bdsFFd86rdrf7jwE6GjeWr1MnKMLLv9cumazjUF7FaeUl2zNR2a9bW3I2ivt_PBtycqPzjfqqM37_cWXcdFcGIq2vkI33onBV-_Cu4o22fihz6pbysM1JNOFxvefi4XTJrrGmcVCtG7IrRrqZuPS5cZG7ZULH50puP0yffJc_uzn0Tvj8n5oPyWR4FRiMOUiZ64ZAMIQE4gYJ3cebuCgiCBB4PMUGDEMJacV3sLRRG1yH209Df5ZhueycUfyRDomHNvy8WTrTf1GnFNIWSXK4p66KRgjDFG8HCuFD4KFjLCqIoPh9SgqsKhwJeQWFKFCcoEhvO8RjsooLCWhHNJlXSBcNi4F4VRWki2y8LK6YAURrCihy66wqpw9TgVjFUP0H3zBklOKOKJykQRfZPr_J95ItaXZ8pxIpwNqlUYnoHUS_Ru0UqG1TdZEna8SraAkDEP-oHunGIRkRZBk8AFm4tyGRoDFENf3wUjAk7I_2QaTAq3vgjLH-iagRRIiBcIUcn6fkuW2weO2-WHd97e8_N6du-Ed6fa2FG1yKetghnf5Bwjzprs0vj3y5rftA9rTUqCV4JQgxqt5HC4mqKqYwFQiuRUoEadCIorngHhfVhjhkiIkCNsI5EIixOVMU83wwD0rCmvgERTLVUR4xXzFzwzYv6Q50fPmoR66bRYLUrwtjbeRplJ_WyDv3RqeXO0OriWjRr-b8VGMXRxwo033vEUNW67pYuyPuXScdDDZNa50fv0HVS7bdu7OzKq7Aznq2hb8PcZhefmT7tB7v7tszRTubuy1-3BhSn9OzOn0C5vRHSHcDwAA"},
-     
-     {"id": "3", "name": "", "url": ""},
 
-    {"id": "4", "name": "Res, Recycle", "category": "",
-     "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACrVX226jMBD9Fz9HkT2-8yurClEwXSQCyDZVo4h_X5F2N1xicFn1KRdzZnzOnBmbG3I-871DyQ21na_aBiXImby32Wtt0HC6rzuU_Lohf-0MSlDWFOiEyqr2xn4uVAVKkPno6iqv_HkEpKAx0UpIjtEJvWd1b8YMl6pBCYFhOH2BOmf6oj1_fqS-9VmdmtpcTDN-s8ZVzmdNbtAJFZUbt1SgxNverIIS_ohaXaZbIYoLrrGkahUlsI-mv7wam7Zlai6dv6adNWX1kV7awqFIiOvLB-RlBH2pl7d945_pN980YKoVAFPqkXH-BNVEMqUJgzCtBYJK4MCAyVgEA8AYpAYWiyBCEioFjc8xcUrwCaBMCeA6NqZWVDLNtQiGlEwJwQVhaN81oSRcCS0IfbKrl5U9hxgLzFtoVq55OPYZ7wloVrFY0KxosaDIDl-CgqVcBgEcCkKlUkQSysN2WCqpqQBFZTyCCY4BlCJHZ8Z0AEQmJZhjgjmj625bKSx4UGKlCVEMtNqXmAxrq8L_WnU7Z6R1jwbZmD8Hrb1TiEkdSpvlvrem2O1fqoKojQbeQG108AZqq4VZHK94ibd4Ho5ysNxbOuzUe6KLafLfWfPXeJJwqRgWG7eMpZCgNWUSM7qWH-Mw54NjYpl9en9Ywu5zYSf2kTmhBYBU-D6bFmOHBluaS0oolmKfL4jQJXBi2n1qh0YgaCK4wvczJpYaw0JiMW4r4jg8B8lNeulnyAFQQrigmH6nbpIzxjjnYp8cC5ObtPjPkJv5K-ynjcptVWpDk2cafK_tmva7TRd3-3l4OXRCPgwxBJ4gjBENmPMnZRv_-bfrkZjL08nv2ZK1rR1xk_fTMqvd_d00b63tOx9adlmT-6qsnq8Pw-muYyBznnnz1trrDJrluXGutdezrZq3McYw_AFl05Z5Qw8AAA"},
-     
-     
+    {"id": "3", "name": "Prefix Fracture (Melee)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACqVX227rKhD9F56jCDDmkl85qhDFeBcVQwS4u1Xlf99yeonrmpL6PMUxM2uGNbPw8ApSVnlM4PQKwjnb4MEJJKPHqO6dAdPhsp7A6b9XkF_OBpyA8h04gN66bOLbgu3ACZyTGbtwfPuRfhzuTZShl2Y45xep-t4-yyF0CRxAZ9OM3oFTjqM5gCflRjNnMFgPTnia7tY20-EzvA6jz1sJpEfr3FGrlGXwUkebrVZOphztowFbiBtuXej-VI3TOAzBy_gQlBze0_nRQUX9MKg6cI7W2_wCVq9NNtErJ-MMUUjcODMYn5WTyrr5qRbrb3C9PCv9-N3wbl0SNN1egCvuKuC9s_5RRpNMfFKXTqtkeN2SDr5343O1LkpH21td5XmwM5VyLouJNePeROWk9U9BF9L-1q77-DPPZ2e1zcdZclIgzojAYI3VXLA2HBCGuIGIsqYqsR8wCGoQb-B-CIwohoKRFt-CsbPV-qh0HqPp3tNGjBFIaMvLxVy5YE5pQxHB9a0SOBVREKQNbduG_y8UwjFvccvF92qLaQncK5eKW2oIF4xjCOvMszeaN1GwEA1hkNTbCMHyngRvGBGtoFWUtoiBYAsRbElD6qnQMgxmhFPaUlSH-QFEMEIQQ0TUP2BNmVzBESaQsTothO1Wx0rTV3GUJLtPC2vdL6Rws1O588tOX_q83NedSUZHlT-5b6FoKIZswcPaBiHRNkhQWORqrzxWh_sedazKulMcqwLs0sYKY580VrwKxAgXiNQPL0TLILfLC26MmRuj6FVuf43985Dro28O88hyHV6iSTZl5fVidtvy0A8qpKX1Ipv32Cd0JKW9t5yRBlHWbvvhImdtSzkmAonfOi4r9s0RH8ud2zBBEOIN_aUj4wIhJuCPH9sPHHgstgmecTjB4iYgfEuj7DmYv3Trju78EtOH30YszEmle9z1qJRpvN7mNu5qd4s85lSTlov_X5ZiDHH2W1w-LyPOfPHUIcbxnEvLSXmdbW9L659fXmmzGb7YzFmCaZoOIEfVmUJ25zjfJD7I9qNzBzCo54_HT7TOPll_wZumf3HPWfZPDwAA"},
 
-    # 빈 카드 (검색 없음, 제목 색은 html 의 COLORS). 채우려면 name 과 url 에 값을 적는다. id "0" 은 생략된다
+    {"id": "4", "name": "", "category": "",
+     "url": ""},
+    
     {"id": "5", "name": "", "url": ""},
     {"id": "6", "name": "", "url": ""},
     {"id": "7", "name": "", "url": ""},
     {"id": "8", "name": "", "url": ""},
     {"id": "9", "name": "", "url": ""},
-    {"id": "10", "name": "", "url": ""},
+    {"id": "10", "name": "Res, Recycle", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACrVX226jMBD9Fz9HkT2-8yurClEwXSQCyDZVo4h_X5F2N1xicFn1KRdzZnzOnBmbG3I-871DyQ21na_aBiXImby32Wtt0HC6rzuU_Lohf-0MSlDWFOiEyqr2xn4uVAVKkPno6iqv_HkEpKAx0UpIjtEJvWd1b8YMl6pBCYFhOH2BOmf6oj1_fqS-9VmdmtpcTDN-s8ZVzmdNbtAJFZUbt1SgxNverIIS_ohaXaZbIYoLrrGkahUlsI-mv7wam7Zlai6dv6adNWX1kV7awqFIiOvLB-RlBH2pl7d945_pN980YKoVAFPqkXH-BNVEMqUJgzCtBYJK4MCAyVgEA8AYpAYWiyBCEioFjc8xcUrwCaBMCeA6NqZWVDLNtQiGlEwJwQVhaN81oSRcCS0IfbKrl5U9hxgLzFtoVq55OPYZ7wloVrFY0KxosaDIDl-CgqVcBgEcCkKlUkQSysN2WCqpqQBFZTyCCY4BlCJHZ8Z0AEQmJZhjgjmj625bKSx4UGKlCVEMtNqXmAxrq8L_WnU7Z6R1jwbZmD8Hrb1TiEkdSpvlvrem2O1fqoKojQbeQG108AZqq4VZHK94ibd4Ho5ysNxbOuzUe6KLafLfWfPXeJJwqRgWG7eMpZCgNWUSM7qWH-Mw54NjYpl9en9Ywu5zYSf2kTmhBYBU-D6bFmOHBluaS0oolmKfL4jQJXBi2n1qh0YgaCK4wvczJpYaw0JiMW4r4jg8B8lNeulnyAFQQrigmH6nbpIzxjjnYp8cC5ObtPjPkJv5K-ynjcptVWpDk2cafK_tmva7TRd3-3l4OXRCPgwxBJ4gjBENmPMnZRv_-bfrkZjL08nv2ZK1rR1xk_fTMqvd_d00b63tOx9adlmT-6qsnq8Pw-muYyBznnnz1trrDJrluXGutdezrZq3McYw_AFl05Z5Qw8AAA"},
     {"id": "11", "name": "", "url": ""},
     {"id": "12", "name": "", "url": ""},
     {"id": "13", "name": "", "url": ""},
     {"id": "14", "name": "", "url": ""},
     {"id": "15", "name": "", "url": ""},
-    {"id": "16", "name": "", "url": ""},
-    {"id": "17", "name": "", "url": ""},
-    {"id": "18", "name": "", "url": ""},
+    {"id": "16", "name": "Viper Cap (2s)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACnVQyWrDMBD9lTJntcSS40XX_EMvxRjVVmCoLCtaTILRvxfZbXGgus3wtnmzgvPCBwd8hdl4nDVwEItAJT6VhEjAP4wEDu9opH25CANkkzjgH-svKPQIBK6ovLQJ6CLJYivgCBzk3Sgc0L8ls57RtmVlfSoZJOk_jILVbVkUDatyDMbouWnYiWYZlFb1uSqLpgACi1BBptqTuAN_LWPsYnc4dN0K9If9MFph0T-enhY03oKEGCMBeQtoJql9Th607N08fMn0xxUm1MDpJp3QDRnVMFsbjJfjU-5VKPcT660Ycxcbi8NeN2XpoBTZm-_jn92IC-rNL8ZvaPb1xB0CAAA"},
+    {"id": "17", "name": "Morior Invictus", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACqWSwWoDIRCGXyXMWcrqrBp9gdBDL72WEOyuKcJGF3VDy7LvXgw0LG1sA_WkzDf_zPzODCmbPCXQM4Qxu-BBQ7LdFM3rYGEh4M3JgoanEF2Im0d_dl3hCeSPsQR20fh-82zfzOAMkIteAv0yfwHG90Dg6IZsYwnsCfQuFfkedI6TXciV7cLk8z_oGVwPGuz7OLjO5YfSzKGlAlvKFWVwS-xGBuUNKorYQgVgXKHglEtaIxSiFFuO-LPmnsDZDJMtnp-cB82W1VA-3DEStrJlkjZS1erTBgUTkqOsEYgMUTLVVCUow4Yh4-Je32RDFcOWVV1BIZUUim7Z375VgN9-c1-8vVpX3E3dYfVeXbsQ4zTmkrra_KMZ0mXrXW99dkf3LV6qwFLOJwp-M8I5AwAA"},
+    {"id": "18", "name": "Mageblood (Cyclone)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACrVVwU7EIBD9FTPnxhRK2y1H7x49mWbDtqwhYUtTwLip_LtBV4PrKrRqTy28N7yZeR1m0IYZq4HOoEYj1AAUNO_sxHaSg8tgYAcOFG7ZA99JpXrIwBxHv3RnhBTmeHXDpYHsNZAGej-_77PBg_dCGj69bYgeKIjDKEUnzLUnbBFBFW5w02DI4JFJy72UgxiAYueyE4c_hZxiUxPSoDqv4BsErgiucF6SZ4TimE0cUoJrPeiUWqfsYC4l94OMDHqhfVV7oGayPEHWYkq5nFJAvMrnnSGlc-35InK_LFBUKlmeHV5OqZZT0Ipj6j9sVaBkjWfiUYs17vUW-Uz64qPQMoP69z-KxFPFcUjK1EkIU8chTcJJeQImIe8VHUYpY3N51ASXX5iMrXfbh3m8v3S3Db6D105Nkx2NpwaX3p5JzcH55wXRA6fxFQcAAA"},
     {"id": "19", "name": "", "url": ""},
-    {"id": "20", "name": "", "url": ""},
+    {"id": "0", "name": "Heart of the Well", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACsVXyW7bSBD9FaPPQlD7ovMc5g_mEBgCI9EYAZJoiFSAwNC_B3RmYiEOO6QnmfDCpauqu6tevdd8Kv3QDJe-rJ9K9zjsu1NZl77dXs7Nh0Nbrqtyao5tWZc_2-Y83HUPd8Pf7d1f7eFQVmX49DgO_bFvjt1pV1bPsfqyfv_071Dz_Plhfxja85eB_a6sy67t2-25Gdrdu9Flkw6EjEllVXb7fpx6V9bD-dJeVxMuBMQI7moLfBySzV3llc-qfGwOl3ZMw3F_Kmu8TkaxQGYC8QUTK2iEaC7wYc7w8NT8bUn56vPYt5dd9-7LbXO6HD-05033sHmJtTl2u758m0W9Xu_HIP-gYdtdTsMcPDCKC1ou2DoCqrqpL_BhQDVLMC1zSjcdhzyQzVPKnHJO2ry0waSJIKCIJi2oMKZHZNIS9CG7mEpGBRXTjVExAbBA4wX4lADJQFnggyKiahk630cg1RxNl_SouaGgAi4CKroBKf7avkYDcTa1WDDPiHZmX5KDOfzxCugkpEz6nfLcf8shfH0Lg7xBUX4XG7zaMd3u-NTN2u__hZC3iB-6gArSAsB7KnKw5E_B1GQCiIPISWcx1nQxVQQUUirAkTHZYPQDTDAga5Q5JDWHlOaQUEUCAN1UrGYTbOZGWLNxJxKHqCgfU5IjkC8RBh55B2vLCycFIa7MjAACiAwV0VUOEhSwaROPRPSESu00XBjN9U3a95_QR-PqQigryyMXRxOthGEXZGKiGvpULUgSl5zDVCQAxGsHH0mnqOLshc6my8RjjYwqlWRIVA-FSqu6gzkZVVYjiaKjBtWaR4WQXaFiI8TGqTVRQksUYIxK-hgxDSlqcTjYHRyohrZAxETGWgbZPSKghrabE9p0CjWE41lr70eV_CqCo072283N-83jtjufL4_DCLqbX9qH5tC35TpenwGL_XYP8w4AAA"},
+    {"id": "20", "name": "Prism of Belief (Shield Wall)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACiXNUQrCMBBF0b287yCorTSzFSkS2xEGYhqaiSjp7F2q34fLbSgatBZQw5JVlgRC4amu4R4Z5n5eQNcG_WQGIaQZDg-JyusfZAaB3znKJHrYg1vXDb0_Xfyw-SMcXiFW3h9PSaCz2WijfQEwt5nTfAAAAA"},
     {"id": "21", "name": "", "url": ""},
-    {"id": "22", "name": "", "url": ""},
-    {"id": "23", "name": "", "url": ""},
-    {"id": "24", "name": "", "url": ""},
-    {"id": "25", "name": "", "url": ""},
+    {"id": "22", "name": "Voices (2)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACnWOQQoCMRAE_9LnwYN72eQbghdZJG5GHMhmQzIRJeTvEsGjx6aaohqKOq0FtmFPKnuEReG1ZncLjE6IbmNYnHdZuYCg7zT2yaX0kMygr6HAXtqPuehBuEtQzgMsBC9lCD2s5sqd_n4bxMOCXynIKnoY8utkjsaYaZpnEJ4uVB69m0TYY-9LX_oHv53gLMgAAAA"},
+    {"id": "23", "name": "Voices (3)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACnXOwQoCIRgE4HeZs3TIy-prBF1iCVv_pR9cV_Q3CvHdwyDo0nGY4WMaijipBbZhT8J7hEWhpWZ3C4SuEN1GsDjvvFCBgrzSyCeX0p0zQX2EAntp385FD4WVg1AexazguQzQw0qu1NXfbQN7WNAzBV5YDgO_anM0xmg9TVB4uFBp_N04wur-i68uFOpzn_sbix8d_dkAAAA"},
+    {"id": "24", "name": "Voices (4)", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACnXOQQrCMBQE0LvMOriwLppcQ3AjRWLzix_SNCQ_RQm5u0QQ3LgcZnhMRRYrJcNUbFF4CzDINJdk757QFIJdCQaXjWfKUJBX7PlsY3xwIqiPkGGu9dvZ4KCwsBdKvZgUHOcOOhhJhZr6u61gBwN6Rs8zy6Hjt0EftdbDMI5Q2K0v1P-uHGBO7RdfrM_Upja1N_woBczZAAAA"},
+    {"id": "25", "name": "Spell Level", "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAACo1S24qEMAz9lzyXYbReqr-yDNKtdQh0rLRRVqT_vtQFUVTYvrUn55KkC3iSNHqoF7ADoe2hBjlJNPLbaAhsxT3UXwvQPOiI9i0w6NCQdn8AtlCD_hkMKqRHJDRpkfOUJ1XKIbDLiiwXGRd5VQKDFn20a6EmN-rwOr2wzV3Zsacrf_wc_J-8EmmaCXGWZ9eMMhNFkRdJBjHAJM2o41Q-2EOdhP9EODaYpFnCE8GfcK22UjonFY1Ot2fOeSgnldcuRHz1qtndD5Bz1kWt3Zo7afy6YmWdGwe6g73sFWGHd_jWQ4OkP1c1IbB1eDfplCT9tm4-fkKltPfWzQ-H_Tv6oJnM1n1ZhXh-ASvArW7AAgAA"},
 ]
 
 # ================================================================ 사용자 설정: 한글 표기 (영어 -> 한글)
@@ -666,6 +664,23 @@ def _as_body(q):
     return q if isinstance(q.get("query"), dict) else {"query": q}
 
 
+def strip_disabled(query):
+    """링크에 들어 있는 'disabled': true 필터(경매장 화면에서 꺼 둔 조건)를 제거한다.
+    경매장 사이트는 검색을 보낼 때 꺼 둔 필터를 빼지만, 이 스크립트는 링크 본문을 그대로 보내서
+    서버가 꺼 둔 필터까지 복잡도에 넣어 400 'Query is too complex' 가 날 수 있다. 필터가 하나도 안 남은 그룹도 같이 지운다."""
+    stats = query.get("stats")
+    if isinstance(stats, list):
+        kept = []
+        for g in stats:
+            if isinstance(g, dict) and isinstance(g.get("filters"), list):
+                g["filters"] = [f for f in g["filters"] if not (isinstance(f, dict) and f.get("disabled"))]
+                if not g["filters"]:
+                    continue
+            kept.append(g)
+        query["stats"] = kept
+    return query
+
+
 def resolve_body(t, cache):
     """항목 -> trade2 검색 요청 본문. 가격 오름차순 정렬로 고정하고, FORCE_SECURABLE 이면 Instant Buyout 로 고정한다.
     저장된 검색 링크는 GET /api/trade2/search/poe2/<리그>/<id> 의 응답 query 를 쓰고 캐시한다 (조건은 리그와 무관하게 다른 리그에도 쓴다)."""
@@ -686,6 +701,7 @@ def resolve_body(t, cache):
             cache[sid] = found
             save_query_cache(cache)
             body = {"query": copy.deepcopy(found)}
+    strip_disabled(body["query"])
     body["sort"] = {"price": "asc"}
     if FORCE_SECURABLE:
         body["query"]["status"] = {"option": "securable"}
