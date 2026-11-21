@@ -45,11 +45,11 @@ html[data-game]:not([data-game=home]) :is(main,.foot)>.wrap{box-sizing:border-bo
 .art{display:grid;place-items:center;padding:18px 0 4px;color:var(--pg)}
 .item.soon .art svg{filter:grayscale(1);opacity:.5}
 .ibody{padding:4px 22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;flex:1}
-.ibody p{margin:4px 0 0;font-size:14px}
+.ibody p{margin:auto 0;font-size:14px} /* 설명 글: 위쪽 그림 아래~구분선 위 남는 공간의 세로 중앙 (카드 높이가 같아도 글 길이와 상관없이) */
 .sep{width:100%;height:9px;border:0;margin:4px 0;position:relative;background:linear-gradient(90deg,transparent,var(--ln2) 20%,var(--ln2) 80%,transparent) center/100% 1px no-repeat}
 .sep::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;border:1px solid var(--ln2);background:var(--sf);transform:translate(-50%,-50%) rotate(45deg)}
 .mods{list-style:none;margin:0;padding:0;color:var(--mod);font-size:14px}.mods li{margin:2px 0}
-.ibody .go,.ibody .st{margin-top:auto}
+.ibody .go,.ibody .st{margin-top:0} /* 구분선·열기 버튼은 설명 아래에 붙여 카드 맨 아래로 (남는 공간은 설명 글 위·아래로 나뉨) */
 .ihead+.ibody{padding-top:16px}
 @media(max-width:760px){.portals{grid-template-columns:minmax(0,360px);gap:28px}}
 </style>
