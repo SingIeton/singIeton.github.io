@@ -23,8 +23,6 @@ python poe2_overquality-flip.py --rates-only --league all
 --rates-only	환율만 갱신하고 끝냅니다. GGG 검색이 없어 몇 초면 끝납니다.N=not implemented (do not read these data)
 
 
-
-
 X=unsed  (do not read these data)
 []=Required Level (do not sort gears or data by required level)
 No need to read one's that are marked N and X (even if there is data)
