@@ -81,6 +81,22 @@ Vaal Orb                        바알 오브
 Fracturing Orb                  분열의 오브
 Hinekora's Lock                 히네코라의 머리카락
 
+[Essences]
+Essence of the Breach               균열의 에센스
+Essence of the Abyss                심연의 에센스
+Greater Essence of Body             상위 육신의 에센스
+Perfect Essence of Body             완벽한 육신의 에센스
+Greater Essence of Mind             상위 정신의 에센스
+Perfect Essence of Mind             완벽한 정신의 에센스
+Greater Essence of Insulation       상위 절연의 에센스
+Greater Essence of Thawing          상위 해동의 에센스
+Greater Essence of Grounding        상위 접지의 에센스
+Greater Essence of Ruin             상위 폐허의 에센스
+Perfect Essence of Ruin             완벽한 폐허의 에센스
+Greater Essence of Opulence         상위 풍요의 에센스
+Perfect Essence of Opulence         완벽한 풍요의 에센스
+Perfect Essence of Enhancement      완벽한 강화의 에센스
+
 [Abyss]
 Preserved Jawbone               보존된 턱뼈
 Preserved Rib                   보존된 갈비뼈
@@ -110,22 +126,6 @@ Omen of Catalysing Exaltation       촉진하는 찬미의 징조
 Omen of Sinistral Necromancy        좌측 강령술의 징조
 Omen of Dextral Necromancy          우측 강령술의 징조
 
-[Essences]
-Essence of the Breach               균열의 에센스
-Essence of the Abyss                심연의 에센스
-Greater Essence of Body             상위 육신의 에센스
-Perfect Essence of Body             완벽한 육신의 에센스
-Greater Essence of Mind             상위 정신의 에센스
-Perfect Essence of Mind             완벽한 정신의 에센스
-Greater Essence of Insulation       상위 절연의 에센스
-Greater Essence of Thawing          상위 해동의 에센스
-Greater Essence of Grounding        상위 접지의 에센스
-Greater Essence of Ruin             상위 폐허의 에센스
-Perfect Essence of Ruin             완벽한 폐허의 에센스
-Greater Essence of Opulence         상위 풍요의 에센스
-Perfect Essence of Opulence         완벽한 풍요의 에센스
-Perfect Essence of Enhancement      완벽한 강화의 에센스
-
 [Breach]
 Flesh Catalyst          육체 기폭제
 Neural Catalyst         신경 기폭제
@@ -137,6 +137,21 @@ Esh's Catalyst          에쉬의 기폭제
 Chayula's Catalyst      차율라의 기폭제
 Reaver Catalyst         강탈자 기폭제
 Sibilant Catalyst       쇳소리 기폭제
+
+[Expedition]
+Runic Alloy             룬 합금
+Swift Alloy             재빠른 합금
+Sovereign Alloy         군왕의 합금
+# Mystic Alloy          신비한 합금
+# Prismatic Alloy       분광 합금  
+# Cyclonic Alloy        회오리바람 합금
+# Expansive Alloy       팽창하는 합금 
+# Protective Alloy      보호의 합금 
+# Adaptive Alloy        적응형 합금 
+
+[Bloodmark]
+
+
 
 """
 

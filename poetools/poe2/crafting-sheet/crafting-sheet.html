@@ -6,6 +6,7 @@
 <title>Crafting Sheet | PoE Tools</title>
 <link rel="stylesheet" href="../../style/theme.css">
 <script src="../../style/site-bar.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap">
 <style>
 /* 공통 모양은 style/theme.css. 여기에는 크래프팅 시트 전용 스타일만 둡니다. */
 .bar{display:flex;flex-wrap:wrap;gap:22px 20px;align-items:center;padding:0 0 10px;margin-left:46px;max-width:798px}
@@ -16,6 +17,7 @@
   --ls-min:240px; /* 저장된 레시피 목록 목표 폭: 실제로는 (목표 폭 − 원래 폭)의 절반만큼만 늘어나며, 왼쪽으로만 커짐 */
   --acts-mt:0px;--acts-mb:16px;   /* 버튼 열 상단·하단 마진 */
   --rn-fs:24px;--rn-mt:0px;       /* 레시피 이름 글자 크기·상단 마진 */
+  --man:color-mix(in oklab,var(--ink) 72%,#e0a030); /* 직접 입력한 가격의 글자색: 기본 글자색에 호박색을 살짝만 섞음 (28% → 숫자를 올리면 더 눈에 띔) */
   --sec-fs:15px;--sec-mt:0px;--sec-mb:0px; /* 섹션(단계) 이름 글자 크기·상단·하단 마진 */
 } /* 버튼 줄 높이(버튼 38 + 위아래 여백 8·8). 총 비용 창이 이 아래에서 붙도록 쓰임 */
 .acts-bar{position:sticky;top:var(--bar-h,0px);z-index:20;box-sizing:border-box;margin:var(--acts-mt) -20px var(--acts-mb);padding:8px 20px 8px 66px;background:var(--bg)}
@@ -35,7 +37,7 @@
 .grp button:hover:not(:disabled){background:color-mix(in oklab,var(--g) 14%,transparent);color:var(--g)}
 .grp button:focus-visible{outline-offset:-3px}
 .grp svg{flex:none;opacity:.8}
-.panel>h2::before,legend::before,.gnav i{display:none} /* theme.css 의 마름모(◆) 모양 숨김 */
+.panel>h2::before,legend::before{display:none} /* theme.css 의 마름모(◆) 모양 숨김 */
 .grp.split{gap:4px;border:0;background:none;overflow:visible}
 .grp.split>*,.grp.split>:last-child{border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf)}
 .grp select{max-width:260px;padding:0 10px;color:var(--mute);text-align:center;text-align-last:center}
@@ -87,6 +89,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .qb:disabled{opacity:.4;cursor:default}
 .ci{width:32px;height:32px;display:grid;place-items:center}.ci img{max-width:32px;max-height:32px;object-fit:contain}
 .it input[data-f=c],.it .pr{font-size:calc(var(--fs) - 2px)} /* 화폐 박스: theme.css 입력칸 기본(--fs-1 = 15px)보다 1px 작은 14px */
+.step .it input.pr.man{color:var(--man)} /* 직접 입력한 가격 (시세 파일 값이 아닐 때) */
 .it .pr{text-align:right;padding-inline:8px;font-variant-numeric:tabular-nums}
 .add{display:block;width:calc(100% - 224px);background:none;border:0;padding:1px 0;color:var(--g);font:600 13px var(--sans);text-align:center;cursor:pointer} /* 224px = 재화 줄(.it)에서 이름 칸을 뺀 나머지 열(32+72+60+28)과 간격(8×4) → 이름 박스와 같은 폭·같은 가운데 */
 .add:hover:not(:disabled){text-decoration:underline}
@@ -116,10 +119,10 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .addstep{width:100%;margin-left:46px;width:calc(100% - 46px);padding:9px 10px;border:1px dashed var(--ln2);border-radius:var(--r);background:none;color:var(--mute);font:600 14px var(--sans);cursor:pointer}
 .addstep:hover{color:var(--g);border-color:var(--g)}
 .big{padding:2px 0 4px}
-.big b{font:300 46px/1.15 var(--serif);color:var(--g);font-variant-numeric:tabular-nums}.big b u{text-decoration:none;font:600 15px var(--serif);margin-left:6px}
-.sc{display:flex;justify-content:space-between;gap:10px;padding:5px 0 6px;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
+.big b{font:700 38px/1.15 "Noto Serif KR",serif;color:var(--g);font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;white-space:nowrap}.big b u{text-decoration:none;font:700 14px "Noto Serif KR",serif;letter-spacing:0;margin-left:6px}
+.sc{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 0 5px;font:400 14px/1.5 var(--sans);font-variant-numeric:tabular-nums}
 .sc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sc b{font-family:var(--serif);font-weight:400} /* 비용은 볼드 없이 */
+.sc b{font:inherit;white-space:nowrap} /* 비용: 단계 이름과 같은 글꼴·크기·기준선 (볼드 없이) */
 .ti img{max-width:28px;max-height:28px;object-fit:contain;vertical-align:middle}
 .side fieldset{margin-top:16px}
 #tot td:last-child{white-space:nowrap} /* 비용 칸(숫자 + D)은 줄바꿈하지 않음 */
@@ -275,7 +278,7 @@ function renderAll(){
 function renderSteps(){
   const n=R.steps.length;
   $("steps").innerHTML=R.steps.map((s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}" data-i="${i}"><span class="no" aria-hidden="true">${i+1}</span><button type="button" class="ib xdel" data-a="delStep"${n>1&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">${ICO.x}</button><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib lock"${lk?"":' tabindex="-1"'} data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button></div>
-<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><button type="button" class="rg" tabindex="-1"${dis} aria-label="${T("줄 순서 변경 (끌어서 이동, 키보드는 ↑↓ 또는 Alt+↑↓)","Reorder row (drag, or use ↑↓ / Alt+↑↓)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" autocomplete="off" aria-autocomplete="list"${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="any" inputmode="decimal"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">${ICO.x}</button></div>`).join("")}${lk?"":`<button type="button" class="add" data-a="addItem">+ ${T("추가","Add")}</button>`}
+<div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><button type="button" class="rg" tabindex="-1"${dis} aria-label="${T("줄 순서 변경 (끌어서 이동, 키보드는 ↑↓ 또는 Alt+↑↓)","Reorder row (drag, or use ↑↓ / Alt+↑↓)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" autocomplete="off" aria-autocomplete="list"${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="any" inputmode="decimal"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">${ICO.x}</button></div>`).join("")}${lk?"":`<button type="button" class="add" data-a="addItem" title="Ctrl+Enter">+ ${T("추가","Add")}</button>`}
 ${lk&&!s.note.trim()?"":`<textarea data-f="note" rows="1"${ro} placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea>`}</div></div>`}).join("");
 }
 /* 소모 재화 표의 재화 칸: 아이콘 이미지만 표시 (아이콘 파일이 없는 재화만 이름 텍스트로 대신 표시) */
@@ -308,8 +311,11 @@ function sums(skip){
     el.querySelector(".sc2").textContent=cs(costs[i]);
     el.querySelectorAll(".it").forEach((r,j)=>{
       const it=R.steps[i].items[j],c=it.c.trim(),b=r.querySelector(".pr"),p=c?price(c):null; /* 가격 칸은 항상 수정 가능 (잠긴 단계만 readonly) */
-      const raw=c&&p!=null&&it.n>0?it.n*p:0,rc=it.p>0?Math.round(it.p):Math.round(raw); /* 디바인은 항상 정수. it.p = 이름 없이 직접 적은 비용 */
-      if(b!==skip)b.value=rc>=1?String(rc):!(it.p>0)&&raw>0&&raw<1?fmtD(raw):c?"0":""; /* 재화를 적은 줄만 1D 미만을 0으로 표시, 빈 줄은 빈칸 */
+      const raw=c&&p!=null&&it.n>0?it.n*p:0,rc=Math.round(it.p>0?it.p:raw); /* 디바인은 기본 정수. it.p = 이름 없이 직접 적은 비용 */
+      const man=it.p>0||(!!c&&nk(canon(c))!=="divine-orb"&&manual(c)!=null); /* 이름 없이 적은 비용, 또는 레시피·브라우저에 저장된 직접 입력 단가 */
+      b.classList.toggle("man",man);b.title=man?T("직접 입력한 가격","Manually entered price"):"";
+      const v2=Math.round((it.p>0?it.p:raw)*100)/100; /* 직접 입력한 가격은 소수점 둘째 자리까지 그대로 표시 */
+      if(b!==skip)b.value=man?(v2>0?String(v2):c?"0":""):rc>=1?String(rc):raw>0&&raw<1?fmtD(raw):c?"0":""; /* 재화를 적은 줄만 1D 미만을 0으로 표시, 빈 줄은 빈칸 */
     });
   });
   $("stepcost").innerHTML=R.steps.map((s,i)=>`<div class="sc"><span>${esc(s.title||T("단계","Step"))}</span><b>${fmtD(costs[i].sum)} D</b></div>`).join("");
@@ -322,10 +328,12 @@ const upd=()=>{renderTot();sums()};
 /* 단계 줄의 비용 입력칸(정수 디바인) → 이 재화의 단가 = 입력값 ÷ 수량 을 이 레시피(R.prices)에 저장. 비우면 직접 입력이 해제되어 시세 파일 값으로 돌아갑니다. */
 function setRowPrice(t){
   const row=t.closest(".it"),it=R.steps[+row.closest(".step").dataset.i].items[+row.dataset.j],c=canon(it.c);
-  if($("msg").textContent===T("디바인은 정수로만 입력합니다.","Enter whole Divine amounts only."))msg("");
-  const d=t.value.replace(/,/g,"").replace(/\D.*$/,"").replace(/^0+(?=\d)/,"").slice(0,7); /* 앞의 0 제거, 숫자 이외는 입력되지 않음 (소수점 이하는 버림) */
+  if($("msg").textContent===T("디바인은 소수점 둘째 자리까지 입력합니다.","Divine amounts allow up to 2 decimals."))msg("");
+  let d=t.value.replace(/,/g,"").replace(/[^\d.].*$/,""),[ip,fp]=d.split("."); /* 숫자·소수점이 아닌 글자를 만나면 거기서 자름 (기존 동작 유지) */ /* 숫자와 소수점 하나만, 소수점 이하는 둘째 자리까지 */
+  ip=ip.replace(/^0+(?=\d)/,"").slice(0,7);if(fp!==undefined&&!ip)ip="0";
+  d=fp===undefined?ip:ip+"."+fp.slice(0,2);
   if(d!==t.value)t.value=d;
-  const v=parseInt(d,10);
+  const v=Math.round(parseFloat(d)*100)/100;
   if(!c){ /* 재화 이름 없이 비용만 적은 줄: 그 줄 자체에 저장 (이름을 적으면 commitName 이 단가로 옮김) */
     if(v>0)it.p=v;else delete it.p;
     renderTot();sums(t);return;
@@ -408,7 +416,7 @@ async function save(){
 function apply(o){
   if(!o||!Array.isArray(o.steps))return msg(T("레시피 형식이 올바르지 않습니다.","Invalid recipe file."));
   const pr={};if(o.prices&&typeof o.prices==='object')Object.entries(o.prices).forEach(([k,v])=>{v=Number(v);if(String(k).trim()&&v>0&&isFinite(v))pr[String(k).trim()]=v});
-  R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*10)/10||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)))}:{})}))}))};
+  R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*100)/100||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)*100)/100)}:{})}))}))};
   if(!R.steps.length)R.steps.push(newStep());
   renderAll();return true;
 }
@@ -449,13 +457,19 @@ async function loadSel(){
     if(apply(o))LOADED=f;
   }catch(e){msg(T(`레시피 파일을 읽지 못했습니다: recipe/${f}`,`Could not read recipe file: recipe/${f}`))}
 }
+/* 단계 i 에 재화 줄을 추가하고, 새로 생긴 재화 칸으로 바로 포커스 ("+ 추가" 버튼과 Ctrl+Enter 가 함께 사용) */
+function addItem(i){
+  const s=R.steps[i];if(!s||s.locked)return;
+  s.items.push({c:"",n:1});refresh();
+  const f=[...document.querySelectorAll(`.step[data-i="${i}"] .it [data-f=c]`)].pop();if(f)f.focus();
+}
 $("app").addEventListener("click",e=>{
   const b=e.target.closest("button[data-a]");if(!b)return;
   const a=b.dataset.a,st=b.closest(".step"),i=st?+st.dataset.i:-1,it=b.closest(".it"),j=it?+it.dataset.j:-1;
   if(a==="lock"){R.steps[i].locked=!R.steps[i].locked;refresh();return}
   if(a==="qup"||a==="qdn"){ /* 수량 ▲▼ 버튼 */
     const s=R.steps[i],o=s&&s.items[j];if(!o||s.locked)return;
-    o.n=Math.min(9999,Math.max(0,Math.round(((+o.n||0)+(a==="qup"?1:-1))*10)/10)); /* 소수 수량에서도 ±1, 소수 한 자리로 정리 */
+    o.n=Math.min(9999,Math.max(0,Math.round(((+o.n||0)+(a==="qup"?1:-1))*100)/100)); /* 소수 수량에서도 ±1, 소수 둘째 자리로 정리 */
     it.querySelector("[data-f=n]").value=o.n;upd();return;
   }
   if(i>=0&&R.steps[i].locked&&(a==="delStep"||a==="addItem"||a==="delItem"))return; /* 잠긴 단계는 줄·단계 추가/삭제 불가 */
@@ -471,7 +485,7 @@ $("app").addEventListener("click",e=>{
     if(has&&!confirm(T(`${i+1}단계를 삭제할까요?`,`Delete step ${i+1}?`)))return;
     R.steps.splice(i,1);refresh();
   }
-  else if(a==="addItem"){R.steps[i].items.push({c:"",n:1});refresh();const f=document.querySelector(`.step[data-i="${i}"] .it:last-of-type [data-f=c]`)||[...document.querySelectorAll(`.step[data-i="${i}"] .it [data-f=c]`)].pop();if(f)f.focus()} /* 새로 생긴 재화 칸으로 바로 포커스 */
+  else if(a==="addItem")addItem(i);
   else if(a==="delItem"){R.steps[i].items.splice(j,1);refresh()}
   else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;renderAll()}}
   else if(a==="save")save();
@@ -485,7 +499,7 @@ $("app").addEventListener("input",e=>{
   const st=t.closest(".step");if(!st)return;
   const s=R.steps[+st.dataset.i],f=t.dataset.f;
   if(f==="p"){setRowPrice(t);return}
-  if(f==="n"){const d=t.value.replace(/(\.\d)\d+/,"$1");if(d!==t.value)t.value=d;if(parseFloat(t.value)>9999)t.value="9999"} /* 수량은 소수점 한 자리까지 (최대 9999) */
+  if(f==="n"){const d=t.value.replace(/(\.\d{2})\d+/,"$1");if(d!==t.value)t.value=d;if(parseFloat(t.value)>9999)t.value="9999"} /* 수량은 소수점 둘째 자리까지 (최대 9999) */
   if(f==="title")s.title=t.value;else if(f==="note"){s.note=t.value;fitNote(t)}
   else{const it=s.items[+t.closest(".it").dataset.j];if(f==="c")it.c=t.value;else it.n=Math.max(0,parseFloat(t.value)||0)}
   if(f==="c"){if(isKnown(t.value))commitName(t);clearTimeout(t._t);t._t=setTimeout(()=>setIcon(t.closest(".it").querySelector(".ci"),t.value),250)}
@@ -544,7 +558,7 @@ function acPick(k){
   t.value=acName(e);acHide();
   t.dispatchEvent(new Event("input",{bubbles:true})); /* 아이콘·단가·합계 갱신은 기존 input 처리에 맡김 */
 }
-$("app").addEventListener("focusin",e=>{const t=e.target;if(t.dataset&&t.dataset.f==="c"&&!t.readOnly&&!isKnown(t.value))acShow(t)});
+$("app").addEventListener("focusin",e=>{const t=e.target;if(t.dataset&&t.dataset.f==="c"&&!t.readOnly&&t.value.trim()&&!isKnown(t.value))acShow(t)}); /* 내용이 비어 있으면 포커스만으로는 목록을 띄우지 않음 (↓ 키로는 열 수 있음) */
 $("app").addEventListener("input",e=>{const t=e.target;if(!t.dataset||t.dataset.f!=="c")return;if(isKnown(t.value))acHide();else acShow(t)});
 $("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="c")acHide()});
 addEventListener("scroll",acPos,true);addEventListener("resize",acPos);
@@ -641,7 +655,7 @@ $("app").addEventListener("keydown",e=>{ /* 자동완성 키보드: ↑↓ 이�
 });
 $("app").addEventListener("beforeinput",e=>{ /* 비용 칸은 숫자만: 소수점 등은 입력 자체를 막고 안내 */
   const t=e.target;
-  if(t.dataset&&t.dataset.f==="p"&&e.inputType==="insertText"&&/\D/.test(e.data||"")){e.preventDefault();msg(T("디바인은 정수로만 입력합니다.","Enter whole Divine amounts only."))}
+  if(t.dataset&&t.dataset.f==="p"&&e.inputType==="insertText"&&(/[^\d.]/.test(e.data||"")||(e.data==="."&&t.value.includes(".")))){e.preventDefault();msg(T("디바인은 소수점 둘째 자리까지 입력합니다.","Divine amounts allow up to 2 decimals."))}
 });
 $("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="p")sums()}); /* 입력을 마치면 표시 형식을 정리 */
 $("app").addEventListener("change",e=>{
@@ -685,6 +699,13 @@ $("app").addEventListener("input",e=>{ /* 위쪽 input 처리(노트 저장·높
   const out=calcLine(v,pos);if(out==null)return;
   t.setSelectionRange(pos-1,pos); /* 방금 입력한 스페이스를 결과로 바꿔서 "=" 바로 뒤에 붙임 */
   if(!document.execCommand("insertText",false,out)){t.setRangeText(out,pos-1,pos,"end");t.dispatchEvent(new Event("input",{bubbles:true}))}
+});
+/* Ctrl+Enter (Mac은 ⌘+Enter): 커서가 있는 단계에 재화 줄 추가 ("+ 추가" 버튼과 같음). 잠긴 단계는 제외, 한글 조합 중에는 무시 */
+$("app").addEventListener("keydown",e=>{
+  if(e.key!=="Enter"||!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||e.isComposing||e.keyCode===229)return;
+  const st=e.target.closest&&e.target.closest(".step");if(!st)return;
+  e.preventDefault();acHide();
+  addItem(+st.dataset.i);
 });
 addEventListener("resize",fitNotes);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitNotes); /* 웹폰트가 늦게 적용돼 줄바꿈이 달라지는 경우 */
