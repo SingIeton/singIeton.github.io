@@ -1,0 +1,37 @@
+{
+ "name": {
+  "Absent Amulet (Melee, Trinity)": "",
+  "Absent Amulet (Melee, Eternal)": "",
+  "Res, Recycle": ""
+ },
+ "currency": {
+  "divine": ""
+ },
+ "item": {
+  "Absent Amulet": "",
+  "Breach Ring": "",
+  "Mnemonic Ring": "",
+  "Prismatic Ring": ""
+ },
+ "mods": {
+  "#% increased Chaos Damage": "",
+  "#% increased Fire Damage": "",
+  "#% increased Rarity of Items found": "",
+  "#% increased Spell Damage": "",
+  "#% increased maximum Mana": "",
+  "+# to Evasion Rating": "",
+  "+# to Level of all Melee Skills": "",
+  "+# to maximum Life": "",
+  "+# to maximum Mana": "",
+  "+#% to Fire Resistance": "",
+  "+#% to Lightning Resistance": "",
+  "+#% to Maximum Quality": "",
+  "+#% to all Elemental Resistances": "",
+  "-# Prefix Modifier allowed": "",
+  "-# Suffix Modifier allowed": "",
+  "Adds # to # Cold damage to Attacks": "",
+  "Adds # to # Fire damage to Attacks": "",
+  "Adds # to # Lightning damage to Attacks": "",
+  "Adds # to # Physical Damage to Attacks": ""
+ }
+}
