@@ -30,7 +30,9 @@ main.home{display:flex;align-items:center}
 @media (prefers-reduced-motion:no-preference){.intro .portal{animation:rise .8s cubic-bezier(.2,.8,.2,1) both}.intro .portal+.portal{animation-delay:.12s}}
 @keyframes rise{from{opacity:0;clip-path:inset(35% 0 0 0)}to{opacity:1;clip-path:inset(0)}}
 /* 게임 페이지: 아이템 툴팁 카드 */
-.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;margin:28px 0 8px}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:28px 0 8px}
+/* 게임 페이지: 카드 간격을 좁힌 만큼 카드 묶음이 안쪽으로 모이므로, 상단 바·머리·푸터도 같은 크기(34px)만큼 안쪽으로 맞춤. 카드 폭은 원래보다 약 8px 좁음. */
+html[data-game]:not([data-game=home]) :is(.top,main,.foot)>.wrap{box-sizing:border-box;border-inline:34px solid transparent}
 .item{--pg:var(--g);display:flex;flex-direction:column;background:var(--sf);border:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));border-radius:3px;text-decoration:none;color:inherit}
 .item.soon{--pg:var(--mute)}
 .ihead{position:relative;text-align:center;padding:12px 16px 10px;border-bottom:1px solid color-mix(in oklab,var(--pg) 50%,var(--ln));background:color-mix(in oklab,var(--pg) 9%,transparent)}
