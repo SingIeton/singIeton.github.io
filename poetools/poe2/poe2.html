@@ -54,10 +54,8 @@ main.home{display:flex;align-items:center}
 <main id="main" tabindex="-1"></main>
 <footer class="foot" id="foot"></footer>
 <script>
-/* 페이지별로 다른 값은 아래 두 줄뿐입니다. ROOT: 레포 루트(github.io 메인)까지의 상대경로, PAGE: "home" | "poe1" | "poe2" */
 const ROOT="../../",PAGE="poe2";
 
-/* 서비스 추가 시: SERVICES에 항목 추가 (dir = 해당 게임 폴더 아래 서비스 폴더명). poe1.html, poe2.html, poetools.html의 이 블록을 동일하게 유지하세요. */
 const SITE={ko:"PoE Tools",en:"PoE Tools"};
 const GAMES=[{id:"poe1",num:"1",short:"PoE 1",name:"Path of Exile Tools"},{id:"poe2",num:"2",short:"PoE 2",name:"Path of Exile 2 Tools"}];
 const SERVICES=[
@@ -65,11 +63,13 @@ const SERVICES=[
  name:{ko:"수확 시뮬레이터",en:"Harvest Simulator"},
  desc:{ko:"수확 생기 기댓값 시뮬레이션\n작물 감소 아틀라스 패시브 추천\n갑충석·조각 효율 분석",en:"Expected lifeforce simulation\nCrop-reduction Atlas passive suggestions\nScarab and fragment efficiency analysis"}},
 {dir:"season-snapshot",games:["poe2"],live:true,icon:"snapshot",name:{ko:"시즌 스냅샷",en:"Season Snapshot"},
- desc:{ko:"이전 시즌 통계 정보를 바탕으로, 시즌 시점과 투자 기간에 따른 보유 화폐 추천",en:"Currency-holding recommendations by season timing and investment period, based on past season statistics"}},
-{dir:"crafting-sheet",games:["poe2"],live:true,icon:"crafting",name:{ko:"크래프팅 시트",en:"Crafting Sheet"},
+ desc:{ko:"이전 시즌 통계 정보를 바탕으로 시즌 시점, 투자 기간에 따른 보유 화폐 추천",en:"Currency-holding recommendations by season timing and investment period, based on past season statistics"}},
+{dir:"crafting-sheet",games:["poe2"],live:true,icon:"crafting",name:{ko:"제작 시트",en:"Crafting Sheet"},
  desc:{ko:"단계별 크래프팅 레시피 작성\n단계별·총 소모 재화와 비용 확인\n레시피 저장 · 불러오기",en:"Build step-by-step crafting recipes\nPer-step and total currency cost in Divine Orbs\nSave and load recipes"}},
 {dir:"overquality-flip",games:["poe2"],live:true,icon:"quality",name:{ko:"오버퀄리티 플리핑",en:"Overquality Flipping"},
- desc:{ko:"오버소켓 베이스 오버퀄리티 플리핑 수익 예상",en:"Projected profit from flipping oversocketed bases with overquality"}}];
+ desc:{ko:"오버소켓 베이스 오버퀄리티 플리핑 수익 예상",en:"Projected profit from flipping oversocketed bases with overquality"}},
+{dir:"trade-overview",games:["poe2"],live:true,icon:"overview",name:{ko:"경매장 오버뷰",en:"Trade Overview"},
+ desc:{ko:"한 화면에 보는 경매장 즐겨찾기",en:"Favorites on a single screen"}}];
 
 let LANG="ko";try{LANG=localStorage.getItem("lang")||"ko"}catch(e){}
 if(LANG!=="en")LANG="ko";
@@ -85,6 +85,7 @@ const ART={
 harvest:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--y"],[48,10,26,13,"--b"],[76,2,22,15,"--p"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
 quality:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[20,18,30,11,"--gem"],[48,10,26,13,"--b"],[76,2,22,15,"--mod"]].map(([x,t,s,w,c])=>`<polygon points="${x},${t} ${x+w},${s} ${x},52 ${x-w},${s}" fill="var(${c})"/><polygon points="${x},${t} ${x+w},${s} ${x},${s}" fill="#fff" opacity=".22"/><polygon points="${x},${s} ${x+w},${s} ${x},52" fill="#000" opacity=".18"/>`).join("")+'</svg>',
 crafting:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true"><g transform="rotate(35 70 20)"><rect x="68" y="16" width="4" height="26" rx="1" fill="var(--y)"/><rect x="56" y="6" width="28" height="11" rx="1.5" fill="var(--b)"/></g><path d="M16 29H74Q74 35 64 36H59L61 45H68V52H32V45H39L41 36H36Q24 35 16 29Z" fill="currentColor"/><path d="M18 30H72" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-linecap="round"/><path d="M80 24l5-4M82 30l7-1M76 20l1-6" stroke="var(--y)" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>',
+overview:'<svg viewBox="0 0 96 56" width="96" height="56" aria-hidden="true">'+[[6,4],[35,4],[64,4],[6,30],[35,30],[64,30]].map(([x,y])=>`<rect x="${x}" y="${y}" width="26" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="${x}" y="${y}" width="26" height="7" rx="2" fill="currentColor" opacity=".35"/><path d="M${x+13} ${y+13}H${x+22}M${x+13} ${y+18}H${x+22}" stroke="var(--y)" stroke-width="1.6" stroke-linecap="round"/>`).join("")+'</svg>',
 snapshot:'<svg viewBox="0 0 96 56" width="96" height="56" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 50H90" stroke="var(--ln2)" stroke-width="1.5"/><path d="M6 46L24 42L40 34L56 36L72 22L90 26" stroke="var(--b)" stroke-width="2" stroke-dasharray="5 4"/><path d="M6 44L22 38L36 40L52 24L68 28L90 8" stroke="currentColor" stroke-width="2.5"/></svg>'};
 
 const dk=()=>document.documentElement.dataset.theme;
