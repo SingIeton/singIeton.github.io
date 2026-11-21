@@ -11,7 +11,7 @@
 <script src="../../style/site-bar.js"></script>
 <style>
 .cards{display:flex;flex-direction:column;gap:9px;align-items:stretch;margin-top:16px}
-.crow{display:grid;grid-template-columns:repeat(5,calc((100% - 36px)/5 - 10px));justify-content:center;gap:9px}
+.crow{display:grid;grid-template-columns:repeat(5,calc((100% - 36px)/5 - 18px));justify-content:center;gap:9px}
 .card{position:relative;display:flex;flex-direction:column;box-sizing:border-box;min-width:0;height:154px;overflow:hidden;background:var(--sf);border:1px solid var(--ln);border-radius:var(--r)}
 .card h2{position:relative;flex:none;gap:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;height:46px;margin:0;padding:0 26px;text-align:center;font:600 15px/1.3 var(--serif);color:var(--ink);background:color-mix(in oklab,var(--ink) 7%,transparent);border-bottom:1px solid var(--ln)}
 .card h2.tc{background:color-mix(in oklab,var(--tc) 38%,transparent)}
@@ -32,10 +32,9 @@
   <div class="cards" id="out"></div>
 </main>
 
-<script src="out/trade-overview.js"></script>
 <script>
-(function(){
 "use strict";
+function start(){
 var D = window.TRADE_OVERVIEW_SKILL_AMULET, out = document.getElementById("out");
 var KO = function(){ return false; };                    // 한글 모드여도 전부 영어로 표시
 var pick = function(ko, en){ return (KO() && ko) ? ko : en; };
@@ -124,6 +123,13 @@ var lastKo = KO();                                        // 한/영 전환(html
 new MutationObserver(function(){ var k = KO(); if(k !== lastKo){ lastKo = k; render(); } })
   .observe(document.documentElement, {attributes:true});
 var timer; window.addEventListener("resize", function(){ clearTimeout(timer); timer = setTimeout(render, 120); });
+}
+/* 데이터 js 는 매번 주소 뒤에 시각을 붙여 불러온다 -> 브라우저·GitHub Pages(최대 10분) 캐시에 걸리지 않고, 새로고침만으로 최신 데이터가 적용된다 */
+(function(){
+  var s = document.createElement("script");
+  s.src = "out/trade-overview.js?t=" + Date.now();
+  s.onload = s.onerror = start;                          // 실패해도 start() 가 "Failed to load data." 를 보여 준다
+  document.head.appendChild(s);
 })();
 </script>
 </body>
