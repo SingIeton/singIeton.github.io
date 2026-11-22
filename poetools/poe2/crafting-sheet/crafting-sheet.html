@@ -142,7 +142,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .exts{display:flex;align-items:center;gap:12px}
 .exts .ext+.ext{margin-left:8px} /* PoE2DB와 Craft of Exile 사이 추가 간격 */
 .exts select{max-width:150px;height:24px;padding:0 6px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);color:var(--mute);font:500 13px var(--sans)}
-.subrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px}
+.subrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:4px 16px}
 .subrow .sub{margin:0}
 .subrow .psrc{margin-left:auto} /* 시세 드롭다운: 설명 줄의 오른쪽 끝 (Craft of Exile 링크 아래) */
 #pinfo{margin:0;margin-left:auto;text-align:right;white-space:nowrap}
@@ -526,7 +526,8 @@ function fillList(){
   s.disabled=!LIST||!LIST.length;
   const op=x=>`<option value="${esc(x.file)}">${esc(x.name||x.file)}</option>`;
   const grp=L=>{ /* category 별로 묶기: 그룹 순서는 PoE2DB 아이템 타입 드롭다운과 같고(목록에 없는 값은 index.js 에 나온 순서로 그 뒤), category 없는 항목은 맨 끝의 "기타" 그룹 */
-    const m=new Map();L.forEach(x=>{const c=x.category||"";if(!m.has(c))m.set(c,[]);m.get(c).push(x)});
+    const m=new Map(),kr=new Map(MOD_TYPES.flatMap(([g,l])=>l.map(([n,s])=>[s.toLowerCase(),n])));kr.set("weapon","무기");kr.set("weapons","무기"); /* 영문 category(PoE2DB slug)는 한글 이름으로 환산해 같은 그룹으로 묶음 */
+    L.forEach(x=>{const r=x.category||"",c=kr.get(r.toLowerCase())||r;if(!m.has(c))m.set(c,[]);m.get(c).push(x)});
     const flat=MOD_TYPES.flatMap(([g,l])=>l.map(([n])=>[g,n])); /* PoE2DB 아이템 타입 드롭다운의 순서 */
     const rk=c=>{const i=flat.findIndex(([g,n])=>n===c||n.startsWith(c+"(")||(c==="무기"&&g.endsWith(" 무기")));return i<0?9999:i}; /* "방패" = 방패(str) 등의 위치, "무기" = 한손·양손 무기의 위치 */
     const keys=[...m.keys()].filter(k=>k).sort((a,b)=>rk(a)-rk(b));
