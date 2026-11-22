@@ -1,6 +1,6 @@
 window.CRAFT_RECIPE = {
   "v": 1,
-  "name": "오버퀄리티 Attack 반지",
+  "name": "Attack Ring",
   "steps": [
     {
       "title": "Flat 분열 베이스",

@@ -7,16 +7,16 @@ window.CRAFT_RECIPE_INDEX =
   }, 
   */
   {
-     "file": "Ring_Res_Recycle.js",
+     "file": "ring_res_recycle.js",
      "name": "저항 Recycle 반지"
   },
   {
-    "file": "Amulet_absent.js",
-    "name": "부재 목걸이 기본"
+    "file": "amulet_absent.js",
+    "name": "부재 목걸이"
   },  
   {
-    "file": "Ring_attack.js",
-    "name": "오버퀄리티 공격 반지"
+    "file": "ring_attack.js",
+    "name": "Attack Ring"
   },
   
 ];

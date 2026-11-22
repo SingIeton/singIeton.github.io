@@ -1,6 +1,6 @@
 window.CRAFT_RECIPE = {
   "v": 1,
-  "name": "부재 목걸이 (기본)",
+  "name": "부재 목걸이",
   "steps": [
     {
       "title": "",

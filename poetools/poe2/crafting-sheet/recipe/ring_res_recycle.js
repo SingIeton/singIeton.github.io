@@ -14,7 +14,7 @@ window.CRAFT_RECIPE = {
       "locked": true
     },
     {
-      "title": "접미 훼손 (울라만)",
+      "title": "훼손",
       "note": "",
       "items": [
         {
@@ -56,7 +56,7 @@ window.CRAFT_RECIPE = {
       "locked": true
     },
     {
-      "title": "",
+      "title": "접두",
       "note": "",
       "items": [
         {
@@ -64,13 +64,23 @@ window.CRAFT_RECIPE = {
           "n": 0.5
         },
         {
+          "c": "군왕의 합금",
+          "n": 1
+        },
+        {
           "c": "블러드마크",
           "n": 0.5
+        },
+        {
+          "c": "치직대는 유동체",
+          "n": 1
         }
-      ]
+      ],
+      "locked": true
     }
   ],
   "prices": {
-    "블러드마크": 3
+    "블러드마크": 3,
+    "Base": 2
   }
 };
