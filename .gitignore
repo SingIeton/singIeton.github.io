@@ -1,3 +1,6 @@
 !unused/
-season-snapshot/raw_data/
-season-snapshot/currency_data.json
+raw_data/
+poe/season-snapshot/raw_data/
+poe/season-snapshot/currency_data.json
+poe2/crafting-sheet/recipe/index.js
+poe2/crafting-sheet/price-history/raw_data/
