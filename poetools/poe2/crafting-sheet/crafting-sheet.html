@@ -19,13 +19,11 @@
   --rn-fs:24px;--rn-mt:0px;       /* 레시피 이름 글자 크기·상단 마진 */
   --man-sat:0.7; /* 직접 입력한 가격 색의 채도 배율: 1 = 원래 색, 0 = 무채색, 1 초과 = 더 진하게 (예: 0.6, 1.3) */
   --man:var(--g2); /* 직접 입력한 가격의 글자색: PoE 2 포인트색(--g2, 밤 모드 #9fe0d4) */
-  --cur-w:240px;--cur-gap:11px; /* 총 재화 창 폭 / 총 비용과의 간격: 창 위치와 시세 드롭다운 위치가 이 값을 함께 씁니다 */
+  --cur-w:240px;--cur-gap:11px; /* 총 재화 창 폭 / 총 비용과의 간격: 창 위치가 이 값을 씁니다 */
   --sec-fs:15px;--sec-mt:0px;--sec-mb:0px; /* 섹션(단계) 이름 글자 크기·상단·하단 마진 */
 } /* 버튼 줄 높이(버튼 38 + 위아래 여백 8·8). 총 비용 창이 이 아래에서 붙도록 쓰임 */
 .acts-bar{position:sticky;top:var(--bar-h,0px);z-index:20;box-sizing:border-box;margin:var(--acts-mt) -20px var(--acts-mb);padding:8px 20px 8px 66px;background:var(--bg)}
 .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:798px}
-.acts-bar .psrc{display:block;margin:8px auto 0} /* 시세 드롭다운: 좁은 화면에서는 버튼 줄 아래 */
-@media(min-width:1340px){.acts-bar .psrc{position:absolute;top:8px;left:calc(100% + var(--cur-gap) + var(--cur-w) - 20px);transform:translateX(-100%);margin:0}} /* 넓은 화면: 파일 저장 줄의 오른쪽 바깥, 총 재화 창 바로 위 (폭은 가장 긴 항목에 맞춤(최소 150px), 오른쪽 끝을 총 재화 창 오른쪽 끝에 맞춤: 총 재화 창 폭·간격 변수(--cur-w, --cur-gap)를 따라감. -20px = 버튼 줄의 좌우 확장분) */
 @media(max-width:820px){:root{--acts-h:0px}.acts-bar{position:static}} /* 버튼이 여러 줄로 접히는 좁은 화면에서는 붙이지 않음 */
 .acts .l,.acts .r{flex:1 1 0;display:flex;gap:8px;align-items:center;min-width:130px} /* 왼쪽(초기화)·오른쪽(파일 저장) 폭을 같게 맞춰, 가운데 묶음(목록·불러오기·파일 불러오기)이 정확히 중앙에 오도록 */
 .acts .r{justify-content:flex-end}
@@ -55,7 +53,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 @media(min-width:1340px){ /* 넓은 화면: 단계 목록·총 비용의 위치와 폭은 원래 그대로 두고, 재화 창만 총 비용 오른쪽 바깥에 붙임 (본문 폭을 늘리지 않으므로 전체 가로 위치가 변하지 않음) */
   .sides>.side+.side{position:absolute;top:0;left:calc(100% + var(--cur-gap));width:var(--cur-w)} /* 240px = 재화 폭, 11px = 총 비용과의 간격 */
 }
-@media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.sides{position:static}}
+@media(max-width:800px){.layout{grid-template-columns:minmax(0,1fr)}.sides{position:static}}
 .steps{position:relative}
 .steps::before{content:"";position:absolute;left:15px;top:18px;bottom:48px;width:1px;background:var(--ln2)}
 .step{position:relative;margin:0 0 14px 46px;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) var(--pbd),var(--ln));border-radius:var(--r)}
@@ -146,6 +144,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .exts select{max-width:150px;height:24px;padding:0 6px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);color:var(--mute);font:500 13px var(--sans)}
 .subrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px}
 .subrow .sub{margin:0}
+.subrow .psrc{margin-left:auto} /* 시세 드롭다운: 설명 줄의 오른쪽 끝 (Craft of Exile 링크 아래) */
 #pinfo{margin:0;margin-left:auto;text-align:right;white-space:nowrap}
 /* Tab 으로 이동할 때 나타나는 포커스 표시(테두리·그림자) 제거 */
 *:focus,*:focus-visible{outline:none!important;box-shadow:none!important}
@@ -318,7 +317,7 @@ const MOD_TYPES=[
 ];
 const modUrl=s=>"https://poe2db.tw/kr/"+(s?s+"#ModifiersCalc":"Modifiers");
 let MODSEL=""; /* 드롭다운에서 고른 타입 (화면을 다시 그려도 유지) */
-const modOpts=()=>`<option value="">${T("아이템 타입","Item type")}</option>`+MOD_TYPES.map(([g,l])=>`<optgroup label="${esc(g)}">${l.map(([n,s])=>`<option value="${esc(s)}"${s===MODSEL?" selected":""}>${esc(n)}</option>`).join("")}</optgroup>`).join("");
+const modOpts=()=>`<option value="">${T("아이템 모드","Item mods")}</option>`+MOD_TYPES.map(([g,l])=>`<optgroup label="${esc(g)}">${l.map(([n,s])=>`<option value="${esc(s)}"${s===MODSEL?" selected":""}>${esc(n)}</option>`).join("")}</optgroup>`).join("");
 
 const newStep=()=>({title:"",note:"",items:[{c:"",n:1}]});
 let R={name:"",prices:{},steps:[newStep()]},LIST=null;
@@ -348,11 +347,11 @@ const msg=()=>{}; /* 안내 문구는 표시하지 않음 */
 
 function renderAll(){
   document.title=T("크래프팅 시트","Crafting Sheet")+" | PoE 2 | PoE Tools";
-  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><div class="toprow"><a class="game" href="../poe2.html">PoE 2</a><span class="exts"><select id="modsel" aria-label="${T("아이템 타입","Item type")}">${modOpts()}</select><a class="ext" id="poe2db" href="${modUrl(MODSEL)}" target="_blank" rel="noopener noreferrer">PoE2DB ↗</a><a class="ext" href="https://www.craftofexile.com/?game=poe2" target="_blank" rel="noopener noreferrer">Craft of Exile ↗</a></span></div><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("레시피를 단계별로 기록하고, 단계별·전체 소모 재화와 총 비용을 확인합니다.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p></div></div></div>
+  $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><div class="toprow"><a class="game" href="../poe2.html">PoE 2</a><span class="exts"><select id="modsel" aria-label="${T("아이템 타입","Item type")}">${modOpts()}</select><a class="ext" id="poe2db" href="${modUrl(MODSEL)}" target="_blank" rel="noopener noreferrer">PoE2DB ↗</a><a class="ext" href="https://www.craftofexile.com/?game=poe2" target="_blank" rel="noopener noreferrer">Craft of Exile ↗</a></span></div><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("레시피를 단계별로 기록하고, 단계별·전체 소모 재화와 총 비용을 확인합니다.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p><select id="psrc" class="psrc${PRDY?" ready":""}" aria-label="${T("시세","Prices")}">${psrcOpts()}</select></div></div></div>
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}"></div>
 <div class="acts-bar"><div class="acts"><div class="l"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div></div>
 <div class="c"><div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("불러오기","Load")}</button></div></div>
-<div class="r"><div class="grp fl"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div><div class="grp"><button type="button" data-a="save">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div><select id="psrc" class="psrc${PRDY?" ready":""}" aria-label="${T("시세","Prices")}">${psrcOpts()}</select></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden>
+<div class="r"><div class="grp fl"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div><div class="grp"><button type="button" data-a="save">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden>
 <p class="note" id="msg" role="status"></p>
 <div class="layout"><div><div class="steps" id="steps"></div><button type="button" class="addstep" data-a="addStep">+ ${T("단계 추가","Add step")}</button></div>
 <div class="sides"><aside class="panel side"><h2>${T("총 비용","Total cost")}</h2><div class="big"><b id="gv"></b></div>
@@ -486,7 +485,7 @@ async function getDir(){
   return DIR;
 }
 /* 목록 정렬: 최근에 저장한 레시피가 맨 위 (at = 저장 시각). at 이 없는 옛 항목은 원래 순서대로 그 아래에 둠 */
-const byRecent=(a,b)=>(+b.at||0)-(+a.at||0);
+/* 비활성: 최근 저장순 정렬 (index.js 순서를 따름) */ const byRecent=(a,b)=>(+b.at||0)-(+a.at||0);
 async function save(){
   if(!window.showDirectoryPicker)return download(); /* 폴더 저장을 못 쓰는 브라우저는 일반 다운로드 */
   try{
@@ -501,7 +500,7 @@ async function save(){
     }
     let w=await(await d.getFileHandle(file,{create:true})).createWritable();await w.write(recipeJs());await w.close();
     let idx=[];try{idx=parseJs(await(await(await d.getFileHandle("index.js")).getFile()).text());if(!Array.isArray(idx))idx=[]}catch(e){}
-    idx=idx.filter(x=>x&&x.file&&x.file!==file);idx.push({file,name:R.name||file,at:Date.now()});idx.sort(byRecent);
+    const prev=idx.find(x=>x&&x.file===file)||(LIST||[]).find(x=>x&&x.file===file);idx=idx.filter(x=>x&&x.file);const k=idx.findIndex(x=>x.file===file),ent={file,name:R.name||file,...(prev&&prev.category?{category:prev.category}:{}),at:Date.now()};if(k>=0)idx[k]={...idx[k],...ent};else idx.push(ent); /* 기존 항목은 제자리에서 갱신(category 유지), 새 항목은 맨 끝. 저장 시각(at)은 기록하되 정렬에는 쓰지 않음 */
     w=await(await d.getFileHandle("index.js",{create:true})).createWritable();await w.write(indexJs(idx));await w.close();
     LOADED=file;LIST=idx.filter(x=>x&&x.file);SEL=file;fillList(); /* 드롭다운 즉시 갱신 */
   }catch(e){
@@ -518,14 +517,22 @@ function apply(o){
 }
 function loadList(){ /* recipe/index.js 가 <script> 로 먼저 읽혀 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
   const a=window.CRAFT_RECIPE_INDEX;
-  LIST=Array.isArray(a)?a.filter(x=>x&&x.file).sort(byRecent):null;
+  LIST=Array.isArray(a)?a.filter(x=>x&&x.file):null; /* index.js 순서 그대로 (최근 저장순 정렬 비활성) */
   fillList();
 }
 let SEL=null; /* 드롭다운에서 고른 파일 (화면을 다시 그려도 선택을 유지) */
 function fillList(){
   const s=$("list");if(!s)return;
   s.disabled=!LIST||!LIST.length;
-  s.innerHTML=LIST&&LIST.length?LIST.map(x=>`<option value="${esc(x.file)}">${esc(x.name||x.file)}</option>`).join(""):`<option>${LIST?T("저장된 레시피 없음","No saved recipes"):"-"}</option>`;
+  const op=x=>`<option value="${esc(x.file)}">${esc(x.name||x.file)}</option>`;
+  const grp=L=>{ /* category 별로 묶기: 그룹 순서는 PoE2DB 아이템 타입 드롭다운과 같고(목록에 없는 값은 index.js 에 나온 순서로 그 뒤), category 없는 항목은 맨 끝의 "기타" 그룹 */
+    const m=new Map();L.forEach(x=>{const c=x.category||"";if(!m.has(c))m.set(c,[]);m.get(c).push(x)});
+    const flat=MOD_TYPES.flatMap(([g,l])=>l.map(([n])=>[g,n])); /* PoE2DB 아이템 타입 드롭다운의 순서 */
+    const rk=c=>{const i=flat.findIndex(([g,n])=>n===c||n.startsWith(c+"(")||(c==="무기"&&g.endsWith(" 무기")));return i<0?9999:i}; /* "방패" = 방패(str) 등의 위치, "무기" = 한손·양손 무기의 위치 */
+    const keys=[...m.keys()].filter(k=>k).sort((a,b)=>rk(a)-rk(b));
+    return keys.map(k=>`<optgroup label="${esc(k)}">${m.get(k).map(op).join("")}</optgroup>`).join("")+(m.get("")?`<optgroup label="${T("기타","Other")}">${m.get("").map(op).join("")}</optgroup>`:"");
+  };
+  s.innerHTML=LIST&&LIST.length?grp(LIST):`<option>${LIST?T("저장된 레시피 없음","No saved recipes"):"-"}</option>`;
   if(SEL&&LIST&&LIST.some(x=>x.file===SEL))s.value=SEL;
   /* 최소 폭으로 늘어난 만큼 가운데 묶음을 왼쪽으로 절반 옮겨, 불러오기 버튼(오른쪽 끝)은 제자리에 두고 목록만 왼쪽으로 늘림 */
   const c=s.closest(".c");
