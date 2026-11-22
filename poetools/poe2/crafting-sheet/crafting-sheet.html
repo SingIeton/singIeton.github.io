@@ -374,7 +374,7 @@ const slug=n=>(n||"").trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").repla
 const json=()=>{
   const used=new Set(R.steps.flatMap(s=>s.items).map(it=>nk(canon(it.c))).filter(Boolean)),pr={};
   Object.entries(R.prices||{}).forEach(([k,v])=>{if(v>0&&used.has(nk(canon(k))))pr[k]=v});
-  return JSON.stringify({v:1,name:R.name,steps:R.steps.map(({locked,collapsed,...s})=>locked?{...s,locked:true}:s),...(Object.keys(pr).length?{prices:pr}:{})},null,2);
+  return JSON.stringify({v:1,name:R.name,steps:R.steps.map(({locked,collapsed,...s})=>({...s,...(locked?{locked:true}:{}),...(collapsed?{collapsed:true}:{})})),...(Object.keys(pr).length?{prices:pr}:{})},null,2);
 };
 /* 레시피 파일과 목록 파일은 <script> 로 읽는 .js 형식입니다 (file:// 로 열어도 동작).
    recipe/<이름>.js : window.CRAFT_RECIPE = {레시피};
@@ -428,7 +428,7 @@ async function save(){
 function apply(o){
   if(!o||!Array.isArray(o.steps))return msg(T("레시피 형식이 올바르지 않습니다.","Invalid recipe file."));
   const pr={};if(o.prices&&typeof o.prices==='object')Object.entries(o.prices).forEach(([k,v])=>{v=Number(v);if(String(k).trim()&&v>0&&isFinite(v))pr[String(k).trim()]=v});
-  R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*100)/100||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)*100)/100)}:{})}))}))};
+  R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),...(s.collapsed?{collapsed:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*100)/100||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)*100)/100)}:{})}))}))};
   if(!R.steps.length)R.steps.push(newStep());
   DELETED.length=0;renderAll();return true;
 }
