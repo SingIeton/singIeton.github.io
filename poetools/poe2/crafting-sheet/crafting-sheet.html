@@ -175,6 +175,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 let LANG=(window.PoEPrefs&&PoEPrefs.lang)||document.documentElement.lang||"ko";
 const T=(ko,en)=>LANG==="en"?en:ko;
 const fmtD=n=>{n=+n;const L=LANG==="en"?"en-US":"ko-KR";if(n>0&&n<1&&Math.round(n*10)>0&&Math.round(n*10)<10)return(Math.round(n*10)/10).toLocaleString(L,{minimumFractionDigits:1,maximumFractionDigits:1});return Math.round(n).toLocaleString(L)}; /* 디바인 단위는 정수, 단 0 초과 1 미만은 소수점 한 자리 */
+const fmtT=n=>{n=+n;const r=Math.round(n*10)/10;return r>0&&r<10?r.toLocaleString(LANG==="en"?"en-US":"ko-KR",{maximumFractionDigits:1}):fmtD(n)}; /* 총 비용: 0 초과 10 미만은 소수점 한 자리까지 */
 const fmt=n=>{n=+n;const a=Math.abs(n);return n.toLocaleString(LANG==="en"?"en-US":"ko-KR",{maximumFractionDigits:a>0&&a<0.01?6:a<1?3:2})};
 
 /* 재화 목록(자동완성용, 직접 입력도 가능). 시세 파일을 읽으면 그 안의 재화도 목록에 추가됩니다. 한글 이름은 아래 KO_LOCAL 에 적거나, 시세 파일(names_ko)로 받아옵니다. */
@@ -362,7 +363,7 @@ function renderAll(){
 function renderSteps(){
   const n=R.steps.length;
   let num=0; /* 접힌 단계는 번호를 매기지 않고 건너뜀 */
-  $("steps").innerHTML=R.steps.map((s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}${s.collapsed?" col":""}" data-i="${i}"><span class="no" aria-hidden="true">${s.collapsed?"":++num}</span><button type="button" class="ib xdel" data-a="delStep"${n>1&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">${ICO.x}</button><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib fold" data-a="fold" aria-expanded="${!s.collapsed}" title="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}" aria-label="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}">${ICO.fold}</button><button type="button" class="ib lock"${lk?"":' tabindex="-1"'} data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button></div>
+  $("steps").innerHTML=R.steps.map((s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}${s.collapsed?" col":""}" data-i="${i}"><span class="no" aria-hidden="true">${s.collapsed?"":++num}</span><button type="button" class="ib xdel" data-a="delStep"${n>1&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">${ICO.x}</button><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib fold"${s.collapsed?"":' tabindex="-1"'} data-a="fold" aria-expanded="${!s.collapsed}" title="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}" aria-label="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}">${ICO.fold}</button><button type="button" class="ib lock"${lk?"":' tabindex="-1"'} data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button></div>
 <div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><button type="button" class="rg" tabindex="-1"${dis} aria-label="${T("줄 순서 변경 (끌어서 이동, 키보드는 ↑↓ 또는 Alt+↑↓)","Reorder row (drag, or use ↑↓ / Alt+↑↓)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" autocomplete="off" aria-autocomplete="list"${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="any" inputmode="decimal"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">${ICO.x}</button></div>`).join("")}${lk?"":`<button type="button" class="add" data-a="addItem" title="Ctrl+Enter">+ ${T("추가","Add")}</button>`}
 ${lk&&!s.note.trim()?"":`<textarea data-f="note" rows="1"${ro} placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea>`}</div></div>`}).join("");
 }
@@ -390,7 +391,7 @@ function renderTot(){
 /* 입력값에 따라 숫자만 갱신 (입력 중인 칸은 건드리지 않음) */
 function sums(skip){
   const all=R.steps.filter(s=>!s.collapsed).flatMap(s=>s.items),tot=totals(all),g=cost(tot,all); /* 접힌 단계는 계산에서 제외 */
-  $("gv").innerHTML=`${fmtD(g.sum)}<u>Div</u>`;
+  $("gv").innerHTML=`${fmtT(g.sum)}<u>Div</u>`;
   const costs=R.steps.map(s=>cost(totals(s.items),s.items));
   document.querySelectorAll(".step").forEach((el,i)=>{
     el.querySelector(".sc2").textContent=R.steps[i].collapsed?"—":cs(costs[i]);
@@ -458,7 +459,7 @@ const recipeJs=()=>"window.CRAFT_RECIPE = "+json()+";\n";
 const indexJs=idx=>"window.CRAFT_RECIPE_INDEX = "+JSON.stringify(idx,null,2)+";\n";
 /* "window.X = {...};" 형태 또는 순수 JSON 텍스트 → 값 (코드를 실행하지 않고 JSON 으로만 해석) */
 const parseJs=t=>{t=String(t).replace(/^\uFEFF/,"").trim();const m=t.match(/^window\.\w+\s*=\s*([\s\S]*?);?$/);return JSON.parse(m?m[1]:t)};
-const DELETED=[]; /* 삭제한 단계 기록 (복원용) */
+const UNDO=[]; /* 되돌리기 기록: 동작마다 "그 동작을 취소하는 함수"를 쌓아 두고 Ctrl+Z 가 마지막부터 하나씩 실행 */
 let LOADED=null; /* 최근에 불러오거나 저장한 레시피 파일 이름 (초기화하면 해제) */
 const recipeFile=()=>{const f=LOADED?LOADED.replace(/\.[^.]*$/,""):slug(R.name);return (f==="index"?"index-recipe":f)+".js"}; /* 불러온 파일이 있으면 그 이름으로 저장. index.js(목록)를 덮어쓰지 않도록 */
 function download(){
@@ -513,7 +514,7 @@ function apply(o){
   const pr={};if(o.prices&&typeof o.prices==='object')Object.entries(o.prices).forEach(([k,v])=>{v=Number(v);if(String(k).trim()&&v>0&&isFinite(v))pr[String(k).trim()]=v});
   R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),...(s.collapsed?{collapsed:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*100)/100||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)*100)/100)}:{})}))}))};
   if(!R.steps.length)R.steps.push(newStep());
-  DELETED.length=0;renderAll();return true;
+  UNDO.length=0;renderAll();return true;
 }
 function loadList(){ /* recipe/index.js 가 <script> 로 먼저 읽혀 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
   const a=window.CRAFT_RECIPE_INDEX;
@@ -555,34 +556,39 @@ async function loadSel(){
 /* 단계 i 에 재화 줄을 추가하고, 새로 생긴 재화 칸으로 바로 포커스 ("+ 추가" 버튼과 Ctrl+Enter 가 함께 사용) */
 function addItem(i){
   const s=R.steps[i];if(!s||s.locked)return;
-  s.items.push({c:"",n:1});refresh();
+  const it={c:"",n:1};s.items.push(it);UNDO.push(()=>{const k=s.items.indexOf(it);if(k>=0)s.items.splice(k,1)});refresh();
   const f=[...document.querySelectorAll(`.step[data-i="${i}"] .it [data-f=c]`)].pop();if(f)f.focus();
+}
+/* 단계를 맨 끝에 추가하고 첫 재화 칸으로 포커스 ("+ 단계 추가" 버튼과 Ctrl+Shift+Enter 가 함께 사용) */
+function addStep(b){
+  /* 새 단계가 생겨 버튼이 아래로 밀린 만큼 그대로 스크롤해서, 버튼이 화면에서 같은 자리에 머물게 합니다 */
+  const y0=b.getBoundingClientRect().top;
+  const ns=newStep();R.steps.push(ns);UNDO.push(()=>{const k=R.steps.indexOf(ns);if(k>=0)R.steps.splice(k,1)});
+  refresh();
+  const dy=b.getBoundingClientRect().top-y0;
+  if(dy)window.scrollBy({top:dy,left:0,behavior:"instant"});
+  const tf=document.querySelector(`.step[data-i="${R.steps.length-1}"] .it [data-f=c]`);if(tf)tf.focus({preventScroll:true}); /* 새 단계의 첫 재화 칸으로 포커스 */
 }
 $("app").addEventListener("click",e=>{
   const b=e.target.closest("button[data-a]");if(!b)return;
   const a=b.dataset.a,st=b.closest(".step"),i=st?+st.dataset.i:-1,it=b.closest(".it"),j=it?+it.dataset.j:-1;
-  if(a==="lock"){R.steps[i].locked=!R.steps[i].locked;refresh();return}
+  if(a==="lock"){const s=R.steps[i],p=!!s.locked;UNDO.push(()=>{s.locked=p});s.locked=!s.locked;refresh();return}
   if(a==="qup"||a==="qdn"){ /* 수량 ▲▼ 버튼 */
     const s=R.steps[i],o=s&&s.items[j];if(!o||s.locked)return;
+    const pn=o.n;UNDO.push(()=>{o.n=pn});
     o.n=Math.min(9999,Math.max(0,Math.round(((+o.n||0)+(a==="qup"?1:-1))*100)/100)); /* 소수 수량에서도 ±1, 소수 둘째 자리로 정리 */
     it.querySelector("[data-f=n]").value=o.n;upd();return;
   }
   if(i>=0&&R.steps[i].locked&&(a==="delStep"||a==="addItem"||a==="delItem"))return; /* 잠긴 단계는 줄·단계 추가/삭제 불가 */
-  if(a==="addStep"){
-    /* 새 단계가 생겨 버튼이 아래로 밀린 만큼 그대로 스크롤해서, 버튼이 화면에서 같은 자리에 머물게 합니다 */
-    const y0=b.getBoundingClientRect().top;
-    R.steps.push(newStep());refresh();
-    const dy=b.getBoundingClientRect().top-y0;
-    if(dy)window.scrollBy({top:dy,left:0,behavior:"instant"});
-  }
-  else if(a==="fold"){R.steps[i].collapsed=!R.steps[i].collapsed;refresh()}
+  if(a==="addStep")addStep(b);
+  else if(a==="fold"){const s=R.steps[i],p=!!s.collapsed;UNDO.push(()=>{s.collapsed=p});s.collapsed=!s.collapsed;refresh()}
   else if(a==="delStep"){
-    DELETED.push({i,s:R.steps[i]}); /* 확인 없이 바로 삭제, Ctrl+Z 로 복원 */
+    const ds=R.steps[i];UNDO.push(()=>{R.steps.splice(Math.min(i,R.steps.length),0,ds)}); /* 확인 없이 바로 삭제, Ctrl+Z 로 복원 */
     R.steps.splice(i,1);refresh();
   }
   else if(a==="addItem")addItem(i);
-  else if(a==="delItem"){R.steps[i].items.splice(j,1);refresh()}
-  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;DELETED.length=0;renderAll()}}
+  else if(a==="delItem"){const S=R.steps[i],di=S.items[j];UNDO.push(()=>{S.items.splice(Math.min(j,S.items.length),0,di)});S.items.splice(j,1);refresh()}
+  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;UNDO.length=0;renderAll()}}
   else if(a==="save")save();
   else if(a==="pick")$("file").click();
   else if(a==="loadsel")loadSel();
@@ -692,11 +698,12 @@ function dndEnd(e){
   D.els.forEach(el=>{if(D.row&&moved)el.style.transition="none";el.style.transform="";el.classList.remove("dragging")}); /* 줄은 DOM 순서를 바로 바꾸므로, 놓는 순간 되돌아가는 애니메이션이 보이지 않게 끔 */
   if(!moved)return;
   if(D.row){moveRow(D.si,D.i,D.to);void D.st.offsetWidth;D.els.forEach(el=>{el.style.transition=""})}
-  else{const[s]=R.steps.splice(D.i,1);R.steps.splice(D.to,0,s);refresh()}
+  else{const[s]=R.steps.splice(D.i,1);R.steps.splice(D.to,0,s);const f=D.i;UNDO.push(()=>{R.steps.splice(R.steps.indexOf(s),1);R.steps.splice(f,0,s)});refresh()}
 }
 /* 한 단계 안에서 재화 줄 이동: 데이터와 화면(DOM)을 함께 옮김. 화면을 다시 그리지 않으므로 아이콘·입력 상태가 그대로 유지됨 */
 function moveRow(si,from,to){
   const its=R.steps[si].items,[x]=its.splice(from,1);its.splice(to,0,x);
+  UNDO.push(()=>{its.splice(its.indexOf(x),1);its.splice(from,0,x)});
   const sb=document.querySelector(`.step[data-i="${si}"] .sb`),rows=[...sb.querySelectorAll(".it")],[r]=rows.splice(from,1);
   rows.splice(to,0,r);
   sb.insertBefore(r,rows[to+1]||sb.querySelector(".add"));
@@ -724,7 +731,7 @@ $("app").addEventListener("keydown",e=>{
   e.preventDefault();
   const i=+h.closest(".step").dataset.i,k=e.key==="ArrowUp"?i-1:i+1;
   if(k<0||k>=R.steps.length)return;
-  [R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];refresh();
+  [R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];UNDO.push(()=>{[R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]]});refresh();
   const g=document.querySelector(`.step[data-i="${k}"] .gr`);if(g)g.focus();
 });
 /* 재화 줄 키보드: 줄 손잡이에서 ↑↓, 또는 줄 안의 어느 칸에서든 Alt+↑↓ */
@@ -804,12 +811,22 @@ $("app").addEventListener("keydown",e=>{
   e.preventDefault();acHide();
   addItem(+st.dataset.i);
 });
-/* Ctrl+Z (Mac은 ⌘+Z): 마지막에 삭제한 단계를 원래 위치에 복원. 입력칸에 커서가 있을 땐 브라우저 기본 되돌리기를 그대로 사용 */
+/* Ctrl+Shift+Enter (Mac은 ⌘+Shift+Enter): 단계 추가 ("+ 단계 추가" 버튼과 같음) */
+$("app").addEventListener("keydown",e=>{
+  if(e.key!=="Enter"||!(e.ctrlKey||e.metaKey)||!e.shiftKey||e.altKey||e.isComposing||e.keyCode===229)return;
+  const b=document.querySelector("button[data-a=addStep]");if(!b)return;
+  e.preventDefault();acHide();
+  addStep(b);
+});
+let TYPED=null; /* 포커스 이후 직접 입력한 칸 (그 칸에서만 글자 입력 되돌리기를 브라우저에 맡김) */
+$("app").addEventListener("input",e=>{TYPED=e.target});
+$("app").addEventListener("focusin",e=>{if(e.target!==TYPED)TYPED=null});
+/* Ctrl+Z (Mac은 ⌘+Z): 마지막 동작(단계·재화 줄 추가/삭제/이동, 잠금, 접기, 수량 ▲▼)부터 하나씩 되돌림. 입력칸에 직접 입력했을 땐 그 칸은 브라우저 기본 되돌리기를 그대로 사용 */
 addEventListener("keydown",e=>{
   if(e.code!=="KeyZ"||!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||e.isComposing||e.keyCode===229)return;
-  const t=e.target;if(t&&t.matches&&t.matches("input,textarea,select,[contenteditable]"))return;
-  const d=DELETED.pop();if(!d)return;
-  e.preventDefault();R.steps.splice(Math.min(d.i,R.steps.length),0,d.s);refresh();
+  const t=e.target;if(t&&t.matches&&t.matches("input,textarea,select,[contenteditable]")&&t===TYPED)return; /* 직접 입력한 칸은 브라우저 기본 되돌리기 */
+  const u=UNDO.pop();if(!u)return;
+  e.preventDefault();u();refresh();
 });
 addEventListener("resize",fitNotes);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitNotes); /* 웹폰트가 늦게 적용돼 줄바꿈이 달라지는 경우 */
