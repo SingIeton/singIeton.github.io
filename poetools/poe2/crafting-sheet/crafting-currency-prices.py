@@ -6,11 +6,11 @@
 가격은 모두 디바인 오브(Divine Orb) 1개 기준 단가로 변환해 저장합니다(페이지의 PRICES 형식과 동일).
 
 사용법:
-  python crafting-currency-prices.py                          # CURRENCIES 목록을 받아 crafting-currency-prices.js 생성
-  python crafting-currency-prices.py --list                   # poe.ninja가 알려주는 리그 목록 출력
-  python crafting-currency-prices.py --league "Runes of Aldur"  # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
-  python crafting-currency-prices.py --dump-currencies all.txt  # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
-  python crafting-currency-prices.py --no-cache               # 30분 이내 받은 응답도 무시하고 새로 요청
+  python crafting-currency-prices.py                              # CURRENCIES 목록을 받아 crafting-currency-prices.js 생성
+  python crafting-currency-prices.py --list                       # poe.ninja가 알려주는 리그 목록 출력
+  python crafting-currency-prices.py --league "Runes of Aldur"    # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
+  python crafting-currency-prices.py --dump-currencies all.txt    # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
+  python crafting-currency-prices.py --no-cache                   # 30분 이내 받은 응답도 무시하고 새로 요청
   python crafting-currency-prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트가 있는 폴더)
 
 저장 위치(기본값: 이 스크립트가 있는 폴더):
@@ -82,20 +82,20 @@ Fracturing Orb                  분열의 오브
 Hinekora's Lock                 히네코라의 머리카락
 
 [Essences]
-Essence of the Breach               균열의 에센스
-Essence of the Abyss                심연의 에센스
-Greater Essence of Body             상위 육신의 에센스
-Perfect Essence of Body             완벽한 육신의 에센스
-Greater Essence of Mind             상위 정신의 에센스
-Perfect Essence of Mind             완벽한 정신의 에센스
-Greater Essence of Insulation       상위 절연의 에센스
-Greater Essence of Thawing          상위 해동의 에센스
-Greater Essence of Grounding        상위 접지의 에센스
-Greater Essence of Ruin             상위 폐허의 에센스
-Perfect Essence of Ruin             완벽한 폐허의 에센스
-Greater Essence of Opulence         상위 풍요의 에센스
-Perfect Essence of Opulence         완벽한 풍요의 에센스
-Perfect Essence of Enhancement      완벽한 강화의 에센스
+Essence of the Breach           균열의 에센스
+Essence of the Abyss            심연의 에센스
+Greater Essence of Body         상위 육신의 에센스
+Perfect Essence of Body         완벽한 육신의 에센스
+Greater Essence of Mind         상위 정신의 에센스
+Perfect Essence of Mind         완벽한 정신의 에센스
+Greater Essence of Insulation   상위 절연의 에센스
+Greater Essence of Thawing      상위 해동의 에센스
+Greater Essence of Grounding    상위 접지의 에센스
+Greater Essence of Ruin         상위 폐허의 에센스
+Perfect Essence of Ruin         완벽한 폐허의 에센스
+Greater Essence of Opulence     상위 풍요의 에센스
+Perfect Essence of Opulence     완벽한 풍요의 에센스
+Perfect Essence of Enhancement  완벽한 강화의 에센스
 
 [Abyss]
 Preserved Jawbone               보존된 턱뼈
@@ -105,6 +105,7 @@ Preserved Cranium               보존된 두개골
 Ancient Jawbone                 고대의 턱뼈   
 Ancient Rib                     고대의 갈비뼈
 Ancient Collarbone              고대의 빗장뼈
+Altered Collarbone              뒤바뀐 빗장뼈
 Omen of Light                   빛의 징조
 Omen of Abyssal Echoes          심연의 메아리의 징조
 Omen of the Liege               군왕의 징조 (아마나무)
@@ -148,6 +149,12 @@ Sovereign Alloy         군왕의 합금
 # Expansive Alloy       팽창하는 합금 
 # Protective Alloy      보호의 합금 
 # Adaptive Alloy        적응형 합금 
+
+[Flux]
+Blazing Flux            맹렬한 유동체
+Chilling Flux           오싹한 유동체
+Crackling Flux          치직대는 유동체
+Void Flux               공허 유동체
 
 [Bloodmark]
 
