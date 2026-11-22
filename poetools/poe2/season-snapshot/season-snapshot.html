@@ -285,8 +285,8 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const PAL=["var(--g)","var(--b)","var(--p)","var(--y)","var(--gem)","#f97316","#ec4899","#06b6d4"]; /* 앞 5개는 theme.css 변수, 나머지는 리그가 많을 때 쓰는 고정색 */
 const DAY=864e5;
 const FOLD=new Set(); /* 접힌 섹션 */
-const S={lin:true,sel:new Set(),cur:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",gm:false,view:null,pr:{inv:false,rec:false}}; /* pr: 섹션별로 예상 가격(true) / 배율(false) 표시 */ /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
-let DATA=null,CUR=[],LG=[],SR=[],GM=null,drawnW=0,UEFF="exalted",HAVE={divine:false,chaos:false};
+const S={lin:true,sel:new Set(),cur:null,cur2:null,metric:"average",x:"day",scale:"lin",hideLow:true,unit:"auto",gm:false,view:null,pr:{inv:false,rec:false}}; /* pr: 섹션별로 예상 가격(true) / 배율(false) 표시 */ /* view: 확대해서 볼 x 구간 {a,b}, null이면 전체 */
+let DATA=null,CUR=[],LG=[],LG2=[],SR=[],GM=null,DUAL=null,drawnW=0,UEFF="exalted",HAVE={divine:false,chaos:false};
 const UNITS={exalted:{n:"Exalted Orb",ko:"엑잘티드",en:"Exalted"},chaos:{n:"Chaos Orb",ko:"카오스",en:"Chaos"},divine:{n:"Divine Orb",ko:"디바인",en:"Divine"}};
 const uname=u=>T(UNITS[u].ko,UNITS[u].en);
 const LCOLOR={"Forbidden Rites":"var(--p)","Runes of Aldur":"var(--b)","Fate of the Vaal":"#d4414b","Rise of the Abyssal":"#3d9a5f"}; /* 시즌별 고정색, 없으면 순서대로 PAL */
@@ -315,9 +315,9 @@ function prep(){
   if(!seen.has(S.cur))S.cur=seen.has("Divine Orb")?"Divine Orb":(CUR[0]?CUR[0].name:null);
   prepLeagues();
 }
-function prepLeagues(){
-  LG=Object.entries((DATA&&DATA.leagues)||{}).map(([name,v])=>{
-    const cs=v.currencies||{},c=cs[S.cur];
+function buildLG(cur){
+  return Object.entries((DATA&&DATA.leagues)||{}).map(([name,v])=>{
+    const cs=v.currencies||{},c=cs[cur];
     const days=c?(c.days||[]).slice().sort((a,b)=>a.date<b.date?-1:1):[];
     if(!days.length)return null;
     const start=v.start_date||days[0].date,t0=ts(start); /* 1일차 = 시즌 시작일 */
@@ -327,6 +327,10 @@ function prepLeagues(){
     return {name,days,start,patch:v.patch||"",first:days[0].date,last:days[days.length-1].date,
       rates:{divine:dayMap(cs[UNITS.divine.n]),chaos:dayMap(cs[UNITS.chaos.n])}};
   }).filter(Boolean).sort((a,b)=>a.start<b.start?1:-1); /* 최신 시즌이 앞 */
+}
+function prepLeagues(){
+  LG=buildLG(S.cur);
+  LG2=S.cur2?buildLG(S.cur2):[];
   const keep=[...S.sel].filter(n=>LG.some(l=>l.name===n));
   if(keep.length)S.sel=new Set(keep);
   else{ /* 처음 상태: Dawn of the Hunt, Fate of the Vaal과 데이터가 CFG.minDays일 미만인 리그는 기본 해제. 전부 해제되면 비어 보이지 않게 전체 선택 */
@@ -345,13 +349,13 @@ function rateOf(lg,u,d){
 }
 /* 실제로 쓸 단위. 자동 = 모든 리그의 중앙값이 1 Divine 이상이면 Divine, 아니면 Exalted */
 function unitFor(){
-  const self=Object.keys(UNITS).find(k=>UNITS[k].n===S.cur);
+  const selfs=[S.cur,S.cur2].map(c=>Object.keys(UNITS).find(k=>UNITS[k].n===c)).filter(Boolean);
   let u=S.unit;
   if(u==="auto"){
     u="exalted";
-    if(HAVE.divine&&self!=="divine"){
+    if(HAVE.divine&&!selfs.includes("divine")){
       const vals=[];
-      for(const lg of LG)for(const d of lg.days){
+      for(const lg of [...LG,...(S.cur2?LG2:[])])for(const d of lg.days){
         const y=d[S.metric],r=rateOf(lg,"divine",d);
         if(y>0&&r&&!(S.hideLow&&d.lowv))vals.push(y/r);
       }
@@ -359,12 +363,15 @@ function unitFor(){
       if(vals.length&&vals[vals.length>>1]>=1)u="divine";
     }
   }
-  if(u!=="exalted"&&(u===self||!HAVE[u]))u="exalted"; /* 자기 자신 단위이거나 환산 데이터가 없으면 Exalted */
+  if(u!=="exalted"&&(selfs.includes(u)||!HAVE[u]))u="exalted"; /* 자기 자신 단위이거나 환산 데이터가 없으면 Exalted */
   return u;
 }
 function getSeries(){
   UEFF=unitFor();
-  return LG.map((lg,i)=>({lg,i})).filter(o=>S.sel.has(o.lg.name)).map(o=>{
+  return seriesOf(LG);
+}
+function seriesOf(lgs){
+  return lgs.map((lg,i)=>({lg,i})).filter(o=>S.sel.has(o.lg.name)).map(o=>{
     const pts=[];
     for(const d of o.lg.days){
       const v=d[S.metric];
@@ -378,17 +385,17 @@ function getSeries(){
 }
 /* 기하평균 선: 선택한 리그들의 같은 일차 가격을 기하평균(= 로그 평균의 exp). 리그가 2개 이상 있는 일차만 계산하고,
    점마다 평균에 쓰인 리그 수(n)를 남깁니다. 리그마다 데이터 길이가 달라 뒤쪽 일차는 남은 리그끼리의 평균입니다. */
-function geoSeries(sr){
-  if(sr.length<2)return null;
+function geoSeries(sr,minN=2){
+  if(sr.length<minN)return null;
   const xs=[...new Set(sr.flatMap(o=>o.pts.map(p=>p.x)))].sort((a,b)=>a-b),pts=[];
   for(const x of xs){
     let sum=0,n=0;
     for(const o of sr){const p=o.map.get(x);if(p){sum+=Math.log(p.y);n++}}
-    if(n>=2)pts.push({x,y:Math.exp(sum/n),n});
+    if(n>=minN)pts.push({x,y:Math.exp(sum/n),n});
   }
   return pts.length?{gm:true,color:"currentColor",pts,map:new Map(pts.map(p=>[p.x,p]))}:null; /* currentColor: 라이트/다크 테마의 글자색을 따라감 */
 }
-const sname=s=>s.gm?T("기하평균","Geometric mean"):esc(nm("leagues",s.lg.name));
+const sname=s=>s.label?s.label:s.gm?T("기하평균","Geometric mean"):esc(nm("leagues",s.lg.name));
 function noteText(){
   return T("마우스 휠로 확대·축소. 바의 양 끝을 끌어 표시할 날짜 폭을, 바 자체를 끌어 구간을 옮길 수 있습니다. 바를 조절하면 추천 화폐 정보도 함께 변경됩니다. 그래프를 드래그하여 가격 변화(%)를 확인할 수 있습니다.","Scroll to zoom. Drag the ends of the period bar to set how many days are shown, or drag the bar to move the range. Adjusting the period bar also updates the recommended currencies below. Drag across the chart to check the % price change.");
 }
@@ -417,6 +424,7 @@ function build(){
   <div class="row"><div class="fld"><div class="grp" role="group" aria-label="${T("리그 선택","Leagues")}">${chips}</div></div></div>
   <div class="row">
    <div class="fld"><label class="lbl" for="cur">${T("화폐","Currency")}</label><select id="cur">${curOpts}</select></div>
+   <div class="fld"><label class="lbl" for="cur2">${T("비교 화폐","Compare")}</label><select id="cur2"><option value="">${T("선택 안 함","None")}</option>${curOpts}</select></div>
    <div class="fld"><label class="chk" for="gm" id="gmlab"><input type="checkbox" id="gm">${T("기하평균 표시","Show geometric mean")}</label></div>
    <div class="fld"><label class="lbl" for="unit">${T("표시 단위","Unit")}</label><select id="unit">${unitOpts}</select></div>
   </div>
@@ -440,10 +448,17 @@ function build(){
 function update(){
   if(!$("chart"))return;
   document.querySelectorAll("[data-lg]").forEach(i=>i.checked=S.sel.has(i.dataset.lg));
-  $("cur").value=S.cur;
+  $("cur").value=S.cur;$("cur2").value=S.cur2||"";
+  $("cur").querySelectorAll("option").forEach(o=>o.disabled=!!S.cur2&&o.value===S.cur2); /* 같은 화폐는 두 드롭다운에서 동시에 선택 불가 */
+  $("cur2").querySelectorAll("option").forEach(o=>o.disabled=o.value!==""&&o.value===S.cur);
   SR=getSeries();
   GM=S.gm?geoSeries(SR):null;
-  $("gm").checked=S.gm;$("gm").disabled=SR.length<2;
+  DUAL=null;
+  if(S.cur2){ /* 두 화폐 비교: 각 화폐의 (선택한 리그들) 기하평균 선만 표시. 리그가 1개면 그 리그 값 그대로 */
+    const mk=(sr,cur,color)=>{const g=geoSeries(sr,Math.min(2,sr.length));return g&&{...g,color,label:esc(nm("items",cur)),dual:true}};
+    DUAL=[mk(SR,S.cur,"var(--g)"),mk(seriesOf(LG2),S.cur2,"var(--b)")].filter(Boolean);
+  }
+  $("gm").checked=S.gm;$("gm").disabled=SR.length<2||!!DUAL;
   $("gmlab").title=SR.length<2?T("리그를 2개 이상 선택하면 사용할 수 있습니다","Select two or more leagues to use this"):T("선택한 리그들의 같은 일차 가격의 기하평균을 점선으로 표시합니다","Draws the geometric mean of the selected leagues' prices on each day as a dashed line");
   $("unit").value=S.unit;$("unit").options[0].textContent=uname(UEFF)+" "+T("(자동)","(Auto)");
   $("pnote").innerHTML=noteText();
@@ -495,12 +510,12 @@ function navBg(){
 
 function drawChart(){
   const box=$("chart");if(!box)return;
-  if(!SR.length){LAY=null;box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
+  if(!(DUAL||SR).length){LAY=null;box.innerHTML=`<p class="emptyc">${T("표시할 데이터가 없습니다. 위에서 리그를 선택하세요.","Nothing to show. Select a league above.")}</p>`;return}
   drawnW=box.clientWidth;
   const W=Math.max(320,drawnW),H=Math.round(Math.min(440,Math.max(220,W*CFG.chartRatio)));
   const M={l:60,r:48,t:28,b:36},unit=S.x==="day"?1:DAY;
   let X0=Infinity,X1=-Infinity;
-  for(const s of SR)for(const p of s.pts){X0=Math.min(X0,p.x);X1=Math.max(X1,p.x)}
+  for(const s of DUAL?[...SR,...DUAL]:SR)for(const p of s.pts){X0=Math.min(X0,p.x);X1=Math.max(X1,p.x)}
   if(X0===X1){X0-=unit;X1+=unit}
   const minW=Math.min(2*unit,X1-X0); /* 최소 3일 */
   LAY={W,H,M,iw:W-M.l-M.r,ih:H-M.t-M.b,X0,X1,unit,minW};
@@ -517,9 +532,10 @@ function drawChart(){
 function drawPlot(){
   const host=$("plot");if(!host||!LAY)return;
   const {W,H,M,iw,ih}=LAY,log=S.scale==="log",[x0,x1]=curView();
+  const PL=DUAL||SR; /* 그릴 선: 비교 화폐를 고르면 두 화폐의 기하평균 선만 */
   let y0=Infinity,y1=-Infinity; /* 세로축은 보이는 구간의 값에 맞춤 */
-  for(const s of SR)for(const p of s.pts)if(p.x>=x0&&p.x<=x1){y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
-  if(y0===Infinity)for(const s of SR)for(const p of around(s.pts,x0,x1)){y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
+  for(const s of PL)for(const p of s.pts)if(p.x>=x0&&p.x<=x1){y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
+  if(y0===Infinity)for(const s of PL)for(const p of around(s.pts,x0,x1)){y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
   let Y0,Y1;const yt=[];
   if(log){
     Y0=y0/1.15;Y1=y1*1.15;
@@ -543,29 +559,29 @@ function drawPlot(){
   if(S.x==="day")g+=`<text class="xu" x="${W-M.r+14}" y="${H-M.b+20}">(${T("일","Day")})</text>`; /* 가로축 끝: 경과일 단위 */
   for(const v of xt)g+=`<text class="xl" x="${px(v).toFixed(1)}" y="${H-M.b+20}">${S.x==="day"?v:fmtDate(v)}</text>`;
   g+=`</g><g${S.view?' clip-path="url(#clipP)"':""}>`; /* 확대했을 때만 영역 밖을 잘라냄 */
-  for(const s of SR){
+  for(const s of PL){
     const pts=around(s.pts,x0,x1);
     g+=`<path d="${pts.map((p,k)=>(k?"L":"M")+px(p.x).toFixed(1)+","+py(p.y).toFixed(1)).join("")}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
-    for(const p of pts)if(p.d.partial)g+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="var(--sf)" stroke="${s.color}" stroke-width="2"/>`;
+    for(const p of pts)if(p.d&&p.d.partial)g+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="var(--sf)" stroke="${s.color}" stroke-width="2"/>`;
   }
-  if(GM){ /* 기하평균: 리그 선 위에 점선으로 */
+  if(GM&&!DUAL){ /* 기하평균: 리그 선 위에 점선으로 */
     const pts=around(GM.pts,x0,x1);
     g+=`<path d="${pts.map((p,k)=>(k?"L":"M")+px(p.x).toFixed(1)+","+py(p.y).toFixed(1)).join("")}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="7 4" stroke-linejoin="round" stroke-opacity=".9"/>`;
   }
   g+=`</g><line id="hl" x1="0" x2="0" y1="${M.t}" y2="${H-M.b}" visibility="hidden"/><g id="hd"></g><g id="sel" pointer-events="none"></g><rect id="cap" x="${M.l}" y="${M.t}" width="${iw}" height="${ih}" fill="transparent"/></svg><div class="tip" id="tip"></div><div class="tip htip" id="htip"></div>`;
   host.innerHTML=g;
 
-  const ALL=GM?[...SR,GM]:SR; /* 범례·툴팁·드래그 비교에는 기하평균도 한 줄로 포함 */
+  const ALL=DUAL||(GM?[...SR,GM]:SR); /* 범례·툴팁·드래그 비교에는 기하평균도 한 줄로 포함 */
   const svg=$("svg"),tip=$("tip"),htip=$("htip"),hl=$("hl"),hd=$("hd");
-  const XS=[...new Set(SR.flatMap(s=>s.pts.map(p=>p.x)))].filter(v=>v>=x0&&v<=x1).sort((a,b)=>a-b);
+  const XS=[...new Set(PL.flatMap(s=>s.pts.map(p=>p.x)))].filter(v=>v>=x0&&v<=x1).sort((a,b)=>a-b);
   const nearest=v=>{let lo=0,hi=XS.length-1;while(hi-lo>1){const m=(lo+hi)>>1;XS[m]<v?lo=m:hi=m}return Math.abs(XS[lo]-v)<=Math.abs(XS[hi]-v)?XS[lo]:XS[hi]};
   /* 좌측 상단 범례: 항상 표시. 마우스를 올리면 그 날 값, 아니면 보이는 구간의 마지막 값 */
   const showLegend=xv=>{
     const r=svg.getBoundingClientRect();
     tip.innerHTML=`<div class="tg">`+ALL.map(s=>{
       const p=xv==null?[...s.pts].reverse().find(q=>q.x>=x0&&q.x<=x1):s.map.get(xv);
-      return `<div class="tr">${swatch(s.color,18,s.gm)}<span class="tn">${sname(s)}</span><b class="tv">${p?fmt(p.y):"–"}</b><span class="u">${p?UNITS[UEFF].n:""}</span></div>`}).join("")+`</div>`;
-    tip.style.display=SR.length?"block":"none";
+      return `<div class="tr">${swatch(s.color,18,s.gm&&!s.dual)}<span class="tn">${sname(s)}</span><b class="tv">${p?fmt(p.y):"–"}</b><span class="u">${p?UNITS[UEFF].n:""}</span></div>`}).join("")+`</div>`;
+    tip.style.display=PL.length?"block":"none";
     tip.style.left=(M.l*(r.width/W)+8).toFixed(0)+"px";tip.style.top=(M.t*(r.height/H)+6).toFixed(0)+"px";
   };
   /* 마우스 오버 툴팁: 강조선 옆(커서 높이)에 날짜/경과일과 시즌별 값을 표시 */
@@ -587,7 +603,7 @@ function drawPlot(){
         if(day)meta.push(p.d.date);
         if(p.d.volume!=null)meta.push(T("거래량","Vol")+" "+cmp(p.d.volume));
       }
-      return `<div class="tr">${swatch(s.color,18,s.gm)}<span class="tn">${sname(s)}</span><b class="tv">${fmt(p.y)}</b><span class="u">${UNITS[UEFF].n}</span><span class="m">${meta.join(" · ")}</span></div>`}).join("")+`</div>`;
+      return `<div class="tr">${swatch(s.color,18,s.gm&&!s.dual)}<span class="tn">${sname(s)}</span><b class="tv">${fmt(p.y)}</b><span class="u">${UNITS[UEFF].n}</span><span class="m">${meta.join(" · ")}</span></div>`}).join("")+`</div>`;
     placeTip(X,ey);
   };
   const hide=()=>{hl.setAttribute("visibility","hidden");hd.innerHTML="";htip.style.display="none";showLegend(null)};
@@ -610,7 +626,7 @@ function drawPlot(){
     const th=day?T(`${lo}→${hi}일차 (${nd}일)`,`Day ${lo}→${hi} (${nd} days)`):`${fmtDate(lo)} → ${fmtDate(hi)} (${T(`${nd}일`,`${nd} days`)})`;
     htip.innerHTML=`<div class="th">${th}</div>`+(rows.length
       ?`<div class="tg">`+rows.map(({s,a,b})=>{const ch=(b.y/a.y-1)*100;
-        return `<div class="tr">${swatch(s.color,18,s.gm)}<span class="tn">${sname(s)}</span><b class="tv" style="color:${ch<0?"var(--bad)":"var(--pos)"}">${pct(ch)}</b><span class="u">${fmt(a.y)} → ${fmt(b.y)} ${UNITS[UEFF].n}</span><span class="m"></span></div>`}).join("")+`</div>`
+        return `<div class="tr">${swatch(s.color,18,s.gm&&!s.dual)}<span class="tn">${sname(s)}</span><b class="tv" style="color:${ch<0?"var(--bad)":"var(--pos)"}">${pct(ch)}</b><span class="u">${fmt(a.y)} → ${fmt(b.y)} ${UNITS[UEFF].n}</span><span class="m"></span></div>`}).join("")+`</div>`
       :`<div class="m">${T("이 구간에 비교할 데이터가 없습니다","No data to compare in this range")}</div>`);
     showLegend(xc);
     placeTip(px(xc),ey);
@@ -718,7 +734,7 @@ const priceAt=(r,n)=>{for(let k=0;k<=CFG.priceTolDays;k++)for(const o of(k?[-k,k
    표의 행을 눌러 화폐만 바꾸면 화폐마다 데이터가 있는 리그·일차 범위가 달라 그래프 범위가 바뀌고, 그러면 표 순위도 달라집니다.
    그래서 행을 누른 시점의 리그·범위를 그대로 유지하고, 기간 바·리그 선택·화폐 드롭다운을 조작하면 해제합니다. */
 let HOLD=null;
-const holdSig=()=>S.cur+"|"+[...S.sel].sort().join(",")+"|"+(S.view?S.view.a+","+S.view.b:"-");
+const holdSig=()=>S.cur+"|"+(S.cur2||"")+"|"+[...S.sel].sort().join(",")+"|"+(S.view?S.view.a+","+S.view.b:"-");
 function tblCtx(){
   if(HOLD&&HOLD.sig===null)HOLD.sig=holdSig(); /* 행 클릭 직후 첫 계산: 그래프가 새 화폐로 그려진 뒤의 상태를 기준으로 삼음 */
   if(HOLD&&HOLD.sig!==holdSig())HOLD=null;
@@ -930,6 +946,7 @@ function renderUnused(){
 $("app").addEventListener("change",e=>{
   const t=e.target;
   if(t.dataset.lg!==undefined){t.checked?S.sel.add(t.dataset.lg):S.sel.delete(t.dataset.lg);update()}
+  else if(t.id==="cur2"){S.cur2=t.value||null;prepLeagues();update()}
   else if(t.id==="cur"){S.cur=t.value;prepLeagues();refreshChips();update()} /* build()로 화면 전체를 다시 만들면 스크롤이 맨 위로 튀므로 쓰지 않음 */
   else if(t.id==="unit"){S.unit=t.value;update()}
   else if(t.id==="gm"){S.gm=t.checked;update()}
@@ -968,6 +985,7 @@ $("app").addEventListener("click",e=>{
     const c=row.dataset.cur;
     if(c&&c!==S.cur&&CUR.some(x=>x.name===c)){
       const cx=tblCtx();HOLD={names:cx.names,va:cx.va,vb:cx.vb,sig:null}; /* 표는 지금 상태 그대로 유지 */
+      if(S.cur2===c)S.cur2=null; /* 같은 화폐는 두 곳에 지정할 수 없음 */
       S.cur=c;prepLeagues();
       refreshChips();
       update(); /* 그래프·드롭다운·표 갱신 */
@@ -980,7 +998,7 @@ $("app").addEventListener("click",e=>{
   t==="inv"?renderInv():renderRec();
 });
 $("skip").addEventListener("click",()=>$("app").focus());
-new ResizeObserver(()=>{const b=$("chart");if(b&&SR.length&&b.clientWidth!==drawnW)drawChart()}).observe(document.body);
+new ResizeObserver(()=>{const b=$("chart");if(b&&(DUAL||SR).length&&b.clientWidth!==drawnW)drawChart()}).observe(document.body);
 /* 언어가 바뀌면 site-bar.js 가 이 이벤트를 보냅니다 (상단 바 버튼, 다른 탭, 뒤로가기 모두) */
 addEventListener("sitebar:lang",e=>{if(e.detail!==LANG){LANG=e.detail;build()}});
 
