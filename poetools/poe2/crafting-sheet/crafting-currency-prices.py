@@ -11,9 +11,9 @@
   python crafting-currency-prices.py --league "Runes of Aldur"    # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
   python crafting-currency-prices.py --dump-currencies all.txt    # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
   python crafting-currency-prices.py --no-cache                   # 30분 이내 받은 응답도 무시하고 새로 요청
-  python crafting-currency-prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트가 있는 폴더)
+  python crafting-currency-prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트 옆 price-history 폴더)
 
-저장 위치(기본값: 이 스크립트가 있는 폴더):
+저장 위치(기본값: 이 스크립트 옆 price-history 폴더):
   crafting-currency-prices.js             결과(페이지가 <script> 로 읽음. 파일을 직접 열어도 동작)
   raw_data/                               poe.ninja 원본 응답 캐시(지워도 됩니다)
 
@@ -34,7 +34,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent  # 결과 파일의 기본 저장 위치(스크립트와 같은 폴더)
+SCRIPT_DIR = Path(__file__).resolve().parent
+DEFAULT_OUT = SCRIPT_DIR / "price-history"  # 결과 파일의 기본 저장 위치(스크립트 옆 price-history 폴더)
 
 # =============================================================================
 # 사용자 설정 - 이 구간만 수정하면 됩니다
@@ -492,7 +493,7 @@ def main():
     ap.add_argument("--list", action="store_true", help="리그 목록만 출력")
     ap.add_argument("--league", metavar="이름 또는 id", help="수집할 리그(스크립트 상단 LEAGUE 보다 우선)")
     ap.add_argument("--dump-currencies", metavar="PATH", help="전체 재화 이름을 붙여넣기용 텍스트로 저장하고 종료")
-    ap.add_argument("--out", default=str(SCRIPT_DIR), help="결과 저장 폴더(기본: 스크립트가 있는 폴더)")
+    ap.add_argument("--out", default=str(DEFAULT_OUT), help="결과 저장 폴더(기본: 스크립트 옆 price-history 폴더)")
     ap.add_argument("--no-cache", action="store_true", help="raw_data/ 의 최근 응답을 무시하고 새로 요청")
     args = ap.parse_args()
     try:

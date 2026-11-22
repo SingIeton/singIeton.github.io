@@ -3,15 +3,14 @@ window.CRAFT_RECIPE = {
   "name": "부재 목걸이",
   "steps": [
     {
-      "title": "",
+      "title": "베이스",
       "note": "",
       "items": [
         {
-          "c": "Absent",
+          "c": "Base",
           "n": 1
         }
-      ],
-      "locked": true
+      ]
     },
     {
       "title": "접미",
@@ -101,8 +100,5 @@ window.CRAFT_RECIPE = {
       ],
       "locked": true
     }
-  ],
-  "prices": {
-    "Absent": 50
-  }
+  ]
 };
