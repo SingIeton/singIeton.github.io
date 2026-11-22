@@ -84,10 +84,10 @@ Hinekora's Lock                 히네코라의 머리카락
 [Essences]
 Essence of the Breach           균열의 에센스
 Essence of the Abyss            심연의 에센스
-Greater Essence of Body         상위 육신의 에센스
-Perfect Essence of Body         완벽한 육신의 에센스
-Greater Essence of Mind         상위 정신의 에센스
-Perfect Essence of Mind         완벽한 정신의 에센스
+Greater Essence of the Body     상위 육신의 에센스
+Perfect Essence of the Body     완벽한 육신의 에센스
+Greater Essence of the Mind     상위 정신의 에센스
+Perfect Essence of the Mind     완벽한 정신의 에센스
 Greater Essence of Insulation   상위 절연의 에센스
 Greater Essence of Thawing      상위 해동의 에센스
 Greater Essence of Grounding    상위 접지의 에센스
