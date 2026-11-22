@@ -19,12 +19,13 @@
   --rn-fs:24px;--rn-mt:0px;       /* 레시피 이름 글자 크기·상단 마진 */
   --man-sat:0.7; /* 직접 입력한 가격 색의 채도 배율: 1 = 원래 색, 0 = 무채색, 1 초과 = 더 진하게 (예: 0.6, 1.3) */
   --man:var(--g2); /* 직접 입력한 가격의 글자색: PoE 2 포인트색(--g2, 밤 모드 #9fe0d4) */
+  --cur-w:240px;--cur-gap:11px; /* 총 재화 창 폭 / 총 비용과의 간격: 창 위치와 시세 드롭다운 위치가 이 값을 함께 씁니다 */
   --sec-fs:15px;--sec-mt:0px;--sec-mb:0px; /* 섹션(단계) 이름 글자 크기·상단·하단 마진 */
 } /* 버튼 줄 높이(버튼 38 + 위아래 여백 8·8). 총 비용 창이 이 아래에서 붙도록 쓰임 */
 .acts-bar{position:sticky;top:var(--bar-h,0px);z-index:20;box-sizing:border-box;margin:var(--acts-mt) -20px var(--acts-mb);padding:8px 20px 8px 66px;background:var(--bg)}
 .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:798px}
 .acts-bar .psrc{display:block;margin:8px auto 0} /* 시세 드롭다운: 좁은 화면에서는 버튼 줄 아래 */
-@media(min-width:1340px){.acts-bar .psrc{position:absolute;top:8px;left:calc(100% + 111px);transform:translateX(-50%);margin:0}} /* 넓은 화면: 파일 저장 줄의 오른쪽 바깥, 총 재화 창 바로 위 (폭은 가장 긴 항목에 맞춤(최소 150px), 오른쪽 끝을 총 재화 창 오른쪽 끝에 맞춤) */
+@media(min-width:1340px){.acts-bar .psrc{position:absolute;top:8px;left:calc(100% + var(--cur-gap) + var(--cur-w) - 20px);transform:translateX(-100%);margin:0}} /* 넓은 화면: 파일 저장 줄의 오른쪽 바깥, 총 재화 창 바로 위 (폭은 가장 긴 항목에 맞춤(최소 150px), 오른쪽 끝을 총 재화 창 오른쪽 끝에 맞춤: 총 재화 창 폭·간격 변수(--cur-w, --cur-gap)를 따라감. -20px = 버튼 줄의 좌우 확장분) */
 @media(max-width:820px){:root{--acts-h:0px}.acts-bar{position:static}} /* 버튼이 여러 줄로 접히는 좁은 화면에서는 붙이지 않음 */
 .acts .l,.acts .r{flex:1 1 0;display:flex;gap:8px;align-items:center;min-width:130px} /* 왼쪽(초기화)·오른쪽(파일 저장) 폭을 같게 맞춰, 가운데 묶음(목록·불러오기·파일 불러오기)이 정확히 중앙에 오도록 */
 .acts .r{justify-content:flex-end}
@@ -52,7 +53,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .sides{position:sticky;top:calc(var(--bar-h) + var(--acts-h) + 8px);display:grid;grid-template-columns:250px;gap:13px;align-items:start}
 .side{margin:0}
 @media(min-width:1340px){ /* 넓은 화면: 단계 목록·총 비용의 위치와 폭은 원래 그대로 두고, 재화 창만 총 비용 오른쪽 바깥에 붙임 (본문 폭을 늘리지 않으므로 전체 가로 위치가 변하지 않음) */
-  .sides>.side+.side{position:absolute;top:0;left:calc(100% + 11px);width:240px} /* 240px = 재화 폭, 11px = 총 비용과의 간격 */
+  .sides>.side+.side{position:absolute;top:0;left:calc(100% + var(--cur-gap));width:var(--cur-w)} /* 240px = 재화 폭, 11px = 총 비용과의 간격 */
 }
 @media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.sides{position:static}}
 .steps{position:relative}
@@ -133,6 +134,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .sc b{font:inherit;white-space:nowrap} /* 비용: 단계 이름과 같은 글꼴·크기·기준선 (볼드 없이) */
 .ti img{max-width:28px;max-height:28px;object-fit:contain;vertical-align:middle}
 .side fieldset{margin-top:16px}
+.psrc:not(.ready){visibility:hidden} /* 항목·폰트가 준비돼 폭이 확정되기 전에는 숨김 */
 .psrc{box-sizing:border-box;width:max-content;min-width:150px;max-width:none;height:36px;margin:0;padding:0 10px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);color:var(--mute);font:500 14px/1 var(--sans);letter-spacing:-.01em} /* 총 재화 위 시세 선택 드롭다운 (높이·글꼴은 위쪽 버튼 줄과 동일) */
 #tot td:last-child{white-space:nowrap} /* 비용 칸(숫자 + D)은 줄바꿈하지 않음 */
 .ghead.sm>div:last-child{flex:1;min-width:0}
@@ -223,7 +225,7 @@ buildKo();fillCur();
 const PRICE_URL="price-history/crafting-currency-prices.json"; /* 이 HTML 기준 상대 경로 */
 let PRICES={};try{PRICES=JSON.parse(localStorage.getItem("craftPrices")||"{}")}catch(e){}
 let AUTO={},META=null,PERR="";
-let LATEST=null,PSEL="latest",HIST=[]; /* LATEST = 최신(ninja) 시세 파일 내용, PSEL = 드롭다운에서 고른 시세("latest" 또는 "리그|일차"), HIST = 과거(scout) 시세 [{league,source,start,days:{일차:{date,prices}}}] */
+let LATEST=null,PSEL="latest",HIST=[],PRDY=false; /* LATEST = 최신(ninja) 시세 파일 내용, PSEL = 드롭다운에서 고른 시세("latest" 또는 "리그|일차"), HIST = 과거(scout) 시세 [{league,source,start,days:{일차:{date,prices}}}] */
 /* 레시피 안에 저장되는 직접 입력 단가(R.prices). 이름은 정규화(nk)해서 비교하므로 대소문자·한글/영어 이름 차이가 있어도 같은 재화로 봅니다. */
 const ovKey=c=>{const k=nk(canon(c));return Object.keys(R.prices||{}).find(x=>nk(canon(x))===k)};
 const manual=c=>{c=canon(c);const k=ovKey(c);if(k!==undefined&&R.prices[k]>0)return R.prices[k];return typeof PRICES[c]==="number"&&PRICES[c]>0?PRICES[c]:null};
@@ -250,7 +252,17 @@ function priceInfo(){
    HISTORY_FILES 의 파일을 차례로 <script> 로 읽습니다(file:// 에서도 동작). 파일을 추가하려면 아래 목록에 적으세요.
    각 파일은 파이썬(crafting-currency-history-scout.py)이 만든 window.CRAFT_PRICES_HISTORY = {league, days:{일차:{date,prices}}} 형식이며,
    같은 리그의 파일은 합쳐지고 같은 일차는 나중에 읽은 파일이 우선합니다. 없는 파일은 건너뜁니다. 한글 이름은 항상 최신 시세 파일(names_ko)을 씁니다. */
-const HISTORY_FILES=["price-history/crafting-currency-prices-Runes_of_Aldur-day30.js"];
+const HISTORY_FILES=[
+	"price-history/crafting-currency-prices-Forbidden_Rites-day7.js",
+	"price-history/crafting-currency-prices-Forbidden_Rites-day15.js",
+	"price-history/crafting-currency-prices-Forbidden_Rites-day30.js",
+	"price-history/crafting-currency-prices-Runes_of_Aldur-day7.js",
+	"price-history/crafting-currency-prices-Runes_of_Aldur-day15.js",
+	"price-history/crafting-currency-prices-Runes_of_Aldur-day30.js",
+	"price-history/crafting-currency-prices-Rise_of_the_Abyssal-day7.js",
+	"price-history/crafting-currency-prices-Rise_of_the_Abyssal-day15.js",
+	"price-history/crafting-currency-prices-Rise_of_the_Abyssal-day30.js",
+];
 function addHist(h){
   if(!h||typeof h.league!=="string"||!h.days||typeof h.days!=="object")return;
   if(h.quote_currency&&nk(h.quote_currency)!=="divine-orb")return; /* 디바인 기준이 아니면 건너뜀 */
@@ -267,11 +279,8 @@ function loadHistory(){
   });
   return HISTORY_FILES.reduce((p,f)=>p.then(()=>one(f)),Promise.resolve()).then(fillPsrc);
 }
-/* 시세 드롭다운의 오른쪽 끝을 총 재화 창의 실제 오른쪽 끝에 맞춤. 1340px 미만에서는 CSS 기본 배치를 사용 */
-function alignPsrc(){const p=$("psrc"),t=$("tot"),n=t&&t.closest(".side");if(!p||!n)return;if(!matchMedia("(min-width:1340px)").matches){p.style.left="";return}const a=n.getBoundingClientRect(),b=p.offsetParent.getBoundingClientRect();p.style.left=(a.right-b.left-p.offsetWidth)+"px"}
-addEventListener("resize",alignPsrc);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(alignPsrc);
-const psrcOpts=()=>`<option value="latest"${PSEL==="latest"?" selected":""}>${T("최신 (2026-11-22)","Latest (2026-11-22)")}</option>`+[...HIST].sort((a,b)=>(b.start||"").localeCompare(a.start||"")).map(h=>Object.keys(h.days).sort((a,b)=>a-b).map(n=>{const v=h.league+"|"+n;return`<option value="${esc(v)}"${v===PSEL?" selected":""}>${esc(h.league)} · ${T(n+"일","Day "+n)}</option>`}).join("")).join("");
-const fillPsrc=()=>{const el=$("psrc");if(el)el.innerHTML=psrcOpts()};
+const psrcOpts=()=>`<option value="latest"${PSEL==="latest"?" selected":""}>${T("최신 (2026-11-22)","Latest (2026-11-22)")}</option>`+[...HIST].sort((a,b)=>(b.start||"").localeCompare(a.start||"")).map(h=>`<optgroup label="${esc(h.league)}">`+Object.keys(h.days).sort((a,b)=>b-a).map(n=>{const v=h.league+"|"+n;return`<option value="${esc(v)}"${v===PSEL?" selected":""}>${esc(h.league)} · ${T(n+"일","Day "+n)}</option>`}).join("")+`</optgroup>`).join("");
+const fillPsrc=()=>{const el=$("psrc");if(el)el.innerHTML=psrcOpts();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{PRDY=true;const e=$("psrc");if(e)e.classList.add("ready")})};
 function selectPrices(v){
   if(v==="latest"){if(!LATEST){const el=$("psrc");if(el)el.value=PSEL;return}setPrices(LATEST);priceInfo();upd();return}
   const k=v.lastIndexOf("|"),lg=v.slice(0,k),dy=v.slice(k+1),h=HIST.find(e=>e.league===lg),d=h&&h.days[dy];
@@ -342,12 +351,12 @@ function renderAll(){
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}"></div>
 <div class="acts-bar"><div class="acts"><div class="l"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div></div>
 <div class="c"><div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("불러오기","Load")}</button></div></div>
-<div class="r"><div class="grp fl"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div><div class="grp"><button type="button" data-a="save">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div><select id="psrc" class="psrc" aria-label="${T("시세","Prices")}">${psrcOpts()}</select></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden>
+<div class="r"><div class="grp fl"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div><div class="grp"><button type="button" data-a="save">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div><select id="psrc" class="psrc${PRDY?" ready":""}" aria-label="${T("시세","Prices")}">${psrcOpts()}</select></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden>
 <p class="note" id="msg" role="status"></p>
 <div class="layout"><div><div class="steps" id="steps"></div><button type="button" class="addstep" data-a="addStep">+ ${T("단계 추가","Add step")}</button></div>
 <div class="sides"><aside class="panel side"><h2>${T("총 비용","Total cost")}</h2><div class="big"><b id="gv"></b></div>
 <fieldset><legend>${T("단계별","Per step")}</legend><div id="stepcost"></div></fieldset></aside>
-<aside class="panel side"><h2>${T("총 재화","Total currency")}</h2><div class="scroll" id="tot"></div></aside></div></div>`;alignPsrc();
+<aside class="panel side"><h2>${T("총 재화","Total currency")}</h2><div class="scroll" id="tot"></div></aside></div></div>`;
   fillList();refresh();priceInfo();
 }
 function renderSteps(){

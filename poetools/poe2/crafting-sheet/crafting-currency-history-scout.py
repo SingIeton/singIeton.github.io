@@ -13,7 +13,7 @@ crafting-currency-prices.js 에 시세가 들어 있는 항목들을 대상으�
   python crafting-currency-history-scout.py --league "Fate of the Vaal" --day 7 --no-cache
 
 저장 위치(기본값: 이 스크립트 옆 price-history 폴더):
-  crafting-currency-prices-<리그>-day<일차들>.js   결과(window.CRAFT_PRICES_HISTORY)
+  crafting-currency-prices-<리그>-day<일차>.js      결과(window.CRAFT_PRICES_HISTORY). 일차마다 파일이 하나씩 만들어집니다
   raw_data/poe2scout/                              원본 응답 캐시(지워도 됩니다)
 
 계산 방식:
@@ -416,21 +416,25 @@ def main():
     if not any(d["prices"] for d in result_days.values()):
         sys.exit("가격을 하나도 계산하지 못했습니다. 파일을 만들지 않습니다. 리그 이름과 --start 를 확인하세요.")
 
-    result = {
-        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        "source": "poe2scout",
-        "league": league,
-        "league_start": start.isoformat(),
-        "quote_currency": DIVINE,
-        "days": result_days,   # {"4": {date, prices: {재화 이름: 디바인 단가}, details, no_data}, ...}
-        "missing": missing,    # 이 리그에서 이름을 찾지 못한 항목
-    }
-    body = json.dumps(result, ensure_ascii=False, indent=1).replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"crafting-currency-prices-{safe_name(league)}-day{'_'.join(map(str, days))}.js"
-    write_atomic(path, f"window.{JS_VARIABLE} = {body};\n")
-    log(f"\n완료 -> {path}")
-
+    generated_at = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    for n, day in result_days.items():  # 일차마다 개별 파일로 저장
+        if not day["prices"]:
+            warn(f"  {n}일차: 가격이 없어 파일을 만들지 않습니다.")
+            continue
+        result = {
+            "generated_at": generated_at,
+            "source": "poe2scout",
+            "league": league,
+            "league_start": start.isoformat(),
+            "quote_currency": DIVINE,
+            "days": {n: day},      # {"4": {date, prices: {재화 이름: 디바인 단가}, details, no_data}}
+            "missing": missing,    # 이 리그에서 이름을 찾지 못한 항목
+        }
+        body = json.dumps(result, ensure_ascii=False, indent=1).replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+        path = out_dir / f"crafting-currency-prices-{safe_name(league)}-day{n}.js"
+        write_atomic(path, f"window.{JS_VARIABLE} = {body};\n")
+        log(f"  완료 -> {path}")
 
 if __name__ == "__main__":
     main()
