@@ -129,7 +129,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .swap:hover{background:var(--g);color:var(--bg)}
 .step>.brk{position:absolute;left:-63px;top:50%;transform:translateY(-50%);width:17px;height:26px;padding:0;display:grid;place-items:center;border:0;background:none;color:var(--mute)}
 .step>.brk:hover{background:none;color:var(--ink)}
-.brk svg{display:block;width:17px;height:17px}
+.brk svg{display:block;width:17px;height:17px;stroke-width:1.2}
 @media(max-width:1400px){#app.br .sides>.side+.side{position:static;width:auto}} /* 분기가 있을 때는 분기를 내리기 전에 총 재화를 총 비용 아래로 먼저 내림 */
 @media(max-width:1339px){ /* 좁은 화면: 메인 폭이 너무 줄어들지 않도록 분기를 메인 아래에 세로로 쌓음 */
   .steps.br{display:block;margin-left:0}
@@ -791,8 +791,19 @@ function dndLayout(){
   let dy=D.y-D.y0+scrollY-D.s0;
   let lo=0,hi=0;
   if(D.row){lo=D.rects[0].top-q.top;hi=D.rects[D.rects.length-1].top-q.top;dy=Math.max(lo,Math.min(hi,dy))} /* 재화 줄은 자기 단계 밖으로 나가지 않음 */
-  const mid=q.top+q.h/2+dy;
+  const mid=q.top+q.h/2+dy,X=D.X;
+  D.cx=false;
+  if(X)D.cx=(X.side?D.x<X.b:D.y+scrollY>=X.b)!==X.bl; /* 반대쪽 흐름 위로 끌고 가면 그쪽으로 이동 */
+  if(D.cx){
+    const n=X.n,tb=!X.bl,st0=tb?n:X.at,en=tb?X.all.length:n;let c=0;
+    for(let k=st0;k<en;k++)if(D.ar[k].top+D.ar[k].h/2<mid)c++;
+    D.cnt=c;D.ins=st0+c;
+    D.st.style.transform=`translate(${D.x-D.x0}px,${dy}px)`;
+    X.all.forEach((el,k)=>{if(k===D.si)return;let sh=0;if(k>D.si&&(k>=n)===X.bl)sh-=D.step;if((k>=n)===tb&&k>=D.ins)sh+=D.step;el.style.transform=sh?`translateY(${sh}px)`:""});
+    return;
+  }
   D.st.style.transform=`translateY(${dy}px)`;
+  if(X)X.all.forEach(el=>{if(!D.els.includes(el))el.style.transform=""});
   let to=0;D.rects.forEach((r,k)=>{if(k!==D.i&&r.top+r.h/2<mid)to++}); /* 끌고 있는 단계 중심 위에 있는 다른 단계 수 = 놓일 위치 */
   if(D.row){if(dy>=hi)to=D.rects.length-1;else if(dy<=lo)to=0} /* 끝까지 끌면 맨 끝 자리 (가운데선이 딱 겹쳐 '<' 비교에서 빠지는 경우 방지) */
   D.to=to;
@@ -806,16 +817,24 @@ function dndTick(){
   if(v){const y=scrollY;scrollBy({top:v,left:0,behavior:"instant"});if(scrollY!==y)dndLayout()}
   D.raf=requestAnimationFrame(dndTick);
 }
-const dndMove=e=>{if(DND&&e.pointerId===DND.id){DND.y=e.clientY;dndLayout()}};
+const dndMove=e=>{if(DND&&e.pointerId===DND.id){DND.y=e.clientY;DND.x=e.clientX;dndLayout()}};
 function dndEnd(e){
   const D=DND;if(!D||e.pointerId!==D.id)return;
   DND=null;cancelAnimationFrame(D.raf);
   removeEventListener("pointermove",dndMove);removeEventListener("pointerup",dndEnd);removeEventListener("pointercancel",dndEnd);
   try{D.h.releasePointerCapture(D.id)}catch(x){}
   document.documentElement.classList.remove("dnd");
-  const moved=e.type==="pointerup"&&D.to!==D.i;
+  const moved=e.type==="pointerup"&&(D.cx||D.to!==D.i);
+  if(D.X)D.X.all.forEach(el=>{el.style.transform=""});
   D.els.forEach(el=>{if(D.row&&moved)el.style.transition="none";el.style.transform="";el.classList.remove("dragging")}); /* 줄은 DOM 순서를 바로 바꾸므로, 놓는 순간 되돌아가는 애니메이션이 보이지 않게 끔 */
   if(!moved)return;
+  if(D.cx){ /* 다른 흐름(메인 ↔ 분기)으로 이동 */
+    const S=R.steps[D.si],snap=R.steps.map(x=>[x,!!x.b]),a0=R.at,n=D.X.n;
+    R.steps.splice(D.si,1);
+    if(D.X.bl){delete S.b;R.steps.splice(D.ins,0,S)}else{S.b=true;R.steps.splice(n-1+D.cnt,0,S)}
+    UNDO.push(()=>{R.steps.splice(0,R.steps.length,...snap.map(x=>x[0]));snap.forEach(([x,b])=>{if(b)x.b=true;else delete x.b});R.at=a0});
+    refresh();return;
+  }
   if(D.row){moveRow(D.si,D.i,D.to);void D.st.offsetWidth;D.els.forEach(el=>{el.style.transition=""})}
   else{const[s]=R.steps.splice(D.i+D.off,1);R.steps.splice(D.to+D.off,0,s);const f=D.i+D.off;UNDO.push(()=>{R.steps.splice(R.steps.indexOf(s),1);R.steps.splice(f,0,s)});refresh()}
 }
@@ -836,7 +855,19 @@ $("app").addEventListener("pointerdown",e=>{
   e.preventDefault();
   if(row){const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur();acHide()} /* 입력 중이던 칸·자동완성 목록은 닫고 시작 */
   const i0=els.indexOf(st);
-  DND={row,off:!row&&bl?mainN():0,si:+sp.dataset.i,i:i0,to:i0,st,els,h,id:e.pointerId,y0:e.clientY,y:e.clientY,s0:scrollY,raf:0,
+  let X=null,ar=null; /* 반대쪽 흐름으로 옮길 수 있는 경우: 각 흐름에 단계가 둘 이상 남아야 하고, 메인은 분기 시작 높이 이후 단계만, 잠긴 단계는 제외 */
+  if(!row){
+    const n=mainN(),len=R.steps.length,at=Math.min(Math.max(R.at|0,0),n),si=+sp.dataset.i;
+    if(n<len&&!R.steps[si].locked&&(bl?len-n>=2:si>=at&&n-at>=2)){
+      const all=[...document.querySelectorAll(".step")],lane=document.querySelector(".lane.bl"),madd=document.querySelector(".steps>.madd");
+      if(lane&&madd&&all.length===len){
+        const lr=lane.getBoundingClientRect(),side=lr.top<madd.getBoundingClientRect().top; /* 좌우 배치면 가로 경계, 좁은 화면(위아래 배치)이면 세로 경계 */
+        X={side,b:side?lr.right:lr.top+scrollY,bl,all,n,at};
+        ar=all.map(el=>{const r=el.getBoundingClientRect();return{top:r.top+scrollY,h:r.height}});
+      }
+    }
+  }
+  DND={X,ar,x:e.clientX,x0:e.clientX,row,off:!row&&bl?mainN():0,si:+sp.dataset.i,i:i0,to:i0,st,els,h,id:e.pointerId,y0:e.clientY,y:e.clientY,s0:scrollY,raf:0,
     rects:els.map(el=>{const r=el.getBoundingClientRect();return{top:r.top+scrollY,h:r.height}}),
     step:st.offsetHeight+(parseFloat(getComputedStyle(st).marginBottom)||0)};
   try{h.setPointerCapture(e.pointerId)}catch(x){}
