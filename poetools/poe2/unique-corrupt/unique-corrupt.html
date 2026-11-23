@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko" data-game="poe2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>고유 타락 플리핑 | PoE Tools</title>
+<link rel="stylesheet" href="../../style/theme.css">
+<script src="../../style/site-bar.js"></script>
+<style>
+.layout{display:grid;grid-template-columns:var(--aw,235px) minmax(0,1fr);gap:55px;align-items:start;margin-left:calc(-1*((max(16px,50vw - 504px) - max(16px,50vw - 584px)) + min(290px,max(0px,max(16px,50vw - 584px) - 16px))) - (var(--aw,235px) - 235px) + var(--sx,0px))}
+@media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr);margin-left:0}.wrapd{flex-direction:column}.final{flex-direction:row!important;flex-wrap:wrap}}
+.layout.stack{grid-template-columns:minmax(0,1fr);margin-left:0;gap:24px}
+.layout.stack section{padding-left:var(--sp,0px)}
+.lh{font:600 15px var(--serif);color:var(--mute);margin:0 0 8px}
+.dt{font:600 18px var(--serif);margin:0 0 6px}
+.list{display:flex;flex-direction:column;gap:2px;min-width:max-content}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;padding:8px 10px;border:0;border-radius:var(--r);background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.row:hover{background:var(--sf2)}
+.row.on{background:color-mix(in oklab,var(--g) 14%,transparent)}
+.row .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .rt{font:600 15.5px var(--serif);font-variant-numeric:tabular-nums;text-align:right}
+.row small{color:var(--mute);font-size:12.5px}
+.pos{color:var(--pos)}.neg{color:var(--bad)}
+.tree{overflow-x:auto}
+.tree svg{display:block;width:100%;height:auto;font-family:var(--sans)}
+.tree text{fill:var(--ink);font-size:16px;paint-order:stroke;stroke:var(--sf);stroke-width:4px;stroke-linejoin:round}
+.tree .mu{fill:var(--mute);font-size:12.5px}
+.tree .ed{fill:none}
+.tree a{cursor:pointer;text-decoration:none}.tree a tspan{fill:var(--mute);font-size:17px;font-weight:300}  /* 거래소 링크 */
+.tree a:hover tspan{fill:var(--g)}
+.tree .lw{fill:var(--bad)} /* 검색 매물 부족 -> ratio 대체 시 매물 건 텍스트 */
+.tree .tp,.tree .tn{font-family:var(--serif);font-weight:600;font-size:15.5px;font-variant-numeric:tabular-nums}.tree .tp{fill:var(--pos)}.tree .tn{fill:var(--bad)}
+.wrapd{display:flex;gap:32px;align-items:flex-start}
+.wrapd .tree{flex:1 1 auto;min-width:0}
+.final{flex:0 0 auto;margin-top:50;display:flex;flex-direction:column;gap:18px;min-width:190px}
+.final .k{display:block;color:var(--mute);font-size:14px}
+.final .v{font:600 22px/1.3 var(--serif);font-variant-numeric:tabular-nums}
+.formula{margin:10px 0 0;color:var(--mute);font-size:13.5px}
+.empty{color:var(--mute);padding:24px 0;text-align:center}
+.empty code{font-family:var(--mono)}
+/* DEBUG-OUTLINE 시작: 레이아웃 외곽선 확인용. 이 블록 전체를 삭제하면 모두 사라집니다. */
+main.wrap,.layout,.layout aside,.layout section,#list,#detail,.wrapd,.tree,.tree svg,.final{outline:1px solid #888}
+/* DEBUG-OUTLINE 끝 */
+</style>
+</head>
+<body>
+<main class="wrap" id="main">
+  <div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1 data-en="Unique Corruption Flipping">고유 타락 플리핑</h1><p class="sub" data-en="Expected corruption return for unique items, with the expected market price and profit/loss of every corruption outcome visualized">고유 장비의 타락 분기별 시장가와 예상 손익을 시각화하고, 총 평균 손익을 예상.</p></div></div>
+  <div class="layout">
+    <aside><div class="list" id="list"></div></aside>
+    <section><div id="detail"></div></section>
+  </div>
+</main>
+
+<script>
+/* 데이터 파일 목록: 스크립트가 만든 파일명을 여기에 추가합니다.
+   각 파일은 window.UC_DATA.push({...}) 형식입니다.
+
+   데이터 구조:
+   {
+     name, base, unit, cost, vaalCost,   // 영문이 기본. 한글 번역이 있으면 ko / baseKo / rootTextKo 필드를 추가 (없으면 영문 표시)
+     rootText:["문구1","문구2"],   // (선택) root(베이스) 노드 아래에 표시되는 문자열 목록 (스크립트의 root_text 에서 수정)
+     (baseUrl: 베이스 구매 검색 링크(선택). 모든 outcomes 항목에는 선택 필드 url: "경매장 검색 링크" 사용 가능. outcomes 항목의 low:true = 검색 매물 부족으로 ratio(또는 변화 없음) 가격을 쓴 경우, 매물 건 텍스트를 붉게 표시)
+     outcomes:[ {group:"none"|"reroll"|"vaal"|"socket", label, p, price, n}, ... ]   // 수치 변동(reroll)도 값(-3/-4/-5 등)마다 동등한 항목 1개
+   } */
+/* 데이터 파일 목록은 uniques/index.js (스크립트가 자동 갱신) 에서 읽습니다. */
+
+/* 언어: 저장·동기화는 style/site-bar.js 가 담당. 현재 언어를 읽고 "sitebar:lang" 이벤트만 구독 */
+let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||(document.documentElement.lang==="en"?"en":"ko");
+const tt=(ko,en)=>LANG==="en"?en:ko;
+/* 데이터는 영문(label/name/base)이 기본. 한글 번역이 있으면 ko/baseKo/rootTextKo 필드에 있고, 없으면 영문 그대로 표시 */
+const pk=(o,f)=>LANG==="ko"&&o.ko?o.ko:o[f];
+function applyStatic(){document.querySelectorAll("[data-en]").forEach(e=>{if(e.dataset.ko===undefined)e.dataset.ko=e.textContent;e.textContent=LANG==="en"?e.dataset.en:e.dataset.ko});
+document.title=tt("고유 타락 플리핑 | PoE Tools","Unique Corruption Flipping | PoE Tools")}
+const GROUPS={none:["No change","변화 없음"],reroll:["Value reroll","수치 변동"],vaal:["Enchant added","인챈트 추가"],socket:["Socket added","소켓 추가"]};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=(v,d=1)=>Number(v).toLocaleString(LANG==="en"?"en-US":"ko-KR",{maximumFractionDigits:d});
+const fp=v=>Math.abs(v)>=10?fmt(v,0):fmt(v,1); /* 가격: 두 자리 수 이상은 정수로 반올림, 그 외 소수점 한 자리(0 제외) */
+const pct=(v,d=1)=>fmt(Math.abs(v)*100,d)+"%"; /* 부호(+/-) 없이 절댓값만 표시, 증감은 색상으로 구분 */
+const spct=v=>(v<0?"-":"")+pct(v); /* 수익률 전용: 음수에 - 표시 */
+const cls=v=>v>0?"pos":v<0?"neg":"";
+const unitOf=it=>(!it.unit||it.unit==="div")?"d":it.unit; /* 단위 표시: div -> d */
+
+window.UC_DATA=[];
+let items=[],sel=null,TH=785,TW=680,VW=680; /* TH: 트리 높이(내부 좌표). fit()이 화면 세로 크기에 맞춰 자동 갱신 */
+
+function analyze(it){
+  const total=it.cost+(it.vaalCost||0);
+  const outs=(it.outcomes||[]).map(o=>({...o,profit:o.price-total,rate:(o.price-total)/total}));
+  const psum=outs.reduce((a,o)=>a+o.p,0)||1; // 확률 합이 1이 아니어도 정규화
+  const avg=outs.reduce((a,o)=>a+o.p*o.price,0)/psum;
+  return {...it,total,outs,psum,avg,profit:avg-total,rate:(avg-total)/total};
+}
+
+/* 목록 폭 = 가장 긴 항목의 폭 (최소 235px). 본문 위치는 고정, 목록은 왼쪽으로 확장 (--aw 를 .layout 이 사용) */
+function sizeList(){
+  const L=document.querySelector(".layout"),l=$("list");
+  l.style.width="max-content";const w=Math.ceil(l.getBoundingClientRect().width);l.style.width="";
+  L.style.setProperty("--aw",Math.max(235,w)+"px");
+}
+function renderList(){
+  $("list").innerHTML=items.length?items.map((it,i)=>`<button class="row${i===sel?" on":""}" data-i="${i}"><span class="nm">${esc(pk(it,"name"))}</span><span class="rt ${cls(it.rate)}">${spct(it.rate)}</span><small>${esc([LANG==="ko"&&it.ko?it.name:"",(LANG==="ko"&&it.baseKo?it.baseKo:(it.base||"")).replace(/샘플\s*/g,"")].filter(Boolean).join(" · "))}</small><small style="text-align:right">${fp(Math.abs(it.profit))} ${esc(unitOf(it))}</small></button>`).join(""):`<div class="empty">${tt("분석된 장비가 없습니다.","No items analyzed.")}</div>`;
+}
+
+function renderDetail(){
+  const it=items[sel];
+  if(!it){
+    $("detail").innerHTML=`<div class="empty">${items.length?tt("왼쪽 목록에서 장비를 선택하세요.","Select an item from the list on the left."):tt("<code>uniques/</code> 폴더에 데이터 파일이 없습니다. 스크립트를 실행하세요.","No data files in the <code>uniques/</code> folder. Run the script.")}</div>`;
+    return;
+  }
+  const u=esc(unitOf(it));
+  const W=VW=Math.max(TW,560),pad=14,RX=8,LX=W-300,POS=0.61,GX=RX+POS*(LX-RX); /* 그룹 노드 위치 = 시작점에서 마지막 점까지 거리 */
+  const gs=Object.keys(GROUPS).filter(g=>it.outs.some(o=>o.group===g)).map(g=>{
+    const rs=it.outs.filter(o=>o.group===g),ps=rs.reduce((a,o)=>a+o.p,0);
+    return {g,rs,p:ps/it.psum,avg:rs.reduce((a,o)=>a+o.p*o.price,0)/ps};
+  });
+  const HH=Math.max(TH,2*pad+(gs.length-1)*14+it.outs.length*40); /* 줄 높이가 너무 좁아지지 않도록 최소 높이 보장 */
+  const LH=(HH-2*pad-(gs.length-1)*14)/it.outs.length; /* 트리 총 높이 고정: 항목 수에 따라 줄 높이 자동 계산 */
+  let y=pad;
+  gs.forEach(G=>{G.rs.forEach(o=>{o.cy=y+LH/2;y+=LH});G.cy=(G.rs[0].cy+G.rs[G.rs.length-1].cy)/2;y+=14});
+  const H=HH,rcy=gs.reduce((a,G)=>a+G.cy,0)/gs.length;
+  const edge=(x1,y1,x2,y2,w,c)=>{const m=(x1+x2)/2;return `<path class="ed" d="M${x1} ${y1}C${m} ${y1} ${m} ${y2} ${x2} ${y2}" stroke="${c}" stroke-opacity=".5" stroke-width="${Math.max(2,w*44).toFixed(1)}" stroke-linecap="round"/>`};
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  gs.forEach(G=>{
+    svg+=edge(RX,rcy,GX,G.cy,G.p,"var(--g)");
+    G.rs.forEach(o=>{svg+=edge(GX,G.cy,LX,o.cy,o.p/it.psum,"var(--g)")});
+  });
+  const link=url=>url?`<a href="${esc(url)}" target="_blank" rel="noopener" aria-label="${tt("거래소에서 보기","Open in trade site")}"><title>${tt("거래소에서 보기","Open in trade site")}</title><tspan dx="6">↗</tspan></a>`:"";
+  const rt=(LANG==="ko"&&it.rootTextKo)||it.rootText||[];
+  svg+=`<circle cx="${RX}" cy="${rcy}" r="8" fill="var(--g)"/><text x="${RX}" y="${rcy-33}" style="font-weight:700">${tt("베이스","Base")}${link(it.baseUrl)}</text>`;
+  svg+=`<text class="mu" x="${RX}" y="${rcy-18}">${fp(it.cost)} ${u}</text>`;
+  rt.forEach((c,i)=>{svg+=`<text class="mu" x="${RX}" y="${rcy+26+i*15}">${esc(c)}</text>`});
+  gs.forEach(G=>{
+    svg+=`<circle cx="${GX}" cy="${G.cy}" r="8" fill="var(--g)"/><text x="${GX}" y="${G.cy-16}" text-anchor="middle" style="font-weight:700">${tt(GROUPS[G.g][1],GROUPS[G.g][0])}</text><text class="mu" x="${GX}" y="${G.cy+28}" text-anchor="middle">${fmt(G.p*100,1)}% · ${fp(G.avg)} ${u}</text>`;
+    G.rs.forEach(o=>{
+      const pos=o.rate>=0;
+      svg+=`<circle cx="${LX}" cy="${o.cy}" r="6" fill="${pos?"var(--pos)":"var(--bad)"}"/><text x="${LX+16}" y="${o.cy-3}" style="font-weight:600;font-size:15.5px">${esc(pk(o,"label"))}${o.est?esc(tt(" (추정)"," (est.)")):""}${o.url?`<a href="${esc(o.url)}" target="_blank" rel="noopener" aria-label="${tt("거래소에서 보기","Open in trade site")}"><title>${tt("거래소에서 보기","Open in trade site")}</title><tspan dx="6">↗</tspan></a>`:""}</text><text class="mu" x="${LX+16}" y="${o.cy+15}">${fmt(o.p/it.psum*100,1)}% · ${fp(o.price)} ${u}${o.n!=null&&o.n<10?` · ${o.low?'<tspan class="lw">':""}${tt("매물 "+o.n,o.n+(o.n===1?" listing":" listings"))}${o.low?"</tspan>":""}`:""}</text><text class="${pos?"tp":"tn"}" x="${W-15}" y="${o.cy+5}" text-anchor="end">${spct(o.rate)}</text>`;
+    });
+  });
+  svg+="</svg>";
+  $("detail").innerHTML=`<div class="wrapd"><div class="tree">${svg}</div>
+  <div class="final">
+    <div><span class="k">${tt("구매가","Purchase price")}</span><b class="v">${fp(it.total)} ${u}</b></div>
+    <div><span class="k">${tt("총 평균 예상 가치","Total average expected value")}</span><b class="v">${fp(it.avg)} ${u}</b></div>
+    <div><span class="k">${tt("평균 예상 수익 (수익률)","Average expected profit (return)")}</span><b class="v ${cls(it.profit)}">${fp(Math.abs(it.profit))} ${u} (${spct(it.rate)})</b></div>
+  </div></div>`;
+}
+
+function align(){
+  const L=document.querySelector(".layout"),h=document.querySelector(".ghead h1"),A=L.querySelector("aside");
+  L.classList.remove("stack");L.style.setProperty("--sx","0px");L.style.setProperty("--sp","0px");
+  const c=()=>L.querySelector(".tree circle");
+  if(matchMedia("(max-width:900px)").matches||!h||!c())return;
+  const M=document.querySelector(".ghead .mini")||h;
+  const tx=()=>M.getBoundingClientRect().left; /* 문 모양 아이콘의 왼쪽 끝 */
+  const cx=()=>c().getBoundingClientRect().left; /* 트리 시작 원의 왼쪽 끝 */
+  const d=tx()-cx();
+  if(A.getBoundingClientRect().left+d>=16){
+    L.style.setProperty("--sx",d+"px");
+    L.style.setProperty("--sx",(d-(cx()-tx()))+"px"); /* 남은 오차 보정 */
+    return;
+  }
+  /* 목록을 옮길 여백이 없으면 목록을 위로 올리고 본문만 제목에 맞춤 */
+  L.classList.add("stack");
+  const v=tx()-cx();
+  L.style.setProperty("--sp",v+"px");
+  L.style.setProperty("--sp",(v-(cx()-tx()))+"px");
+}
+/* 트리가 화면 세로 크기(뷰포트 높이)에 딱 맞도록 TH를 계산 */
+function fit(){
+  for(let i=0;i<3;i++){
+    const s=document.querySelector(".tree svg");if(!s)return;
+    const r=s.getBoundingClientRect(),top=r.top+scrollY;
+    const t=Math.round((innerHeight-top-16)*VW/r.width); /* 16 = 아래쪽 여백(px) */
+    const w=Math.round(document.querySelector(".tree").clientWidth); /* 트리 박스 실제 폭 → 글자 크기 유지한 채 그래프만 확장 */
+    if(Math.abs(t-TH)<=1&&Math.abs(w-TW)<=1)return;
+    TH=t;TW=w;renderDetail();
+  }
+}
+function render(){renderList();sizeList();renderDetail();fit();align()}
+const refit=()=>{sizeList();fit();align()};
+addEventListener("resize",refit);if(document.fonts)document.fonts.ready.then(refit);
+$("list").addEventListener("click",e=>{const b=e.target.closest(".row");if(!b)return;sel=+b.dataset.i;render()});
+
+window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyStatic();render()});
+applyStatic();
+const load=f=>new Promise(r=>{const s=document.createElement("script");s.src=encodeURI(f);s.onload=s.onerror=()=>r();document.head.appendChild(s)});
+load("uniques/index.js").then(()=>Promise.all((window.UC_FILES||[]).map(f=>load("uniques/"+f)))).then(()=>{
+  items=window.UC_DATA.map(analyze).sort((a,b)=>b.rate-a.rate);if(items.length)sel=0;
+  render();
+});
+</script>
+</body>
+</html>

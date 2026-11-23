@@ -1,0 +1,57 @@
+Constricting Command
+
+[ 0. Base 검색 조건 ]
+(Config)
+Corrupted: No, Mirrored: No
+Augmentable Sockets: Min=2
+(Mods)
+# to maximum Life					Min=110
+# to all Attributes					
+# Life Regeneration per second
+Require # additional enemies to be Surrounded		Max=-4
+
+
+[ 1. 변화 없음 ] 
+베이스의 X%, X는 사용자가 python script 설정 섹션에서 수정. 모든 고유 장비에 글로벌 적용.
+
+[ 1. Corrupted - Mod Range Change 검색 조건 ]
+정상 범위 안의 값은 원래 그 값인 것과 타락해서 그 값인 것을 구분할 수 없으므로, 검색으로 가격를 확인하면 안되고 타락 확률에 따라 계산.
+
+(Config)
+Corrupted: Yes, Augmentable Sockets: Min=2 Max=2
+
+Case 1:
+Require # additional enemies to be Surrounded		Min=-3
+Corrupt->Mod Range Change(25%)-> 베이스 -4*0.78~1.22 중 -4 보다 숫자가 높아지는 경우 (-3 이상이 되는 경우) 검색없이 가치으로 0 계산
+
+Case 2:
+Require # additional enemies to be Surrounded		Min=-4 
+변화 없음과 동일한 가치 계산
+
+Cases 3:
+# to maximum Life					Min=105
+Require # additional enemies to be Surrounded		Max=-5
+
+
+[ 2. Corrupted - Enchant Mod 검색 조건 ]
+각 Enchant 항목별로 1. 검색해서 시세를 확인하거나, 2. 사용자가 해당 enchant 항목의 가치 변화 % 값을 입력
+
+(15—25)% increased Energy Shield			미검색 - 베이스의 Y%
+(10—20)% reduced Attribute Requirements		미검색 - 베이스의 Y%
++(1—3)% to Maximum Cold Resistance		
++(20—30) to Spirit					
++1 to Maximum Power Charges			
++(50—100) to Accuracy Rating Attack			미검색 - 베이스의 Y%
+(15—25)% increased Life Regeneration rate Life		미검색 - 베이스의 Y%
+(20—30)% increased Mana Regeneration Rate Mana	미검색 - 베이스의 Y%
++1 to Level of all Minion Skills			
+
+[ 3. Corrupted - Socket + 1 검색 조건 ]
+(Config)
+Augmentable Sockets: Min=3
+(Mods)
+# to maximum Life					Min=108
+# to all Attributes					
+# Life Regeneration per second			
+Require # additional enemies to be Surrounded		Max=-4
+
