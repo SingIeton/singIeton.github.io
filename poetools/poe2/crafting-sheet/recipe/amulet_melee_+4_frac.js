@@ -1,6 +1,7 @@
 window.CRAFT_RECIPE = {
   "v": 1,
   "name": "근접 +4 생% (생% 분열)",
+  "category": "Amulet",
   "steps": [
     {
       "title": "베이스",

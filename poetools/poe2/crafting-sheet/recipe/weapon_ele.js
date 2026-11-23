@@ -1,6 +1,7 @@
 window.CRAFT_RECIPE = {
   "v": 1,
   "name": "81 원소 무기",
+  "category": "Weapon",
   "steps": [
     {
       "title": "베이스",

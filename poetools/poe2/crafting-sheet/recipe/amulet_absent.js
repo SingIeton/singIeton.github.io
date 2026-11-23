@@ -1,6 +1,7 @@
 window.CRAFT_RECIPE = {
   "v": 1,
   "name": "부재 목걸이",
+  "category": "Amulet",
   "steps": [
     {
       "title": "베이스",

@@ -1,6 +1,7 @@
 window.CRAFT_RECIPE = {
   "v": 1,
   "name": "저항 Recycle 반지",
+  "category": "Ring",
   "steps": [
     {
       "title": "Base",

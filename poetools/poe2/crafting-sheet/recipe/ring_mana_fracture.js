@@ -1,6 +1,7 @@
 window.CRAFT_RECIPE = {
   "v": 1,
   "name": "마나 Ring",
+  "category": "Ring",
   "steps": [
     {
       "title": "분열 베이스",

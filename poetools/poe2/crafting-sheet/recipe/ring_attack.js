@@ -1,6 +1,7 @@
 window.CRAFT_RECIPE = {
   "v": 1,
   "name": "Attack Ring",
+  "category": "Ring",
   "steps": [
     {
       "title": "Flat 분열 베이스",
