@@ -28,8 +28,10 @@
 .acts .l,.acts .r{flex:1 1 0;display:flex;gap:8px;align-items:center;min-width:130px} /* 왼쪽(초기화)·오른쪽(파일 저장) 폭을 같게 맞춰, 가운데 묶음(목록·불러오기·파일 불러오기)이 정확히 중앙에 오도록 */
 .acts .r{justify-content:flex-end}
 .acts .c{display:flex;flex:none;gap:8px;align-items:center;margin-inline:auto}
-.acts .r .fl{margin-inline:auto} /* 파일 불러오기는 가운데 묶음(목록·불러오기)과 파일 저장 사이의 한가운데 */
-@media(min-width:821px){.acts{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.acts .l,.acts .r{min-width:0}} /* 3칸 격자: 가운데 묶음이 항상 정중앙 */
+.acts .r .fl{margin-inline:auto} /* 불러오기는 가운데 묶음(목록)과 파일 저장 사이의 한가운데 */
+.acts .c{position:relative;left:-5px} /* 목록 묶음을 파일 불러오기에서 5px 더 떨어지게 왼쪽으로 (레이아웃 폭에는 영향 없음) */
+.acts .c select{width:var(--ls-min)} /* 목록 드롭다운 기본 넓이 (목록이 비어 있어도 좁아지지 않도록) */
+@media(min-width:821px){.acts{display:grid;grid-template-columns:minmax(max-content,1fr) minmax(0,auto) minmax(max-content,1fr)}.acts .l,.acts .r{min-width:0}.acts .c,.acts .c>.grp{min-width:0}.acts .c select{min-width:0!important}} /* 양옆 버튼은 글자가 잘리지 않는 폭을 보장하고, 가운데 목록이 남는 폭에 맞춰 줄어듦 */ /* 3칸 격자: 가운데 묶음이 항상 정중앙 */
 .bar .rn{flex:1 1 100%;min-width:0;width:auto;max-width:none;padding:4px 0 6px;border:0;border-bottom:1px solid var(--ln2);border-radius:0;background:none;margin-top:var(--rn-mt);font:600 var(--rn-fs)/1.3 var(--serif)}
 .bar .rn:focus,.bar .rn:focus-visible{outline:none;box-shadow:none;background:none;border-bottom-color:var(--ln2)}
 .grp{display:inline-flex;align-items:stretch;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);overflow:hidden}
@@ -42,13 +44,13 @@
 .panel>h2::before,legend::before{display:none} /* theme.css 의 마름모(◆) 모양 숨김 */
 .grp.split{gap:4px;border:0;background:none;overflow:visible}
 .grp.split>*,.grp.split>:last-child{border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf)}
-.grp select{max-width:260px;padding:0 10px;color:var(--mute);text-align:center;text-align-last:center}
+.grp select{max-width:260px;padding:0 10px;background:var(--sf);color:var(--mute);text-align:center;text-align-last:center} /* 배경을 투명(none)이 아닌 색으로: 펼친 목록이 흰 배경으로 뜨지 않도록 (.psrc 와 같은 방식) */
 #msg{margin:0 0 8px 46px;max-width:798px}
 #msg:empty{display:none} /* 안내 문구가 없을 땐 자리를 차지하지 않음 */
 main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inline:20px} /* 844px(본문 폭) + 좌우 패딩 40px — 헤더·바·본문의 좌우 끝선이 같아지고 화면 가운데에 정렬됨 */
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:24px 16px;align-items:start;max-width:844px} /* 가로 간격 24→16px: 총 비용 위치는 그대로 두고 단계 폭만 오른쪽으로 8px 늘어남 (세로 간격 24px 유지) */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 242px;gap:24px 16px;align-items:start;max-width:844px} /* 가로 간격 24→16px: 총 비용 위치는 그대로 두고 단계 폭만 오른쪽으로 8px 늘어남 (세로 간격 24px 유지) */
 /* 오른쪽 묶음(.sides): 총 비용(.side) 과 총 재화(.side)를 담음. 좁은 화면에서는 세로로 쌓이고, 스크롤해도 묶음이 화면 위쪽에 붙어 있음 */
-.sides{position:sticky;top:calc(var(--bar-h) + var(--acts-h) + 8px);display:grid;grid-template-columns:250px;gap:13px;align-items:start}
+.sides{position:sticky;top:calc(var(--bar-h) + var(--acts-h) + 8px);display:grid;grid-template-columns:242px;gap:13px;align-items:start}
 .side{margin:0}
 @media(min-width:1340px){ /* 넓은 화면: 단계 목록·총 비용의 위치와 폭은 원래 그대로 두고, 재화 창만 총 비용 오른쪽 바깥에 붙임 (본문 폭을 늘리지 않으므로 전체 가로 위치가 변하지 않음) */
   .sides>.side+.side{position:absolute;top:0;left:calc(100% + var(--cur-gap));width:var(--cur-w)} /* 240px = 재화 폭, 11px = 총 비용과의 간격 */
@@ -76,7 +78,7 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 /* 단계 접기: 머리줄 자물쇠 왼쪽 버튼. 접힌 단계는 머리줄만 남기고(내용 숨김, 합계 제외), 삭제 버튼은 숨김 */
 .ib.fold svg{display:block;margin:auto;transform:rotate(180deg);transition:transform .15s}
 .step.col .ib.fold svg{transform:none}
-.step.col>.sb,.step.col>.xdel,.step.col>.no{display:none}
+.step.col>.sb,.step.col>.xdel,.step.col>.no,.step.col>.brk{display:none}
 .step.col .sh{border-bottom:0}
 .step.lk .sb{padding-bottom:9px} /* 잠긴 단계: 하단 여백 2px 줄임 */
 .it{display:grid;grid-template-columns:minmax(0,1fr) 32px 72px 60px 28px;gap:8px;align-items:center;margin:0 0 5px}
@@ -112,6 +114,32 @@ main.wrap{box-sizing:border-box;max-width:884px;margin-inline:auto;padding-inlin
 .gr{flex:none;width:24px;height:26px;margin-left:-6px;padding:0;border:0;border-radius:var(--r);background:none;color:var(--mute);cursor:grab;display:grid;place-items:center;touch-action:none}
 .gr:hover{color:var(--ink);background:var(--sf2)}
 .step{transition:transform .15s}
+/* 분기: 단계 왼쪽에 대안 흐름(분기)을 둠. 같은 높이에 있는 두 흐름 중 오른쪽(메인)만 계산에 들어감.
+   분기가 있으면 메인 단계 폭을 --mw 로 줄이고, 분기 칸(--lw = 분기 단계 폭 + 여백 40px)을 왼쪽에 둠. 모자란 폭(--ext)은 화면 왼쪽 여백으로 넓히고, 여백도 모자라면 메인 폭을 더 줄임 */
+:root{--bg-gap:20px;--emax:max(0px,calc((100vw - 884px)/2 + 12px));--mw:min(540px,calc((586px + var(--emax) - 92px - var(--bg-gap))/2));--lw:calc(var(--mw) + 46px + var(--bg-gap));--ext:max(0px,calc(var(--lw) + var(--mw) + 46px - 586px))} /* 586px = 평소 단계 영역 폭 (844 - 총 비용 242 - 간격 16), 92px = 두 흐름의 번호 칸(46px×2). 두 흐름의 단계 폭(--mw)을 같게, 쓸 수 있는 폭(평소 영역 + 화면 왼쪽 여백)에서 최대한 넓게 잡음 (최대 540px = 분기 없을 때 단계 폭) */
+.steps.br{display:grid;grid-template-columns:var(--lw) minmax(0,1fr);margin-left:calc(-1*var(--ext))}
+.steps.br::before{display:block;grid-column:2;grid-row:1 / var(--end)} /* 메인 흐름 세로선: 메인 단계 구간에만 */
+.steps.br>.step{grid-column:2}
+.lane.bl{position:relative;grid-column:1}
+.steps.br>.madd{grid-column:2;align-self:start} /* 메인 마지막 단계 바로 아래 (분기 쪽 "+ 단계 추가"와 같은 높이 기준) */
+.lane::before{content:"";position:absolute;left:15px;top:18px;bottom:48px;width:1px;background:var(--ln2)}
+.bl .step{margin-right:var(--bg-gap)}
+.bl .addstep{width:calc(100% - 46px - var(--bg-gap))}
+.swap{position:absolute;top:-20px;left:calc(100% + 4.5px);width:22px;height:22px;padding:0;display:grid;place-items:center;border:1px solid var(--g);border-radius:50%;background:var(--bg);color:var(--g);cursor:pointer;z-index:1}
+.swap:hover{background:var(--g);color:var(--bg)}
+.step>.brk{position:absolute;left:-63px;top:50%;transform:translateY(-50%);width:17px;height:26px;padding:0;display:grid;place-items:center;border:0;background:none;color:var(--mute)}
+.step>.brk:hover{background:none;color:var(--ink)}
+.brk svg{display:block;width:17px;height:17px}
+@media(max-width:1400px){#app.br .sides>.side+.side{position:static;width:auto}} /* 분기가 있을 때는 분기를 내리기 전에 총 재화를 총 비용 아래로 먼저 내림 */
+@media(max-width:1339px){ /* 좁은 화면: 메인 폭이 너무 줄어들지 않도록 분기를 메인 아래에 세로로 쌓음 */
+  .steps.br{display:block;margin-left:0}
+  .steps.br::before{display:none}
+  .steps.br>.madd{margin-bottom:14px}
+  .lane.bl{grid-row:auto!important}
+  .bl .step{margin-right:0}
+  .bl .addstep{width:calc(100% - 46px)}
+  .swap{position:static;margin:0 0 10px 46px;border-radius:var(--r);width:auto;height:28px;padding:0 12px}
+}
 .step.dragging{transition:none;z-index:5;background:linear-gradient(var(--sf),var(--sf)),var(--bg); /* 뒤 단계가 비치지 않도록 불투명 바탕 위에 */box-shadow:0 8px 24px color-mix(in oklab,#000 40%,transparent)}
 .dnd,.dnd *{cursor:grabbing!important;user-select:none!important}
 /* 재화 줄 순서 끌기: 손잡이(.rg)는 줄 왼쪽 여백(.sb 의 padding)에 띄워 두므로 칸 배치와 "+ 추가" 정렬은 그대로 */
@@ -162,6 +190,10 @@ button::-moz-focus-inner{border:0}
 .ac-o.on{box-shadow:inset 0 0 0 2px #b79cf2} /* 자동으로 잡힌 첫 항목: 테두리 */
 .ac:hover .ac-o.on:not(:hover){box-shadow:none}
 .ac.kb .ac-o.on,.ac-o:hover{background:#7f6aa8;box-shadow:none} /* 방향키로 고른 항목·마우스를 올린 항목: 채움 */
+dialog.asksave{max-width:380px;padding:20px;border:1px solid var(--ln2);border-radius:var(--r);background:var(--sf);color:var(--ink)}
+dialog.asksave::backdrop{background:rgba(0,0,0,.4)}
+.asksave p{margin:0 0 16px}
+.asksave .ab{display:flex;gap:8px;justify-content:flex-end}
 </style>
 </head>
 <body>
@@ -320,6 +352,8 @@ let MODSEL=""; /* 드롭다운에서 고른 타입 (화면을 다시 그려도 �
 const modOpts=()=>`<option value="">${T("아이템 모드","Item mods")}</option>`+MOD_TYPES.map(([g,l])=>`<optgroup label="${esc(g)}">${l.map(([n,s])=>`<option value="${esc(s)}"${s===MODSEL?" selected":""}>${esc(n)}</option>`).join("")}</optgroup>`).join("");
 
 const newStep=()=>({title:"",note:"",items:[{c:"",n:1}]});
+/* 분기: R.steps 는 [메인 단계들…, 분기 단계들(b:true)…] 순서. R.at = 분기가 시작되는 메인 단계 번호(0부터). 같은 높이의 메인·분기 중 메인만 계산 */
+const mainN=()=>R.steps.filter(s=>!s.b).length;
 let R={name:"",prices:{},steps:[newStep()]},LIST=null;
 
 const totals=items=>{const m=new Map();items.forEach(it=>{const c=canon(it.c);if(c&&it.n>0)m.set(c,(m.get(c)||0)+it.n)});return m};
@@ -330,7 +364,9 @@ const cs=g=>`${fmtD(g.sum)} D`;
 const line=s=>{const m=totals(s.items);return m.size?[...m].map(([c,n])=>`${disp(c)} ×${fmt(n)}`).join(" · ")+" = "+cs(cost(m,s.items)):T("입력된 재화 없음","No currency yet")};
 const IC=d=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const ICO={reset:IC('<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>'),plus:IC('<path d="M12 5v14M5 12h14"/>'),dl:IC('<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'),folder:IC('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),up:IC('<path d="M12 16V5M7 9l5-4 5 4M5 20h14"/>'),file:IC('<path d="M6 3h8l4 4v14H6zM14 3v5h4"/>'),x:IC('<path d="M5 5l14 14M19 5L5 19"/>'),lock:IC('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),unlock:IC('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-1.3"/>'),grip:IC('<g fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.9"/><circle cx="15" cy="6" r="1.9"/><circle cx="9" cy="12" r="1.9"/><circle cx="15" cy="12" r="1.9"/><circle cx="9" cy="18" r="1.9"/><circle cx="15" cy="18" r="1.9"/></g>')};
-ICO.fold=IC('<path d="m6 9 6 6 6-6"/>'); /* 단계 접기·펼치기 (접히면 CSS로 -90° 회전) */
+ICO.fold=IC('<path d="m6 9 6 6 6-6"/>');
+ICO.branch=IC('<path d="M17 4 6 12l11 8z"/>'); /* 분기 추가 */
+ICO.swap=IC('<path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/>'); /* 분기 전환 */ /* 단계 접기·펼치기 (접히면 CSS로 -90° 회전) */
 const CV=d=>`<svg viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 const CHV={up:CV("M1 5l4-4 4 4"),dn:CV("M1 1l4 4 4-4")};
 const isl=n=>n.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
@@ -350,8 +386,8 @@ function renderAll(){
   $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><div class="toprow"><a class="game" href="../poe2.html">PoE 2</a><span class="exts"><select id="modsel" aria-label="${T("아이템 타입","Item type")}">${modOpts()}</select><a class="ext" id="poe2db" href="${modUrl(MODSEL)}" target="_blank" rel="noopener noreferrer">PoE2DB ↗</a><a class="ext" href="https://www.craftofexile.com/?game=poe2" target="_blank" rel="noopener noreferrer">Craft of Exile ↗</a></span></div><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("레시피를 단계별로 기록하고, 단계별·전체 소모 재화와 총 비용을 확인합니다.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p><select id="psrc" class="psrc${PRDY?" ready":""}" aria-label="${T("시세","Prices")}">${psrcOpts()}</select></div></div></div>
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}"></div>
 <div class="acts-bar"><div class="acts"><div class="l"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div></div>
-<div class="c"><div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadsel">${ICO.file}${T("불러오기","Load")}</button></div></div>
-<div class="r"><div class="grp fl"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div><div class="grp"><button type="button" data-a="save">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" hidden>
+<div class="c"><div class="grp" role="group" aria-label="${T("목록","List")}"><select id="list" aria-label="${T("저장된 레시피","Saved recipes")}"></select><button type="button" data-a="loadidx">${ICO.up}${T("불러오기","Load")}</button><button type="button" data-a="savelist">${ICO.dl}${T("저장","Save")}</button></div></div>
+<div class="r"><div class="grp fl"><button type="button" data-a="pick">${ICO.up}${T("파일 불러오기","Load file")}</button></div><div class="grp"><button type="button" data-a="save">${ICO.dl}${T("파일 저장","Save file")}</button></div></div></div></div><input type="file" id="file" accept=".js,.json,text/javascript,application/json" multiple hidden><input type="file" id="idxfile" accept=".js,.json,text/javascript,application/json" hidden>
 <p class="note" id="msg" role="status"></p>
 <div class="layout"><div><div class="steps" id="steps"></div><button type="button" class="addstep" data-a="addStep">+ ${T("단계 추가","Add step")}</button></div>
 <div class="sides"><aside class="panel side"><h2>${T("총 비용","Total cost")}</h2><div class="big"><b id="gv"></b></div>
@@ -360,11 +396,20 @@ function renderAll(){
   fillList();refresh();priceInfo();
 }
 function renderSteps(){
-  const n=R.steps.length;
-  let num=0; /* 접힌 단계는 번호를 매기지 않고 건너뜀 */
-  $("steps").innerHTML=R.steps.map((s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}${s.collapsed?" col":""}" data-i="${i}"><span class="no" aria-hidden="true">${s.collapsed?"":++num}</span><button type="button" class="ib xdel" data-a="delStep"${n>1&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">${ICO.x}</button><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib fold"${s.collapsed?"":' tabindex="-1"'} data-a="fold" aria-expanded="${!s.collapsed}" title="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}" aria-label="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}">${ICO.fold}</button><button type="button" class="ib lock"${lk?"":' tabindex="-1"'} data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button></div>
+  const n=mainN(),hasBr=n<R.steps.length,at=hasBr?Math.min(Math.max(R.at|0,0),n):n;
+  const NUM=new Map(); /* 접힌 단계는 번호를 매기지 않고 건너뜀. 분기 단계는 같은 높이의 메인 단계와 같은 번호부터 */
+  {let c=0;for(let i=0;i<at;i++)if(!R.steps[i].collapsed)NUM.set(i,++c);const c0=c;
+   for(let i=at;i<n;i++)if(!R.steps[i].collapsed)NUM.set(i,++c);
+   c=c0;for(let i=n;i<R.steps.length;i++)if(!R.steps[i].collapsed)NUM.set(i,++c)}
+  const stepHtml=(s,i)=>{const lk=!!s.locked,dis=lk?" disabled":"",ro=dis; /* 잠긴 단계는 disabled: 포커스·커서·입력 모두 불가 */return `<div class="step${lk?" lk":""}${s.collapsed?" col":""}" data-i="${i}"><span class="no" aria-hidden="true">${NUM.get(i)||""}</span>${!s.b&&!hasBr&&i>0?`<button type="button" class="ib brk" data-a="addBranch" title="${T("분기 추가","Add branch")}" aria-label="${T("분기 추가","Add branch")}">${ICO.branch}</button>`:""}<button type="button" class="ib xdel" data-a="delStep"${(s.b||n>1)&&!lk?"":" disabled"} aria-label="${T("단계 삭제","Delete step")}">${ICO.x}</button><div class="sh"><button type="button" class="gr" aria-label="${T("순서 변경 (끌어서 이동, 키보드는 ↑↓)","Reorder (drag, or use ↑↓ keys)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" class="t" data-f="title"${ro} value="${esc(s.title)}" placeholder="${T("단계","Step")}" aria-label="${T("단계 이름","Step name")}"><span class="sc2"></span><button type="button" class="ib fold"${s.collapsed?"":' tabindex="-1"'} data-a="fold" aria-expanded="${!s.collapsed}" title="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}" aria-label="${s.collapsed?T("단계 펼치기","Expand step"):T("단계 접기","Collapse step")}">${ICO.fold}</button><button type="button" class="ib lock"${lk?"":' tabindex="-1"'} data-a="lock" aria-pressed="${lk}" title="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}" aria-label="${lk?T("잠금 해제","Unlock step"):T("단계 잠금","Lock step")}">${lk?ICO.lock:ICO.unlock}</button></div>
 <div class="sb">${s.items.map((it,j)=>`<div class="it" data-j="${j}"><button type="button" class="rg" tabindex="-1"${dis} aria-label="${T("줄 순서 변경 (끌어서 이동, 키보드는 ↑↓ 또는 Alt+↑↓)","Reorder row (drag, or use ↑↓ / Alt+↑↓)")}" title="${T("끌어서 순서 변경","Drag to reorder")}">${ICO.grip}</button><input type="text" autocomplete="off" aria-autocomplete="list"${ro} data-f="c" value="${esc(it.c.trim()?disp(canon(it.c)):it.c)}" aria-label="${T("재화","Currency")}"><span class="ci"></span><span class="qty"><input type="number" min="0" max="9999" step="any" inputmode="decimal"${ro} data-f="n" value="${it.n}" aria-label="${T("수량","Qty")}"><span class="qsp"><button type="button" class="qb" data-a="qup" tabindex="-1"${dis} aria-label="${T("수량 늘리기","Increase")}">${CHV.up}</button><button type="button" class="qb" data-a="qdn" tabindex="-1"${dis} aria-label="${T("수량 줄이기","Decrease")}">${CHV.dn}</button></span></span><input type="text" inputmode="decimal" class="pr" data-f="p"${ro} autocomplete="off" aria-label="${T("이 줄의 비용 (디바인, 정수)","Row cost (Divine, whole number)")}"><button type="button" class="ib" data-a="delItem"${dis} aria-label="${T("재화 삭제","Remove")}">${ICO.x}</button></div>`).join("")}${lk?"":`<button type="button" class="add" data-a="addItem" title="Ctrl+Enter">+ ${T("추가","Add")}</button>`}
-${lk&&!s.note.trim()?"":`<textarea data-f="note" rows="1"${ro} placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea>`}</div></div>`}).join("");
+${lk&&!s.note.trim()?"":`<textarea data-f="note" rows="1"${ro} placeholder="${T("노트","Notes")}" aria-label="${T("노트","Notes")}">${esc(s.note)}</textarea>`}</div></div>`};
+  const rows=(a,b)=>{let h="";for(let i=a;i<b;i++)h+=stepHtml(R.steps[i],i);return h},st=$("steps");
+  $("app").classList.toggle("br",hasBr);
+  const ob=document.querySelector(".layout>div>.addstep");if(ob)ob.hidden=hasBr; /* 분기 중에는 .steps 안의 메인 추가 버튼을 씀 */
+  if(!hasBr){st.className="steps";st.style.gridTemplateRows="";st.innerHTML=rows(0,n);return}
+  st.className="steps br";st.style.gridTemplateRows=`repeat(${n},auto) 1fr`;st.style.setProperty("--end",n+1);
+  st.innerHTML=rows(0,n)+`<button type="button" class="addstep madd" data-a="addStep" style="grid-row:${n+1}">+ ${T("단계 추가","Add step")}</button><div class="lane bl" style="grid-row:${at+1} / -1">${rows(n,R.steps.length)}<button type="button" class="addstep" data-a="addBStep">+ ${T("단계 추가","Add step")}</button><button type="button" class="swap" data-a="swapBranch" title="${T("분기 전환: 왼쪽 분기와 이 높이 아래의 메인 단계를 서로 바꿉니다","Switch branch: swap the left branch with the main steps below")}" aria-label="${T("분기 전환","Switch branch")}">${ICO.swap}</button></div>`;
 }
 /* 소모 재화 표의 재화 칸: 아이콘 이미지만 표시 (아이콘 파일이 없는 재화만 이름 텍스트로 대신 표시) */
 const TIC=new Map(); /* 재화 이름 → 아이콘 주소 (없으면 null) */
@@ -377,7 +422,7 @@ function totIcons(){
   }),250);
 }
 function renderTot(){
-  const all=R.steps.filter(s=>!s.collapsed).flatMap(s=>s.items),tot=totals(all); /* 접힌 단계는 계산에서 제외 */
+  const all=R.steps.filter(s=>!s.collapsed&&!s.b).flatMap(s=>s.items),tot=totals(all); /* 접힌 단계는 계산에서 제외 */
   /* 재화 이름이 빈 줄: 비용(it.p)을 적은 줄만, 줄마다 따로 표시 (이름 칸은 빈 값, 수량·비용은 입력값 그대로). 비용 없이 수량만 있는 빈 줄은 표에 넣지 않음 */
   /* 행마다 비용(v)을 계산해 비용 내림차순으로 정렬 (단가를 모르는 재화는 맨 아래). 이름 없이 비용만 적은 줄도 같은 기준으로 섞어서 정렬 */
   const rows=[...tot].map(([c,n])=>{const p=price(c),v=p==null?null:n*p;return{v,n,c}}).filter(r=>r.v==null||r.v>0); /* 비용이 0이 아니면 표시: 정수로 반올림(fmtD)했을 때 0 D 가 되더라도 행을 숨기지 않고 "0 D" 로 표기 */
@@ -389,10 +434,11 @@ function renderTot(){
 }
 /* 입력값에 따라 숫자만 갱신 (입력 중인 칸은 건드리지 않음) */
 function sums(skip){
-  const all=R.steps.filter(s=>!s.collapsed).flatMap(s=>s.items),tot=totals(all),g=cost(tot,all); /* 접힌 단계는 계산에서 제외 */
+  const all=R.steps.filter(s=>!s.collapsed&&!s.b).flatMap(s=>s.items),tot=totals(all),g=cost(tot,all); /* 접힌 단계는 계산에서 제외 */
   $("gv").innerHTML=`${fmtT(g.sum)}<u>Div</u>`;
   const costs=R.steps.map(s=>cost(totals(s.items),s.items));
-  document.querySelectorAll(".step").forEach((el,i)=>{
+  document.querySelectorAll(".step").forEach(el=>{
+    const i=+el.dataset.i;
     el.querySelector(".sc2").textContent=R.steps[i].collapsed?"—":cs(costs[i]);
     el.querySelectorAll(".it").forEach((r,j)=>{
       const it=R.steps[i].items[j],c=it.c.trim(),b=r.querySelector(".pr"),p=c?price(c):null; /* 가격 칸은 항상 수정 가능 (잠긴 단계만 readonly) */
@@ -403,7 +449,7 @@ function sums(skip){
       if(b!==skip)b.value=man?(v2>0?String(v2):c?"0":""):rc>=1?String(rc):raw>0&&raw<1?fmtD(raw):c?"0":""; /* 재화를 적은 줄만 1D 미만을 0으로 표시, 빈 줄은 빈칸 */
     });
   });
-  $("stepcost").innerHTML=R.steps.map((s,i)=>s.collapsed?"":`<div class="sc"><span>${esc(s.title||T("단계","Step"))}</span><b>${fmtD(costs[i].sum)} D</b></div>`).join(""); /* 접힌 단계는 목록에서 생략 */
+  $("stepcost").innerHTML=R.steps.map((s,i)=>s.collapsed||s.b?"":`<div class="sc"><span>${esc(s.title||T("단계","Step"))}</span><b>${fmtD(costs[i].sum)} D</b></div>`).join(""); /* 접힌 단계는 목록에서 생략 */
 }
 /* 노트 칸 높이를 내용에 맞춰 자동으로 늘리고 줄입니다 (입력, 불러오기, 창 크기·글꼴 변경 시) */
 const fitNote=t=>{t.style.height="auto";t.style.height=(t.scrollHeight+t.offsetHeight-t.clientHeight)+"px"};
@@ -449,7 +495,7 @@ const slug=n=>(n||"").trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"-").repla
 const json=()=>{
   const used=new Set(R.steps.flatMap(s=>s.items).map(it=>nk(canon(it.c))).filter(Boolean)),pr={};
   Object.entries(R.prices||{}).forEach(([k,v])=>{if(v>0&&used.has(nk(canon(k))))pr[k]=v});
-  return JSON.stringify({v:1,name:R.name,steps:R.steps.map(({locked,collapsed,...s})=>({...s,...(locked?{locked:true}:{}),...(collapsed?{collapsed:true}:{})})),...(Object.keys(pr).length?{prices:pr}:{})},null,2);
+  return JSON.stringify({v:1,name:R.name,...(R.category?{category:R.category}:{}),steps:R.steps.map(({locked,collapsed,...s})=>({...s,...(locked?{locked:true}:{}),...(collapsed?{collapsed:true}:{})})),...(R.steps.some(s=>s.b)?{at:Math.max(0,R.at|0)}:{}),...(Object.keys(pr).length?{prices:pr}:{})},null,2);
 };
 /* 레시피 파일과 목록 파일은 <script> 로 읽는 .js 형식입니다 (file:// 로 열어도 동작).
    recipe/<이름>.js : window.CRAFT_RECIPE = {레시피};
@@ -457,13 +503,23 @@ const json=()=>{
 const recipeJs=()=>"window.CRAFT_RECIPE = "+json()+";\n";
 const indexJs=idx=>"window.CRAFT_RECIPE_INDEX = "+JSON.stringify(idx,null,2)+";\n";
 /* "window.X = {...};" 형태 또는 순수 JSON 텍스트 → 값 (코드를 실행하지 않고 JSON 으로만 해석) */
-const parseJs=t=>{t=String(t).replace(/^\uFEFF/,"").trim();const m=t.match(/^window\.\w+\s*=\s*([\s\S]*?);?$/);return JSON.parse(m?m[1]:t)};
+/* JSON 이 아닌 JS 표기(주석, 마지막 항목 뒤 쉼표)가 섞인 경우를 위한 보정: 코드를 실행하지 않고 주석·쉼표만 걸러 냄 */
+const looseJson=t=>{let o="",i=0;const n=t.length;
+  while(i<n){const c=t[i],d=t[i+1];
+    if(c==='"'){let j=i+1;while(j<n&&t[j]!=='"'){if(t[j]==="\\")j++;j++}o+=t.slice(i,j+1);i=j+1}
+    else if(c==="/"&&d==="*"){const j=t.indexOf("*/",i+2);i=j<0?n:j+2}
+    else if(c==="/"&&d==="/"){while(i<n&&t[i]!=="\n")i++}
+    else{if(c==="]"||c==="}")o=o.replace(/,\s*$/,"");o+=c;i++}}
+  return o};
+const parseJs=t=>{t=String(t).replace(/^\uFEFF/,"").trim();const m=t.match(/^window\.\w+\s*=\s*([\s\S]*?);?$/),x=m?m[1]:t;try{return JSON.parse(x)}catch(e){return JSON.parse(looseJson(x))}};
+let SNAP=""; /* 마지막으로 불러오거나 저장한 시점의 레시피 내용 (현재와 다르면 저장 안 한 작업) */
+const isDirty=()=>json()!==SNAP;
 const UNDO=[]; /* 되돌리기 기록: 동작마다 "그 동작을 취소하는 함수"를 쌓아 두고 Ctrl+Z 가 마지막부터 하나씩 실행 */
 let LOADED=null; /* 최근에 불러오거나 저장한 레시피 파일 이름 (초기화하면 해제) */
 const recipeFile=()=>{const f=LOADED?LOADED.replace(/\.[^.]*$/,""):slug(R.name);return (f==="index"?"index-recipe":f)+".js"}; /* 불러온 파일이 있으면 그 이름으로 저장. index.js(목록)를 덮어쓰지 않도록 */
 function download(){
   const file=recipeFile(),a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([recipeJs()],{type:"text/javascript"}));a.download=file;a.click();URL.revokeObjectURL(a.href);LOADED=file;
+  a.href=URL.createObjectURL(new Blob([recipeJs()],{type:"text/javascript"}));a.download=file;a.click();URL.revokeObjectURL(a.href);LOADED=file;SNAP=json();return true;
 }
 /* 저장 폴더(recipe)를 처음 한 번만 고르면 브라우저(IndexedDB)가 기억합니다. 이후엔 누르기만 하면 바로 저장. */
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open("poeCraftDir",1);r.onupgradeneeded=()=>r.result.createObjectStore("h");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
@@ -499,10 +555,7 @@ async function save(){
       }
     }
     let w=await(await d.getFileHandle(file,{create:true})).createWritable();await w.write(recipeJs());await w.close();
-    let idx=[];try{idx=parseJs(await(await(await d.getFileHandle("index.js")).getFile()).text());if(!Array.isArray(idx))idx=[]}catch(e){}
-    const prev=idx.find(x=>x&&x.file===file)||(LIST||[]).find(x=>x&&x.file===file);idx=idx.filter(x=>x&&x.file);const k=idx.findIndex(x=>x.file===file),ent={file,name:R.name||file,...(prev&&prev.category?{category:prev.category}:{}),at:Date.now()};if(k>=0)idx[k]={...idx[k],...ent};else idx.push(ent); /* 기존 항목은 제자리에서 갱신(category 유지), 새 항목은 맨 끝. 저장 시각(at)은 기록하되 정렬에는 쓰지 않음 */
-    w=await(await d.getFileHandle("index.js",{create:true})).createWritable();await w.write(indexJs(idx));await w.close();
-    LOADED=file;LIST=idx.filter(x=>x&&x.file);SEL=file;fillList(); /* 드롭다운 즉시 갱신 */
+    LOADED=file;SNAP=json();return true;
   }catch(e){
     if(e&&e.name==="AbortError")return;
     DIR=null;try{await idbSet(null)}catch(x){} /* 기억한 폴더가 사라졌거나 권한이 없으면 다음 저장 때 다시 고르게 */
@@ -511,15 +564,26 @@ async function save(){
 function apply(o){
   if(!o||!Array.isArray(o.steps))return msg(T("레시피 형식이 올바르지 않습니다.","Invalid recipe file."));
   const pr={};if(o.prices&&typeof o.prices==='object')Object.entries(o.prices).forEach(([k,v])=>{v=Number(v);if(String(k).trim()&&v>0&&isFinite(v))pr[String(k).trim()]=v});
-  R={name:String(o.name||""),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),...(s.collapsed?{collapsed:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*100)/100||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)*100)/100)}:{})}))}))};
+  R={name:String(o.name||""),...(typeof o.category==="string"&&o.category?{category:o.category}:{}),prices:pr,steps:o.steps.map(s=>({title:String(s.title||""),note:String(s.note||""),...(s.locked?{locked:true}:{}),...(s.collapsed?{collapsed:true}:{}),...(s.b?{b:true}:{}),items:(Array.isArray(s.items)?s.items:[]).map(it=>({c:String(it.c||""),n:Math.min(9999,Math.max(0,Math.round(Number(it.n)*100)/100||0)),...(Number(it.p)>0?{p:Math.min(9999999,Math.round(Number(it.p)*100)/100)}:{})}))}))};
+  R.steps=[...R.steps.filter(s=>!s.b),...R.steps.filter(s=>s.b)]; /* 메인 단계 뒤에 분기 단계 */
+  if(R.steps.some(s=>s.b)){R.at=Math.max(0,Math.floor(Number(o.at))||0);if(!R.steps.some(s=>!s.b))R.steps.unshift(newStep())}
   if(!R.steps.length)R.steps.push(newStep());
-  UNDO.length=0;renderAll();return true;
+  UNDO.length=0;renderAll();SNAP=json();return true;
 }
 function loadList(){ /* recipe/index.js 가 <script> 로 먼저 읽혀 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
   const a=window.CRAFT_RECIPE_INDEX;
   LIST=Array.isArray(a)?a.filter(x=>x&&x.file):null; /* index.js 순서 그대로 (최근 저장순 정렬 비활성) */
   fillList();
+  loadNames();
 }
+function loadNames(){ /* 목록의 표시 이름을 각 레시피 파일의 name 으로 (이미 내용을 가진 항목은 건너뜀). 순서대로 하나씩 처리 */
+  const L=LIST;if(!L)return;
+  NAMES=NAMES.then(async()=>{
+    for(const x of L){if(x.data)continue;try{window.CRAFT_RECIPE=undefined;await loadScript("recipe/"+encodeURIComponent(x.file));const n=window.CRAFT_RECIPE&&window.CRAFT_RECIPE.name;if(n)x.name=String(n)}catch(e){}}
+    window.CRAFT_RECIPE=undefined;if(LIST===L)fillList();
+  });
+}
+let NAMES=Promise.resolve(); /* 레시피 이름 읽기가 끝날 때까지 loadSel 이 기다림 (같은 window.CRAFT_RECIPE 를 공유) */
 let SEL=null; /* 드롭다운에서 고른 파일 (화면을 다시 그려도 선택을 유지) */
 function fillList(){
   const s=$("list");if(!s)return;
@@ -533,7 +597,7 @@ function fillList(){
     const keys=[...m.keys()].filter(k=>k).sort((a,b)=>rk(a)-rk(b));
     return keys.map(k=>`<optgroup label="${esc(k)}">${m.get(k).map(op).join("")}</optgroup>`).join("")+(m.get("")?`<optgroup label="${T("기타","Other")}">${m.get("").map(op).join("")}</optgroup>`:"");
   };
-  s.innerHTML=LIST&&LIST.length?grp(LIST):`<option>${LIST?T("저장된 레시피 없음","No saved recipes"):"-"}</option>`;
+  s.innerHTML=LIST&&LIST.length?`<option value="" disabled hidden selected>${T("레시피 선택","Select recipe")}</option>`+grp(LIST):`<option>${LIST?T("저장된 레시피 없음","No saved recipes"):"-"}</option>`;
   if(SEL&&LIST&&LIST.some(x=>x.file===SEL))s.value=SEL;
   /* 최소 폭으로 늘어난 만큼 가운데 묶음을 왼쪽으로 절반 옮겨, 불러오기 버튼(오른쪽 끝)은 제자리에 두고 목록만 왼쪽으로 늘림 */
   const c=s.closest(".c");
@@ -550,16 +614,34 @@ function loadScript(src){
     document.head.appendChild(el);
   });
 }
-async function loadSel(){
-  if(!LIST||!LIST.length)return msg(T("저장된 레시피가 없습니다.","No saved recipes."));
-  const f=$("list").value;SEL=f;
+async function loadSel(){ /* 목록에서 고른 레시피를 바로 불러옴 (저장 안 한 작업이 있으면 먼저 저장할지 물음) */
+  const sel=$("list"),f=sel.value;if(!f||!LIST)return;
+  if(isDirty()){
+    const r=await askSave();
+    if(r==="cancel"||(r==="save"&&!(await save()))){sel.value=SEL||"";return}
+  }
+  SEL=f;
   try{
-    window.CRAFT_RECIPE=undefined;
-    await loadScript("recipe/"+encodeURIComponent(f));
-    const o=window.CRAFT_RECIPE;window.CRAFT_RECIPE=undefined;
+    let o=(LIST.find(x=>x.file===f)||{}).data; /* 파일로 직접 추가한 항목은 내용을 이미 가지고 있음 */
+    if(!o){await NAMES;window.CRAFT_RECIPE=undefined;await loadScript("recipe/"+encodeURIComponent(f));o=window.CRAFT_RECIPE;window.CRAFT_RECIPE=undefined}
     if(!o)throw new Error("empty");
+    const en=LIST.find(x=>x.file===f);if(en&&en.category&&!o.category)o={...o,category:en.category};
     if(apply(o))LOADED=f;
   }catch(e){msg(T(`레시피 파일을 읽지 못했습니다: recipe/${f}`,`Could not read recipe file: recipe/${f}`))}
+}
+function askSave(){ /* 저장 / 저장 안 함 / 취소 */
+  return new Promise(ok=>{
+    const d=document.createElement("dialog");d.className="asksave";
+    d.innerHTML=`<p>${T("저장하지 않은 작업이 있습니다. 불러오기 전에 현재 레시피를 저장할까요?","You have unsaved changes. Save the current recipe before loading?")}</p><div class="ab"><button type="button" class="pri" data-r="save">${T("저장","Save")}</button><button type="button" class="sec" data-r="discard">${T("저장 안 함","Don't save")}</button><button type="button" class="sec" data-r="cancel">${T("취소","Cancel")}</button></div>`;
+    d.addEventListener("click",e=>{const r=e.target.dataset&&e.target.dataset.r;if(r)d.close(r)});
+    d.addEventListener("close",()=>{const r=d.returnValue||"cancel";d.remove();ok(r)});
+    document.body.appendChild(d);d.showModal();
+  });
+}
+function saveList(){ /* 현재 목록을 index.js 로 저장 (파일로 직접 추가한 항목의 내용은 넣지 않고 file·name·category 만) */
+  if(!LIST||!LIST.length)return;
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([indexJs(LIST.map(({data,at,...x})=>x))],{type:"text/javascript"}));a.download="index.js";a.click();URL.revokeObjectURL(a.href);
 }
 /* 단계 i 에 재화 줄을 추가하고, 새로 생긴 재화 칸으로 바로 포커스 ("+ 추가" 버튼과 Ctrl+Enter 가 함께 사용) */
 function addItem(i){
@@ -568,18 +650,39 @@ function addItem(i){
   const f=[...document.querySelectorAll(`.step[data-i="${i}"] .it [data-f=c]`)].pop();if(f)f.focus();
 }
 /* 단계를 맨 끝에 추가하고 첫 재화 칸으로 포커스 ("+ 단계 추가" 버튼과 Ctrl+Shift+Enter 가 함께 사용) */
-function addStep(b){
+/* 분기 전환: 분기점 아래의 메인 단계들과 왼쪽 분기 단계들의 자리를 서로 바꿈 (같은 높이에서는 메인만 계산되므로 계산 대상이 바뀜) */
+function swapBranch(){
+  const mc=mainN();if(mc>=R.steps.length)return;
+  const at=Math.min(Math.max(R.at|0,0),mc),snap=R.steps.map(x=>[x,!!x.b]),a0=R.at;
+  const head=R.steps.slice(0,at),tail=R.steps.slice(at,mc),br=R.steps.slice(mc);
+  tail.forEach(x=>{x.b=true});br.forEach(x=>{delete x.b});
+  R.steps.splice(0,R.steps.length,...head,...br,...tail);
+  UNDO.push(()=>{R.steps.splice(0,R.steps.length,...snap.map(x=>x[0]));snap.forEach(([x,b])=>{if(b)x.b=true;else delete x.b});R.at=a0});
+  refresh();
+}
+function addStep(b,br){
   /* 새 단계가 생겨 버튼이 아래로 밀린 만큼 그대로 스크롤해서, 버튼이 화면에서 같은 자리에 머물게 합니다 */
   const y0=b.getBoundingClientRect().top;
-  const ns=newStep();R.steps.push(ns);UNDO.push(()=>{const k=R.steps.indexOf(ns);if(k>=0)R.steps.splice(k,1)});
+  const ns=newStep();if(br)ns.b=true;const ix=br?R.steps.length:mainN(); /* 메인 단계는 메인 맨 끝(분기 단계들 앞), 분기 단계는 분기 맨 끝 */
+  R.steps.splice(ix,0,ns);UNDO.push(()=>{const k=R.steps.indexOf(ns);if(k>=0)R.steps.splice(k,1)});
   refresh();
-  const dy=b.getBoundingClientRect().top-y0;
+  const nb=b.isConnected?b:(document.querySelector(`button[data-a="${b.dataset.a}"]:not([hidden])`)||b),dy=nb.getBoundingClientRect().top-y0; /* 화면을 다시 그리면 눌렀던 버튼이 교체되므로 새 버튼 기준 */
   if(dy)window.scrollBy({top:dy,left:0,behavior:"instant"});
-  const tf=document.querySelector(`.step[data-i="${R.steps.length-1}"] .it [data-f=c]`);if(tf)tf.focus({preventScroll:true}); /* 새 단계의 첫 재화 칸으로 포커스 */
+  const tf=document.querySelector(`.step[data-i="${ix}"] .it [data-f=c]`);if(tf)tf.focus({preventScroll:true}); /* 새 단계의 첫 재화 칸으로 포커스 */
 }
 $("app").addEventListener("click",e=>{
   const b=e.target.closest("button[data-a]");if(!b)return;
   const a=b.dataset.a,st=b.closest(".step"),i=st?+st.dataset.i:-1,it=b.closest(".it"),j=it?+it.dataset.j:-1;
+  if(a==="addBStep"){addStep(b,true);return}
+  if(a==="swapBranch"){swapBranch();return}
+  if(a==="addBranch"){ /* 이 단계의 왼쪽에 분기를 만들고 첫 분기 단계를 추가 (분기는 하나만) */
+    if(R.steps.some(x=>x.b)||i<1)return;
+    const ns=newStep(),a0=R.at,snap=R.steps.map(x=>[x,!!x.b]);
+    R.steps.slice(i).forEach(x=>{x.b=true}); /* 이 단계부터 아래의 기존 메인 단계는 분기로 */
+    R.steps.splice(i,0,ns);R.at=i; /* 새 빈 단계가 메인 (분기 전환을 한 번 누른 상태) */
+    UNDO.push(()=>{R.steps.splice(0,R.steps.length,...snap.map(x=>x[0]));snap.forEach(([x,b])=>{if(b)x.b=true;else delete x.b});R.at=a0});refresh();
+    const tf=document.querySelector(`.step[data-i="${i}"] .it [data-f=c]`);if(tf)tf.focus();return;
+  }
   if(a==="lock"){const s=R.steps[i],p=!!s.locked;UNDO.push(()=>{s.locked=p});s.locked=!s.locked;refresh();return}
   if(a==="qup"||a==="qdn"){ /* 수량 ▲▼ 버튼 */
     const s=R.steps[i],o=s&&s.items[j];if(!o||s.locked)return;
@@ -591,15 +694,23 @@ $("app").addEventListener("click",e=>{
   if(a==="addStep")addStep(b);
   else if(a==="fold"){const s=R.steps[i],p=!!s.collapsed;UNDO.push(()=>{s.collapsed=p});s.collapsed=!s.collapsed;refresh()}
   else if(a==="delStep"){
-    const ds=R.steps[i];UNDO.push(()=>{R.steps.splice(Math.min(i,R.steps.length),0,ds)}); /* 확인 없이 바로 삭제, Ctrl+Z 로 복원 */
-    R.steps.splice(i,1);refresh();
+    const ds=R.steps[i],a0=R.at,snap=R.steps.map(x=>[x,!!x.b]);
+    UNDO.push(()=>{R.steps.splice(0,R.steps.length,...snap.map(x=>x[0]));snap.forEach(([x,b])=>{if(b)x.b=true;else delete x.b});R.at=a0}); /* 확인 없이 바로 삭제, Ctrl+Z 로 복원 */
+    R.steps.splice(i,1);
+    if(!ds.b&&R.at>i)R.at--; /* 분기점 위의 메인 단계를 지우면 분기점도 한 칸 위로 */
+    if(R.steps.some(x=>x.b)){
+      R.at=Math.min(Math.max(R.at|0,0),mainN());
+      if(R.at>=mainN()){R.steps.forEach(x=>{delete x.b});delete R.at} /* 분기점 이하 메인 단계가 없으면 분기를 취소하고 분기 단계를 메인으로 편입 */
+    }
+    refresh();
   }
   else if(a==="addItem")addItem(i);
   else if(a==="delItem"){const S=R.steps[i],di=S.items[j];UNDO.push(()=>{S.items.splice(Math.min(j,S.items.length),0,di)});S.items.splice(j,1);refresh()}
-  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;UNDO.length=0;renderAll()}}
+  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;UNDO.length=0;renderAll();SNAP=json()}}
   else if(a==="save")save();
   else if(a==="pick")$("file").click();
-  else if(a==="loadsel")loadSel();
+  else if(a==="loadidx")$("idxfile").click();
+  else if(a==="savelist")saveList();
 });
 $("app").addEventListener("input",e=>{
   const t=e.target;
@@ -706,7 +817,7 @@ function dndEnd(e){
   D.els.forEach(el=>{if(D.row&&moved)el.style.transition="none";el.style.transform="";el.classList.remove("dragging")}); /* 줄은 DOM 순서를 바로 바꾸므로, 놓는 순간 되돌아가는 애니메이션이 보이지 않게 끔 */
   if(!moved)return;
   if(D.row){moveRow(D.si,D.i,D.to);void D.st.offsetWidth;D.els.forEach(el=>{el.style.transition=""})}
-  else{const[s]=R.steps.splice(D.i,1);R.steps.splice(D.to,0,s);const f=D.i;UNDO.push(()=>{R.steps.splice(R.steps.indexOf(s),1);R.steps.splice(f,0,s)});refresh()}
+  else{const[s]=R.steps.splice(D.i+D.off,1);R.steps.splice(D.to+D.off,0,s);const f=D.i+D.off;UNDO.push(()=>{R.steps.splice(R.steps.indexOf(s),1);R.steps.splice(f,0,s)});refresh()}
 }
 /* 한 단계 안에서 재화 줄 이동: 데이터와 화면(DOM)을 함께 옮김. 화면을 다시 그리지 않으므로 아이콘·입력 상태가 그대로 유지됨 */
 function moveRow(si,from,to){
@@ -721,11 +832,11 @@ $("app").addEventListener("pointerdown",e=>{
   const h=e.target.closest(".gr,.rg");if(!h||e.button>0||DND)return;
   const row=h.classList.contains("rg"),sp=h.closest(".step");
   if(row&&R.steps[+sp.dataset.i].locked)return;
-  const st=row?h.closest(".it"):sp,els=[...(row?sp.querySelectorAll(".it"):document.querySelectorAll(".step"))];if(els.length<2)return;
+  const st=row?h.closest(".it"):sp,bl=!!R.steps[+sp.dataset.i].b,els=[...(row?sp.querySelectorAll(".it"):[...document.querySelectorAll(".step")].filter(x=>!!R.steps[+x.dataset.i].b===bl))]; /* 단계는 같은 흐름(메인 또는 분기) 안에서만 이동 */if(els.length<2)return;
   e.preventDefault();
   if(row){const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur();acHide()} /* 입력 중이던 칸·자동완성 목록은 닫고 시작 */
   const i0=els.indexOf(st);
-  DND={row,si:+sp.dataset.i,i:i0,to:i0,st,els,h,id:e.pointerId,y0:e.clientY,y:e.clientY,s0:scrollY,raf:0,
+  DND={row,off:!row&&bl?mainN():0,si:+sp.dataset.i,i:i0,to:i0,st,els,h,id:e.pointerId,y0:e.clientY,y:e.clientY,s0:scrollY,raf:0,
     rects:els.map(el=>{const r=el.getBoundingClientRect();return{top:r.top+scrollY,h:r.height}}),
     step:st.offsetHeight+(parseFloat(getComputedStyle(st).marginBottom)||0)};
   try{h.setPointerCapture(e.pointerId)}catch(x){}
@@ -738,7 +849,7 @@ $("app").addEventListener("keydown",e=>{
   const h=e.target.closest&&e.target.closest(".gr");if(!h||(e.key!=="ArrowUp"&&e.key!=="ArrowDown"))return;
   e.preventDefault();
   const i=+h.closest(".step").dataset.i,k=e.key==="ArrowUp"?i-1:i+1;
-  if(k<0||k>=R.steps.length)return;
+  const sb=!!R.steps[i].b,mc=mainN();if(k<(sb?mc:0)||k>=(sb?R.steps.length:mc))return; /* 같은 흐름 안에서만 */
   [R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]];UNDO.push(()=>{[R.steps[i],R.steps[k]]=[R.steps[k],R.steps[i]]});refresh();
   const g=document.querySelector(`.step[data-i="${k}"] .gr`);if(g)g.focus();
 });
@@ -771,8 +882,21 @@ $("app").addEventListener("beforeinput",e=>{ /* 비용 칸은 숫자만: 소수�
 $("app").addEventListener("focusout",e=>{if(e.target.dataset&&e.target.dataset.f==="p")sums()}); /* 입력을 마치면 표시 형식을 정리 */
 $("app").addEventListener("change",e=>{
   if(e.target.id==="psrc"){selectPrices(e.target.value);return}
-  if(e.target.id==="list"){SEL=e.target.value;return}
+  if(e.target.id==="list"){loadSel();return}
+  if(e.target.id==="idxfile"){ /* index.js 로 목록 교체 */
+    const f=e.target.files[0];if(!f)return;
+    f.text().then(t=>{const a=parseJs(t);if(!Array.isArray(a))throw 0;LIST=a.filter(x=>x&&x.file);SEL=null;fillList();loadNames()}).catch(()=>alert(T("목록 파일(index.js)을 읽지 못했습니다.","Could not read the list file (index.js)."))).finally(()=>{e.target.value=""});
+    return;
+  }
   if(e.target.id!=="file"||!e.target.files[0])return;
+  if(e.target.files.length>1){ /* 2개 이상 선택: index.js 를 읽을 때처럼 목록을 선택한 파일들로 교체 */
+    Promise.all([...e.target.files].map(f=>f.text().then(t=>{const o=parseJs(t);return o&&Array.isArray(o.steps)?{file:f.name,name:String(o.name||f.name),...(typeof o.category==="string"&&o.category?{category:o.category}:{}),data:o}:null}).catch(()=>null))).then(r=>{
+      r=r.filter(Boolean);if(!r.length)return;
+      const m=new Map();r.forEach(en=>m.set(en.file,en)); /* 같은 파일 이름은 하나로 */
+      LIST=[...m.values()];SEL=null;fillList();loadNames();
+    }).finally(()=>{e.target.value=""});
+    return;
+  }
   const fn=e.target.files[0].name;
   e.target.files[0].text().then(t=>{const o=parseJs(t);if(o&&o.prices&&!o.steps){setPrices(o);priceInfo();upd()}else if(apply(o))LOADED=fn}).catch(()=>{}).finally(()=>{e.target.value=""});
 });
@@ -822,7 +946,7 @@ $("app").addEventListener("keydown",e=>{
 /* Ctrl+Shift+Enter (Mac은 ⌘+Shift+Enter): 단계 추가 ("+ 단계 추가" 버튼과 같음) */
 $("app").addEventListener("keydown",e=>{
   if(e.key!=="Enter"||!(e.ctrlKey||e.metaKey)||!e.shiftKey||e.altKey||e.isComposing||e.keyCode===229)return;
-  const b=document.querySelector("button[data-a=addStep]");if(!b)return;
+  const b=document.querySelector("button[data-a=addStep]:not([hidden])");if(!b)return;
   e.preventDefault();acHide();
   addStep(b);
 });
@@ -839,7 +963,7 @@ addEventListener("keydown",e=>{
 addEventListener("resize",fitNotes);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitNotes); /* 웹폰트가 늦게 적용돼 줄바꿈이 달라지는 경우 */
 addEventListener("sitebar:lang",e=>{LANG=e.detail;fillCur();renderAll()});
-renderAll();loadList();loadPrices();loadHistory();
+renderAll();SNAP=json();loadList();loadPrices();loadHistory();
 </script>
 </body>
 </html>
