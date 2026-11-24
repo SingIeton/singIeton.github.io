@@ -326,6 +326,9 @@ def sort_leagues(leagues):
 
 
 # ---------------------------------------------------------------- 대화형 입력
+ALL_LEAGUES = "0"  # --league 0 / 선택 번호 0 = 목록의 모든 리그 (Standard 제외)
+
+
 def _ask(prompt):
     try:
         return input(prompt).strip()
@@ -335,13 +338,16 @@ def _ask(prompt):
 
 def ask_league(leagues):
     print("리그를 선택하세요:")
+    print(f"  [{ALL_LEAGUES}] 목록의 모든 리그 (Standard 제외)")
     for i, l in enumerate(leagues, 1):
         print(f"  [{i}] {l}")
     while True:
         v = _ask("번호 입력: ")
+        if v == ALL_LEAGUES:
+            return ALL_LEAGUES
         if v.isdigit() and 1 <= int(v) <= len(leagues):
             return leagues[int(v) - 1]
-        print(f"  1~{len(leagues)} 사이의 번호를 입력해 주세요.")
+        print(f"  0~{len(leagues)} 사이의 번호를 입력해 주세요.")
 
 
 def ask_days():
@@ -353,60 +359,8 @@ def ask_days():
         print("  1 이상의 정수를 입력해 주세요.")
 
 
-# ---------------------------------------------------------------- 메인
-def main():
-    ap = argparse.ArgumentParser(description="poe2scout 에서 과거 리그 N일차 재화 시세(디바인 기준)를 받아 JS 파일로 저장")
-    ap.add_argument("--list", action="store_true", help="리그 목록만 출력")
-    ap.add_argument("--league", metavar="이름", help="리그 이름(예: \"Fate of the Vaal\")")
-    ap.add_argument("--day", type=int, nargs="+", metavar="N", help="일차(여러 개 가능). 예: --day 4 7 10 15 30")
-    ap.add_argument("--start", metavar="YYYY-MM-DD", help="리그 시작일(1일차) 직접 지정. 생략하면 시계열의 가장 이른 날짜")
-    ap.add_argument("--source", default=str(DEFAULT_OUT / SOURCE_JS), help="항목 목록을 읽을 JS 파일(기본: price-history/crafting-sheet-prices.js)")
-    ap.add_argument("--out", default=str(DEFAULT_OUT), help="결과 저장 폴더(기본: 스크립트 옆 price-history 폴더)")
-    grp = ap.add_mutually_exclusive_group()
-    grp.add_argument("--no-cache", action="store_true", help="캐시를 무시하고 새로 요청")
-    grp.add_argument("--use-cache", action="store_true", help="만료 시간과 무관하게 기존 캐시를 사용(없는 항목만 새로 요청)")
-    args = ap.parse_args()
-    try:
-        sys.stdout.reconfigure(line_buffering=True, errors="replace")
-        sys.stderr.reconfigure(errors="replace")
-    except Exception:
-        pass
-
-    global FORCE_CACHE
-    FORCE_CACHE = args.use_cache
-    use_cache = not args.no_cache
-    out_dir = Path(args.out)
-    raw_dir = out_dir / "raw_data" / "poe2scout"
-
-    log("리그 목록 조회 중...")
-    try:
-        leagues = fetch_leagues(raw_dir, use_cache)
-    except RuntimeError as e:
-        sys.exit(f"리그 목록을 받지 못했습니다: {e}")
-    leagues = sort_leagues(leagues)
-    if args.list:
-        print("poe2scout 리그 목록:")
-        for l in leagues:
-            print(f"  {l}")
-        return
-    if not leagues:
-        sys.exit("조회 가능한 리그가 없습니다.")
-    if not args.league:
-        args.league = ask_league(leagues)
-    if not args.day:
-        args.day = ask_days()
-    if any(d < 1 for d in args.day):
-        sys.exit("--day 는 1 이상이어야 합니다.")
-    days = sorted(set(args.day))
-    start_override = None
-    if args.start:
-        try:
-            start_override = dt.date.fromisoformat(args.start)
-        except ValueError:
-            sys.exit("--start 형식은 YYYY-MM-DD 입니다.")
-
-    league = pick_league(leagues, args.league)
-    wanted = load_wanted(Path(args.source))
+# ---------------------------------------------------------------- 리그 1개 처리
+def run_league(league, wanted, days, start_override, raw_dir, out_dir, use_cache):
     log(f"리그: {league} / 대상 항목 {len(wanted)}개 / 일차: {', '.join(map(str, days))}")
 
     # 1) 이름 -> itemId
@@ -501,6 +455,73 @@ def main():
         path = out_dir / f"crafting-sheet-prices-{safe_name(league)}-day{n}.js"
         write_atomic(path, f"window.{JS_VARIABLE} = {body};\n")
         log(f"  완료 -> {path}")
+
+
+# ---------------------------------------------------------------- 메인
+def main():
+    ap = argparse.ArgumentParser(description="poe2scout 에서 과거 리그 N일차 재화 시세(디바인 기준)를 받아 JS 파일로 저장")
+    ap.add_argument("--list", action="store_true", help="리그 목록만 출력")
+    ap.add_argument("--league", metavar="이름", help="리그 이름(예: \"Fate of the Vaal\")")
+    ap.add_argument("--day", type=int, nargs="+", metavar="N", help="일차(여러 개 가능). 예: --day 4 7 10 15 30")
+    ap.add_argument("--start", metavar="YYYY-MM-DD", help="리그 시작일(1일차) 직접 지정. 생략하면 시계열의 가장 이른 날짜")
+    ap.add_argument("--source", default=str(DEFAULT_OUT / SOURCE_JS), help="항목 목록을 읽을 JS 파일(기본: price-history/crafting-sheet-prices.js)")
+    ap.add_argument("--out", default=str(DEFAULT_OUT), help="결과 저장 폴더(기본: 스크립트 옆 price-history 폴더)")
+    grp = ap.add_mutually_exclusive_group()
+    grp.add_argument("--no-cache", action="store_true", help="캐시를 무시하고 새로 요청")
+    grp.add_argument("--use-cache", action="store_true", help="만료 시간과 무관하게 기존 캐시를 사용(없는 항목만 새로 요청)")
+    args = ap.parse_args()
+    try:
+        sys.stdout.reconfigure(line_buffering=True, errors="replace")
+        sys.stderr.reconfigure(errors="replace")
+    except Exception:
+        pass
+
+    global FORCE_CACHE
+    FORCE_CACHE = args.use_cache
+    use_cache = not args.no_cache
+    out_dir = Path(args.out)
+    raw_dir = out_dir / "raw_data" / "poe2scout"
+
+    log("리그 목록 조회 중...")
+    try:
+        leagues = fetch_leagues(raw_dir, use_cache)
+    except RuntimeError as e:
+        sys.exit(f"리그 목록을 받지 못했습니다: {e}")
+    leagues = sort_leagues(leagues)
+    if args.list:
+        print("poe2scout 리그 목록:")
+        for l in leagues:
+            print(f"  {l}")
+        return
+    if not leagues:
+        sys.exit("조회 가능한 리그가 없습니다.")
+    if not args.league:
+        args.league = ask_league(leagues)
+    if not args.day:
+        args.day = ask_days()
+    if any(d < 1 for d in args.day):
+        sys.exit("--day 는 1 이상이어야 합니다.")
+    days = sorted(set(args.day))
+    start_override = None
+    if args.start:
+        try:
+            start_override = dt.date.fromisoformat(args.start)
+        except ValueError:
+            sys.exit("--start 형식은 YYYY-MM-DD 입니다.")
+
+    wanted = load_wanted(Path(args.source))
+    targets = [l for l in leagues if key(l) != key("Standard")] if args.league == ALL_LEAGUES else [pick_league(leagues, args.league)]
+    if len(targets) > 1 and start_override:
+        sys.exit("--start 는 리그를 하나만 선택했을 때만 쓸 수 있습니다.")
+    for i, league in enumerate(targets, 1):
+        if len(targets) > 1:
+            log(f"=== [{i}/{len(targets)}] {league} ===")
+        try:
+            run_league(league, wanted, days, start_override, raw_dir, out_dir, use_cache)
+        except SystemExit as e:  # 여러 리그를 돌릴 때는 한 리그가 실패해도 다음 리그로 진행
+            if len(targets) == 1:
+                raise
+            warn(f"  {league}: {e.code} -> 건너뜁니다.")
 
 if __name__ == "__main__":
     main()

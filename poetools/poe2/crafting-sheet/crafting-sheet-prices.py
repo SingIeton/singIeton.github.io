@@ -82,11 +82,11 @@ Orb of Alchemy                  연금술의 오브
 Vaal Orb                        바알 오브
 Fracturing Orb                  분열의 오브
 Hinekora's Lock                 히네코라의 머리카락
-Blacksmith's Whetstone         대장장이의 숫돌
+Blacksmith's Whetstone          대장장이의 숫돌
 Arcanist's Etcher               신비학자의 식각기
 Armourer's Scrap                방어구 장인의 고철
 
- 
+
 [Essences]
 Essence of the Breach           균열의 에센스
 Essence of the Abyss            심연의 에센스
@@ -210,6 +210,9 @@ ALIASES = {
     "Vaal Orb": "vaal",
     "Orb of Chance": "chance",
     "Mirror of Kalandra": "mirror",
+    "Blacksmith's Whetstone": "whetstone",
+    "Arcanist's Etcher": "etcher",
+    "Armourer's Scrap": "scrap",
     # 에센스: poe.ninja id 에는 'the' 가 들어감
     "Greater Essence of Body": "greater-essence-of-the-body",
     "Perfect Essence of Body": "perfect-essence-of-the-body",
