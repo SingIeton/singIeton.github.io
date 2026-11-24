@@ -5,15 +5,15 @@
   2) 수치 변동   : 굴린 뒤 나올 수 있는 값(예: -3/-4/-5)별 확률을 계산(배율 0.78~1.22, 0.01 단위)하고, 값별 가격은 검색(실패 시 ratio) 또는 '변화 없음' 가치로 정함
   3) 바알 인챈트 : 인챈트별로 (검색) 또는 (베이스 x ratio). 검색으로 가격을 못 구하면 ratio 로 대체
   4) 소켓 추가   : 검색 (socket_search 가 None 이면 장신구처럼 변화 없음으로 합산)
-가격 판정(fair_price)·레이트리밋·poe.ninja 환율은 poe2_overquality-flip.py 의 것을 가져왔다. 가격 단위는 Divine.
+가격 판정(최저가, 이상치 제외)·레이트리밋·poe.ninja 환율을 사용한다. 가격 단위는 Divine.
 
 실행:
-  python poe2_unique_corrupt.py                      # UNIQUES 전체, 최신 리그
-  python poe2_unique_corrupt.py "Viper Cap"          # 하나만
-  python poe2_unique_corrupt.py --league "리그이름"   # latest | previous | standard | 이름
-  python poe2_unique_corrupt.py --out other_dir      # 저장 폴더 (기본: 스크립트 옆 uniques/)
+  python unique_corrupt.py                      # UNIQUES 전체, 최신 리그
+  python unique_corrupt.py "Viper Cap"          # 하나만
+  python unique_corrupt.py --league "리그이름"   # latest | previous | standard | 이름
+  python unique_corrupt.py --out other_dir      # 저장 폴더 (기본: 스크립트 옆 uniques/)
   (실행하면 캐시 사용 여부를 묻는다: 1 = yes, 2 = no(전체 검색). --use-cache 를 주면 묻지 않고 사용)
-  python poe2_unique_corrupt.py --use-cache          # 같은 리그로 저장된 js 의 검색 결과 중 검색 조건이 같은 것은 재사용 (거래소 검색 생략)
+  python unique_corrupt.py --use-cache          # 같은 리그로 저장된 js 의 검색 결과 중 검색 조건이 같은 것은 재사용 (거래소 검색 생략)
 """
 import argparse
 import hashlib
@@ -71,6 +71,15 @@ ENCHANTS = {
         {"en": "Mana Regeneration Rate",          "ko": "마나 재생 속도 % 증가",    "range": "20—30",  "mod": "#% increased Mana Regeneration Rate"},
         {"en": "Level of all Minion Skills +1",   "ko": "모든 소환수 스켈 레벨 +1",  "range": "1",      "mod": "# to Level of all Minion Skills"},
     ],
+    "shield": [
+        {"en": "Increased Armour",                "ko": "방어도 % 증가",           "range": "15—25",  "mod": "#% increased Armour (Local)"},
+        {"en": "Reduced Attribute Requirements",  "ko": "능력치 요구사항 감소",     "range": "10—20",  "mod": "#% increased Attribute Requirements"},
+        {"en": "Increased Thorns Damage",         "ko": "가시 피해 % 증가",        "range": "40—50",  "mod": "#% increased Thorns damage"},
+        {"en": "Increased Block Chance",          "ko": "막기 확률 % 증가",        "range": "10—15",  "mod": "#% increased Block chance"},
+        {"en": "Maximum Block Chance",            "ko": "최대 막기 확률 +%",       "range": "3",      "mod": "+#% to maximum Block chance"},
+        {"en": "Life on Block",                   "ko": "막아낼 시 생명력 획득",    "range": "20—25",  "mod": "# Life gained when you Block"},
+        {"en": "Mana on Block",                   "ko": "막아낼 시 마나 획득",      "range": "10—15",  "mod": "# Mana gained when you Block"},
+    ],
 }
 
 
@@ -97,17 +106,29 @@ def no_enchant_mods(u):
     return [{**M(e["mod"]), "group": "enchant"} for e in ENCHANTS[u["slot"]] if e.get("mod")]
 
 
+SVALINN_ENCHANTS = [
+    {"en": "Increased Armour",               "ratio": 1.00},
+    {"en": "Reduced Attribute Requirements", "ratio": 1.00},
+    {"en": "Increased Thorns Damage",        "ratio": 1.00},
+    {"en": "Increased Block Chance",         "ratio": 1.00},
+    {"en": "Maximum Block Chance",           "ratio": 1.00},
+    {"en": "Life on Block",                  "ratio": 1.00},
+    {"en": "Mana on Block",                  "ratio": 1.00},
+]
+
 UNIQUES = [
     {
-        "name": "Constricting Command",
-        "ko": "목 죄이는 명령",                        # 한글 이름 (비우면 영문만 표시)
+        "name": "Constricting Command",      # 거래소 검색에 쓰는 이름
+        "file": "Constricting_Command_Oversocket",   # 저장 파일명 (uniques/<file>.js). 없으면 name 사용
+        "title": "Constricting Command (Oversocket)",   # html 에 표시할 이름 (없으면 name)
+        "ko": "목 죄이는 명령 (오버소켓)",              # 한글 이름 (비우면 영문만 표시)
         "type": "Viper Cap",             # 베이스 타입(선택). 이름만으로 검색이 안 되면 지정
         "slot": "helmet",                # 장비 부위 -> 바알 인챈트 목록은 파일 상단 ENCHANTS[slot] 사용
         "base": "",                      # html 목록에 작게 표시할 문구 (영문 기본, 한글은 "base_ko" 로 추가 가능)
         # 모든 표시 문구는 영문이 기본(label/name/base). 한글 번역이 있을 때만 "ko"(base 는 "base_ko") 를 추가 -> 화면이 한글일 때 사용, 없으면 영문 그대로
         # root 노드(베이스) 아래에 표시할 문구. 직접 수정. 한글은 root_text_ko (비우면 영문 표시)
         "root_text": ["Sockets ≥2", "Surrounded =-4"],
-        "root_text_ko": ["소켓 ≥2", "포위 수 =-4"],
+        "root_text_ko": ["소켓 = 2", "포위 수 = -4"],
         # 기본 검색 값: 아래 모든 검색(base/enchant/socket/reroll)이 이 값을 바탕으로 한다.
         #   각 검색에는 기본값과 다른 항목만 적는다. corrupted / sockets 는 적으면 덮어쓰고,
         #   mods 는 같은 옵션(stat)이면 해당 옵션만 교체, 없는 옵션은 추가한다 (기본 옵션은 그대로 유지).
@@ -142,18 +163,131 @@ UNIQUES = [
         # [1] 수치 변동. roll = 구매하는 베이스의 해당 옵션 수치. 굴린 뒤 나올 수 있는 값(-3, -4, -5)이 각각 동등한 결과이고, 확률은 roll 에서 계산한다.
         #   outcomes 에는 나올 수 있는 값을 전부 적어야 한다 (빠지면 오류).
         #   "search" 가 있으면 거래소 검색으로 가격을 구하고, 없으면 '변화 없음' 검색 가격을 그대로 쓴다 (값이 그대로인 경우).
-        #   "ratio" (선택): 검색 실패(정상 매물 < MIN_LISTINGS)일 때 베이스 가격 x ratio 로 대체. 없으면 변화 없음 가치로 대체.
+        #   "suffix" / "suffix_ko" (선택): 화면 라벨 뒤에 붙는 문구 (예: " 이상"). "ratio" (선택): 검색 실패(정상 매물 < MIN_LISTINGS)일 때 베이스 가격 x ratio 로 대체. 없으면 변화 없음 가치로 대체.
         "reroll": {
             "label": "Surround", "ko": "포위", "roll": -4,
             "outcomes": [
-                {"value": -3, "search": {"mods": [
+                {"value": -5, "suffix": " or lower", "suffix_ko": " 이상", "ratio": 8.0, "search": {"mods": [
                     M("# to maximum Life", min=105),
-                    M("Require # additional enemies to be Surrounded", min=-3, max=-3),
+                    M("Require # additional enemies to be Surrounded", max=-5),
                 ]}},
-                {"value": -4},
-                {"value": -5, "search": {"mods": [
+                {"value": -4, "suffix": "", "suffix_ko": "", "ratio": 1.0, "search": {"mods": [
                     M("# to maximum Life", min=105),
-                    M("Require # additional enemies to be Surrounded", min=-5, max=-5),
+                    M("Require # additional enemies to be Surrounded", min=-4, max=-4),
+                ]}},
+                {"value": -3, "suffix": " or higher", "suffix_ko": " 이하", "ratio": 1.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", min=-3),
+                ]}},
+            ],
+        },
+    },
+    {
+        "name": "Constricting Command",
+        "file": "Constricting_Command",
+        "ko": "목 죄이는 명령",
+        "type": "Viper Cap",
+        "slot": "helmet",
+        "base": "",
+        "root_text": ["Sockets =1", "Surrounded =-4"],
+        "root_text_ko": ["소켓 = 1", "포위 수 = -4"],
+        "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
+            M("# to maximum Life", min=110),
+            M("# to all Attributes"),
+            M("# Life Regeneration per second"),
+            M("Require # additional enemies to be Surrounded", min=-4, max=-4),
+        ]},
+        # [0] 베이스 구매가 (미타락, 소켓 1)
+        "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
+        # [2] 바알 인챈트 검색 = 기본 검색 그대로
+        "enchant_search": {},
+        # [3] 소켓 +1 검색 (1 -> 2소켓)
+        "socket_search": {"sockets": (2, None), "mods": [
+            M("# to maximum Life", min=108),
+        ]},
+        "enchants": [
+            {"en": "Increased Energy Shield",        "ratio": 0.85},
+            {"en": "Reduced Attribute Requirements", "ratio": 0.70},
+            {"en": "Maximum Cold Resistance",        "ratio": 1.15},
+            {"en": "Spirit",                         "search": True, "ratio": 1.00},
+            {"en": "Maximum Power Charges +1",       "search": True, "ratio": 1.00},
+            {"en": "Accuracy Rating",                "ratio": 1.10},
+            {"en": "Life Regeneration rate",         "ratio": 1.05},
+            {"en": "Mana Regeneration Rate",         "ratio": 0.85},
+            {"en": "Level of all Minion Skills +1",  "search": True, "ratio": 1.00},
+        ],
+        "reroll": {
+            "label": "Surround", "ko": "포위", "roll": -4,
+            "outcomes": [
+                {"value": -5, "suffix": " or lower", "suffix_ko": " 이상", "ratio": 8.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", max=-5),
+                ]}},
+                {"value": -4, "suffix": "", "suffix_ko": "", "ratio": 1.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", min=-4, max=-4),
+                ]}},
+                {"value": -3, "suffix": " or higher", "suffix_ko": " 이하", "ratio": 1.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", min=-3),
+                ]}},
+            ],
+        },
+    },
+    {
+        "name": "Svalinn",
+        "file": "Svalinn_0-1",
+        "title": "Svalinn (0~1)",
+        "ko": "스발린 (0~1)",
+        "type": "Crucible Tower Shield",
+        "slot": "shield",
+        "base": "",
+        "root_text": ["Sockets =1", "Armour ≥250%", "Blocked Hits ≤1%"],
+        "root_text_ko": ["소켓 = 1", "방어도 ≥ 250%", "막기 피격 피해 ≤ 1%"],
+        # 0~1 은 바알 수치 변동을 해도 0 은 0, 1 은 1 로 그대로 -> 수치 변동 = 변화 없음과 동일 취급
+        "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
+            M("#% increased Armour (Local)", min=250),
+            M("You take #% of damage from Blocked Hits", max=1),
+        ]},
+        "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
+        "enchant_search": {},
+        "socket_search": {"sockets": (2, None)},
+        "enchants": SVALINN_ENCHANTS,
+        "reroll": {
+            "label": "Blocked Dmg", "ko": "막기 피해", "roll": 1,
+            "outcomes": [
+                {"value": 1, "text": "1", "text_ko": "1"},      # search 없음 = 변화 없음 가격
+            ],
+        },
+    },
+    {
+        "name": "Svalinn",
+        "file": "Svalinn_2-5",
+        "title": "Svalinn (2~5)",
+        "ko": "스발린 (2~5)",
+        "type": "Crucible Tower Shield",
+        "slot": "shield",
+        "base": "",
+        "root_text": ["Sockets =1", "Armour ≥250%", "Blocked Hits 2—5%"],
+        "root_text_ko": ["소켓 = 1", "방어도 ≥ 250%", "막기 피격 피해 2—5%"],
+        "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
+            M("#% increased Armour (Local)", min=250),
+            M("You take #% of damage from Blocked Hits", min=2, max=5),
+        ]},
+        "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
+        "enchant_search": {},
+        "socket_search": {"sockets": (2, None)},
+        "enchants": SVALINN_ENCHANTS,
+        # 수치 변동: 구매 베이스의 수치(roll) 기준. 기본 검색 범위(2~5) 안이면 변화 없음과 같은 가격, 벗어나면 별도 검색
+        "reroll": {
+            "label": "Blocked Dmg", "ko": "막기 피해", "roll": 3.5,
+            "outcomes": [
+                {"range": (None, 1), "text": "≤1", "text_ko": "≤ 1", "search": {"mods": [
+                    M("You take #% of damage from Blocked Hits", max=1),
+                ]}},
+                {"range": (2, 5), "text": "2—5", "text_ko": "2—5"},
+                {"range": (6, None), "text": "6+", "text_ko": "6 이상", "search": {"mods": [
+                    M("You take #% of damage from Blocked Hits", min=6),
                 ]}},
             ],
         },
@@ -165,13 +299,19 @@ def _mod_key(m):
     return m.get("id") or m["stat"]
 
 
+def fname(u):
+    """저장 파일명(확장자 제외): file 이 있으면 file, 없으면 name."""
+    return u.get("file") or u["name"]
+
+
 def apply_defaults(u):
     """각 검색 명세에 u['default_search'] 를 적용 (corrupted/sockets 는 덮어쓰기, mods 는 옵션 단위로 교체·추가)."""
     d = u.get("default_search") or {}
 
     def merge(spec):
         over = {_mod_key(m): m for m in spec.get("mods") or []}
-        mods = [over.pop(_mod_key(m), m) for m in d.get("mods") or []] + list(over.values())
+        drop = set(spec.get("drop_mods") or [])
+        mods = [over.pop(_mod_key(m), m) for m in d.get("mods") or [] if _mod_key(m) not in drop] + list(over.values())
         return {**d, **spec, "mods": mods}
 
     for k in ("base_search", "enchant_search", "socket_search"):
@@ -185,22 +325,10 @@ def apply_defaults(u):
 for _u in UNIQUES:
     apply_defaults(_u)
 
-# ================================================================ 적정 최저가 판정 파라미터 (poe2_overquality-flip.py 와 동일)
+# ================================================================ 적정 최저가 판정 파라미터
 MIN_LISTINGS = 2             # 검색 실패 = 가격·통화를 확인할 수 있는 정상 매물이 이 값 미만 (price_search 가 None 반환). 실패 시 대체값: 베이스 구매가=장비 제외, 변화 없음=베이스 x NO_CHANGE_RATIO, 인챈트=ratio(없으면 변화 없음 가치)
 OUTLIER_MIN_N = 4
 OUTLIER_RATIO = 0.5
-STALE_DAYS = 3
-OLD_DAYS = 7
-CONF_HIGH_N, CONF_HIGH_REL = 5, 0.75
-CONF_MED_N, CONF_MED_REL = 3, 0.65
-SELLER_W2 = 0.5
-SELLER_CAP = 2.5
-SELLER_RATIO = 1 - SELLER_W2 / (SELLER_CAP - 1)
-ISOLATED_RATIO = 1.10
-ISOLATED_MIN_N = 4
-AGE_GROUP_N = 3
-ISOLATED_REF_N = 3
-ISOLATED_BLEND = 0.5
 MAX_SKIP = 2
 OUTLIER_MAX_AGE_DAYS = 2
 DEFAULT_CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}   # poe.ninja 실패 시에만 사용
@@ -500,6 +628,11 @@ def norm_stat(t):
     return re.sub(r"\s+", " ", t.replace("+", "")).strip()
 
 
+def raw_stat(t):
+    """(Local) 표기를 유지한 정규화 문구. M('... (Local)') 처럼 로컬 옵션을 지정할 때 사용."""
+    return re.sub(r"\s+", " ", str(t or "").lower().replace("+", "")).strip()
+
+
 def load_stats():
     """trade2 옵션 목록 -> {그룹(explicit/enchant/..): {정규화 문구: [id, ...]}}"""
     data = call("GET", f"{BASE}/api/trade2/data/stats")
@@ -509,6 +642,8 @@ def load_stats():
         for e in grp.get("entries", []):
             if e.get("id"):
                 idx.setdefault(gid, {}).setdefault(norm_stat(e.get("text")), []).append(e["id"])
+                if "(local)" in str(e.get("text") or "").lower():
+                    idx[gid].setdefault(raw_stat(e.get("text")), []).append(e["id"])
     return idx
 
 
@@ -519,7 +654,8 @@ def stat_id(text, group="explicit"):
     if not STATS:                      # 옵션 목록은 실제로 필요할 때(검색/링크 생성)만 로드
         STATS.update(load_stats())
     pool = STATS.get(group, {})
-    ids = pool.get(norm_stat(text))
+    ids = pool.get(raw_stat(text)) if "(local)" in str(text).lower() else None
+    ids = ids or pool.get(norm_stat(text))
     if ids:
         if len(ids) > 1:
             print(f"  ⚠ '{text}' 와 일치하는 옵션이 {len(ids)}개라 첫 번째({ids[0]}) 사용")
@@ -596,13 +732,12 @@ def cheapest(u, league, spec, extra_mods=()):
             price = listing.get("price") or {}
             rows.append({
                 "amount": price.get("amount"), "currency": price.get("currency"),
-                "seller": (listing.get("account") or {}).get("name", "?"),
                 "indexed": listing.get("indexed"),
             })
     return total, rows, s.get("id")
 
 
-# ================================================================ 적정 최저가 (poe2_overquality-flip.py 와 동일)
+# ================================================================ 적정 최저가
 def _ex(r):
     rate = CMP_RATES.get(r["currency"])
     if rate is None or r["amount"] is None:
@@ -623,25 +758,8 @@ def age_days(r):
     return max(0.0, (datetime.now(timezone.utc) - dt).total_seconds() / 86400)
 
 
-_CONF_LEVELS = ["low", "medium", "high"]
-
-
-def effective_count(rows):
-    seen = {}
-    total = 0.0
-    for r in rows:
-        who = str(r.get("seller") or "?").strip().lower()
-        if who == "?":
-            total += 1.0
-            continue
-        k = seen.get(who, 0)
-        seen[who] = k + 1
-        total += 1.0 if k == 0 else SELLER_W2 * SELLER_RATIO ** (k - 1)
-    return total
-
-
-def fair_price(rows, market=False):
-    """적정 최저가 판정. market=True 는 판매 시세(고립된 최저가를 윗 매물층 쪽으로 보정), False 는 구매가(최저가 그대로)."""
+def fair_price(rows):
+    """적정 최저가: 가격을 확인할 수 있는 매물 중 최저가. 중앙값의 OUTLIER_RATIO 미만인 최근 저가 매물은 이상치로 최대 MAX_SKIP개 제외."""
     usable = sorted((r for r in rows if _ex(r) is not None), key=_ex)
     n = len(usable)
     if n < MIN_LISTINGS:
@@ -661,34 +779,7 @@ def fair_price(rows, market=False):
             skipped = cheap
 
     chosen = usable[skipped]
-    valid = vals[skipped:]
-    valid_n = len(valid)
-    rel = round(valid[0] / statistics.median(valid), 6)
-    n_eff = round(effective_count(usable[skipped:]), 6)
-    if n_eff >= CONF_HIGH_N and rel >= CONF_HIGH_REL:
-        conf = "high"
-    elif n_eff >= CONF_MED_N and rel >= CONF_MED_REL:
-        conf = "medium"
-    else:
-        conf = "low"
-
-    a, c = chosen["amount"], chosen["currency"]
-    if market and valid_n >= ISOLATED_MIN_N and round(valid[1] / valid[0], 6) > ISOLATED_RATIO:
-        ref = statistics.median(valid[1:1 + ISOLATED_REF_N])
-        rate = CMP_RATES.get(c)
-        if rate:
-            a = round((valid[0] + ISOLATED_BLEND * (ref - valid[0])) / rate, 1)
-        conf = _CONF_LEVELS[max(0, _CONF_LEVELS.index(conf) - 1)]
-
-    age = age_days(chosen)
-    grp = [x for x in (age_days(r) for r in usable[skipped:skipped + AGE_GROUP_N]) if x is not None]
-    group_age = statistics.median_low(grp) if grp else None
-    cands = [x for x in (age, group_age) if x is not None]
-    if cands:
-        eff_age = max(cands)
-        drop = 2 if eff_age >= OLD_DAYS else 1 if eff_age >= STALE_DAYS else 0
-        conf = _CONF_LEVELS[max(0, _CONF_LEVELS.index(conf) - drop)]
-    return {"status": "ok", "a": a, "c": c, "n": valid_n, "confidence": conf}
+    return {"status": "ok", "a": chosen["amount"], "c": chosen["currency"], "n": n - skipped}
 
 
 # ================================================================ 계산
@@ -706,30 +797,30 @@ CACHE_OUT = {}     # 이번 실행에서 쓴 결과 (js 의 "searches" 로 저�
 ONLINE = {"done": False, "vaal": None}
 
 
-def search_fp(u, spec, market=True):
+def search_fp(u, spec, kind="price"):
     """검색 조건 지문. 거래소 검색에 영향을 주는 값만 포함 (root_text, ko, ratio, NO_CHANGE_RATIO 등은 제외)."""
     mods = [[m.get("id") or m["stat"], m.get("group", "explicit"), m.get("min"), m.get("max")] for m in spec.get("mods") or []]
     corrupted = bool(spec["corrupted"])
     nots = [[m.get("id") or m["stat"], m.get("group", "explicit")] for m in spec.get("not_mods") or []]
     key = [u["name"], u.get("type"), mods, nots, corrupted, CORRUPT_FILTERS if corrupted else None, spec.get("quality_min", QUALITY_MIN) if corrupted else None,
-           list(spec.get("sockets") or (None, None)), market, TOP_N]
+           list(spec.get("sockets") or (None, None)), kind, TOP_N]
     return hashlib.sha1(json.dumps(key, ensure_ascii=False).encode("utf-8")).hexdigest()[:12]
 
 
 def search_specs(u):
-    """장비 하나가 거래소 검색에 쓰는 (명세, market) 목록. analyze 의 price_search 호출과 같아야 한다."""
+    """장비 하나가 거래소 검색에 쓰는 명세 목록. analyze 의 price_search 호출과 같아야 한다."""
     es = u["enchant_search"]
-    out = [(u["base_search"], False), ({**es, "not_mods": no_enchant_mods(u)}, True)]
-    out += [({**es, "mods": list(es["mods"]) + [{**M(e["mod"]), "group": "enchant"}]}, True) for e in enchants_of(u) if e.get("search")]
+    out = [u["base_search"], {**es, "not_mods": no_enchant_mods(u)}]
+    out += [{**es, "mods": list(es["mods"]) + [{**M(e["mod"]), "group": "enchant"}]} for e in enchants_of(u) if e.get("search")]
     if u.get("socket_search") is not None:
-        out.append((u["socket_search"], True))
-    out += [(reroll_spec(u, o), True) for o in u["reroll"]["outcomes"] if o.get("search")]
+        out.append(u["socket_search"])
+    out += [reroll_spec(u, o) for o in u["reroll"]["outcomes"] if o.get("search")]
     return out
 
 
 def reroll_spec(u, o):
     """수치 변동 검색: 변화 없음 검색처럼 인챈트 옵션 전체를 NOT 그룹으로 제외 (인챈트가 붙은 매물 배제)."""
-    return {**o["search"], "not_mods": no_enchant_mods(u)}
+    return {**o["search"], "not_mods": no_enchant_mods(u) + list(o["search"].get("not_mods") or [])}
 
 
 def ensure_online(league):
@@ -758,30 +849,30 @@ def link_url(u, league, spec, extra):
     return url
 
 
-def price_search(u, league, spec, tag, market=True):
-    """검색 -> (Divine 가격, 매물 수). 데이터 부족이면 (None, n)."""
-    fp = search_fp(u, spec, market)
+def price_search(u, league, spec, tag):
+    """검색 -> (Divine 가격, 매물 수, 링크). 데이터 부족이면 (None, n, 링크)."""
+    fp = search_fp(u, spec)
     if fp in CACHE_IN:
         price, n, url = CACHE_IN[fp]
         CACHE_OUT[fp] = CACHE_IN[fp]
         print(f"  [{tag}] 캐시 사용 -> " + (f"{price} div" if price is not None else "데이터 부족"))
         return price, n, url
     ensure_online(league)
-    price, n, url = _price_search(u, league, spec, tag, market)
+    price, n, url = _price_search(u, league, spec, tag)
     CACHE_OUT[fp] = [price, n, url]
     return price, n, url
 
 
-def _price_search(u, league, spec, tag, market):
+def _price_search(u, league, spec, tag):
     total, rows, sid = cheapest(u, league, spec)
     url = f"{BASE}/trade2/search/poe2/{quote(league)}/{sid}" if sid else None  # 가격 유무와 관계없이 항상 링크 생성
-    f = fair_price(rows, market)
+    f = fair_price(rows)
     if f["status"] != "ok":
         print(f"  [{tag}] 검색 {total}건, 데이터 부족 ({f['reason']})")
-        return None, f["n"], url
+        return None, total, url          # n = 거래소 검색 전체 매물 수 (가격 판정에 쓴 상위 10건 중 정상 매물 수가 아님)
     p = to_div(f)
-    print(f"  [{tag}] 검색 {total}건 -> {rnd(p)} div (신뢰 {f['confidence']})")
-    return rnd(p), f["n"], url
+    print(f"  [{tag}] 검색 {total}건 -> {rnd(p)} div")
+    return rnd(p), total, url
 
 
 def roll_dist(roll):
@@ -802,21 +893,30 @@ def reroll_outcomes(u, league, cost, nc):
     R = u["reroll"]
     dist = roll_dist(R["roll"])
     print(f"  [{R['label']}] 변동 후 값 분포: " + ", ".join(f"{v}:{p * 100:.0f}%" for v, p in sorted(dist.items())))
-    missing = sorted(v for v in dist if v not in {o["value"] for o in R["outcomes"]})
+    def bounds(o):
+        return o["range"] if "range" in o else (o["value"], o["value"])
+
+    def covers(o, v):
+        lo, hi = bounds(o)
+        return (lo is None or v >= lo) and (hi is None or v <= hi)
+
+    missing = sorted(v for v in dist if not any(covers(o, v) for o in R["outcomes"]))
     if missing:
         sys.exit(f"{u['name']}: reroll.outcomes 에 없는 값이 나올 수 있습니다: {missing}")
     outs = []
     for o in R["outcomes"]:
-        pv = dist.get(o["value"], 0)
+        pv = sum(p for v, p in dist.items() if covers(o, v))
+        txt = o["text"] if "text" in o else f"{o['value']}{o.get('suffix', '')}"
+        txt_ko = o["text_ko"] if "text_ko" in o else f"{o['value']}{o.get('suffix_ko', '')}"
         if pv == 0:
-            print(f"  ⚠ {R['label']} {o['value']}: 확률 0 (ROUND_MODE={ROUND_MODE}) -> 제외")
+            print(f"  ⚠ {R['label']} {txt}: 확률 0 (ROUND_MODE={ROUND_MODE}) -> 제외")
             continue
-        out = {"group": "reroll", "label": f"{R['label']} {o['value']}", "p": OUTCOME_P * pv}
+        out = {"group": "reroll", "label": f"{R['label']} {txt}", "p": OUTCOME_P * pv}
         if R.get("ko"):
-            out["ko"] = f"{R['ko']} {o['value']}"
+            out["ko"] = f"{R['ko']} {txt_ko}"
         low = False
         if o.get("search"):
-            price, n, url = price_search(u, league, reroll_spec(u, o), f"수치 변동 {o['value']}")
+            price, n, url = price_search(u, league, reroll_spec(u, o), f"수치 변동 {txt}")
             if price is None:    # 검색 실패 -> ratio (없으면 변화 없음 가치) 로 대체, html 에서 매물 건 텍스트를 붉게 표시
                 price, low = (rnd(cost * o["ratio"]) if o.get("ratio") is not None else nc["price"]), True
         else:                    # 값 그대로 = 변화 없음 검색 가격
@@ -837,7 +937,7 @@ def analyze(u, league, old=None):
     if old:
         CACHE_IN.update(old["data"].get("searches") or {})
         print(f"  기존 데이터 사용 가능 (수집 {old['stamp']}) · 검색 조건이 같은 항목은 검색 생략")
-    cost, n_base, base_url = price_search(u, league, u["base_search"], "베이스 구매가", market=False)
+    cost, n_base, base_url = price_search(u, league, u["base_search"], "베이스 구매가")
     if cost is None:
         print("  베이스 시세를 알 수 없어 건너뜁니다.")
         return None
@@ -896,7 +996,7 @@ def analyze(u, league, old=None):
         vaal_div = ONLINE["vaal"]
     else:
         vaal_div = old["data"]["vaalCost"]       # 이번 실행에서 거래소 조회가 없었으면 기존 값 유지
-    data = {"name": u["name"], "base": u.get("base", ""), "unit": "d", "cost": cost,
+    data = {"name": u.get("title") or u["name"], "base": u.get("base", ""), "unit": "d", "cost": cost,
             "vaalCost": vaal_div, "rootText": u.get("root_text", []),
             "outcomes": outcomes, "searches": dict(CACHE_OUT)}
     if base_url:
@@ -913,7 +1013,7 @@ def analyze(u, league, old=None):
 def count_requests(u, old=None):
     """검색 요청 수 (기존 데이터에 같은 조건의 결과가 있으면 제외)."""
     cached = (old["data"].get("searches") or {}) if old else {}
-    return sum(1 for spec, market in search_specs(u) if search_fp(u, spec, market) not in cached)
+    return sum(1 for spec in search_specs(u) if search_fp(u, spec) not in cached)
 
 
 def load_old(name, league, out_dir):
@@ -931,12 +1031,12 @@ def load_old(name, league, out_dir):
         return None
 
 
-def save(data, league, out_dir):
+def save(data, league, out_dir, name):
     os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, f"{data['name']}.js")
+    path = os.path.join(out_dir, f"{name}.js")
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     with open(path, "w", encoding="utf-8") as f:
-        f.write(f"/* {data['name']} / 리그: {league} / 수집: {stamp} */\n")
+        f.write(f"/* {name} / 리그: {league} / 수집: {stamp} */\n")
         f.write("window.UC_DATA.push(" + json.dumps(data, ensure_ascii=False, indent=1) + ");\n")
     # html 이 읽을 목록 파일: 폴더 안의 데이터 js 전체 (index.js 제외)
     files = sorted(x for x in os.listdir(out_dir) if x.lower().endswith(".js") and x.lower() != "index.js")
@@ -963,13 +1063,14 @@ def main():
     if args.target.lower() == "all":
         targets = UNIQUES
     else:
-        targets = [u for u in UNIQUES if u["name"].lower() == args.target.strip().lower()]
+        t = args.target.strip().lower()
+        targets = [u for u in UNIQUES if t in (u["name"].lower(), fname(u).lower())]
         if not targets:
-            sys.exit(f"UNIQUES 에 없는 장비: {args.target} (사용 가능: {', '.join(u['name'] for u in UNIQUES)})")
+            sys.exit(f"UNIQUES 에 없는 장비: {args.target} (사용 가능: {', '.join(fname(u) for u in UNIQUES)})")
 
     league = resolve_league(args.league)
-    olds = {u["name"]: load_old(u["name"], league, args.out) if args.use_cache else None for u in targets}
-    n_search = sum(count_requests(u, olds[u["name"]]) for u in targets)
+    olds = {fname(u): load_old(fname(u), league, args.out) if args.use_cache else None for u in targets}
+    n_search = sum(count_requests(u, olds[fname(u)]) for u in targets)
     est = estimate_seconds(n_search, n_search)
     print(f"리그: {league}\n요청 최대 {2 * n_search}회 (검색 {n_search} + fetch {n_search}) · 레이트리밋 기준 최단 약 {est / 60:.1f}분")
 
@@ -978,9 +1079,9 @@ def main():
     started = time.monotonic()
     saved = []
     for u in targets:
-        data = analyze(u, league, olds[u["name"]])
+        data = analyze(u, league, olds[fname(u)])
         if data:
-            path = save(data, league, args.out)
+            path = save(data, league, args.out, fname(u))
             saved.append(os.path.basename(path))
             print(f"  -> {path} 저장")
     print(f"\n완료: 요청 {limiter.count}회, 소요 {(time.monotonic() - started) / 60:.1f}분")
