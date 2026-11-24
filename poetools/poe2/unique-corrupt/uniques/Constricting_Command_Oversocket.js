@@ -1,4 +1,4 @@
-/* Constricting_Command_Oversocket / 리그: Forbidden Rites / 수집: 2026-11-24T00:00:46Z */
+/* Constricting_Command_Oversocket / 리그: Forbidden Rites / 수집: 2026-11-24T00:13:15Z */
 window.UC_DATA.push({
  "name": "Constricting Command (Oversocket)",
  "base": "",
@@ -232,5 +232,7 @@ window.UC_DATA.push({
   "소켓 = 2",
   "포위 수 = -4"
  ],
- "ko": "목 죄이는 명령 (오버소켓)"
+ "ko": "목 죄이는 명령 (오버소켓)",
+ "league": "Forbidden Rites",
+ "stamp": "2026-11-24T00:13:15Z"
 });

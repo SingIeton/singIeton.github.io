@@ -1,4 +1,4 @@
-/* Constricting_Command / 리그: Forbidden Rites / 수집: 2026-11-24T00:00:47Z */
+/* Constricting_Command / 리그: Forbidden Rites / 수집: 2026-11-24T00:13:15Z */
 window.UC_DATA.push({
  "name": "Constricting Command",
  "base": "",
@@ -228,5 +228,7 @@ window.UC_DATA.push({
   "소켓 = 1",
   "포위 수 = -4"
  ],
- "ko": "목 죄이는 명령"
+ "ko": "목 죄이는 명령",
+ "league": "Forbidden Rites",
+ "stamp": "2026-11-24T00:13:15Z"
 });

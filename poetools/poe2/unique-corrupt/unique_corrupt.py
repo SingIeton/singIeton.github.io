@@ -12,7 +12,7 @@
   python unique_corrupt.py "Viper Cap"          # 하나만
   python unique_corrupt.py --league "리그이름"   # latest | previous | standard | 이름
   python unique_corrupt.py --out other_dir      # 저장 폴더 (기본: 스크립트 옆 uniques/)
-  (실행하면 캐시 사용 여부를 묻는다: 1 = yes, 2 = no(전체 검색). --use-cache 를 주면 묻지 않고 사용)
+  (실행하면 캐시 사용 여부를 묻는다: 엔터/1 = yes, 2 = no(전체 검색). --use-cache 를 주면 묻지 않고 사용)
   python unique_corrupt.py --use-cache          # 같은 리그로 저장된 js 의 검색 결과 중 검색 조건이 같은 것은 재사용 (거래소 검색 생략)
 """
 import argparse
@@ -237,8 +237,8 @@ UNIQUES = [
     {
         "name": "Svalinn",
         "file": "Svalinn_0-1",
-        "title": "Svalinn (0~1)",
-        "ko": "스발린 (0~1)",
+        "title": "Svalinn (0-1%)",
+        "ko": "스발린 (0-1%)",
         "type": "Crucible Tower Shield",
         "slot": "shield",
         "base": "",
@@ -256,15 +256,15 @@ UNIQUES = [
         "reroll": {
             "label": "Blocked Dmg", "ko": "막기 피해", "roll": 1,
             "outcomes": [
-                {"value": 1, "text": "1", "text_ko": "1"},      # search 없음 = 변화 없음 가격
+                {"value": 1, "text": "0—1%", "text_ko": "0—1%"},      # search 없음 = 변화 없음 가격
             ],
         },
     },
     {
         "name": "Svalinn",
         "file": "Svalinn_2-5",
-        "title": "Svalinn (2~5)",
-        "ko": "스발린 (2~5)",
+        "title": "Svalinn (2-5%)",
+        "ko": "스발린 (2-5%)",
         "type": "Crucible Tower Shield",
         "slot": "shield",
         "base": "",
@@ -282,11 +282,11 @@ UNIQUES = [
         "reroll": {
             "label": "Blocked Dmg", "ko": "막기 피해", "roll": 3.5,
             "outcomes": [
-                {"range": (None, 1), "text": "≤1", "text_ko": "≤ 1", "search": {"mods": [
+                {"range": (None, 1), "text": "≤1%", "text_ko": "≤ 1%", "search": {"mods": [
                     M("You take #% of damage from Blocked Hits", max=1),
                 ]}},
-                {"range": (2, 5), "text": "2—5", "text_ko": "2—5"},
-                {"range": (6, None), "text": "6+", "text_ko": "6 이상", "search": {"mods": [
+                {"range": (2, 5), "text": "2—5%", "text_ko": "2—5%"},
+                {"range": (6, None), "text": "6%+", "text_ko": "6% 이상", "search": {"mods": [
                     M("You take #% of damage from Blocked Hits", min=6),
                 ]}},
             ],
@@ -1031,10 +1031,11 @@ def load_old(name, league, out_dir):
         return None
 
 
-def save(data, league, out_dir, name):
+def save(data, league, out_dir, name, stamp=None):
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, f"{name}.js")
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    data["league"], data["stamp"] = league, stamp      # html 에 표시할 리그·시세 시점
     with open(path, "w", encoding="utf-8") as f:
         f.write(f"/* {name} / 리그: {league} / 수집: {stamp} */\n")
         f.write("window.UC_DATA.push(" + json.dumps(data, ensure_ascii=False, indent=1) + ");\n")
@@ -1054,9 +1055,9 @@ def main():
     args = ap.parse_args()
     if not args.use_cache and sys.stdin.isatty():      # --use-cache 를 주지 않으면 실행 시 물어봄
         while True:
-            ans = input("캐시를 사용하시겠습니까? 1 = yes, 2 = no (full query): ").strip()
-            if ans in ("1", "2"):
-                args.use_cache = ans == "1"
+            ans = input("캐시를 사용하시겠습니까? 1 = yes, 2 = no (full query) [Enter = 1]: ").strip()
+            if ans in ("", "1", "2"):      # 그냥 엔터 = 캐시 사용
+                args.use_cache = ans != "2"
                 break
             print("1 또는 2 를 입력하세요.")
 
@@ -1081,7 +1082,9 @@ def main():
     for u in targets:
         data = analyze(u, league, olds[fname(u)])
         if data:
-            path = save(data, league, args.out, fname(u))
+            old = olds[fname(u)]
+            keep = old and count_requests(u, old) == 0      # 거래소 검색 없이 캐시만 쓴 경우 기존 시세 시점 유지
+            path = save(data, league, args.out, fname(u), old["stamp"] if keep else None)
             saved.append(os.path.basename(path))
             print(f"  -> {path} 저장")
     print(f"\n완료: 요청 {limiter.count}회, 소요 {(time.monotonic() - started) / 60:.1f}분")

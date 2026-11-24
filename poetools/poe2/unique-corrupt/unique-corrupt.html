@@ -13,7 +13,7 @@
 .layout.stack section{padding-left:var(--sp,0px)}
 .lh{font:600 15px var(--serif);color:var(--mute);margin:0 0 8px}
 .dt{font:600 18px var(--serif);margin:0 0 6px}
-.list{display:flex;flex-direction:column;gap:2px;min-width:max-content}
+.list{display:flex;flex-direction:column;gap:2px;min-width:0}
 .row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;padding:8px 10px;border:0;border-radius:var(--r);background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
 .row.hi{grid-template-columns:auto 1fr auto;column-gap:10px;align-items:center}
 .row .ic{grid-row:1/3;width:36px;height:36px;object-fit:contain}
@@ -22,6 +22,7 @@
 .row .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row .rt{font:600 15.5px var(--serif);font-variant-numeric:tabular-nums;text-align:right}
 .row small{color:var(--mute);font-size:12.5px}
+.row small:first-of-type{min-width:0;overflow:hidden;white-space:nowrap}
 .pos{color:var(--pos)}.neg{color:var(--bad)}
 .tree{overflow-x:auto}
 .tree svg{display:block;width:100%;height:auto;font-family:var(--sans)}
@@ -34,14 +35,15 @@
 .tree .lw{fill:var(--bad)} /* 검색 매물 부족 -> ratio 대체 시 매물 건 텍스트 */
 .tree .tp,.tree .tn{font-family:var(--serif);font-weight:600;font-size:15.5px;font-variant-numeric:tabular-nums}.tree .tp{fill:var(--pos)}.tree .tn{fill:var(--bad)}
 .tree .gp{font-size:14px;font-weight:600}
-.wrapd{display:flex;gap:42px;align-items:flex-start}
+.wrapd{display:flex;gap:42px;align-items:stretch}
 .wrapd .tree{flex:1 1 auto;min-width:0}
 .final{flex:0 0 auto;margin-top:50;display:flex;flex-direction:column;gap:14px;min-width:185px}
 .final .k{display:block;color:var(--mute);font-size:14px}
 .final .v{font:600 22px/1.3 var(--serif);font-variant-numeric:tabular-nums}
 .formula{margin:10px 0 0;color:var(--mute);font-size:13.5px}
 .seg{display:inline-flex;margin-top:4px;background:var(--sf2);border-radius:var(--r);padding:2px}.seg button{font:inherit;font-size:13.5px;color:var(--mute);background:none;border:0;border-radius:var(--r);padding:4px 12px;cursor:pointer}.seg button.on{background:color-mix(in oklab,var(--g) 14%,transparent);color:var(--ink);font-weight:600}
-#sort{margin:0 0 6px 10px}
+#meta{margin-top:auto;text-align:right;white-space:pre-line;color:var(--mute);font-size:13px;line-height:1.5}
+#sort{display:flex;width:fit-content;margin:0 auto 10px}
 .empty{color:var(--mute);padding:24px 0;text-align:center}
 .empty code{font-family:var(--mono)}
 /* 디버그용 테두리 (우측 하단 버튼으로 켜고 끔): 필요 없으면 이 블록과 #dbg 버튼, 스크립트 한 줄 삭제 */
@@ -62,7 +64,7 @@ body.dbg .ghead{outline:1px dashed gray}
 <main class="wrap" id="main">
   <div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1 data-en="Unique Corruption Flipping">고유 타락 플리핑</h1><p class="sub" data-en="Expected corruption return for unique items, with the expected market price and profit/loss of every corruption outcome visualized">고유 장비의 타락 분기별 시장가와 예상 손익을 시각화하고, 총 평균 손익을 예상.</p></div></div>
   <div class="layout">
-    <aside><div class="seg" id="sort"><button type="button" data-s="name" data-en="Name">이름</button><button type="button" data-s="rate" data-en="Return">수익률</button></div><div class="list" id="list"></div></aside>
+    <aside><div class="seg" id="sort"><button type="button" data-s="name" data-en="Name">이름</button><button type="button" data-s="rate" data-en="Return">수익</button></div><div class="list" id="list"></div></aside>
     <section><div id="detail"></div></section>
   </div>
 </main>
@@ -123,7 +125,14 @@ function analyze(it){
 function sizeList(){
   const L=document.querySelector(".layout"),l=$("list");
   l.style.width="max-content";const w=Math.ceil(l.getBoundingClientRect().width);l.style.width="";
-  L.style.setProperty("--aw",Math.max(235,w)+"px");
+  L.style.setProperty("--aw",Math.min(LIST_MAX,Math.max(235,w))+"px"); /* 목록 최대 폭 제한 */
+}
+const LIST_MAX=320; /* 목록 최대 폭(px). 이름이 넘치면 글자 크기를 줄여 맞춤 */
+function fitList(){
+  document.querySelectorAll("#list .nm,#list .row small:first-of-type").forEach(el=>{
+    el.style.fontSize="";let fs=parseFloat(getComputedStyle(el).fontSize);
+    while(el.scrollWidth>el.clientWidth+0.5&&fs>9){fs-=0.5;el.style.fontSize=fs+"px"}
+  });
 }
 /* 아이콘: icon/<이름>.webp (이름 = 괄호 부분을 뺀 영문 이름을 소문자·하이픈으로. 데이터에 icon 이 있으면 그 값 사용) */
 const iconOf=it=>{const s=it.icon||String(it.name).replace(/\s*\(.*\)\s*$/,"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");return s?"icon/"+s+".webp":""};
@@ -173,7 +182,9 @@ function renderDetail(){
     <div><span class="k">${tt("예상 수익률","Expected return")}</span><b class="v ${cls(it.profit)}">${spct(it.rate)}</b></div>
     <div><span class="k">${tt("예상 평균 판매가","Expected average sale price")}</span><b class="v">${fp(it.avg)} ${u}</b></div>
     <div><span class="k">${tt("항목 표시 단위","Item display unit")}</span><div class="seg"><button type="button" data-m="amt" class="${MODE==="amt"?"on":""}">${tt("금액","Amount")}</button><button type="button" data-m="pct" class="${MODE==="pct"?"on":""}" title="${tt("마이너스(-) 값까지 합산한 결과이므로 100%를 초과할 수 있습니다.","Negative values are included in the sum, so the total can exceed 100%.")}">${tt("총 이익 비율","Share of total gain")}</button></div></div>
+    <div id="meta"></div>
   </div></div>`;
+  showMeta();
 }
 
 function align(){
@@ -207,8 +218,13 @@ function fit(){
     TH=t;TW=w;renderDetail();
   }
 }
-function render(){document.querySelectorAll("#sort button").forEach(b=>b.classList.toggle("on",b.dataset.s===SORT));renderList();sizeList();renderDetail();fit();align()}
-const refit=()=>{sizeList();fit();align()};
+function showMeta(){
+  if(!$("meta"))return; /* 시세 리그·시점 (데이터 중 가장 최근 수집 시각) */
+  const it=items.filter(x=>x.stamp).sort((a,b)=>b.stamp<a.stamp?-1:1)[0];
+  $("meta").textContent=it?tt("리그: ","League: ")+it.league+"\n"+tt("시세 기준: ","Prices as of: ")+new Date(it.stamp).toLocaleString(LANG==="en"?"en-US":"ko-KR",{dateStyle:"medium",timeStyle:"short"}):"";
+}
+function render(){document.querySelectorAll("#sort button").forEach(b=>b.classList.toggle("on",b.dataset.s===SORT));renderList();sizeList();fitList();renderDetail();fit();align()}
+const refit=()=>{sizeList();fitList();fit();align()};
 addEventListener("resize",refit);if(document.fonts)document.fonts.ready.then(refit);
 $("dbg").addEventListener("click",e=>{const on=document.body.classList.toggle("dbg");e.currentTarget.classList.toggle("on",on);e.currentTarget.setAttribute("aria-pressed",on)}); /* 디버그 테두리 토글 */
 $("detail").addEventListener("click",e=>{const b=e.target.closest(".seg button");if(!b||b.dataset.m===MODE)return;MODE=b.dataset.m;renderDetail();fit();align()});

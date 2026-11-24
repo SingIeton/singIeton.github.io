@@ -1,6 +1,6 @@
-/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-24T00:00:48Z */
+/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-24T00:13:15Z */
 window.UC_DATA.push({
- "name": "Svalinn (0~1)",
+ "name": "Svalinn (0-1%)",
  "base": "",
  "unit": "d",
  "cost": 15.0,
@@ -101,9 +101,9 @@ window.UC_DATA.push({
   },
   {
    "group": "reroll",
-   "label": "Blocked Dmg 1",
+   "label": "Blocked Dmg 0—1%",
    "p": 0.25,
-   "ko": "막기 피해 1",
+   "ko": "막기 피해 0—1%",
    "price": 8.0,
    "n": 32,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVOG26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2VMVrTHnhDP-qBJntCEh7CbVbQg9uKdDaHkQ-v8Mv35rAitYTUuOa5ogEEZ4mbOKpQg0rwjjjNRVgpBXuKyLkuEEXha0wLikPGVAKCUVIywa7MJu9eRlFc3qvjoaYcBdHn7ZazjGfYa4-_gPViaUcjDGj061D2Jn_JyOHowZzB9wLzo7o-4EUjXPO9xJVmjpYA8p_Ohj8pbZl7jgeWR19DD2SrvUi71WjR3kl3L2riXZPTxTj1t23oyXEOP-8j6clHnZHkB1LQo_oEHncBwDAAA"
@@ -167,5 +167,7 @@ window.UC_DATA.push({
   "방어도 ≥ 250%",
   "막기 피격 피해 ≤ 1%"
  ],
- "ko": "스발린 (0~1)"
+ "ko": "스발린 (0-1%)",
+ "league": "Forbidden Rites",
+ "stamp": "2026-11-24T00:13:15Z"
 });
