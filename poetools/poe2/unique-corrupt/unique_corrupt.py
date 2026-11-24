@@ -2,7 +2,7 @@
 
 타락 결과 4종은 각 25% (poe2wiki 기준). 고유 장비 하나당 아래를 계산해 window.UC_DATA.push({...}) 형식으로 저장한다.
   1) 변화 없음   : 검색 (인챈트 없음: 인챈트 옵션 전체를 NOT 그룹으로 제외). 검색 실패 시 베이스 가격 x NO_CHANGE_RATIO 로 대체
-  2) 수치 변동   : 굴린 뒤 나올 수 있는 값(예: -3/-4/-5)별 확률을 계산(배율 0.78~1.22, 0.01 단위)하고, 값별 가격은 검색(실패 시 ratio) 또는 '변화 없음' 가치로 정함
+  2) 수치 변동   : 굴린 뒤 나올 수 있는 값(예: -3/-4/-5)별 확률을 계산(배율 0.78~1.22, 0.01 단위)하고, 값별 가격은 검색(실패 시 ratio) / ratio(search 없음) / '변화 없음' 가치(ratio 도 없음)로 정함
   3) 바알 인챈트 : 인챈트별로 (검색) 또는 (베이스 x ratio). 검색으로 가격을 못 구하면 ratio 로 대체
   4) 소켓 추가   : 검색 (socket_search 가 None 이면 장신구처럼 변화 없음으로 합산)
 가격 판정(최저가, 이상치 제외)·레이트리밋·poe.ninja 환율을 사용한다. 가격 단위는 Divine.
@@ -72,7 +72,7 @@ ENCHANTS = {
         {"en": "Level of all Minion Skills +1",   "ko": "모든 소환수 스켈 레벨 +1",  "range": "1",      "mod": "# to Level of all Minion Skills"},
     ],
     "shield": [
-        {"en": "Increased Armour",                "ko": "방어도 % 증가",           "range": "15—25",  "mod": "#% increased Armour (Local)"},
+        {"en": "Increased Defence",               "range": "15—25",  "defence": True, "local": True},   # 방패는 로컬 옵션 문구((Local))를 붙임
         {"en": "Reduced Attribute Requirements",  "ko": "능력치 요구사항 감소",     "range": "10—20",  "mod": "#% increased Attribute Requirements"},
         {"en": "Increased Thorns Damage",         "ko": "가시 피해 % 증가",        "range": "40—50",  "mod": "#% increased Thorns damage"},
         {"en": "Increased Block Chance",          "ko": "막기 확률 % 증가",        "range": "10—15",  "mod": "#% increased Block chance"},
@@ -85,12 +85,12 @@ ENCHANTS = {
 
 # 헬멧 방어 인챈트는 베이스 종류(def_type)에 따라 다름: str=방어도, dex=회피, int=에너지 보호막, 나머지는 복합. (en, ko, 거래소 옵션 문구)
 DEFENCE_TYPES = {
-    "str":     ("Increased Armour",                    "방어도 % 증가",                  "#% increased Armour"),
-    "dex":     ("Increased Evasion",                   "회피 % 증가",               "#% increased Evasion Rating"),
-    "int":     ("Increased Energy Shield",             "에너지 보호막 % 증가",           "#% increased Energy Shield"),
-    "str_dex": ("Increased Armour and Evasion",        "방어도 및 회피 % 증가",     "#% increased Armour and Evasion"),
+    "str":     ("Increased Armour",                    "방어도 % 증가",             "#% increased Armour"),
+    "dex":     ("Increased Evasion",                   "회피 % 증가",              "#% increased Evasion Rating"),
+    "int":     ("Increased Energy Shield",             "에너지 보호막 % 증가",        "#% increased Energy Shield"),
+    "str_dex": ("Increased Armour and Evasion",        "방어도 및 회피 % 증가",       "#% increased Armour and Evasion"),
     "str_int": ("Increased Armour and Energy Shield",  "방어도 및 에너지 보호막 % 증가", "#% increased Armour and Energy Shield"),
-    "dex_int": ("Increased Evasion and Energy Shield", "회피 및 에너지 보호막 % 증가", "#% increased Evasion and Energy Shield"),
+    "dex_int": ("Increased Evasion and Energy Shield", "회피 및 에너지 보호막 % 증가",  "#% increased Evasion and Energy Shield"),
 }
 
 
@@ -103,6 +103,8 @@ def slot_enchants(u):
             if t not in DEFENCE_TYPES:
                 sys.exit(f"{u['name']}: def_type 을 지정하세요 ({', '.join(DEFENCE_TYPES)})")
             e = {**e, "key": e["en"], **dict(zip(("en", "ko", "mod"), DEFENCE_TYPES[t]))}   # key = 설정에서 쓰는 이름("Increased Defence")
+            if e.get("local"):
+                e["mod"] += " (Local)"
         out.append(e)
     return out
 
@@ -131,17 +133,59 @@ def no_enchant_mods(u):
     return [{**M(e["mod"]), "group": "enchant"} for e in slot_enchants(u) if e.get("mod")]
 
 
-SVALINN_ENCHANTS = [
-    {"en": "Increased Armour",               "ratio": 1.00},
-    {"en": "Reduced Attribute Requirements", "ratio": 1.00},
-    {"en": "Increased Thorns Damage",        "ratio": 1.00},
-    {"en": "Increased Block Chance",         "ratio": 1.00},
-    {"en": "Maximum Block Chance",           "ratio": 1.00},
-    {"en": "Life on Block",                  "ratio": 1.00},
-    {"en": "Mana on Block",                  "ratio": 1.00},
-]
-
 UNIQUES = [
+    {
+        "name": "Constricting Command",
+        "file": "Constricting_Command",
+        "ko": "목 죄이는 명령",
+        "type": "Viper Cap",
+        "slot": "helmet",
+        "base": "",
+        "root_text": ["Sockets =1", "Surrounded =-4"],
+        "root_text_ko": ["소켓 = 1", "포위 수 = -4"],
+        "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
+            M("# to maximum Life", min=110),
+            M("# to all Attributes"),
+            M("# Life Regeneration per second"),
+            M("Require # additional enemies to be Surrounded", min=-4, max=-4),
+        ]},
+        # [0] 베이스 구매가 (미타락, 소켓 1)
+        "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
+        # [2] 바알 인챈트 검색 = 기본 검색 그대로
+        "enchant_search": {},
+        # [3] 소켓 +1 검색 (1 -> 2소켓)
+        "socket_search": {"sockets": (2, None), "mods": [
+            M("# to maximum Life", min=108),
+        ]},
+        "enchants": [
+            {"en": "Increased Defence",              "ratio": 1.0},
+            {"en": "Reduced Attribute Requirements", "ratio": 0.75},
+            {"en": "Maximum Cold Resistance",        "ratio": 1.1},
+            {"en": "Spirit",                         "ratio": 10.0},
+            {"en": "Maximum Power Charges +1",       "ratio": 1.0},
+            {"en": "Accuracy Rating",                "ratio": 1.0},
+            {"en": "Life Regeneration rate",         "ratio": 1.0},
+            {"en": "Mana Regeneration Rate",         "ratio": 0.75},
+            {"en": "Level of all Minion Skills +1",  "ratio": 0.75},
+        ],
+        "reroll": {
+            "label": "Surround", "ko": "포위", "roll": -4,
+            "outcomes": [
+                {"value": -5, "suffix": " or lower", "suffix_ko": " 이상", "ratio": 8.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", max=-5),
+                ]}},
+                {"value": -4, "suffix": "", "suffix_ko": "", "ratio": 1.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", min=-4, max=-4),
+                ]}},
+                {"value": -3, "suffix": " or higher", "suffix_ko": " 이하", "ratio": 1.0, "search": {"mods": [
+                    M("# to maximum Life", min=105),
+                    M("Require # additional enemies to be Surrounded", min=-3),
+                ]}},
+            ],
+        },
+    },
     {
         "name": "Constricting Command",      # 거래소 검색에 쓰는 이름
         "file": "Constricting_Command_Oversocket",   # 저장 파일명 (uniques/<file>.js). 없으면 name 사용
@@ -176,72 +220,20 @@ UNIQUES = [
         #   "search": 기본 True (모든 인챈트를 거래소에서 검색, 끄려면 False). 검색 시 해당 인챈트 매물 검색. 검색 실패(정상 매물 < MIN_LISTINGS)일 때만 ratio 사용: ratio 가 있으면 베이스 가격 x ratio, 없으면 변화 없음 가치
         #   "ratio": 베이스 가격 x ratio 로 평가 (search 가 없을 때 사용). "w" = 확률 가중치(선택, 기본 1)
         "enchants": [
-            {"en": "Increased Defence",                 "ratio": 0.85},
-            {"en": "Reduced Attribute Requirements", "ratio": 0.70},
-            {"en": "Maximum Cold Resistance",        "ratio": 1.15},
-            {"en": "Spirit",                         "search": True, "ratio": 1.00},
-            {"en": "Maximum Power Charges +1",       "search": True, "ratio": 1.00},
-            {"en": "Accuracy Rating",                "ratio": 1.10},
-            {"en": "Life Regeneration rate",         "ratio": 1.05},
-            {"en": "Mana Regeneration Rate",         "ratio": 0.85},
-            {"en": "Level of all Minion Skills +1",  "search": True, "ratio": 1.00},
+            {"en": "Increased Defence",              "ratio": 1.0},
+            {"en": "Reduced Attribute Requirements", "ratio": 0.75},
+            {"en": "Maximum Cold Resistance",        "ratio": 1.1},
+            {"en": "Spirit",                         "ratio": 10.0},
+            {"en": "Maximum Power Charges +1",       "ratio": 1.0},
+            {"en": "Accuracy Rating",                "ratio": 1.0},
+            {"en": "Life Regeneration rate",         "ratio": 1.0},
+            {"en": "Mana Regeneration Rate",         "ratio": 0.75},
+            {"en": "Level of all Minion Skills +1",  "ratio": 0.75},
         ],
         # [1] 수치 변동. roll = 구매하는 베이스의 해당 옵션 수치. 굴린 뒤 나올 수 있는 값(-3, -4, -5)이 각각 동등한 결과이고, 확률은 roll 에서 계산한다.
         #   outcomes 에는 나올 수 있는 값을 전부 적어야 한다 (빠지면 오류).
-        #   "search" 가 있으면 거래소 검색으로 가격을 구하고, 없으면 '변화 없음' 검색 가격을 그대로 쓴다 (값이 그대로인 경우).
+        #   "search" 가 있으면 거래소 검색으로 가격을 구하고, 없으면 "ratio" 가 있을 때 베이스 가격 x ratio, ratio 도 없으면 '변화 없음' 검색 가격을 그대로 쓴다 (값이 그대로인 경우).
         #   "suffix" / "suffix_ko" (선택): 화면 라벨 뒤에 붙는 문구 (예: " 이상"). "ratio" (선택): 검색 실패(정상 매물 < MIN_LISTINGS)일 때 베이스 가격 x ratio 로 대체. 없으면 변화 없음 가치로 대체.
-        "reroll": {
-            "label": "Surround", "ko": "포위", "roll": -4,
-            "outcomes": [
-                {"value": -5, "suffix": " or lower", "suffix_ko": " 이상", "ratio": 8.0, "search": {"mods": [
-                    M("# to maximum Life", min=105),
-                    M("Require # additional enemies to be Surrounded", max=-5),
-                ]}},
-                {"value": -4, "suffix": "", "suffix_ko": "", "ratio": 1.0, "search": {"mods": [
-                    M("# to maximum Life", min=105),
-                    M("Require # additional enemies to be Surrounded", min=-4, max=-4),
-                ]}},
-                {"value": -3, "suffix": " or higher", "suffix_ko": " 이하", "ratio": 1.0, "search": {"mods": [
-                    M("# to maximum Life", min=105),
-                    M("Require # additional enemies to be Surrounded", min=-3),
-                ]}},
-            ],
-        },
-    },
-    {
-        "name": "Constricting Command",
-        "file": "Constricting_Command",
-        "ko": "목 죄이는 명령",
-        "type": "Viper Cap",
-        "slot": "helmet",
-        "base": "",
-        "root_text": ["Sockets =1", "Surrounded =-4"],
-        "root_text_ko": ["소켓 = 1", "포위 수 = -4"],
-        "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
-            M("# to maximum Life", min=110),
-            M("# to all Attributes"),
-            M("# Life Regeneration per second"),
-            M("Require # additional enemies to be Surrounded", min=-4, max=-4),
-        ]},
-        # [0] 베이스 구매가 (미타락, 소켓 1)
-        "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
-        # [2] 바알 인챈트 검색 = 기본 검색 그대로
-        "enchant_search": {},
-        # [3] 소켓 +1 검색 (1 -> 2소켓)
-        "socket_search": {"sockets": (2, None), "mods": [
-            M("# to maximum Life", min=108),
-        ]},
-        "enchants": [
-            {"en": "Increased Defence",                 "ratio": 0.85},
-            {"en": "Reduced Attribute Requirements", "ratio": 0.70},
-            {"en": "Maximum Cold Resistance",        "ratio": 1.15},
-            {"en": "Spirit",                         "search": True, "ratio": 1.00},
-            {"en": "Maximum Power Charges +1",       "search": True, "ratio": 1.00},
-            {"en": "Accuracy Rating",                "ratio": 1.10},
-            {"en": "Life Regeneration rate",         "ratio": 1.05},
-            {"en": "Mana Regeneration Rate",         "ratio": 0.85},
-            {"en": "Level of all Minion Skills +1",  "search": True, "ratio": 1.00},
-        ],
         "reroll": {
             "label": "Surround", "ko": "포위", "roll": -4,
             "outcomes": [
@@ -278,7 +270,15 @@ UNIQUES = [
         "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
         "enchant_search": {},
         "socket_search": {"sockets": (2, None)},
-        "enchants": SVALINN_ENCHANTS,
+        "enchants": [
+            {"en": "Increased Defence",              "ratio": 1.1},
+            {"en": "Reduced Attribute Requirements", "ratio": 0.75},
+            {"en": "Increased Thorns Damage",        "ratio": 0.75},
+            {"en": "Increased Block Chance",         "ratio": 2.0},
+            {"en": "Maximum Block Chance",           "ratio": 10.00},
+            {"en": "Life on Block",                  "ratio": 1.1},
+            {"en": "Mana on Block",                  "ratio": 0.75},
+        ],
         "reroll": {
             "label": "Blocked Dmg", "ko": "막기 피해", "roll": 1,
             "outcomes": [
@@ -294,8 +294,8 @@ UNIQUES = [
         "type": "Crucible Tower Shield",
         "slot": "shield",
         "base": "",
-        "root_text": ["Armour ≥250%", "Blocked Hits 2—5%"],
-        "root_text_ko": ["방어도 ≥ 250%", "막기 피격 피해 2—5%"],
+        "root_text": ["Armour ≥250%", "Blocked Hits 2-5%"],
+        "root_text_ko": ["방어도 ≥ 250%", "막기 피격 피해 2-5%"],
         "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
             M("#% increased Armour (Local)", min=250),
             M("You take #% of damage from Blocked Hits", min=2, max=5),
@@ -303,7 +303,15 @@ UNIQUES = [
         "base_search": {"corrupted": False, "sockets": None},   # 최대 소켓이 1 이므로 소켓 조건 없이 검색
         "enchant_search": {},
         "socket_search": {"sockets": (2, None)},
-        "enchants": SVALINN_ENCHANTS,
+        "enchants": [
+            {"en": "Increased Defence",              "ratio": 1.1},
+            {"en": "Reduced Attribute Requirements", "ratio": 0.75},
+            {"en": "Increased Thorns Damage",        "ratio": 0.75},
+            {"en": "Increased Block Chance",         "ratio": 2.0},
+            {"en": "Maximum Block Chance",           "ratio": 10.00},
+            {"en": "Life on Block",                  "ratio": 1.1},
+            {"en": "Mana on Block",                  "ratio": 0.75},
+        ],
         # 수치 변동: 구매 베이스의 수치(roll) 기준. 기본 검색 범위(2~5) 안이면 변화 없음과 같은 가격, 벗어나면 별도 검색
         "reroll": {
             "label": "Blocked Dmg", "ko": "막기 피해", "roll": 3.5,
@@ -353,6 +361,7 @@ for _u in UNIQUES:
 
 # ================================================================ 적정 최저가 판정 파라미터
 MIN_LISTINGS = 2             # 검색 실패 = 가격·통화를 확인할 수 있는 정상 매물이 이 값 미만 (price_search 가 None 반환). 실패 시 대체값: 베이스 구매가=장비 제외, 변화 없음=베이스 x NO_CHANGE_RATIO, 인챈트=ratio(없으면 변화 없음 가치)
+OUTLIER_FILTER = False      # 이상치(미끼 저가) 제외 사용 여부. False = 항상 최저가, True = 아래 OUTLIER_* 기준으로 제외
 OUTLIER_MIN_N = 4
 OUTLIER_RATIO = 0.5
 MAX_SKIP = 2
@@ -793,7 +802,7 @@ def fair_price(rows):
 
     vals = [_ex(r) for r in usable]
     skipped = 0
-    if n >= OUTLIER_MIN_N:
+    if OUTLIER_FILTER and n >= OUTLIER_MIN_N:
         med = statistics.median(vals)
         cheap = 0
         while cheap < n and vals[cheap] < med * OUTLIER_RATIO:
@@ -945,7 +954,9 @@ def reroll_outcomes(u, league, cost, nc):
             price, n, url = price_search(u, league, reroll_spec(u, o), f"수치 변동 {txt}")
             if price is None:    # 검색 실패 -> ratio (없으면 변화 없음 가치) 로 대체, html 에서 매물 건 텍스트를 붉게 표시
                 price, low = (rnd(cost * o["ratio"]) if o.get("ratio") is not None else nc["price"]), True
-        else:                    # 값 그대로 = 변화 없음 검색 가격
+        elif o.get("ratio") is not None:     # search 없음 + ratio = 베이스 가격 x ratio
+            price, n, url = rnd(cost * o["ratio"]), None, None
+        else:                    # search 도 ratio 도 없음 = 값 그대로 = 변화 없음 검색 가격
             price, n, url, low = nc["price"], nc["n"], nc["url"], nc["low"]
         out.update({"price": price, "n": n})
         if low:
@@ -1105,9 +1116,9 @@ def detect_def_type(u, league):
 
 
 def resolve_def_types(targets, league, out_dir):
-    """def_type 이 필요한 장비(헬멧)는 설정값 > 저장된 js > 거래소 판별 순으로 정한다. 판별은 값이 없을 때 한 번만."""
+    """def_type 이 필요한 장비(헬멧/방패)는 설정값 > 저장된 js > 거래소 판별 순으로 정한다. 판별은 값이 없을 때 한 번만."""
     for u in targets:
-        if u.get("slot") != "helmet" or u.get("def_type"):
+        if not any(e.get("defence") for e in ENCHANTS.get(u.get("slot"), [])) or u.get("def_type"):
             continue
         t = saved_def_type(fname(u), out_dir)
         if not t:
