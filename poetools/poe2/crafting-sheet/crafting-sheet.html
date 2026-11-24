@@ -199,6 +199,7 @@ dialog.asksave::backdrop{background:rgba(0,0,0,.4)}
 <body>
 <main class="wrap" id="app"></main>
 <script src="price-history/crafting-sheet-prices.js"></script>
+<script src="price-history/price-history-index.js"></script>
 <script src="recipe/index.js"></script>
 <script>
 const $=id=>document.getElementById(id);
@@ -281,10 +282,10 @@ function priceInfo(){
   }else el.textContent=PERR?T(`시세 파일을 읽지 못했습니다 (${PERR})`,`Could not read the price file (${PERR})`):T("시세를 불러오는 중…","Loading prices…");
 }
 /* ── 과거(scout) 시세 ──
-   HISTORY_FILES 의 파일을 차례로 <script> 로 읽습니다(file:// 에서도 동작). 파일을 추가하려면 아래 목록에 적으세요.
+   price-history/price-history-index.js(스크립트가 자동 생성)의 파일을 차례로 <script> 로 읽습니다(file:// 에서도 동작). 목록 파일이 없을 때만 아래 예비 목록을 씁니다.
    각 파일은 파이썬(crafting-sheet-history-scout.py)이 만든 window.CRAFT_PRICES_HISTORY = {league, days:{일차:{date,prices}}} 형식이며,
    같은 리그의 파일은 합쳐지고 같은 일차는 나중에 읽은 파일이 우선합니다. 없는 파일은 건너뜁니다. 한글 이름은 항상 최신 시세 파일(names_ko)을 씁니다. */
-const HISTORY_FILES=[
+const HISTORY_FILES=Array.isArray(window.CRAFT_HISTORY_INDEX)?window.CRAFT_HISTORY_INDEX.map(f=>"price-history/"+f):[ /* price-history-index.js 가 없을 때만 쓰는 예비 목록 */
 	"price-history/crafting-sheet-prices-Forbidden_Rites-day7.js",
 	"price-history/crafting-sheet-prices-Forbidden_Rites-day15.js",
 	"price-history/crafting-sheet-prices-Forbidden_Rites-day30.js",

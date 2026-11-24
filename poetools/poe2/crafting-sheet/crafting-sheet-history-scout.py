@@ -15,6 +15,7 @@ crafting-sheet-prices.js 에 시세가 들어 있는 항목들을 대상으로, 
 
 저장 위치(기본값: 이 스크립트 옆 price-history 폴더):
   crafting-sheet-prices-<리그>-day<일차>.js      결과(window.CRAFT_PRICES_HISTORY). 일차마다 파일이 하나씩 만들어집니다
+  price-history-index.js                                 위 파일들의 목록(HTML 이 읽음. 실행할 때마다 자동 갱신)
   raw_data/poe2scout/                              원본 응답 캐시(지워도 됩니다)
 
 계산 방식:
@@ -309,6 +310,13 @@ def write_atomic(path, text):
     tmp.replace(path)
 
 
+def write_history_index(out_dir):
+    """out_dir 안의 일차별 시세 파일을 스캔해 price-history-index.js 를 갱신(HTML 이 이 목록으로 파일을 읽음)."""
+    files = sorted(p.name for p in out_dir.glob("crafting-sheet-prices-*-day*.js"))
+    write_atomic(out_dir / "price-history-index.js", "window.CRAFT_HISTORY_INDEX = " + json.dumps(files, ensure_ascii=False, indent=1) + ";\n")
+    log(f"  목록 갱신 -> {out_dir / 'price-history-index.js'} ({len(files)}개)")
+
+
 # ---------------------------------------------------------------- 리그 정렬
 def is_hc(name):
     n = name.lower()
@@ -455,6 +463,7 @@ def run_league(league, wanted, days, start_override, raw_dir, out_dir, use_cache
         path = out_dir / f"crafting-sheet-prices-{safe_name(league)}-day{n}.js"
         write_atomic(path, f"window.{JS_VARIABLE} = {body};\n")
         log(f"  완료 -> {path}")
+    write_history_index(out_dir)
 
 
 # ---------------------------------------------------------------- 메인
