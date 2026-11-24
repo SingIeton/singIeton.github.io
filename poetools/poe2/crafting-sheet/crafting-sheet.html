@@ -198,7 +198,7 @@ dialog.asksave::backdrop{background:rgba(0,0,0,.4)}
 </head>
 <body>
 <main class="wrap" id="app"></main>
-<script src="price-history/crafting-currency-prices.js"></script>
+<script src="price-history/crafting-sheet-prices.js"></script>
 <script src="recipe/index.js"></script>
 <script>
 const $=id=>document.getElementById(id);
@@ -217,7 +217,7 @@ const SPECIAL={"hinekoras-lock":"Hinekora's Lock","uul-netols-catalyst":"Uul-Net
 /* 시세 파일의 슬러그 키(greater-exalted-orb)를 표시 이름(Greater Exalted Orb)으로 */
 const pretty=k=>/[A-Z\s]/.test(k)?k:SPECIAL[k]||k.split("-").map((w,i)=>i&&(w==="of"||w==="the")?w:w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
 /* 한글 이름: 영어 이름 → 한글 이름.
-   · 시세 파일(crafting-currency-prices.js 의 names_ko)에 들어 있는 한글명이 자동으로 쓰입니다 (파이썬 스크립트 CURRENCIES 에서 영어 이름 오른쪽에 적은 것).
+   · 시세 파일(crafting-sheet-prices.js 의 names_ko)에 들어 있는 한글명이 자동으로 쓰입니다 (파이썬 스크립트 CURRENCIES 에서 영어 이름 오른쪽에 적은 것).
    · 파일 없이 직접 추가하려면 KO_LOCAL 에 적으세요. 같은 이름이면 KO_LOCAL 이 우선합니다.
      예) const KO_LOCAL={"Divine Orb":"디바인 오브","Chaos Orb":"카오스 오브"};
    한글 이름으로 입력해도 같은 재화로 인식되고(단가·아이콘 포함), 소모 재화 표와 자동완성에 한글이 표시됩니다. */
@@ -252,9 +252,9 @@ function fillCur(extra){
 buildKo();fillCur();
 
 /* 가격: 재화 이름 → 디바인 단가.
-   AUTO   = 시세 파일(crafting-currency-prices.json)에서 읽은 값 (이름은 nk()로 정규화)
+   AUTO   = 시세 파일(crafting-sheet-prices.json)에서 읽은 값 (이름은 nk()로 정규화)
    PRICES = 사용자가 직접 입력한 값 (브라우저에 저장, AUTO보다 우선) */
-const PRICE_URL="price-history/crafting-currency-prices.json"; /* 이 HTML 기준 상대 경로 */
+const PRICE_URL="price-history/crafting-sheet-prices.json"; /* 이 HTML 기준 상대 경로 */
 let PRICES={};try{PRICES=JSON.parse(localStorage.getItem("craftPrices")||"{}")}catch(e){}
 let AUTO={},META=null,PERR="";
 let LATEST=null,PSEL="latest",HIST=[],PRDY=false; /* LATEST = 최신(ninja) 시세 파일 내용, PSEL = 드롭다운에서 고른 시세("latest" 또는 "리그|일차"), HIST = 과거(scout) 시세 [{league,source,start,days:{일차:{date,prices}}}] */
@@ -282,18 +282,18 @@ function priceInfo(){
 }
 /* ── 과거(scout) 시세 ──
    HISTORY_FILES 의 파일을 차례로 <script> 로 읽습니다(file:// 에서도 동작). 파일을 추가하려면 아래 목록에 적으세요.
-   각 파일은 파이썬(crafting-currency-history-scout.py)이 만든 window.CRAFT_PRICES_HISTORY = {league, days:{일차:{date,prices}}} 형식이며,
+   각 파일은 파이썬(crafting-sheet-history-scout.py)이 만든 window.CRAFT_PRICES_HISTORY = {league, days:{일차:{date,prices}}} 형식이며,
    같은 리그의 파일은 합쳐지고 같은 일차는 나중에 읽은 파일이 우선합니다. 없는 파일은 건너뜁니다. 한글 이름은 항상 최신 시세 파일(names_ko)을 씁니다. */
 const HISTORY_FILES=[
-	"price-history/crafting-currency-prices-Forbidden_Rites-day7.js",
-	"price-history/crafting-currency-prices-Forbidden_Rites-day15.js",
-	"price-history/crafting-currency-prices-Forbidden_Rites-day30.js",
-	"price-history/crafting-currency-prices-Runes_of_Aldur-day7.js",
-	"price-history/crafting-currency-prices-Runes_of_Aldur-day15.js",
-	"price-history/crafting-currency-prices-Runes_of_Aldur-day30.js",
-	"price-history/crafting-currency-prices-Rise_of_the_Abyssal-day7.js",
-	"price-history/crafting-currency-prices-Rise_of_the_Abyssal-day15.js",
-	"price-history/crafting-currency-prices-Rise_of_the_Abyssal-day30.js",
+	"price-history/crafting-sheet-prices-Forbidden_Rites-day7.js",
+	"price-history/crafting-sheet-prices-Forbidden_Rites-day15.js",
+	"price-history/crafting-sheet-prices-Forbidden_Rites-day30.js",
+	"price-history/crafting-sheet-prices-Runes_of_Aldur-day7.js",
+	"price-history/crafting-sheet-prices-Runes_of_Aldur-day15.js",
+	"price-history/crafting-sheet-prices-Runes_of_Aldur-day30.js",
+	"price-history/crafting-sheet-prices-Rise_of_the_Abyssal-day7.js",
+	"price-history/crafting-sheet-prices-Rise_of_the_Abyssal-day15.js",
+	"price-history/crafting-sheet-prices-Rise_of_the_Abyssal-day30.js",
 ];
 function addHist(h){
   if(!h||typeof h.league!=="string"||!h.days||typeof h.days!=="object")return;
@@ -324,7 +324,7 @@ function selectPrices(v){
 }
 async function loadPrices(){
   try{
-    if(window.CRAFT_PRICES)setPrices(window.CRAFT_PRICES); /* crafting-currency-prices.js (file:// 에서도 동작) */
+    if(window.CRAFT_PRICES)setPrices(window.CRAFT_PRICES); /* crafting-sheet-prices.js (file:// 에서도 동작) */
     else{const r=await fetch(PRICE_URL,{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);setPrices(await r.json())}
   }catch(e){PERR=e.message||"error"}
   priceInfo();upd();
@@ -719,7 +719,7 @@ $("app").addEventListener("click",e=>{
   }
   else if(a==="addItem")addItem(i);
   else if(a==="delItem"){const S=R.steps[i],di=S.items[j];UNDO.push(()=>{S.items.splice(Math.min(j,S.items.length),0,di)});S.items.splice(j,1);refresh()}
-  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;UNDO.length=0;renderAll();SNAP=json()}}
+  else if(a==="new"){if(confirm(T("현재 내용을 지우고 새로 시작할까요?","Discard the current recipe and start over?"))){R={name:"",prices:{},steps:[newStep()]};LOADED=null;SEL=null;UNDO.length=0;renderAll();SNAP=json()}}
   else if(a==="save")save();
   else if(a==="pick")$("file").click();
   else if(a==="loadidx")$("idxfile").click();

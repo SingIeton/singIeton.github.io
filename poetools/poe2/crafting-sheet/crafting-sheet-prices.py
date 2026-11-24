@@ -6,15 +6,16 @@
 가격은 모두 디바인 오브(Divine Orb) 1개 기준 단가로 변환해 저장합니다(페이지의 PRICES 형식과 동일).
 
 사용법:
-  python crafting-currency-prices.py                              # CURRENCIES 목록을 받아 crafting-currency-prices.js 생성
-  python crafting-currency-prices.py --list                       # poe.ninja가 알려주는 리그 목록 출력
-  python crafting-currency-prices.py --league "Runes of Aldur"    # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
-  python crafting-currency-prices.py --dump-currencies all.txt    # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
-  python crafting-currency-prices.py --no-cache                   # 30분 이내 받은 응답도 무시하고 새로 요청
-  python crafting-currency-prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트 옆 price-history 폴더)
+  python crafting-sheet-prices.py                              # CURRENCIES 목록을 받아 crafting-sheet-prices.js 생성
+  python crafting-sheet-prices.py --list                       # poe.ninja가 알려주는 리그 목록 출력
+  python crafting-sheet-prices.py --league "Runes of Aldur"    # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
+  python crafting-sheet-prices.py --dump-currencies all.txt    # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
+  python crafting-sheet-prices.py --no-cache                   # 30분 이내 받은 응답도 무시하고 새로 요청
+  python crafting-sheet-prices.py --use-cache                  # 만료 시간과 무관하게 raw_data/ 의 기존 응답을 사용(없는 항목만 새로 요청)
+  python crafting-sheet-prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트 옆 price-history 폴더)
 
 저장 위치(기본값: 이 스크립트 옆 price-history 폴더):
-  crafting-currency-prices.js             결과(페이지가 <script> 로 읽음. 파일을 직접 열어도 동작)
+  crafting-sheet-prices.js             결과(페이지가 <script> 로 읽음. 파일을 직접 열어도 동작)
   raw_data/                               poe.ninja 원본 응답 캐시(지워도 됩니다)
 
 데이터 출처: poe.ninja 공식 이코노미 API  https://poe.ninja/docs/api
@@ -81,7 +82,11 @@ Orb of Alchemy                  연금술의 오브
 Vaal Orb                        바알 오브
 Fracturing Orb                  분열의 오브
 Hinekora's Lock                 히네코라의 머리카락
+Blacksmith's Whetstone         대장장이의 숫돌
+Arcanist's Etcher               신비학자의 식각기
+Armourer's Scrap                방어구 장인의 고철
 
+ 
 [Essences]
 Essence of the Breach           균열의 에센스
 Essence of the Abyss            심연의 에센스
@@ -98,6 +103,7 @@ Greater Essence of Opulence     상위 풍요의 에센스
 Perfect Essence of Opulence     완벽한 풍요의 에센스
 Perfect Essence of Enhancement  완벽한 강화의 에센스
 
+
 [Abyss]
 Preserved Jawbone               보존된 턱뼈
 Preserved Rib                   보존된 갈비뼈
@@ -112,6 +118,7 @@ Omen of Abyssal Echoes          심연의 메아리의 징조
 Omen of the Liege               군왕의 징조 (아마나무)
 Omen of the Sovereign           군주의 징조 (울라만)
 Omen of the Blackblooded        검은 피의 징조 (쿠르갈)
+
 
 [Ritual]
 Omen of Whittling                   절사의 징조
@@ -128,6 +135,7 @@ Omen of Catalysing Exaltation       촉진하는 찬미의 징조
 Omen of Sinistral Necromancy        좌측 강령술의 징조
 Omen of Dextral Necromancy          우측 강령술의 징조
 
+
 [Breach]
 Flesh Catalyst          육체 기폭제
 Neural Catalyst         신경 기폭제
@@ -140,22 +148,47 @@ Chayula's Catalyst      차율라의 기폭제
 Reaver Catalyst         강탈자 기폭제
 Sibilant Catalyst       쇳소리 기폭제
 
+
+[Temple]
+Vaal Blacksmith's Infuser   바알 대장장이의 주입기
+Vaal Arcanist's Infuser     바알 신비학자의 주입기
+Vaal Armourer's Infuser     바알 방어구 장인의 주입기
+Vaal Catalysing Infuser     바알 촉진시키는 주입기
+
+Architect's Orb             건축가의 오브
+Vaal Cultivation Orb        바알 함양 오브
+Crystallised Corruption     결정화된 타락
+
+
 [Expedition]
 Runic Alloy             룬 합금
 Swift Alloy             재빠른 합금
 Sovereign Alloy         군왕의 합금
 # Mystic Alloy          신비한 합금
-# Prismatic Alloy       분광 합금  
+# Prismatic Alloy       분광 합금
 # Cyclonic Alloy        회오리바람 합금
-# Expansive Alloy       팽창하는 합금 
-# Protective Alloy      보호의 합금 
-# Adaptive Alloy        적응형 합금 
+# Expansive Alloy       팽창하는 합금
+# Protective Alloy      보호의 합금
+# Adaptive Alloy        적응형 합금
+
+Serle's Triumph         세를의 승리
+Cadigan's Epiphany      캐디건의 통찰
+Astrid's Creativity     아스트리드의 창의성
+
+Uhtred's Sidereus       우트레드의 성좌 
+Kolr's Hunt             콜르의 사냥
+Vorana's Carnage        보라나의 학살
+Thrud's Might           스루드의 완력
+Katla's Gloom           카틀라의 순흑
+Medved's Tending        메드베드의 보살핌
+
 
 [Flux]
 Blazing Flux            맹렬한 유동체
 Chilling Flux           오싹한 유동체
 Crackling Flux          치직대는 유동체
 Void Flux               공허 유동체
+
 
 [Bloodmark]
 
@@ -190,8 +223,9 @@ ALIASES = {
 SEARCH_UNIQUES = True
 
 # ---- 기타 --------------------------------------------------------------------
-OUTPUT_JS_FILE = "crafting-currency-prices.js"  # 결과 JS 파일 이름(페이지가 <script> 로 읽음)
+OUTPUT_JS_FILE = "crafting-sheet-prices.js"  # 결과 JS 파일 이름(페이지가 <script> 로 읽음)
 JS_VARIABLE = "CRAFT_PRICES"  # JS 파일이 만드는 전역 변수 이름(window.CRAFT_PRICES). 페이지 쪽과 같아야 함
+FORCE_CACHE = False       # --use-cache 지정 시 True: 만료 시간 무시
 CACHE_MINUTES = 30        # 이 시간(분) 안에 받은 원본 응답이 있으면 재사용. 0 이면 캐시 안 씀
 # poe.ninja 는 앱을 식별할 수 있는 User-Agent 와 연락처를 요청합니다. 본인 정보로 바꿔 주세요.
 USER_AGENT = "crafting-sheet-prices/1.0 (personal tool; contact: your-email@example.com)"
@@ -360,7 +394,7 @@ def pick_league(leagues, wanted):
 def fetch_overview(kind, league_id, type_, raw_dir, use_cache):
     """kind: 'exchange'(재화 교환) | 'stash'(아이템). 원본 응답은 raw_data/ 에 저장하고, 최근 것이 있으면 재사용."""
     path = raw_dir / f"{safe_name(league_id)}__{kind}__{type_}.json"
-    if use_cache and CACHE_MINUTES > 0 and path.exists() and time.time() - path.stat().st_mtime < CACHE_MINUTES * 60:
+    if use_cache and path.exists() and (FORCE_CACHE or (CACHE_MINUTES > 0 and time.time() - path.stat().st_mtime < CACHE_MINUTES * 60)):
         try:
             return json.loads(path.read_text(encoding="utf-8")), True
         except ValueError:
@@ -494,7 +528,9 @@ def main():
     ap.add_argument("--league", metavar="이름 또는 id", help="수집할 리그(스크립트 상단 LEAGUE 보다 우선)")
     ap.add_argument("--dump-currencies", metavar="PATH", help="전체 재화 이름을 붙여넣기용 텍스트로 저장하고 종료")
     ap.add_argument("--out", default=str(DEFAULT_OUT), help="결과 저장 폴더(기본: 스크립트 옆 price-history 폴더)")
-    ap.add_argument("--no-cache", action="store_true", help="raw_data/ 의 최근 응답을 무시하고 새로 요청")
+    grp = ap.add_mutually_exclusive_group()
+    grp.add_argument("--no-cache", action="store_true", help="raw_data/ 의 최근 응답을 무시하고 새로 요청")
+    grp.add_argument("--use-cache", action="store_true", help="만료 시간과 무관하게 raw_data/ 의 기존 응답을 사용(없는 항목만 새로 요청)")
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(line_buffering=True, errors="replace")
@@ -502,6 +538,8 @@ def main():
     except Exception:
         pass
 
+    global FORCE_CACHE
+    FORCE_CACHE = args.use_cache
     use_cache = not args.no_cache
     out_dir = Path(args.out)
     raw_dir = out_dir / "raw_data"
