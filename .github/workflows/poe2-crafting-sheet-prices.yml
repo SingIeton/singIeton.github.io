@@ -1,4 +1,4 @@
-name: poe2 / crafting-currency prices
+name: poe2 / crafting-sheet-prices
 
 on:
   schedule:
@@ -10,7 +10,7 @@ permissions:
   contents: write                # 결과 파일을 커밋·푸시하기 위해 필요
 
 concurrency:
-  group: poe2-crafting-currency-prices   # 이전 실행이 끝나기 전에는 다음 실행을 시작하지 않음
+  group: poe2-crafting-sheet-prices   # 이전 실행이 끝나기 전에는 다음 실행을 시작하지 않음
   cancel-in-progress: false
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
       # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준) ← 실제 위치에 맞게 수정하세요.
       # 결과 파일은 이 폴더 안에 생긴다고 가정하고, 이 폴더의 변경분을 커밋합니다.
       SCRIPT_DIR: poetools/poe2/crafting-sheet
-      SCRIPT_NAME: crafting-currency-prices.py
+      SCRIPT_NAME: crafting-sheet-prices.py
     steps:
       - uses: actions/checkout@v4
 
@@ -55,6 +55,6 @@ jobs:
             echo "변경 없음"
             exit 0
           fi
-          git commit -m "chore: update crafting currency prices ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git commit -m "chore: update crafting sheet prices ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push
