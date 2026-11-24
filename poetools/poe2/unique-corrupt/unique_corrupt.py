@@ -61,7 +61,7 @@ def M(stat, min=None, max=None, id=None):
 # 어떤 인챈트를 검색/ratio 로 평가할지와 ratio 값은 개별 장비의 "enchants" 에서 설정한다.
 ENCHANTS = {
     "helmet": [
-        {"en": "Increased Energy Shield",         "ko": "에너지 보호막 % 증가",    "range": "15—25",  "mod": "#% increased Energy Shield"},
+        {"en": "Increased Defence",               "range": "15—25",  "defence": True},   # 방어 옵션: 장비의 def_type(DEFENCE_TYPES)에 따라 en/ko/mod 가 정해짐
         {"en": "Reduced Attribute Requirements",  "ko": "능력치 요구사항 감소",     "range": "10—20",  "mod": "#% increased Attribute Requirements"},
         {"en": "Maximum Cold Resistance",         "ko": "냉기 저항 최대치 +%",     "range": "1—3",    "mod": "+#% to Maximum Cold Resistance"},
         {"en": "Spirit",                          "ko": "정신력",                "range": "20—30",  "mod": "# to Spirit"},
@@ -83,16 +83,41 @@ ENCHANTS = {
 }
 
 
+# 헬멧 방어 인챈트는 베이스 종류(def_type)에 따라 다름: str=방어도, dex=회피, int=에너지 보호막, 나머지는 복합. (en, ko, 거래소 옵션 문구)
+DEFENCE_TYPES = {
+    "str":     ("Increased Armour",                    "방어도 % 증가",                  "#% increased Armour"),
+    "dex":     ("Increased Evasion",                   "회피 % 증가",               "#% increased Evasion Rating"),
+    "int":     ("Increased Energy Shield",             "에너지 보호막 % 증가",           "#% increased Energy Shield"),
+    "str_dex": ("Increased Armour and Evasion",        "방어도 및 회피 % 증가",     "#% increased Armour and Evasion"),
+    "str_int": ("Increased Armour and Energy Shield",  "방어도 및 에너지 보호막 % 증가", "#% increased Armour and Energy Shield"),
+    "dex_int": ("Increased Evasion and Energy Shield", "회피 및 에너지 보호막 % 증가", "#% increased Evasion and Energy Shield"),
+}
+
+
+def slot_enchants(u):
+    """장비 부위의 인챈트 목록. 방어 옵션(defence)은 장비의 def_type 에 맞는 en/ko/mod 로 바꿔서 반환."""
+    out = []
+    for e in ENCHANTS[u["slot"]]:
+        if e.get("defence"):
+            t = u.get("def_type")
+            if t not in DEFENCE_TYPES:
+                sys.exit(f"{u['name']}: def_type 을 지정하세요 ({', '.join(DEFENCE_TYPES)})")
+            e = {**e, "key": e["en"], **dict(zip(("en", "ko", "mod"), DEFENCE_TYPES[t]))}   # key = 설정에서 쓰는 이름("Increased Defence")
+        out.append(e)
+    return out
+
+
 def enchants_of(u):
     """장비의 enchants 설정에 ENCHANTS[slot] 의 en/ko/range/mod 를 합쳐서 반환."""
     if u.get("slot") not in ENCHANTS:
         sys.exit(f"{u['name']}: slot 이 없거나 ENCHANTS 에 없는 부위입니다 (사용 가능: {', '.join(ENCHANTS)})")
-    base = {e["en"]: e for e in ENCHANTS[u["slot"]]}
+    base = {e.get("key", e["en"]): e for e in slot_enchants(u)}
     out = []
     for c in u["enchants"]:
         if c["en"] not in base:
             sys.exit(f"{u['name']}: ENCHANTS['{u['slot']}'] 에 없는 인챈트입니다: {c['en']}")
-        e = {**base[c["en"]], **c}
+        e = {**base[c["en"]], **c, "en": base[c["en"]]["en"]}      # 표시 이름은 종류에 맞게 확정된 이름
+        e.setdefault("search", bool(e.get("mod")))      # 기본값: mod 가 있으면 모두 거래소 검색 (끄려면 "search": False)
         if e.get("search") and not e.get("mod"):
             sys.exit(f"{u['name']}: '{e['en']}' 은 검색하도록 설정됐지만 ENCHANTS 에 mod 가 없습니다")
         if not e.get("search") and e.get("ratio") is None:
@@ -103,7 +128,7 @@ def enchants_of(u):
 
 def no_enchant_mods(u):
     """'변화 없음' 검색용: 부위의 인챈트 옵션 전체를 NOT 그룹(하나도 없음)으로 제외. mod 가 있는 인챈트만 포함."""
-    return [{**M(e["mod"]), "group": "enchant"} for e in ENCHANTS[u["slot"]] if e.get("mod")]
+    return [{**M(e["mod"]), "group": "enchant"} for e in slot_enchants(u) if e.get("mod")]
 
 
 SVALINN_ENCHANTS = [
@@ -124,6 +149,7 @@ UNIQUES = [
         "ko": "목 죄이는 명령 (오버소켓)",              # 한글 이름 (비우면 영문만 표시)
         "type": "Viper Cap",             # 베이스 타입(선택). 이름만으로 검색이 안 되면 지정
         "slot": "helmet",                # 장비 부위 -> 바알 인챈트 목록은 파일 상단 ENCHANTS[slot] 사용
+        # "def_type": "dex_int",         # (선택) 헬멧 베이스 종류를 직접 지정. 없으면 첫 실행 때 거래소 매물에서 자동 판별해 js 에 저장
         "base": "",                      # html 목록에 작게 표시할 문구 (영문 기본, 한글은 "base_ko" 로 추가 가능)
         # 모든 표시 문구는 영문이 기본(label/name/base). 한글 번역이 있을 때만 "ko"(base 는 "base_ko") 를 추가 -> 화면이 한글일 때 사용, 없으면 영문 그대로
         # root 노드(베이스) 아래에 표시할 문구. 직접 수정. 한글은 root_text_ko (비우면 영문 표시)
@@ -147,10 +173,10 @@ UNIQUES = [
             M("# to maximum Life", min=108),
         ]},
         # 바알 인챈트 설정 (en = 상단 ENCHANTS[slot] 의 영문명). 이 목록의 인챈트가 타락 결과로 계산된다.
-        #   "search": True -> 거래소에서 해당 인챈트 매물 검색. 검색 실패(정상 매물 < MIN_LISTINGS)일 때만 ratio 사용: ratio 가 있으면 베이스 가격 x ratio, 없으면 변화 없음 가치
+        #   "search": 기본 True (모든 인챈트를 거래소에서 검색, 끄려면 False). 검색 시 해당 인챈트 매물 검색. 검색 실패(정상 매물 < MIN_LISTINGS)일 때만 ratio 사용: ratio 가 있으면 베이스 가격 x ratio, 없으면 변화 없음 가치
         #   "ratio": 베이스 가격 x ratio 로 평가 (search 가 없을 때 사용). "w" = 확률 가중치(선택, 기본 1)
         "enchants": [
-            {"en": "Increased Energy Shield",        "ratio": 0.85},
+            {"en": "Increased Defence",                 "ratio": 0.85},
             {"en": "Reduced Attribute Requirements", "ratio": 0.70},
             {"en": "Maximum Cold Resistance",        "ratio": 1.15},
             {"en": "Spirit",                         "search": True, "ratio": 1.00},
@@ -206,7 +232,7 @@ UNIQUES = [
             M("# to maximum Life", min=108),
         ]},
         "enchants": [
-            {"en": "Increased Energy Shield",        "ratio": 0.85},
+            {"en": "Increased Defence",                 "ratio": 0.85},
             {"en": "Reduced Attribute Requirements", "ratio": 0.70},
             {"en": "Maximum Cold Resistance",        "ratio": 1.15},
             {"en": "Spirit",                         "search": True, "ratio": 1.00},
@@ -242,8 +268,8 @@ UNIQUES = [
         "type": "Crucible Tower Shield",
         "slot": "shield",
         "base": "",
-        "root_text": ["Sockets =1", "Armour ≥250%", "Blocked Hits ≤1%"],
-        "root_text_ko": ["소켓 = 1", "방어도 ≥ 250%", "막기 피격 피해 ≤ 1%"],
+        "root_text": ["Armour ≥250%", "Blocked Hits 0-1%"],
+        "root_text_ko": ["방어도 ≥ 250%", "막기 피격 피해 0-1%"],
         # 0~1 은 바알 수치 변동을 해도 0 은 0, 1 은 1 로 그대로 -> 수치 변동 = 변화 없음과 동일 취급
         "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
             M("#% increased Armour (Local)", min=250),
@@ -268,8 +294,8 @@ UNIQUES = [
         "type": "Crucible Tower Shield",
         "slot": "shield",
         "base": "",
-        "root_text": ["Sockets =1", "Armour ≥250%", "Blocked Hits 2—5%"],
-        "root_text_ko": ["소켓 = 1", "방어도 ≥ 250%", "막기 피격 피해 2—5%"],
+        "root_text": ["Armour ≥250%", "Blocked Hits 2—5%"],
+        "root_text_ko": ["방어도 ≥ 250%", "막기 피격 피해 2—5%"],
         "default_search": {"corrupted": True, "sockets": (1, 1), "mods": [
             M("#% increased Armour (Local)", min=250),
             M("You take #% of damage from Blocked Hits", min=2, max=5),
@@ -999,6 +1025,8 @@ def analyze(u, league, old=None):
     data = {"name": u.get("title") or u["name"], "base": u.get("base", ""), "unit": "d", "cost": cost,
             "vaalCost": vaal_div, "rootText": u.get("root_text", []),
             "outcomes": outcomes, "searches": dict(CACHE_OUT)}
+    if u.get("def_type"):
+        data["defType"] = u["def_type"]      # 다음 실행부터 재판별 없이 사용
     if base_url:
         data["baseUrl"] = base_url
     if u.get("root_text_ko"):
@@ -1046,6 +1074,48 @@ def save(data, league, out_dir, name, stamp=None):
     return path
 
 
+def saved_def_type(name, out_dir):
+    """이미 저장된 uniques/장비명.js 에서 판별해 둔 def_type (리그와 무관: 베이스 종류는 리그에 따라 변하지 않음)."""
+    try:
+        with open(os.path.join(out_dir, f"{name}.js"), encoding="utf-8") as f:
+            body = f.read().split("window.UC_DATA.push(", 1)[1].rsplit(");", 1)[0]
+        t = json.loads(body).get("defType")
+        return t if t in DEFENCE_TYPES else None
+    except (OSError, IndexError, ValueError):
+        return None
+
+
+def detect_def_type(u, league):
+    """거래소 매물 1개의 방어 속성(방어도/회피/에너지 보호막)으로 베이스 종류 판별. 요청 2회."""
+    s = call("POST", f"{BASE}/api/trade2/search/poe2/{league}", json=build_query(u, {"corrupted": False, "mods": []}))
+    ids = (s.get("result") or [])[:1]
+    if not ids:
+        sys.exit(f"{u['name']}: def_type 을 판별할 매물이 없습니다. 장비 설정에 \"def_type\" 을 직접 지정하세요.")
+    f = call("GET", f"{BASE}/api/trade2/fetch/{ids[0]}", params={"query": s["id"]})
+    item = ((f.get("result") or [{}])[0].get("item")) or {}
+    ext = item.get("extended") or {}
+    names = {p.get("name") for p in item.get("properties") or []}
+    has = {"str": bool(ext.get("ar")) or "Armour" in names,
+           "dex": bool(ext.get("ev")) or "Evasion Rating" in names,
+           "int": bool(ext.get("es")) or "Energy Shield" in names}
+    t = "_".join(k for k in ("str", "dex", "int") if has[k])
+    if t not in DEFENCE_TYPES:
+        sys.exit(f"{u['name']}: def_type 을 판별하지 못했습니다 (감지: {t or '없음'}). 장비 설정에 \"def_type\" 을 직접 지정하세요.")
+    return t
+
+
+def resolve_def_types(targets, league, out_dir):
+    """def_type 이 필요한 장비(헬멧)는 설정값 > 저장된 js > 거래소 판별 순으로 정한다. 판별은 값이 없을 때 한 번만."""
+    for u in targets:
+        if u.get("slot") != "helmet" or u.get("def_type"):
+            continue
+        t = saved_def_type(fname(u), out_dir)
+        if not t:
+            t = detect_def_type(u, league)
+            print(f"  [{fname(u)}] 베이스 종류 판별: {t}")
+        u["def_type"] = t
+
+
 def main():
     ap = argparse.ArgumentParser(description="PoE2 고유 장비 타락 플리핑 데이터 수집")
     ap.add_argument("target", nargs="?", default="all", help='고유 장비 이름 또는 "all" (기본: %(default)s)')
@@ -1070,6 +1140,7 @@ def main():
             sys.exit(f"UNIQUES 에 없는 장비: {args.target} (사용 가능: {', '.join(fname(u) for u in UNIQUES)})")
 
     league = resolve_league(args.league)
+    resolve_def_types(targets, league, args.out)
     olds = {fname(u): load_old(fname(u), league, args.out) if args.use_cache else None for u in targets}
     n_search = sum(count_requests(u, olds[fname(u)]) for u in targets)
     est = estimate_seconds(n_search, n_search)

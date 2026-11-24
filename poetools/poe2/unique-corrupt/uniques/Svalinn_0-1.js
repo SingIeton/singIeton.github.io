@@ -1,14 +1,13 @@
-/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-24T00:13:15Z */
+/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-24T00:26:12Z */
 window.UC_DATA.push({
  "name": "Svalinn (0-1%)",
  "base": "",
  "unit": "d",
  "cost": 15.0,
- "vaalCost": 0.01614,
+ "vaalCost": 0.0157,
  "rootText": [
-  "Sockets =1",
   "Armour ≥250%",
-  "Blocked Hits ≤1%"
+  "Blocked Hits 0-1%"
  ],
  "outcomes": [
   {
@@ -25,9 +24,10 @@ window.UC_DATA.push({
    "label": "Increased Armour",
    "p": 0.03571428571428571,
    "price": 15.0,
-   "n": null,
+   "n": 0,
    "ko": "방어도 % 증가",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_1062208444%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "low": true,
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VS0W6DMAz8lSrPaAIG08brPqF9myqUBaNagwQcZ22F8u8LMCHYylvi8_ku5wzCsmRnRTEI0zEaLQphQTmSnw0IHwktWwi147dsUGsRTYTQ_zEIvncjJHUVyjU2DDQDWIUy3LoGFfLTSCiT-CVN49csy0JvmOVglGwx6KV57H30kJW-xXme5M_5liVvokhWHK0uUv8X8md_XhmbDZer--pIkpDvmxicxj4I-iAUjFq1w1SGyHUM1YbM5Kb4WiQy9AesZWMnlK-ooHw8YWmyUivGGvfw3oXVzN7nPOPJMvQOuxY0773YaSitUV_AduEm0ZLuOON3w-_kFIb_cDiZK9DheEFoKuF_AO2rgLY9AgAA",
    "range": "15—25"
   },
   {
@@ -35,9 +35,10 @@ window.UC_DATA.push({
    "label": "Reduced Attribute Requirements",
    "p": 0.03571428571428571,
    "price": 15.0,
-   "n": null,
+   "n": 0,
    "ko": "능력치 요구사항 감소",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_3639275092%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "low": true,
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZr47Qa3fYTubqpQFoxqDRJInLUVyrsvQIVgKneJjz_7xM7ADHGyhhUDUx2hkqxgBoTV_LsB5gImeQs-dv7lDUrJggnw-V8Do0c3SlxWPlxjQ6BnASsfhnvXoEB6G4EyCo9xHH6kaepzfS0LY8sWfb84C50LXlJxHmZZlCXZluJ3VkQrRoorl08kOSZ5_J6FeczcxV1WxmbD5eq-OmqukR6bMViJvW_ofCNv1IgdUiitbUdQbWDSdhpfi1or_U-seWMmlW4ooHxdYUkyXArCGvf03vrVzN7neYaTZegtdi1I2nuxlVAaJX6AzMJGwTLdscZzwydtBfr_cPhUN9CH8xWhqZj7A_uwQLo9AgAA",
    "range": "10—20"
   },
   {
@@ -45,19 +46,20 @@ window.UC_DATA.push({
    "label": "Increased Thorns Damage",
    "p": 0.03571428571428571,
    "price": 15.0,
-   "n": null,
+   "n": 0,
    "ko": "가시 피해 % 증가",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_1315743832%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "low": true,
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy26DMBD8lchnVPFym3LtJ6S3KkKuWZRVwQZ73SRC_vcaaBFU4Wbv7OyMZz0wS4KcZcXAdEeoFSuYBemM-GyA-Ygp0UKonb5Fg0qxaCKE_o-B0b0bIaGqUK6xITAzgFUow61rUCI9jYQyiZ_TND7meR56wywHo2SLQS_lsffRQ1b6GnOe8IxvWeLGimTFUfIi1J9QlvCXPDtmKfNnf14Zmw2Xq_vqaIRBum9icAr7IOiDUDBq5Q5TamNcR1BtyGTcFF-LxmjzD6xFYyeUriihfDxhabJCScIa9_DehdXM3uc848ky9A67FhTtvdgpKK2WX0B24SbRku4443fDb8ZJDP_h8K6vYA6nC0JTMf8DXZNT-D0CAAA",
    "range": "40—50"
   },
   {
    "group": "vaal",
    "label": "Increased Block Chance",
    "p": 0.03571428571428571,
-   "price": 15.0,
-   "n": null,
+   "price": 40.0,
+   "n": 2,
    "ko": "막기 확률 % 증가",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_2481353198%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZr4y0R7u0fo7qYKZcGo1kKAxFlbobz7AmwIpnKX-PizT-wMzJIgZ9lpYG1H2Gp2YhakM-JTAfMR06KBEDt_C4Vas2gCQv7HwOjRjZLQVQjXqAjMLGAVwnDvFEqklxEok_g1TeMiz_OQG2o5GFs2GPqlPPY-ekqlx5jzhGd8S4k7OyUrRsur0H9IXiQZz5JjwfzFX1bGZsPl6r46GmGQHpsxOI19aOhDo2DUyh1Stsa4jqDawGTcNL4GjWnNP7EWyk4q3VBC-bzCkmSFloQ17um9C6uZvc_zjCfL0DvsGtC092KnobSt_AKyC5tEy3THGr8bfjNOYvgPh_f2BuZwviKoivkf_hwziD0CAAA",
    "range": "10—15"
   },
   {
@@ -65,29 +67,30 @@ window.UC_DATA.push({
    "label": "Maximum Block Chance",
    "p": 0.03571428571428571,
    "price": 15.0,
-   "n": null,
+   "n": 1,
    "ko": "최대 막기 확률 +%",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_480796730%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "low": true,
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZoChf7d9hG6u6lCWTCqNUggcdZWKO--ABWCqdwlPv7sEzsdsyTIWXbqmG4ItWInZkE6I74rYD5iStQQYpdfUaFSLBqAkP_VMXo2vSRUEcIlVgRmFLAIYXg0FUqkjx7IY75LEn5I0zTkhloO-pY1hn5Jxr2P3lLJkWdZnG2zJSUe7BTPGCVvQr2Q9MD3x91-y5m_-uvM1-g3n91nRyMM0nMxBaewDf186BN8WrlCSm2MawiKBUzGDdOr0Rht_omlqOyg0h0l5O8rTElWKElY4preurCZ0fs4Tj5YhtZhU4OitRc7BbnV8gfITmwcTcPta7wWfDZOYvgOm099B7O53BCqgvk_SgDVEzwCAAA",
    "range": "3"
   },
   {
    "group": "vaal",
    "label": "Life on Block",
    "p": 0.03571428571428571,
-   "price": 15.0,
-   "n": null,
+   "price": 30.0,
+   "n": 3,
    "ko": "막아낼 시 생명력 획득",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_762600725%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WSwW6DMAyGX6XKGU2BEbpx3SN0t6lCWTCqNQiQOGsrlHdfgArBVG6Jf3_2HzsDsyTJWZYPrO0IW81yZkE5I79rYD5iWjYQYqdfWaPWLJqAkP81MLp3oyR1GcIV1gRmFrAMYbh1NSqklxEoYp4lCX9L0zTkhloOxpYNhn6J4N5HT6nknQsRi1expeSN5fGK0eoi9QM5ZknG-TERzJ_9eeVr9lus7qujkQbpvpmC09iHfj70CT6t2iFVa4zrCMoNTMZN02vQmNb8EytZ20mlKyoonldYkqzUirDCPb13YTOz93mcfLIMvcOuAU17L3YaCtuqHyC7sHG0DHes8Vjwh3EKw3c4fLZXMIfTBaEumf8DZfIGHzwCAAA",
    "range": "20—25"
   },
   {
    "group": "vaal",
    "label": "Mana on Block",
    "p": 0.03571428571428571,
-   "price": 15.0,
-   "n": null,
+   "price": 11.0,
+   "n": 2,
    "ko": "막아낼 시 마나 획득",
-   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_2122183138%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D",
+   "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZoIPxPjdo_Q3k0VyoKrWoMEEmdthfLuC7AhmMpd4uPPPrEzMEuCnGXlwHRHqBUrmQXpjPhsgPmIKdFCiB2_RYNKsWgCQv7HwOjRjZJQdQhfsCEws4B1CMO9a1AivYxAxePXJImLLMtCbqjlYGzZYuiX5LH30VMqeYvznOdpvqXEnZV8xSh5FeoP4UnCi5SnBfNnf14Zmw1Xq_vqaIRBemzG4BT2oaEPjYJRK3dIqY1xHUG9gcm4aXwtGqPNP_EiGjupdEMJ1fMKS5IVShJecE_vXVjN7H2eZzxZht5h14KivRc7BZXV8gvILiyPlumONX43_G6cxPAfDid9A3M4XhGamvkfeYXBOz0CAAA",
    "range": "10—15"
   },
   {
@@ -120,40 +123,40 @@ window.UC_DATA.push({
    32,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVOG26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2VMVrTHnhDP-qBJntCEh7CbVbQg9uKdDaHkQ-v8Mv35rAitYTUuOa5ogEEZ4mbOKpQg0rwjjjNRVgpBXuKyLkuEEXha0wLikPGVAKCUVIywa7MJu9eRlFc3qvjoaYcBdHn7ZazjGfYa4-_gPViaUcjDGj061D2Jn_JyOHowZzB9wLzo7o-4EUjXPO9xJVmjpYA8p_Ohj8pbZl7jgeWR19DD2SrvUi71WjR3kl3L2riXZPTxTj1t23oyXEOP-8j6clHnZHkB1LQo_oEHncBwDAAA"
   ],
-  "f2135c52892c": [
+  "cc856a5bf7d3": [
    null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_1062208444%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+   0,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VS0W6DMAz8lSrPaAIG08brPqF9myqUBaNagwQcZ22F8u8LMCHYylvi8_ku5wzCsmRnRTEI0zEaLQphQTmSnw0IHwktWwi147dsUGsRTYTQ_zEIvncjJHUVyjU2DDQDWIUy3LoGFfLTSCiT-CVN49csy0JvmOVglGwx6KV57H30kJW-xXme5M_5liVvokhWHK0uUv8X8md_XhmbDZer--pIkpDvmxicxj4I-iAUjFq1w1SGyHUM1YbM5Kb4WiQy9AesZWMnlK-ooHw8YWmyUivGGvfw3oXVzN7nPOPJMvQOuxY0773YaSitUV_AduEm0ZLuOON3w-_kFIb_cDiZK9DheEFoKuF_AO2rgLY9AgAA"
   ],
-  "272f7bbb2dd2": [
+  "e86e93aef5d1": [
    null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_3639275092%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+   0,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZr47Qa3fYTubqpQFoxqDRJInLUVyrsvQIVgKneJjz_7xM7ADHGyhhUDUx2hkqxgBoTV_LsB5gImeQs-dv7lDUrJggnw-V8Do0c3SlxWPlxjQ6BnASsfhnvXoEB6G4EyCo9xHH6kaepzfS0LY8sWfb84C50LXlJxHmZZlCXZluJ3VkQrRoorl08kOSZ5_J6FeczcxV1WxmbD5eq-OmqukR6bMViJvW_ofCNv1IgdUiitbUdQbWDSdhpfi1or_U-seWMmlW4ooHxdYUkyXArCGvf03vrVzN7neYaTZegtdi1I2nuxlVAaJX6AzMJGwTLdscZzwydtBfr_cPhUN9CH8xWhqZj7A_uwQLo9AgAA"
   ],
-  "042663442ab7": [
+  "6fe4adf60f29": [
    null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_1315743832%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+   0,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy26DMBD8lchnVPFym3LtJ6S3KkKuWZRVwQZ73SRC_vcaaBFU4Wbv7OyMZz0wS4KcZcXAdEeoFSuYBemM-GyA-Ygp0UKonb5Fg0qxaCKE_o-B0b0bIaGqUK6xITAzgFUow61rUCI9jYQyiZ_TND7meR56wywHo2SLQS_lsffRQ1b6GnOe8IxvWeLGimTFUfIi1J9QlvCXPDtmKfNnf14Zmw2Xq_vqaIRBum9icAr7IOiDUDBq5Q5TamNcR1BtyGTcFF-LxmjzD6xFYyeUriihfDxhabJCScIa9_DehdXM3uc848ky9A67FhTtvdgpKK2WX0B24SbRku4443fDb8ZJDP_h8K6vYA6nC0JTMf8DXZNT-D0CAAA"
   ],
-  "ce96459ed4cd": [
-   null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_2481353198%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+  "f2169dd28199": [
+   40.0,
+   2,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZr4y0R7u0fo7qYKZcGo1kKAxFlbobz7AmwIpnKX-PizT-wMzJIgZ9lpYG1H2Gp2YhakM-JTAfMR06KBEDt_C4Vas2gCQv7HwOjRjZLQVQjXqAjMLGAVwnDvFEqklxEok_g1TeMiz_OQG2o5GFs2GPqlPPY-ekqlx5jzhGd8S4k7OyUrRsur0H9IXiQZz5JjwfzFX1bGZsPl6r46GmGQHpsxOI19aOhDo2DUyh1Stsa4jqDawGTcNL4GjWnNP7EWyk4q3VBC-bzCkmSFloQ17um9C6uZvc_zjCfL0DvsGtC092KnobSt_AKyC5tEy3THGr8bfjNOYvgPh_f2BuZwviKoivkf_hwziD0CAAA"
   ],
-  "23f6aed2e2ae": [
+  "1b5e8657fb08": [
    null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_480796730%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+   1,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZoChf7d9hG6u6lCWTCqNUggcdZWKO--ABWCqdwlPv7sEzsdsyTIWXbqmG4ItWInZkE6I74rYD5iStQQYpdfUaFSLBqAkP_VMXo2vSRUEcIlVgRmFLAIYXg0FUqkjx7IY75LEn5I0zTkhloO-pY1hn5Jxr2P3lLJkWdZnG2zJSUe7BTPGCVvQr2Q9MD3x91-y5m_-uvM1-g3n91nRyMM0nMxBaewDf186BN8WrlCSm2MawiKBUzGDdOr0Rht_omlqOyg0h0l5O8rTElWKElY4preurCZ0fs4Tj5YhtZhU4OitRc7BbnV8gfITmwcTcPta7wWfDZOYvgOm099B7O53BCqgvk_SgDVEzwCAAA"
   ],
-  "9ea29365e07c": [
-   null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_762600725%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+  "116cb3d2df0f": [
+   30.0,
+   3,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WSwW6DMAyGX6XKGU2BEbpx3SN0t6lCWTCqNQiQOGsrlHdfgArBVG6Jf3_2HzsDsyTJWZYPrO0IW81yZkE5I79rYD5iWjYQYqdfWaPWLJqAkP81MLp3oyR1GcIV1gRmFrAMYbh1NSqklxEoYp4lCX9L0zTkhloOxpYNhn6J4N5HT6nknQsRi1expeSN5fGK0eoi9QM5ZknG-TERzJ_9eeVr9lus7qujkQbpvpmC09iHfj70CT6t2iFVa4zrCMoNTMZN02vQmNb8EytZ20mlKyoonldYkqzUirDCPb13YTOz93mcfLIMvcOuAU17L3YaCtuqHyC7sHG0DHes8Vjwh3EKw3c4fLZXMIfTBaEumf8DZfIGHzwCAAA"
   ],
-  "65a2349e5272": [
-   null,
-   null,
-   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites?q=%7B%22query%22%3A%7B%22status%22%3A%7B%22option%22%3A%22securable%22%7D%2C%22name%22%3A%22Svalinn%22%2C%22stats%22%3A%5B%7B%22type%22%3A%22and%22%2C%22filters%22%3A%5B%7B%22id%22%3A%22explicit.stat_1062208444%22%2C%22value%22%3A%7B%22min%22%3A250%7D%7D%2C%7B%22id%22%3A%22explicit.stat_2905515354%22%2C%22value%22%3A%7B%22max%22%3A1%7D%7D%2C%7B%22id%22%3A%22enchant.stat_2122183138%22%7D%5D%7D%5D%2C%22filters%22%3A%7B%22type_filters%22%3A%7B%22filters%22%3A%7B%22rarity%22%3A%7B%22option%22%3A%22unique%22%7D%7D%7D%2C%22misc_filters%22%3A%7B%22filters%22%3A%7B%22corrupted%22%3A%7B%22option%22%3A%22true%22%7D%2C%22mirrored%22%3A%7B%22option%22%3A%22false%22%7D%2C%22twice_corrupted%22%3A%7B%22option%22%3A%22false%22%7D%2C%22sanctified%22%3A%7B%22option%22%3A%22false%22%7D%2C%22quality%22%3A%7B%22min%22%3A20%7D%7D%7D%2C%22equipment_filters%22%3A%7B%22filters%22%3A%7B%22rune_sockets%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%7D%7D%7D%2C%22type%22%3A%22Crucible%20Tower%20Shield%22%7D%2C%22sort%22%3A%7B%22price%22%3A%22asc%22%7D%7D"
+  "7c996b3f2717": [
+   11.0,
+   2,
+   "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZoIPxPjdo_Q3k0VyoKrWoMEEmdthfLuC7AhmMpd4uPPPrEzMEuCnGXlwHRHqBUrmQXpjPhsgPmIKdFCiB2_RYNKsWgCQv7HwOjRjZJQdQhfsCEws4B1CMO9a1AivYxAxePXJImLLMtCbqjlYGzZYuiX5LH30VMqeYvznOdpvqXEnZV8xSh5FeoP4UnCi5SnBfNnf14Zmw1Xq_vqaIRBemzG4BT2oaEPjYJRK3dIqY1xHUG9gcm4aXwtGqPNP_EiGjupdEMJ1fMKS5IVShJecE_vXVjN7H2eZzxZht5h14KivRc7BZXV8gvILiyPlumONX43_G6cxPAfDid9A3M4XhGamvkfeYXBOz0CAAA"
   ],
   "e17f786d3c81": [
    155.0,
@@ -163,11 +166,10 @@ window.UC_DATA.push({
  },
  "baseUrl": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VQQW7CMBD8CtpzhJI0RjTXPoHeKoSMs6grOXa6tiko8t-7CRwSid7smZ2Z3RkhRB1TgHYEP0TyDloIaBLrs0XIBTjdo2CHq7bkHBSzQOa_Roj3YaK06wS-kI3ID4I6gfE2WDIUt5PgVJW7ui73TdPIrHglnCJ7krxalTkXL1X1e6lUpd7UWqVv0FY5H_NxkfvY57T4L56smeJ9dWVy9CN-WbJlj2D-URrPnIaI3Up80TbM9fTE7Pk1O1s_S_rgZEgq3Xz6X-TN4ZvQdpD_AG9ZKxOAAQAA",
  "rootTextKo": [
-  "소켓 = 1",
   "방어도 ≥ 250%",
-  "막기 피격 피해 ≤ 1%"
+  "막기 피격 피해 0-1%"
  ],
  "ko": "스발린 (0-1%)",
  "league": "Forbidden Rites",
- "stamp": "2026-11-24T00:13:15Z"
+ "stamp": "2026-11-24T00:26:12Z"
 });

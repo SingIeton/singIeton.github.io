@@ -152,10 +152,11 @@ function renderDetail(){
     const rs=it.outs.filter(o=>o.group===g),ps=rs.reduce((a,o)=>a+o.p,0);
     return {g,rs,p:ps/it.psum,avg:rs.reduce((a,o)=>a+o.p*o.price,0)/ps};
   });
-  const HH=Math.max(TH,pad+padB+(gs.length-1)*14+it.outs.length*40); /* 줄 높이가 너무 좁아지지 않도록 최소 높이 보장 */
-  const LH=(HH-pad-padB-(gs.length-1)*14)/it.outs.length; /* 트리 총 높이 고정: 항목 수에 따라 줄 높이 자동 계산 */
+  const gaps=gs.slice(1).map((G,i)=>Math.max(14,76-(gs[i].rs.length+G.rs.length)*20)),gsum=gaps.reduce((a,v)=>a+v,0); /* 대분류 간격: 항목이 적은 그룹끼리는 라벨이 겹치지 않도록 넓힘 */
+  const HH=Math.max(TH,pad+padB+gsum+it.outs.length*40); /* 줄 높이가 너무 좁아지지 않도록 최소 높이 보장 */
+  const LH=(HH-pad-padB-gsum)/it.outs.length; /* 트리 총 높이 고정: 항목 수에 따라 줄 높이 자동 계산 */
   let y=pad;
-  gs.forEach(G=>{G.rs.forEach(o=>{o.cy=y+LH/2;y+=LH});G.cy=(G.rs[0].cy+G.rs[G.rs.length-1].cy)/2;y+=14});
+  gs.forEach((G,i)=>{G.rs.forEach(o=>{o.cy=y+LH/2;y+=LH});G.cy=(G.rs[0].cy+G.rs[G.rs.length-1].cy)/2;y+=gaps[i]||0});
   const H=HH,rcy=gs.reduce((a,G)=>a+G.cy,0)/gs.length;
   const edge=(x1,y1,x2,y2,w,c)=>{const m=(x1+x2)/2;return `<path class="ed" d="M${x1} ${y1}C${m} ${y1} ${m} ${y2} ${x2} ${y2}" stroke="${c}" stroke-opacity=".5" stroke-width="${Math.max(2,w*44).toFixed(1)}" stroke-linecap="round"/>`};
   let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
