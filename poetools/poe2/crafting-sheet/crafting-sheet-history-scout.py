@@ -63,6 +63,17 @@ PRICE_FIELDS = ["price", "avgprice", "averageprice", "avg", "average", "close"] 
 VOLUME_FIELDS = ["volume", "quantity", "count"]
 LEAGUE_NAME_FIELDS = ["value", "name", "leaguename", "text"]
 
+# 리그 표시 순서를 직접 지정합니다(위에서 아래로 출력). 대소문자/공백/기호는 무시하고 비교합니다.
+# 여기에 없는 리그는 Standard 바로 위(Standard 가 없으면 맨 뒤)에 API 응답 순서대로 붙습니다. 비워 두면 기본 정렬(SC 먼저, HC 나중)을 씁니다.
+LEAGUE_ORDER = [
+"Conquerors of Wraeclast",
+"Forbidden Rites", 	    
+"Runes of Aldur",	  
+"Fate of the Vaal",
+"Rise of the Abyssal",
+"Standard",
+]
+
 # =============================================================================
 BASE = "https://api.poe2scout.com/poe2"
 DIVINE = "Divine Orb"
@@ -305,6 +316,11 @@ def is_hc(name):
 
 
 def sort_leagues(leagues):
+    leagues = [l for l in leagues if not is_hc(l)]  # HC 리그 제외
+    if LEAGUE_ORDER:
+        rank = {key(n): i for i, n in enumerate(LEAGUE_ORDER)}
+        default = rank.get(key("Standard"), len(rank)) - 0.5  # 미지정 리그는 Standard 바로 위(없으면 맨 뒤), API 순서 유지
+        return sorted(leagues, key=lambda l: rank.get(key(l), default))
     # SC 리그 먼저, HC 리그 나중 (각 그룹 내에서는 API 응답 순서 유지)
     return sorted(leagues, key=is_hc)
 
