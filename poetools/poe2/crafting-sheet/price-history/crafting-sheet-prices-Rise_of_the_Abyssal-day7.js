@@ -1,5 +1,5 @@
 window.CRAFT_PRICES_HISTORY = {
- "generated_at": "2026-11-22T08:39:07+00:00",
+ "generated_at": "2026-11-24T06:02:34+00:00",
  "source": "poe2scout",
  "league": "Rise of the Abyssal",
  "league_start": "2025-08-30",

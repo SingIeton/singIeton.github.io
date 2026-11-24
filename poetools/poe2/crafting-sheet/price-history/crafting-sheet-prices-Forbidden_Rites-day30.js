@@ -1,5 +1,5 @@
 window.CRAFT_PRICES_HISTORY = {
- "generated_at": "2026-11-22T08:44:45+00:00",
+ "generated_at": "2026-11-24T06:00:50+00:00",
  "source": "poe2scout",
  "league": "Forbidden Rites",
  "league_start": "2026-09-04",

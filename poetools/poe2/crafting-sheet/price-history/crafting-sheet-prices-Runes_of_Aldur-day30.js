@@ -1,5 +1,5 @@
 window.CRAFT_PRICES_HISTORY = {
- "generated_at": "2026-11-22T07:15:04+00:00",
+ "generated_at": "2026-11-24T06:24:57+00:00",
  "source": "poe2scout",
  "league": "Runes of Aldur",
  "league_start": "2026-05-29",
