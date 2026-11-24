@@ -5,7 +5,7 @@ window.CRAFT_RECIPE = {
   "steps": [
     {
       "title": "Base",
-      "note": "",
+      "note": "All Res + Ele Res, Empty Prefix >= 1,  Empty Suffix = 1",
       "items": [
         {
           "c": "Base",
@@ -65,6 +65,10 @@ window.CRAFT_RECIPE = {
           "n": 0.5
         },
         {
+          "c": "상위 카오스 오브",
+          "n": 1
+        },
+        {
           "c": "군왕의 합금",
           "n": 1
         },
@@ -81,7 +85,7 @@ window.CRAFT_RECIPE = {
     }
   ],
   "prices": {
-    "블러드마크": 3,
-    "Base": 2
+    "Base": 0.5,
+    "블러드마크": 1
   }
 };

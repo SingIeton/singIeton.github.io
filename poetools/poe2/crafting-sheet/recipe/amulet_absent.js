@@ -101,5 +101,8 @@ window.CRAFT_RECIPE = {
       ],
       "locked": true
     }
-  ]
+  ],
+  "prices": {
+    "Base": 50
+  }
 };
