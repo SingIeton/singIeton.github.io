@@ -298,6 +298,45 @@ def write_atomic(path, text):
     tmp.replace(path)
 
 
+# ---------------------------------------------------------------- 리그 정렬
+def is_hc(name):
+    n = name.lower()
+    return "hardcore" in n or bool(re.search(r"\bhc\b", n))
+
+
+def sort_leagues(leagues):
+    # SC 리그 먼저, HC 리그 나중 (각 그룹 내에서는 API 응답 순서 유지)
+    return sorted(leagues, key=is_hc)
+
+
+# ---------------------------------------------------------------- 대화형 입력
+def _ask(prompt):
+    try:
+        return input(prompt).strip()
+    except EOFError:
+        sys.exit("입력을 받을 수 없습니다. --league 와 --day 인자를 지정해 주세요.")
+
+
+def ask_league(leagues):
+    print("리그를 선택하세요:")
+    for i, l in enumerate(leagues, 1):
+        print(f"  [{i}] {l}")
+    while True:
+        v = _ask("번호 입력: ")
+        if v.isdigit() and 1 <= int(v) <= len(leagues):
+            return leagues[int(v) - 1]
+        print(f"  1~{len(leagues)} 사이의 번호를 입력해 주세요.")
+
+
+def ask_days():
+    while True:
+        v = _ask("일차 입력 (여러 개는 공백/쉼표로 구분, 예: 4 7 10 15 30): ")
+        parts = v.replace(",", " ").split()
+        if parts and all(p.isdigit() and int(p) >= 1 for p in parts):
+            return [int(p) for p in parts]
+        print("  1 이상의 정수를 입력해 주세요.")
+
+
 # ---------------------------------------------------------------- 메인
 def main():
     ap = argparse.ArgumentParser(description="poe2scout 에서 과거 리그 N일차 재화 시세(디바인 기준)를 받아 JS 파일로 저장")
@@ -328,13 +367,18 @@ def main():
         leagues = fetch_leagues(raw_dir, use_cache)
     except RuntimeError as e:
         sys.exit(f"리그 목록을 받지 못했습니다: {e}")
+    leagues = sort_leagues(leagues)
     if args.list:
         print("poe2scout 리그 목록:")
         for l in leagues:
             print(f"  {l}")
         return
-    if not args.league or not args.day:
-        sys.exit("--league 와 --day 가 필요합니다. 예: --league \"Fate of the Vaal\" --day 4 7 10")
+    if not leagues:
+        sys.exit("조회 가능한 리그가 없습니다.")
+    if not args.league:
+        args.league = ask_league(leagues)
+    if not args.day:
+        args.day = ask_days()
     if any(d < 1 for d in args.day):
         sys.exit("--day 는 1 이상이어야 합니다.")
     days = sorted(set(args.day))
