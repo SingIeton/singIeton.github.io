@@ -200,7 +200,6 @@ dialog.asksave::backdrop{background:rgba(0,0,0,.4)}
 <main class="wrap" id="app"></main>
 <script src="price-history/crafting-sheet-prices.js"></script>
 <script src="price-history/price-history-index.js"></script>
-<script src="recipe/index.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -584,7 +583,10 @@ function apply(o){
   if(!R.steps.length)R.steps.push(newStep());
   UNDO.length=0;renderAll();SNAP=json();return true;
 }
-function loadList(){ /* recipe/index.js 가 <script> 로 먼저 읽혀 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
+async function loadList(){ /* recipe/sample.js 가 있으면 그것을, 없으면 recipe/index.js 를 읽어 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
+  window.CRAFT_RECIPE_INDEX=undefined;
+  try{await loadScript("recipe/sample.js")}catch(e){}
+  if(!Array.isArray(window.CRAFT_RECIPE_INDEX)){try{await loadScript("recipe/index.js")}catch(e){}}
   const a=window.CRAFT_RECIPE_INDEX;
   LIST=Array.isArray(a)?a.filter(x=>x&&x.file):null; /* index.js 순서 그대로 (최근 저장순 정렬 비활성) */
   fillList();
