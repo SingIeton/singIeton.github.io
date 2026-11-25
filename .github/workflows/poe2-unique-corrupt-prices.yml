@@ -1,0 +1,60 @@
+name: poe2 / unique-corrupt prices
+
+on:
+  schedule:
+    - cron: "41 * * * *"         # 1시간마다 (UTC 기준, 정각과 다른 워크플로 시간을 피해 41분에 실행)
+  workflow_dispatch:             # Actions 탭의 "Run workflow" 버튼으로 수동 실행
+
+permissions:
+  contents: write                # 결과 파일을 커밋·푸시하기 위해 필요
+
+concurrency:
+  group: poe2-unique-corrupt-prices      # 이전 실행이 끝나기 전에는 다음 실행을 시작하지 않음
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60          # 스크립트 소요 시간에 맞게 조정
+    env:
+      # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준) ← 실제 위치에 맞게 수정하세요.
+      # 결과 파일은 이 폴더 안에 생긴다고 가정하고, 이 폴더의 변경분을 커밋합니다.
+      SCRIPT_DIR: poetools/poe2/unique_corrupt
+      SCRIPT_NAME: unique_corrupt.py
+      PYTHONDONTWRITEBYTECODE: "1"       # __pycache__ 가 커밋에 섞이지 않도록 생성 방지
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # requirements.txt 가 있으면 그대로 설치, 없으면 requests 만 설치
+      - name: Install dependencies
+        working-directory: ${{ env.SCRIPT_DIR }}
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install requests
+          fi
+
+      - name: Collect prices
+        working-directory: ${{ env.SCRIPT_DIR }}
+        run: python -u "$SCRIPT_NAME"
+
+      # 스크립트가 성공했을 때만 커밋 (실패하면 기존 결과 파일을 그대로 유지)
+      # raw_data/ 같은 중간 산출물은 커밋하지 않습니다.
+      - name: Commit results
+        if: ${{ success() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- "${SCRIPT_DIR}" ":!${SCRIPT_DIR}/raw_data"
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git commit -m "chore: update unique corrupt prices ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
