@@ -80,6 +80,20 @@ ENCHANTS = {
         {"en": "Life on Block",                   "ko": "막아낼 시 생명력 획득",    "range": "20—25",  "mod": "# Life gained when you Block"},
         {"en": "Mana on Block",                   "ko": "막아낼 시 마나 획득",      "range": "10—15",  "mod": "# Mana gained when you Block"},
     ],
+    "ring": [
+        {"en": "Maximum Mana",                    "ko": "최대 마나 +",             "range": "20—25",  "mod": "+# to maximum Mana"},
+        {"en": "Chaos Resistance",                "ko": "카오스 저항 +%",           "range": "13—19",  "mod": "+#% to Chaos Resistance"},
+        {"en": "Life Regeneration rate",          "ko": "생명력 재생 속도 % 증가",   "range": "15—25",  "mod": "#% increased Life Regeneration rate"},
+        {"en": "Mana Regeneration Rate",          "ko": "마나 재생 속도 % 증가",    "range": "20—30",  "mod": "#% increased Mana Regeneration Rate"},
+        {"en": "All Elemental Resistances",       "ko": "모든 원소 저항 +%",        "range": "5—10",   "mod": "+#% to all Elemental Resistances"},
+        {"en": "Rarity of Items",                 "ko": "아이템 희귀도 % 증가",      "range": "10—15",  "mod": "#% increased Rarity of Items found"},
+        {"en": "Increased Damage",                "ko": "피해 % 증가",             "range": "20—30",  "mod": "#% increased Damage"},
+        {"en": "Skill Speed",                     "ko": "스킬 속도 % 증가",         "range": "4—6",    "mod": "#% increased Skill Speed"},
+        {"en": "Critical Damage Bonus",           "ko": "치명타 피해 보너스 % 증가",  "range": "15—20",  "mod": "#% increased Critical Damage Bonus"},
+        {"en": "Strength",                        "ko": "힘",                    "range": "10—15",  "mod": "+# to Strength"},
+        {"en": "Dexterity",                       "ko": "민첩",                   "range": "10—15",  "mod": "+# to Dexterity"},
+        {"en": "Intelligence",                    "ko": "지능",                   "range": "10—15",  "mod": "+# to Intelligence"},
+    ],
 }
 
 
@@ -322,6 +336,53 @@ UNIQUES = [
                 {"range": (2, 5), "text": "2—5%", "text_ko": "2—5%"},
                 {"range": (6, None), "text": "6%+", "text_ko": "6% 이상", "search": {"mods": [
                     M("You take #% of damage from Blocked Hits", min=6),
+                ]}},
+            ],
+        },
+    },
+    {
+        "name": "The Taming",
+        "file": "The_Taming",
+        "title": "The Taming",
+        "ko": "조련",
+        "type": "Prismatic Ring",
+        "slot": "ring",
+        "base": "",
+        "root_text": ["Damage per Ailment type ≥18%", "All Ele Resist ≥15%"],
+        "root_text_ko": ["상태 이상 유형당 피해 ≥ 18%", "모든 원소 저항 ≥ 15%"],
+        # 반지는 소켓 조건 없음. 모든 원소 저항은 implicit 이 아닌 explicit 옵션
+        "default_search": {"corrupted": True, "mods": [
+            M("+#% to all Elemental Resistances", min=15),
+            M("#% increased Damage for each type of Elemental Ailment on Enemy", min=18),
+            M("Wind Skills which can be boosted by Elemental Ground Surfaces can be boosted by multiple Elemental Ground Surfaces"),
+        ]},
+        "base_search": {"corrupted": False},
+        "enchant_search": {},
+        "socket_search": None,      # 반지는 소켓이 늘어나지 않음 -> 변화 없음으로 합산
+        "enchants": [
+            {"en": "Maximum Mana",              "ratio": 1.0},
+            {"en": "Chaos Resistance",          "ratio": 1.0},
+            {"en": "Life Regeneration rate",    "ratio": 1.0},
+            {"en": "Mana Regeneration Rate",    "ratio": 1.0},
+            {"en": "All Elemental Resistances", "ratio": 1.0},
+            {"en": "Rarity of Items",           "ratio": 1.0},
+            {"en": "Increased Damage",          "ratio": 1.0},
+            {"en": "Skill Speed",               "ratio": 1.0},
+            {"en": "Critical Damage Bonus",     "ratio": 1.0},
+            {"en": "Strength",                  "ratio": 1.0},
+            {"en": "Dexterity",                 "ratio": 1.0},
+            {"en": "Intelligence",              "ratio": 1.0},
+        ],
+        # 수치 변동: 피해 증가 수치(18~20, 중간값 19) 기준. 기본 범위(18~20) 안이면 변화 없음과 같은 가격
+        "reroll": {
+            "label": "Dmg per Ailment", "ko": "상태 이상당 피해", "roll": 19,
+            "outcomes": [
+                {"range": (None, 17), "text": "≤17%", "text_ko": "≤ 17%", "search": {"mods": [
+                    M("#% increased Damage for each type of Elemental Ailment on Enemy", max=17),
+                ]}},
+                {"range": (18, 20), "text": "18—20%", "text_ko": "18—20%"},
+                {"range": (21, None), "text": "21%+", "text_ko": "21% 이상", "search": {"mods": [
+                    M("#% increased Damage for each type of Elemental Ailment on Enemy", min=21),
                 ]}},
             ],
         },
