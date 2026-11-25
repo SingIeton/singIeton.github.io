@@ -1,212 +1,213 @@
 window.CRAFT_PRICES = {
- "generated_at": "2026-11-25T10:33:43+00:00",
+ "generated_at": "2026-11-25T20:15:16+00:00",
  "source": "poe.ninja",
  "league": "Forbidden Rites",
  "league_id": "Forbidden Rites",
  "quote_currency": "Divine Orb",
  "prices": {
   "Divine Orb": 1.0,
-  "Exalted Orb": 0.002361,
-  "greater-exalted-orb": 0.04544,
-  "perfect-exalted-orb": 2.45,
-  "Chaos Orb": 0.05885,
-  "greater-chaos-orb": 0.2538,
-  "perfect-chaos-orb": 10.79,
-  "Regal Orb": 0.007014,
-  "greater-regal-orb": 0.004897,
-  "perfect-regal-orb": 0.05882,
-  "Orb of Transmutation": 0.002812,
-  "greater-orb-of-transmutation": 0.001231,
-  "perfect-orb-of-transmutation": 0.1138,
-  "Orb of Augmentation": 0.002311,
-  "greater-orb-of-augmentation": 0.001649,
-  "perfect-orb-of-augmentation": 0.22,
-  "Orb of Annulment": 0.2319,
-  "Orb of Alchemy": 0.01661,
-  "Vaal Orb": 0.01699,
-  "fracturing-orb": 7.51,
-  "hinekoras-lock": 2046.0,
-  "Blacksmith's Whetstone": 0.01227,
-  "Arcanist's Etcher": 0.03719,
-  "Armourer's Scrap": 0.01243,
-  "essence-of-the-breach": 0.3565,
-  "essence-of-the-abyss": 0.1829,
-  "greater-essence-of-the-body": 0.007418,
-  "perfect-essence-of-the-body": 0.07893,
-  "greater-essence-of-the-mind": 0.000592,
-  "perfect-essence-of-the-mind": 0.1,
-  "greater-essence-of-insulation": 0.01522,
-  "greater-essence-of-thawing": 0.04144,
-  "greater-essence-of-grounding": 0.03055,
-  "greater-essence-of-ruin": 0.05622,
-  "greater-essence-of-opulence": 0.08901,
-  "perfect-essence-of-opulence": 0.01214,
-  "perfect-essence-of-enhancement": 0.09859,
-  "preserved-jawbone": 0.007245,
-  "preserved-rib": 0.008278,
-  "preserved-collarbone": 0.03752,
-  "preserved-cranium": 19.61,
-  "ancient-jawbone": 9.05,
-  "ancient-rib": 3.08,
-  "ancient-collarbone": 5.02,
-  "altered-collarbone": 5.31,
-  "omen-of-light": 8.52,
-  "omen-of-abyssal-echoes": 0.07339,
-  "omen-of-the-liege": 0.0002146,
-  "omen-of-the-sovereign": 0.0002361,
-  "omen-of-the-blackblooded": 0.005885,
-  "omen-of-whittling": 13.92,
-  "omen-of-sinistral-annulment": 21.6,
-  "omen-of-sinistral-erasure": 24.95,
-  "omen-of-dextral-annulment": 16.58,
-  "omen-of-dextral-erasure": 13.35,
-  "omen-of-sinistral-crystallisation": 0.2629,
-  "omen-of-dextral-crystallisation": 0.2812,
-  "omen-of-greater-exaltation": 0.04848,
-  "omen-of-sinistral-exaltation": 0.1441,
-  "omen-of-dextral-exaltation": 0.02943,
-  "omen-of-catalysing-exaltation": 0.05505,
-  "omen-of-sinistral-necromancy": 0.006643,
-  "omen-of-dextral-necromancy": 0.006423,
-  "flesh-catalyst": 0.009442,
-  "neural-catalyst": 0.03104,
-  "carapace-catalyst": 0.01404,
-  "uul-netols-catalyst": 0.007707,
-  "xophs-catalyst": 0.1049,
-  "tuls-catalyst": 0.02348,
-  "eshs-catalyst": 0.01314,
-  "chayulas-catalyst": 0.05584,
-  "reaver-catalyst": 0.4154,
-  "sibilant-catalyst": 0.3417,
-  "vaal-blacksmiths-infuser": 0.267,
-  "vaal-arcanists-infuser": 0.03158,
-  "vaal-armourers-infuser": 1.5,
-  "vaal-catalysing-infuser": 5.73,
-  "architects-orb": 9.12,
-  "vaal-cultivation-orb": 4.54,
-  "crystallised-corruption": 8.61,
-  "runic-alloy": 0.05885,
-  "swift-alloy": 0.04438,
-  "sovereign-alloy": 0.2872,
-  "serles-triumph": 6.84,
-  "cadigans-epiphany": 1.86,
-  "astrids-creativity": 5.66,
-  "uhtreds-sidereus": 0.4441,
-  "kolrs-hunt": 1.0,
-  "voranas-carnage": 0.6667,
-  "thruds-might": 1.0,
-  "katlas-gloom": 1.0,
-  "medveds-tending": 0.08239,
-  "blazing-flux": 0.1753,
-  "chilling-flux": 0.3091,
-  "crackling-flux": 0.1935,
-  "void-flux": 0.1969
+  "Exalted Orb": 0.002305,
+  "greater-exalted-orb": 0.04647,
+  "perfect-exalted-orb": 2.16,
+  "Chaos Orb": 0.05518,
+  "greater-chaos-orb": 0.2421,
+  "perfect-chaos-orb": 11.23,
+  "Regal Orb": 0.008221,
+  "greater-regal-orb": 0.03794,
+  "perfect-regal-orb": 0.06575,
+  "Orb of Transmutation": 0.002157,
+  "greater-orb-of-transmutation": 2.803e-05,
+  "perfect-orb-of-transmutation": 0.04725,
+  "Orb of Augmentation": 0.002105,
+  "greater-orb-of-augmentation": 0.001541,
+  "perfect-orb-of-augmentation": 0.1834,
+  "Orb of Annulment": 0.2334,
+  "Orb of Alchemy": 0.01178,
+  "Vaal Orb": 0.01609,
+  "fracturing-orb": 7.35,
+  "hinekoras-lock": 2192.0,
+  "Blacksmith's Whetstone": 0.009709,
+  "Arcanist's Etcher": 0.03135,
+  "Armourer's Scrap": 0.01054,
+  "essence-of-the-breach": 0.2758,
+  "essence-of-the-abyss": 0.3009,
+  "greater-essence-of-the-body": 0.002017,
+  "perfect-essence-of-the-body": 0.05518,
+  "greater-essence-of-the-mind": 0.001152,
+  "perfect-essence-of-the-mind": 0.1429,
+  "greater-essence-of-insulation": 0.01298,
+  "greater-essence-of-thawing": 0.03259,
+  "greater-essence-of-grounding": 0.06848,
+  "greater-essence-of-ruin": 0.05518,
+  "perfect-essence-of-ruin": 0.06751,
+  "greater-essence-of-opulence": 0.05518,
+  "perfect-essence-of-opulence": 0.09656,
+  "perfect-essence-of-enhancement": 0.1049,
+  "preserved-jawbone": 0.0257,
+  "preserved-rib": 0.02027,
+  "preserved-collarbone": 0.1082,
+  "preserved-cranium": 19.92,
+  "ancient-jawbone": 9.31,
+  "ancient-rib": 3.12,
+  "ancient-collarbone": 5.09,
+  "altered-collarbone": 5.13,
+  "omen-of-light": 8.56,
+  "omen-of-abyssal-echoes": 0.07373,
+  "omen-of-the-liege": 0.0002095,
+  "omen-of-the-sovereign": 0.0001456,
+  "omen-of-the-blackblooded": 0.002225,
+  "omen-of-whittling": 15.44,
+  "omen-of-sinistral-annulment": 24.34,
+  "omen-of-sinistral-erasure": 24.98,
+  "omen-of-dextral-annulment": 16.8,
+  "omen-of-dextral-erasure": 14.28,
+  "omen-of-sinistral-crystallisation": 0.2203,
+  "omen-of-dextral-crystallisation": 0.5483,
+  "omen-of-greater-exaltation": 0.02235,
+  "omen-of-sinistral-exaltation": 0.1474,
+  "omen-of-dextral-exaltation": 0.1098,
+  "omen-of-catalysing-exaltation": 0.02056,
+  "omen-of-sinistral-necromancy": 0.0114,
+  "omen-of-dextral-necromancy": 0.003282,
+  "flesh-catalyst": 0.001822,
+  "neural-catalyst": 0.005334,
+  "carapace-catalyst": 0.009129,
+  "uul-netols-catalyst": 0.002631,
+  "xophs-catalyst": 0.02985,
+  "tuls-catalyst": 0.02023,
+  "eshs-catalyst": 0.0101,
+  "chayulas-catalyst": 0.0397,
+  "reaver-catalyst": 0.3567,
+  "sibilant-catalyst": 0.4786,
+  "vaal-blacksmiths-infuser": 0.2254,
+  "vaal-arcanists-infuser": 0.02874,
+  "vaal-armourers-infuser": 1.45,
+  "vaal-catalysing-infuser": 5.82,
+  "architects-orb": 9.34,
+  "vaal-cultivation-orb": 4.53,
+  "crystallised-corruption": 8.53,
+  "runic-alloy": 0.02759,
+  "swift-alloy": 0.03508,
+  "sovereign-alloy": 0.2308,
+  "serles-triumph": 6.32,
+  "cadigans-epiphany": 1.66,
+  "astrids-creativity": 5.04,
+  "uhtreds-sidereus": 1.79,
+  "kolrs-hunt": 1.87,
+  "voranas-carnage": 0.7273,
+  "thruds-might": 0.55,
+  "katlas-gloom": 1.22,
+  "medveds-tending": 0.6667,
+  "blazing-flux": 0.1212,
+  "chilling-flux": 0.08149,
+  "crackling-flux": 0.1216,
+  "void-flux": 0.1884
  },
  "details": {
   "Divine Orb": {
    "category": "Currency",
    "id": "divine",
-   "volume": 7364.0
+   "volume": 9990.0
   },
   "Exalted Orb": {
    "category": "Currency",
    "id": "exalted",
-   "volume": 170.5
+   "volume": 230.2
   },
   "greater-exalted-orb": {
    "category": "Currency",
    "id": "greater-exalted-orb",
-   "volume": 24.33
+   "volume": 62.67
   },
   "perfect-exalted-orb": {
    "category": "Currency",
    "id": "perfect-exalted-orb",
-   "volume": 1266.0
+   "volume": 2101.0
   },
   "Chaos Orb": {
    "category": "Currency",
    "id": "chaos",
-   "volume": 7364.0
+   "volume": 9990.0
   },
   "greater-chaos-orb": {
    "category": "Currency",
    "id": "greater-chaos-orb",
-   "volume": 816.7
+   "volume": 1137.0
   },
   "perfect-chaos-orb": {
    "category": "Currency",
    "id": "perfect-chaos-orb",
-   "volume": 2288.0
+   "volume": 4816.0
   },
   "Regal Orb": {
    "category": "Currency",
    "id": "regal",
-   "volume": 15.33
+   "volume": 7.33
   },
   "greater-regal-orb": {
    "category": "Currency",
    "id": "greater-regal-orb",
-   "volume": 1.73
+   "volume": 8.33
   },
   "perfect-regal-orb": {
    "category": "Currency",
    "id": "perfect-regal-orb",
-   "volume": 12.17
+   "volume": 10.33
   },
   "Orb of Transmutation": {
    "category": "Currency",
    "id": "transmute",
-   "volume": 1.65
+   "volume": 0.6989
   },
   "greater-orb-of-transmutation": {
    "category": "Currency",
    "id": "greater-orb-of-transmutation",
-   "volume": 0.06688
+   "volume": 0.04993
   },
   "perfect-orb-of-transmutation": {
    "category": "Currency",
    "id": "perfect-orb-of-transmutation",
-   "volume": 14.0
+   "volume": 17.33
   },
   "Orb of Augmentation": {
    "category": "Currency",
    "id": "aug",
-   "volume": 4.33
+   "volume": 2.33
   },
   "greater-orb-of-augmentation": {
    "category": "Currency",
    "id": "greater-orb-of-augmentation",
-   "volume": 0.6179
+   "volume": 2.09
   },
   "perfect-orb-of-augmentation": {
    "category": "Currency",
    "id": "perfect-orb-of-augmentation",
-   "volume": 409.8
+   "volume": 528.2
   },
   "Orb of Annulment": {
    "category": "Currency",
    "id": "annul",
-   "volume": 733.5
+   "volume": 1444.0
   },
   "Orb of Alchemy": {
    "category": "Currency",
    "id": "alch",
-   "volume": 63.0
+   "volume": 48.5
   },
   "Vaal Orb": {
    "category": "Currency",
    "id": "vaal",
-   "volume": 260.5
+   "volume": 437.8
   },
   "fracturing-orb": {
    "category": "Currency",
    "id": "fracturing-orb",
-   "volume": 2086.0
+   "volume": 1364.0
   },
   "hinekoras-lock": {
    "category": "Currency",
    "id": "hinekoras-lock",
-   "volume": 11940.0
+   "volume": 14610.0
   },
   "Blacksmith's Whetstone": {
    "category": "Currency",
@@ -216,377 +217,380 @@ window.CRAFT_PRICES = {
   "Arcanist's Etcher": {
    "category": "Currency",
    "id": "etcher",
-   "volume": 9.17
+   "volume": 28.0
   },
   "Armourer's Scrap": {
    "category": "Currency",
    "id": "scrap",
-   "volume": 44.0
+   "volume": 55.67
   },
   "essence-of-the-breach": {
    "category": "Essences",
    "id": "essence-of-the-breach",
-   "volume": 6.83
+   "volume": 18.02
   },
   "essence-of-the-abyss": {
    "category": "Essences",
    "id": "essence-of-the-abyss",
-   "volume": 7.83
+   "volume": 32.0
   },
   "greater-essence-of-the-body": {
    "category": "Essences",
    "id": "greater-essence-of-the-body",
-   "volume": 0.01978
+   "volume": 0.005377
   },
   "perfect-essence-of-the-body": {
    "category": "Essences",
    "id": "perfect-essence-of-the-body",
-   "volume": 0.03947
+   "volume": 0.1104
   },
   "greater-essence-of-the-mind": {
    "category": "Essences",
    "id": "greater-essence-of-the-mind",
-   "volume": 0.0003947
+   "volume": 0.001536
   },
   "perfect-essence-of-the-mind": {
    "category": "Essences",
    "id": "perfect-essence-of-the-mind",
-   "volume": 0.6667
+   "volume": 0.8333
   },
   "greater-essence-of-insulation": {
    "category": "Essences",
    "id": "greater-essence-of-insulation",
-   "volume": 0.0989
+   "volume": 0.03679
   },
   "greater-essence-of-thawing": {
    "category": "Essences",
    "id": "greater-essence-of-thawing",
-   "volume": 0.08288
+   "volume": 0.03803
   },
   "greater-essence-of-grounding": {
    "category": "Essences",
    "id": "greater-essence-of-grounding",
-   "volume": 0.05091
+   "volume": 0.07989
   },
   "greater-essence-of-ruin": {
    "category": "Essences",
    "id": "greater-essence-of-ruin",
-   "volume": 0.178
+   "volume": 0.1104
+  },
+  "perfect-essence-of-ruin": {
+   "category": "Essences",
+   "id": "perfect-essence-of-ruin",
+   "volume": 0.1913
   },
   "greater-essence-of-opulence": {
    "category": "Essences",
    "id": "greater-essence-of-opulence",
-   "volume": 0.4747
+   "volume": 0.2299
   },
   "perfect-essence-of-opulence": {
    "category": "Essences",
    "id": "perfect-essence-of-opulence",
-   "volume": 0.01618
+   "volume": 0.06438
   },
   "perfect-essence-of-enhancement": {
    "category": "Essences",
    "id": "perfect-essence-of-enhancement",
-   "volume": 2.33
+   "volume": 2.5
   },
   "preserved-jawbone": {
    "category": "Abyss",
    "id": "preserved-jawbone",
-   "volume": 0.6231
+   "volume": 3.67
   },
   "preserved-rib": {
    "category": "Abyss",
    "id": "preserved-rib",
-   "volume": 1.38
+   "volume": 4.5
   },
   "preserved-collarbone": {
    "category": "Abyss",
    "id": "preserved-collarbone",
-   "volume": 6.26
+   "volume": 16.33
   },
   "preserved-cranium": {
    "category": "Abyss",
    "id": "preserved-cranium",
-   "volume": 2406.0
+   "volume": 3625.0
   },
   "ancient-jawbone": {
    "category": "Abyss",
    "id": "ancient-jawbone",
-   "volume": 958.2
+   "volume": 2207.0
   },
   "ancient-rib": {
    "category": "Abyss",
    "id": "ancient-rib",
-   "volume": 256.0
+   "volume": 420.2
   },
   "ancient-collarbone": {
    "category": "Abyss",
    "id": "ancient-collarbone",
-   "volume": 272.2
+   "volume": 709.2
   },
   "altered-collarbone": {
    "category": "Abyss",
    "id": "altered-collarbone",
-   "volume": 51.33
+   "volume": 71.83
   },
   "omen-of-light": {
    "category": "Ritual",
    "id": "omen-of-light",
-   "volume": 4765.0
+   "volume": 7051.0
   },
   "omen-of-abyssal-echoes": {
    "category": "Ritual",
    "id": "omen-of-abyssal-echoes",
-   "volume": 56.17
+   "volume": 74.0
   },
   "omen-of-the-liege": {
    "category": "Ritual",
    "id": "omen-of-the-liege",
-   "volume": 0.002754
+   "volume": 0.001921
   },
   "omen-of-the-sovereign": {
    "category": "Ritual",
    "id": "omen-of-the-sovereign",
-   "volume": 0.0003934
+   "volume": 0.002305
   },
   "omen-of-the-blackblooded": {
    "category": "Ritual",
    "id": "omen-of-the-blackblooded",
-   "volume": 0.05885
+   "volume": 0.03226
   },
   "omen-of-whittling": {
    "category": "Ritual",
    "id": "omen-of-whittling",
-   "volume": 10110.0
+   "volume": 11310.0
   },
   "omen-of-sinistral-annulment": {
    "category": "Ritual",
    "id": "omen-of-sinistral-annulment",
-   "volume": 3023.0
+   "volume": 2536.0
   },
   "omen-of-sinistral-erasure": {
    "category": "Ritual",
    "id": "omen-of-sinistral-erasure",
-   "volume": 4033.0
+   "volume": 2914.0
   },
   "omen-of-dextral-annulment": {
    "category": "Ritual",
    "id": "omen-of-dextral-annulment",
-   "volume": 3303.0
+   "volume": 1649.0
   },
   "omen-of-dextral-erasure": {
    "category": "Ritual",
    "id": "omen-of-dextral-erasure",
-   "volume": 1794.0
+   "volume": 2104.0
   },
   "omen-of-sinistral-crystallisation": {
    "category": "Ritual",
    "id": "omen-of-sinistral-crystallisation",
-   "volume": 17.83
+   "volume": 27.5
   },
   "omen-of-dextral-crystallisation": {
    "category": "Ritual",
    "id": "omen-of-dextral-crystallisation",
-   "volume": 20.67
+   "volume": 60.5
   },
   "omen-of-greater-exaltation": {
    "category": "Ritual",
    "id": "omen-of-greater-exaltation",
-   "volume": 4.0
+   "volume": 7.33
   },
   "omen-of-sinistral-exaltation": {
    "category": "Ritual",
    "id": "omen-of-sinistral-exaltation",
-   "volume": 34.67
+   "volume": 36.33
   },
   "omen-of-dextral-exaltation": {
    "category": "Ritual",
    "id": "omen-of-dextral-exaltation",
-   "volume": 2.41
+   "volume": 9.17
   },
   "omen-of-catalysing-exaltation": {
    "category": "Ritual",
    "id": "omen-of-catalysing-exaltation",
-   "volume": 1.0
+   "volume": 1.2
   },
   "omen-of-sinistral-necromancy": {
    "category": "Ritual",
    "id": "omen-of-sinistral-necromancy",
-   "volume": 0.4107
+   "volume": 1.03
   },
   "omen-of-dextral-necromancy": {
    "category": "Ritual",
    "id": "omen-of-dextral-necromancy",
-   "volume": 0.5138
+   "volume": 0.2308
   },
   "flesh-catalyst": {
    "category": "Breach",
    "id": "flesh-catalyst",
-   "volume": 1.07
+   "volume": 0.3311
   },
   "neural-catalyst": {
    "category": "Breach",
    "id": "neural-catalyst",
-   "volume": 7.0
+   "volume": 1.74
   },
   "carapace-catalyst": {
    "category": "Breach",
    "id": "carapace-catalyst",
-   "volume": 1.33
+   "volume": 1.25
   },
   "uul-netols-catalyst": {
    "category": "Breach",
    "id": "uul-netols-catalyst",
-   "volume": 0.3237
+   "volume": 0.3127
   },
   "xophs-catalyst": {
    "category": "Breach",
    "id": "xophs-catalyst",
-   "volume": 8.5
+   "volume": 2.67
   },
   "tuls-catalyst": {
    "category": "Breach",
    "id": "tuls-catalyst",
-   "volume": 1.55
+   "volume": 3.31
   },
   "eshs-catalyst": {
    "category": "Breach",
    "id": "eshs-catalyst",
-   "volume": 1.33
+   "volume": 2.85
   },
   "chayulas-catalyst": {
    "category": "Breach",
    "id": "chayulas-catalyst",
-   "volume": 1.83
+   "volume": 2.67
   },
   "reaver-catalyst": {
    "category": "Breach",
    "id": "reaver-catalyst",
-   "volume": 182.5
+   "volume": 120.5
   },
   "sibilant-catalyst": {
    "category": "Breach",
    "id": "sibilant-catalyst",
-   "volume": 111.3
+   "volume": 266.5
   },
   "vaal-blacksmiths-infuser": {
    "category": "Currency",
    "id": "vaal-blacksmiths-infuser",
-   "volume": 19.0
+   "volume": 33.67
   },
   "vaal-arcanists-infuser": {
    "category": "Currency",
    "id": "vaal-arcanists-infuser",
-   "volume": 0.5
+   "volume": 0.8333
   },
   "vaal-armourers-infuser": {
    "category": "Currency",
    "id": "vaal-armourers-infuser",
-   "volume": 347.5
+   "volume": 390.2
   },
   "vaal-catalysing-infuser": {
    "category": "Currency",
    "id": "vaal-catalysing-infuser",
-   "volume": 248.3
+   "volume": 623.5
   },
   "architects-orb": {
    "category": "Currency",
    "id": "architects-orb",
-   "volume": 673.3
+   "volume": 1269.0
   },
   "vaal-cultivation-orb": {
    "category": "Currency",
    "id": "vaal-cultivation-orb",
-   "volume": 277.8
+   "volume": 504.5
   },
   "crystallised-corruption": {
    "category": "Currency",
    "id": "crystallised-corruption",
-   "volume": 530.8
+   "volume": 429.3
   },
   "runic-alloy": {
    "category": "Verisium",
    "id": "runic-alloy",
-   "volume": 0.08828
+   "volume": 0.08277
   },
   "swift-alloy": {
    "category": "Verisium",
    "id": "swift-alloy",
-   "volume": 0.1479
+   "volume": 0.6898
   },
   "sovereign-alloy": {
    "category": "Verisium",
    "id": "sovereign-alloy",
-   "volume": 2.78
+   "volume": 1.5
   },
   "serles-triumph": {
    "category": "Runes",
    "id": "serles-triumph",
-   "volume": 21.67
+   "volume": 32.67
   },
   "cadigans-epiphany": {
    "category": "Runes",
    "id": "cadigans-epiphany",
-   "volume": 10.83
+   "volume": 29.83
   },
   "astrids-creativity": {
    "category": "Runes",
    "id": "astrids-creativity",
-   "volume": 88.67
+   "volume": 117.7
   },
   "uhtreds-sidereus": {
    "category": "Runes",
    "id": "uhtreds-sidereus",
-   "volume": 0.8141
+   "volume": 8.67
   },
   "kolrs-hunt": {
    "category": "Runes",
    "id": "kolrs-hunt",
-   "volume": 5.69
+   "volume": 16.5
   },
   "voranas-carnage": {
    "category": "Runes",
    "id": "voranas-carnage",
-   "volume": 0.3333
+   "volume": 1.33
   },
   "thruds-might": {
    "category": "Runes",
    "id": "thruds-might",
-   "volume": 1.17
+   "volume": 3.67
   },
   "katlas-gloom": {
    "category": "Runes",
    "id": "katlas-gloom",
-   "volume": 1.0
+   "volume": 5.5
   },
   "medveds-tending": {
    "category": "Runes",
    "id": "medveds-tending",
-   "volume": 0.06866
+   "volume": 1.0
   },
   "blazing-flux": {
    "category": "Expedition",
    "id": "blazing-flux",
-   "volume": 2.83
+   "volume": 1.33
   },
   "chilling-flux": {
    "category": "Expedition",
    "id": "chilling-flux",
-   "volume": 5.67
+   "volume": 0.489
   },
   "crackling-flux": {
    "category": "Expedition",
    "id": "crackling-flux",
-   "volume": 1.0
+   "volume": 0.8921
   },
   "void-flux": {
    "category": "Expedition",
    "id": "void-flux",
-   "volume": 0.5579
+   "volume": 2.17
   }
  },
- "missing": [
-  "Perfect Essence of Ruin"
- ],
+ "missing": [],
  "names_ko": {
   "Divine Orb": "디바인 오브",
   "Exalted Orb": "엑잘티드 오브",
@@ -622,7 +626,7 @@ window.CRAFT_PRICES = {
   "greater-essence-of-thawing": "상위 해동의 에센스",
   "greater-essence-of-grounding": "상위 접지의 에센스",
   "greater-essence-of-ruin": "상위 폐허의 에센스",
-  "Perfect Essence of Ruin": "완벽한 폐허의 에센스",
+  "perfect-essence-of-ruin": "완벽한 폐허의 에센스",
   "greater-essence-of-opulence": "상위 풍요의 에센스",
   "perfect-essence-of-opulence": "완벽한 풍요의 에센스",
   "perfect-essence-of-enhancement": "완벽한 강화의 에센스",
