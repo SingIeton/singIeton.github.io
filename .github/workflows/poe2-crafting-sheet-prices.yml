@@ -50,7 +50,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- "${SCRIPT_DIR}" ":!${SCRIPT_DIR}/raw_data"
+          git add -A -- "${SCRIPT_DIR}" ":!${SCRIPT_DIR}/price-history/raw_data"
           if git diff --cached --quiet; then
             echo "변경 없음"
             exit 0
