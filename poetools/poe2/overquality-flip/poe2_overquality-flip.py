@@ -7,6 +7,9 @@
 5-B : ilvl  = 81, Quality 제한 없음 -> 최저가 TOP_N_BUY0 (index.html: ilvl 81 행의 베이스)
 소켓 수는 베이스별로 다르다 (WEAPONS / BODY_ARMOURS 참고). 방어구의 방어 타입(AR/EV/ES)은 BODY_ARMOUR_TYPES 에 보관한다.
 방어구(현재 갑옷만)는 ilvl 82 이상(4-A / 4-B)만 조사하고 ilvl 81(5-A / 5-B)은 조사하지 않는다. 갑옷 소켓은 3.
+고유 장비(UNIQUES, 현재 조련 The Taming = Prismatic Ring)는 Rarity=Unique, 이름+베이스 타입으로 검색한다. ilvl·소켓 조건은 없고
+(entry ilvl = UNIQUE_ILVL = 0 한 행), U-A(Quality >= 30 -> 최저가 TOP_N) / U-B(Quality 제한 없음 -> 최저가 TOP_N_BUY0) 두 검색만 한다.
+고유 장비의 퀄리티는 조프/툴/에쉬의 기폭제 중 가장 싼 것(rates 의 q.catalyst)으로, 바알 화폐는 바알 촉진시키는 주입기(inf.catalysing)로 계산한다.
 
 후처리:
   1) 정상 매물(가격·통화를 알 수 있는 매물)이 2개 미만이면 '데이터 부족'
@@ -50,6 +53,8 @@
       · 바알 주입기·퀄리티 화폐(숫돌·고철): 읽은 값을 Exalted 로 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다 (u = e Exalted / d Divine / c Chaos).
         maxVolumeCurrency 가 Exalted·Divine·Chaos 중 하나면 그 화폐 값을 쓰고, 아니면 Exalted -> Divine -> Chaos 순서로 찾는다. 저장은 읽은 단위 그대로지만, 화면(overquality-flip.html)은 1 Divine 이상이면 d, 그보다 작으면 읽은 단위와 무관하게 Exalted(e)로 환산해 보여준다
       · Divine·Chaos 자체: 항상 Exalted 기준 숫자 (Exalted 시세를 먼저 보고, 없으면 서로를 거쳐 환산)
+    기폭제(Xoph's / Tul's / Esh's Catalyst)는 위와 같이 저장한 뒤, 셋 중 가장 싼 것(Exalted 환산 기준)을 q.catalyst 로 한 번 더 저장한다
+    ({"v": 값, "u": 단위, "from": "xoph" | "tul" | "esh"}). 고유 장비의 퀄리티 화폐다.
     overquality-flip.html 이 이 값을 리그별 기본 환율로 쓴다. 모든 리그는 소프트코어(하드코어 제외)다.
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
   - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
@@ -57,10 +62,10 @@
 결과는 이 스크립트 옆의 out/overquality-flip-prices.json 에 저장된다 (index.html 이 같은 out/ 에서 읽음, 기존 파일이 있으면 병합).
 
 실행:
-  python poe2_basequality.py                          # 기본: 전체 23종 (무기 13 + 갑옷 10, QUERY_BASES = BASES), 최신 리그만,
+  python poe2_basequality.py                          # 기본: 전체 24종 (무기 13 + 갑옷 10 + 고유 1, QUERY_BASES = BASES), 최신 리그만,
                                                       # 수집 중지 항목은 STOPPED_RETRY_DAYS(1일)마다 자동 재조회 (--stopped-retry 로 리그별 지정 가능)
   python poe2_basequality.py "Warmonger Bow"          # 지정한 베이스 하나 (수집 중지여도 조회)
-  python poe2_basequality.py all                      # 전체 23종 (요청 최대: 무기 베이스당 10회, 갑옷 베이스당 5회)
+  python poe2_basequality.py all                      # 전체 24종 (요청 최대: 무기 베이스당 10회, 갑옷·고유 장비당 5회)
   python poe2_basequality.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
   python poe2_basequality.py all --league "latest,previous:6,standard:24" --stopped-retry "latest:1,previous:3,standard:10"
       # 수집 중지 항목 재조회: 최신 1일 / 직전 3일 / Standard 10일마다
@@ -151,6 +156,12 @@ SEARCHES = [
     {"label": "5-B", "ilvl_min": 81, "ilvl_max": 81,   "q_min": None, "q_max": None, "entry_ilvl": 81, "side": "buy0"},
 ]
 ILVLS = sorted({sp["entry_ilvl"] for sp in SEARCHES}, reverse=True)   # overquality-flip-prices.json 의 ilvl 행 (82, 81)
+UNIQUE_ILVL = 0                # 고유 장비는 ilvl 구분 없이 이 값 한 행만 저장한다
+# 고유 장비: ilvl 조건 없음(ilvl_min None). 최대 오버퀄리티(U-A) -> 베이스(U-B) 순서는 SEARCHES 와 같다.
+UNIQUE_SEARCHES = [
+    {"label": "U-A", "ilvl_min": None, "ilvl_max": None, "q_min": 30, "q_max": None, "entry_ilvl": UNIQUE_ILVL, "side": "sell30"},
+    {"label": "U-B", "ilvl_min": None, "ilvl_max": None, "q_min": None, "q_max": None, "entry_ilvl": UNIQUE_ILVL, "side": "buy0"},
+]
 
 # 베이스 이름 -> 증강 가능 소켓 수 (정확히 이 값)
 WEAPONS = {
@@ -177,15 +188,23 @@ BODY_ARMOUR_TYPES = {                                                           
 }
 assert set(BODY_ARMOUR_TYPES.values()) <= set(DEFENCE_TYPES)
 BODY_ARMOURS = {name: BODY_ARMOUR_SOCKETS for name in BODY_ARMOUR_TYPES}
-BASES = {**WEAPONS, **BODY_ARMOURS}
-# 기본 조회 대상 (all 과 같음): BASES 전체 (무기 + 갑옷).
+# 고유 장비: 이름 -> 베이스 타입 (거래소 검색은 name + type, Rarity=Unique). 소켓·ilvl 조건은 쓰지 않는다.
+#   조련(The Taming)은 Prismatic Ring. 고유 장비는 ilvl 구분 없이 한 행(UNIQUE_ILVL)만 저장한다.
+UNIQUES = {"The Taming": "Prismatic Ring"}
+# 고유 장비의 ilvl 행 번호(UNIQUE_ILVL)는 위 UNIQUE_SEARCHES 근처에서 정의
+# 고유 장비의 제작 화폐 (rates 키): 퀄리티 = 기폭제 중 가장 싼 것(q.catalyst), 바알 화폐 = 바알 촉진시키는 주입기(inf.catalysing)
+UNIQUE_CRAFT = {"q": "catalyst", "inf": "catalysing"}
+BASES = {**WEAPONS, **BODY_ARMOURS, **{name: None for name in UNIQUES}}      # 고유 장비의 소켓 값은 None
+# 기본 조회 대상 (all 과 같음): BASES 전체 (무기 + 갑옷 + 고유 장비).
 # 조회에서 빼려면 WEAPONS / BODY_ARMOURS 에서 지우거나, 데이터 부족이면 아래 '수집 중지' 기능이 자동으로 막는다.
 QUERY_BASES = list(BASES)
 ARMOUR_ILVLS = (82,)           # 방어구는 82 이상만 조사
 
 
 def ilvls_for(name):
-    """이 베이스에서 조사하는 ilvl 행. 무기는 ILVLS (82, 81), 방어구는 ARMOUR_ILVLS (82)."""
+    """이 베이스에서 조사하는 ilvl 행. 무기는 ILVLS (82, 81), 방어구는 ARMOUR_ILVLS (82), 고유 장비는 (UNIQUE_ILVL,) 한 행."""
+    if name in UNIQUES:
+        return (UNIQUE_ILVL,)
     return ARMOUR_ILVLS if name in BODY_ARMOURS else tuple(ILVLS)
 
 
@@ -343,10 +362,10 @@ def call(method, url, **kw):
 # 오버퀄리티 계산에 쓰는 가격을 리그별로 poe.ninja 의 PoE2 화폐 거래소 집계(exchange overview, 약 1시간 단위 갱신)에서 읽어
 # overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
 #   - div, chaos: '1개 = Exalted 몇 개' (항상 Exalted 기준 숫자)
-#   - inf.*, q.*: poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다.
+#   - inf.*, q.*, cat.*: poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다.
 #     단위 u 는 e = Exalted, d = Divine, c = Chaos. (예: {"v": 0.1364, "u": "d"} = 1개 = 0.1364 Divine)
 #     화면(overquality-flip.html)은 1 Divine 이상이면 d, 그보다 작으면 읽은 단위(d / c / e)와 무관하게 e 로 환산해 보여주고, 계산은 항상 div / chaos 환율로 Exalted 로 환산한 값으로 한다.
-# overquality-flip.html 이 같은 키(div, chaos, inf.blacksmith/armourer, q.whetstone/scrap)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
+# overquality-flip.html 이 같은 키(div, chaos, inf.*, q.*, cat.xoph/tul/esh)로 읽는다 (키를 바꾸면 html 도 같이 바꿀 것).
 #   "rates": {"div": 646.2, "chaos": 60.96, "inf": {"blacksmith": {"v": 0.1364, "u": "d"}, "armourer": {"v": 1.273, "u": "d"}},
 #             "q": {"whetstone": {"v": 0.01042, "u": "d"}, "scrap": {"v": 0.0139, "u": "d"}},
 #             "source": "poe.ninja", "updatedAt": "2026-11-12T12:41:26Z"}
@@ -361,6 +380,14 @@ RATE_ITEMS = {
     # 방어구용 (무기는 위의 대장장이 계열)
     "inf.armourer": ("Vaal Armourer's Infuser", ("vaalarmourersinfuser", "vaalarmourerinfuser")),
     "q.scrap": ("Armourer's Scrap", ("armourersscrap", "armourerscrap")),
+    # 신비학자·촉진 계열 (html 에서 활성화된 화폐)
+    "inf.arcanist": ("Vaal Arcanist's Infuser", ("vaalarcanistsinfuser", "vaalarcanistinfuser")),
+    "inf.catalysing": ("Vaal Catalysing Infuser", ("vaalcatalysinginfuser", "vaalcatalysinginfusers")),
+    "q.etcher": ("Arcanist's Etcher", ("arcanistsetcher", "arcanistetcher")),
+    # 기폭제 (html 설정 패널의 '기폭제 가격')
+    "cat.xoph": ("Xoph's Catalyst", ("xophscatalyst", "xophcatalyst")),
+    "cat.tul": ("Tul's Catalyst", ("tulscatalyst", "tulcatalyst")),
+    "cat.esh": ("Esh's Catalyst", ("eshscatalyst", "eshcatalyst")),
 }
 EXALTED_KEYS = ("exalted", "exaltedorb")
 # 가격을 환산할 때 기준으로 삼는 세 화폐 (poe.ninja 응답에서 찾는 이름)
@@ -524,8 +551,8 @@ def ninja_league_id(league, ninja_leagues):
     return None
 
 
-def fetch_ninja_rates(league, ninja_leagues):
-    """리그 하나의 환율을 읽어 {"div": (값, "exalted"), "chaos": (값, "exalted"), "inf.blacksmith": (값, "divine"), "q.whetstone": (값, "exalted"), ..} 로 반환 (찾은 것만).
+def fetch_ninja_rates(league, ninja_leagues, keys=None):
+    """리그 하나의 환율을 읽어 {"div": (값, "exalted"), "chaos": (값, "exalted"), "inf.blacksmith": (값, "divine"), "q.whetstone": (값, "exalted"), ..} 로 반환 (찾은 것만). keys 를 주면 그 키들만 조회한다.
     div / chaos 는 Exalted 기준 값이고, 나머지는 poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 단위(화폐 이름)와 함께 돌려준다.
     poe.ninja 의 기준 화폐(core.primary, 'adaptive')로 환산하지 않고 '그 화폐로 매겨진 시세'를 읽는다
     (maxVolumeCurrency 우선, 이어서 Exalted -> Divine -> Chaos). 아무것도 못 얻거나 값이 비정상이면 None."""
@@ -534,9 +561,11 @@ def fetch_ninja_rates(league, ninja_leagues):
         names = ", ".join(str(x.get("id")) for x in ninja_leagues) or "없음"
         print(f"  [{league}] poe.ninja 에서 같은 이름의 리그를 찾지 못함 (poe.ninja 리그: {names})")
         return None
+    items = [k for k in RATE_ITEMS if keys is None or k in keys]
     found, how, quoteless, sample = {}, {}, {}, []
+    base_per, base_anchor = None, {}                 # 첫 응답(Currency)에서 구한 환율·기준 화폐 id (다른 분류에는 기준 화폐가 없을 수 있어 재사용)
     for typ in NINJA_TYPES:
-        want = [k for k in RATE_ITEMS if k not in found]
+        want = [k for k in items if k not in found]
         if not want:
             break
         try:
@@ -549,6 +578,14 @@ def fetch_ninja_rates(league, ninja_leagues):
         if not sample:
             sample = sorted(ov["keys"])[:25]
         per, per_src = ninja_ex_per(ov)
+        if base_per is None:
+            if per:
+                base_per, base_anchor = per, dict(ov["anchor"])
+        else:
+            for n, c in base_anchor.items():
+                ov["anchor"].setdefault(n, c)
+            if len(per) < len(base_per):
+                per = base_per
         for k in want:
             if k in ANCHOR_KEYS:                    # Divine / Chaos 자체의 Exalted 가격
                 name = ANCHOR_KEYS[k]
@@ -567,16 +604,16 @@ def fetch_ninja_rates(league, ninja_leagues):
                                 f"maxVolumeCurrency={ln.get('maxVolumeCurrency')}, maxVolumeRate={ln.get('maxVolumeRate')}"
                                 if ln else f"line 없음 (primary={ov['primary']})"))
         time.sleep(0.5)
-    missing = [RATE_ITEMS[k][0] for k in RATE_ITEMS if k not in found]
+    missing = [RATE_ITEMS[k][0] for k in items if k not in found]
     if "div" in found and "chaos" in found and found["div"][0] <= found["chaos"][0]:
         print(f"  [{league}] 값이 비정상(Divine {found['div'][0]:.1f} <= Chaos {found['chaos'][0]:.1f} Ex)이라 저장하지 않음")
         return None
     shown = ", ".join(f"{RATE_ITEMS[k][0]} {found[k][0]:.4g} {UNIT_SHORT[found[k][1]]}" + (f" ({how[k]})" if how.get(k) else "")
-                      for k in RATE_ITEMS if k in found)
+                      for k in items if k in found)
     print(f"  [{league}] {shown or '찾은 항목 없음'}")
     if missing:
         print(f"    찾지 못함 (이전 값 유지): {', '.join(missing)}")
-        nq = [quoteless[k] for k in RATE_ITEMS if k in quoteless and k not in found]
+        nq = [quoteless[k] for k in items if k in quoteless and k not in found]
         if nq:
             print("    └ 항목은 있으나 Exalted / Divine / Chaos 로 매겨진 시세가 없음:")
             for line in nq:
@@ -585,7 +622,28 @@ def fetch_ninja_rates(league, ninja_leagues):
     return found or None
 
 
-def save_rates(path, league, found, order=None):
+CATALYST_KEYS = ("xoph", "tul", "esh")      # rates["cat"] 의 키 (조프 / 툴 / 에쉬 기폭제)
+
+
+def cheapest_catalyst(rates):
+    """저장된 rates 에서 조프/툴/에쉬 기폭제 중 Exalted 환산이 가장 싼 것. (Ex 가격, 이름, 노드) 또는 None.
+    단위 d / c 는 rates 의 div / chaos(Exalted 기준)로 환산한다."""
+    mult = {"e": 1.0, "d": rates.get("div"), "c": rates.get("chaos")}
+    cat = rates.get("cat") if isinstance(rates.get("cat"), dict) else {}
+    best = None
+    for name in CATALYST_KEYS:
+        node = cat.get(name)
+        if not isinstance(node, dict):
+            continue
+        v, m = _num(node.get("v")), _num(mult.get(node.get("u")))
+        if v is None or m is None:
+            continue
+        if best is None or v * m < best[0]:
+            best = (v * m, name, node)
+    return best
+
+
+def save_rates(path, league, found, order=None, touch=True):
     """found({키: (값, 화폐 이름)})를 overquality-flip-prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
     data = {"version": 1, "leagues": {}}
     if os.path.exists(path):
@@ -611,15 +669,23 @@ def save_rates(path, league, found, order=None):
             t[parts[-1]] = round(val, 2) if val >= 1 else round(val, 4)
         else:                                       # 읽은 값 그대로 + 단위. 작은 값(0.01042 d)이 0 으로 사라지지 않게 유효숫자 4자리로 저장
             t[parts[-1]] = {"v": float(f"{val:.4g}"), "u": UNIT_SHORT.get(unit, "e")}
+    best = cheapest_catalyst(rates)                 # 고유 장비의 퀄리티 화폐: 기폭제 중 가장 싼 것
+    if best:
+        _, name, node = best
+        rates.setdefault("q", {})["catalyst"] = {"v": node["v"], "u": node["u"], "from": name}
+        print(f"  [{league}] 퀄리티 기폭제(가장 싼 것): {name} {node['v']:g} {node['u']}")
     rates["source"] = "poe.ninja"
-    rates["updatedAt"] = utc_stamp()
+    if touch or not rates.get("updatedAt"):         # 일부 항목만 채운 경우(touch=False)에는 기존 갱신 시각 유지
+        rates["updatedAt"] = utc_stamp()
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
 
 
-def update_rates(leagues, out, order=None):
-    """모든 리그의 환율을 poe.ninja 에서 읽어 저장한다. 실패해도 예외를 내지 않는다 (GGG 가격 수집은 계속)."""
-    print("\n== poe.ninja 환율 (읽은 단위 그대로: e=Exalted, d=Divine, c=Chaos / Divine·Chaos 자체는 Ex) ==")
+def update_rates(leagues, out, order=None, only=None):
+    """모든 리그의 환율을 poe.ninja 에서 읽어 저장한다. 실패해도 예외를 내지 않는다 (GGG 가격 수집은 계속).
+    only={리그: [키, ..]} 를 주면 그 리그의 그 키들만 읽어 채운다 (갱신 시각은 그대로)."""
+    print("\n== poe.ninja 환율 (읽은 단위 그대로: e=Exalted, d=Divine, c=Chaos / Divine·Chaos 자체는 Ex) =="
+          if not only else "\n== poe.ninja 환율: 저장되지 않은 항목만 조회 ==")
     try:
         nl = ninja_get("leagues")
         if isinstance(nl, dict):
@@ -630,13 +696,40 @@ def update_rates(leagues, out, order=None):
         return
     for league in leagues:
         try:
-            found = fetch_ninja_rates(league, nl)
+            found = fetch_ninja_rates(league, nl, only.get(league) if only else None)
         except Exception as e:                      # poe.ninja 문제로 전체 수집이 멈추지 않도록
             print(f"  [{league}] 환율 처리 중 오류 ({str(e)[:200]})")
             continue
         if found:
-            save_rates(out, league, found, order)
+            save_rates(out, league, found, order, touch=not only)
             print(f"  -> {out} 저장 ({league} / rates)")
+
+
+FILL_KEYS = ("inf.arcanist", "inf.catalysing", "q.etcher", "cat.xoph", "cat.tul", "cat.esh")   # 저장된 값이 없으면 항상 조회하는 화폐 (Vaal Arcanist's / Catalysing Infuser, Arcanist's Etcher, 기폭제)
+
+
+def missing_fill_keys(path, league):
+    """overquality-flip-prices.json 의 이 리그 rates 에 아직 저장되지 않은 FILL_KEYS 를 반환한다."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            rates = (json.load(f).get("leagues", {}).get(league) or {}).get("rates") or {}
+    except (OSError, ValueError, AttributeError):
+        rates = {}
+    miss = []
+    for key in FILL_KEYS:
+        node = rates
+        for part in key.split("."):
+            node = node.get(part) if isinstance(node, dict) else None
+        if not (isinstance(node, dict) and _num(node.get("v"))):
+            miss.append(key)
+    return miss
+
+
+def fill_missing_rates(leagues, out, order=None):
+    """환율 갱신을 건너뛰는 경우(--no-rates, 수집 간격으로 건너뛴 리그)에도 FILL_KEYS 가 저장돼 있지 않은 리그는 그 항목만 poe.ninja 에서 조회한다."""
+    todo = {lg: m for lg in leagues for m in [missing_fill_keys(out, lg)] if m}
+    if todo:
+        update_rates(list(todo), out, order, only=todo)
 
 
 def use_cmp_rates(path, league):
@@ -771,7 +864,9 @@ def _range(lo, hi):
 
 
 def build_query(base_name, spec, sockets):
-    misc = {"ilvl": _range(spec["ilvl_min"], spec["ilvl_max"])}
+    misc = {}
+    if spec["ilvl_min"] is not None:                    # 고유 장비는 ilvl 조건 없음
+        misc["ilvl"] = _range(spec["ilvl_min"], spec["ilvl_max"])
     if spec["q_min"] is not None:                       # q_min 이 None 이면 퀄리티 제한 없음 (필터 생략)
         misc["quality"] = _range(spec["q_min"], spec["q_max"])
     misc.update({
@@ -779,6 +874,19 @@ def build_query(base_name, spec, sockets):
         "mirrored": {"option": "false"},
         "fractured_item": {"option": "false"},
     })
+    if base_name in UNIQUES:                            # 고유 장비: Rarity=Unique, 이름 + 베이스 타입, 소켓 조건 없음
+        return {
+            "query": {
+                "status": {"option": "securable"},
+                "name": base_name,
+                "type": UNIQUES[base_name],
+                "filters": {
+                    "type_filters": {"filters": {"rarity": {"option": "unique"}}},
+                    "misc_filters": {"filters": misc},
+                },
+            },
+            "sort": {"price": "asc"},
+        }
     return {
         "query": {
             "status": {"option": "securable"},
@@ -803,6 +911,23 @@ def top_n_for(spec):
 def fetch_calls(top_n):
     """top_n 개를 가져오는 데 필요한 fetch 요청 수 (FETCH_MAX 개씩 나눠서)."""
     return -(-top_n // FETCH_MAX)
+
+
+def drop_minor_currencies(rows):
+    """가져온 매물 중 가장 많은 통화의 매물만 남긴다 (최다 통화가 동수로 여럿이면 그 통화들은 모두 남긴다).
+    가격·통화를 모르는 매물은 건드리지 않는다. 반환: (남은 rows, 생략한 매물 수, 생략한 통화별 개수 dict)"""
+    counts = {}
+    for r in rows:
+        if r.get("currency") and r.get("amount") is not None:
+            counts[r["currency"]] = counts.get(r["currency"], 0) + 1
+    if not counts:
+        return rows, 0, {}
+    top = max(counts.values())
+    drop = {c: n for c, n in counts.items() if n < top}
+    if not drop:
+        return rows, 0, {}
+    kept = [r for r in rows if r.get("currency") not in drop or r.get("amount") is None]
+    return kept, sum(drop.values()), drop
 
 
 def cheapest(league, base_name, spec, sockets):
@@ -831,6 +956,10 @@ def cheapest(league, base_name, spec, sockets):
             "seller": (listing.get("account") or {}).get("name", "?"),
             "indexed": listing.get("indexed"),      # 등록(마지막 갱신) 시각, ISO 8601
         })
+    rows, n_drop, dropped = drop_minor_currencies(rows)
+    if n_drop:
+        print(f"    (최다 통화가 아닌 매물 {n_drop}개 생략: "
+              + ", ".join(f"{c} {n}개" for c, n in dropped.items()) + ")")
     return total, rows
 
 
@@ -991,14 +1120,15 @@ def fair_price(rows, market=False):
 
 # ---------------------------------------------------------------- 출력
 def describe(spec, sockets):
-    ilvl = (f">={spec['ilvl_min']}" if spec["ilvl_max"] is None
+    ilvl = ("무관" if spec["ilvl_min"] is None
+            else f">={spec['ilvl_min']}" if spec["ilvl_max"] is None
             else str(spec["ilvl_min"]) if spec["ilvl_min"] == spec["ilvl_max"]
             else f"{spec['ilvl_min']}~{spec['ilvl_max']}")
     qual = ("제한 없음" if spec["q_min"] is None
             else f">={spec['q_min']}" if spec["q_max"] is None
             else str(spec["q_min"]) if spec["q_min"] == spec["q_max"]
             else f"{spec['q_min']}~{spec['q_max']}")
-    return f"{spec['label']}  ilvl{ilvl}, Quality {qual}, 소켓={sockets}"
+    return f"{spec['label']}  ilvl{ilvl}, Quality {qual}" + ("" if sockets is None else f", 소켓={sockets}")
 
 
 CONF_KO = {"high": "신뢰 높음", "medium": "신뢰 보통", "low": "신뢰 낮음"}
@@ -1012,6 +1142,8 @@ def show(spec, sockets, total, rows, fair):
     for r in rows:
         v = r["ilvl"]
         if v is None:
+            continue
+        if spec["ilvl_min"] is None:
             continue
         if v < spec["ilvl_min"] or (spec["ilvl_max"] is not None and v > spec["ilvl_max"]):
             bad += 1
@@ -1144,14 +1276,19 @@ def omitted_payload():
 def run(league, base_name, sockets, ilvls):
     """베이스 하나를 조회하고 overquality-flip-prices.json 용 entries 를 반환 (ilvls 에 든 항목만).
     SEARCHES 는 ilvl 마다 최대 오버퀄리티(A) -> 베이스(B) 순서라, 최대 오버퀄리티 매물이 데이터 부족이면 같은 ilvl 의 베이스 검색은 생략한다."""
-    print(f"\n=== {base_name} (소켓 {sockets}, ilvl {'/'.join(map(str, ilvls))}) ===")
+    if base_name in UNIQUES:
+        print(f"\n=== {base_name} (고유 {UNIQUES[base_name]}) ===")
+    else:
+        print(f"\n=== {base_name} (소켓 {sockets}, ilvl {'/'.join(map(str, ilvls))}) ===")
     by_ilvl = {}
     sell_short = {}                      # entry_ilvl -> 최대 오버퀄리티 매물이 데이터 부족인지
-    for spec in SEARCHES:
+    for spec in SEARCHES + UNIQUE_SEARCHES:
         if spec["entry_ilvl"] not in ilvls:
             continue
         e = by_ilvl.setdefault(spec["entry_ilvl"], {
             "base": slug(base_name), "ilvl": spec["entry_ilvl"], "sockets": sockets})
+        if base_name in UNIQUES:                         # 고유 장비 표시: 퀄리티 = 기폭제 중 가장 싼 것(q.catalyst), 바알 = 촉진시키는 주입기(inf.catalysing)
+            e.update({"unique": True, "type": UNIQUES[base_name], "craft": dict(UNIQUE_CRAFT)})
         if spec["side"] == "buy0" and sell_short.get(spec["entry_ilvl"]):
             print(f"\n  {describe(spec, sockets)}  -> 최대 오버퀄리티 매물 데이터 부족으로 조회 생략")
             e["buy0"] = omitted_payload()
@@ -1307,6 +1444,7 @@ def main():
     if not leagues:
         if waiting:
             print("수집 주기가 아직 되지 않아 이번 실행은 할 일이 없습니다.")
+            fill_missing_rates(waiting, args.out)           # 그래도 저장되지 않은 화폐 가격은 조회 (--no-rates 여도)
             return
         sys.exit('수집할 리그를 확인하지 못했습니다. --league "이름" 으로 직접 지정하세요.')
 
@@ -1317,8 +1455,11 @@ def main():
         order = merge_order(args.out, seasonal, has_latest)
     if not args.no_rates:
         update_rates(leagues, args.out, order)
+        fill_missing_rates(waiting, args.out, order)        # 수집 간격으로 건너뛴 리그도 저장되지 않은 화폐 가격은 조회
         if args.rates_only:
             return
+    else:
+        fill_missing_rates(leagues + waiting, args.out, order)   # --no-rates 여도 저장되지 않은 화폐 가격은 조회
     force = explicit or args.retry_stopped
     plans, n_search, n_fetch = [], 0, 0
     print(f"리그: {', '.join(leagues)}")

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PoE 2 오버소켓 베이스 오버퀄리티 플리핑</title>
+<title>PoE 2 오버퀄리티 플리핑</title>
 <link rel="stylesheet" href="../../style/theme.css">
 <script src="../../style/site-bar.js"></script>
 <style>
@@ -22,6 +22,16 @@ label>span:first-child{white-space:nowrap}
 .tab small{font-weight:400;opacity:.8}
 .tabs{overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}  /* 탭 줄 우측 끝 스크롤바(화살표) 숨김 — 좁은 화면에서는 스크롤 자체는 유지 */
 .tabs::-webkit-scrollbar{display:none;width:0;height:0}
+.tabs{display:flex;align-items:flex-end}
+.tg{display:flex;flex-direction:column;flex:none;margin-left:14px}
+.tgl{font:600 11.5px/1.4 var(--sans);padding:3px 2px 4px;text-align:center;white-space:nowrap}  /* 탭 묶음 구분 문구 */
+.tgb{display:flex;gap:4px}
+.tg.nm{--tc:#6e6e6e}  /* PoE2 일반 아이템(흰색) 계열 */
+.tg.un{--tc:#af6025}   /* PoE2 고유 아이템(주황) 계열 */
+.tg .tab.on{border-color:var(--tc)}
+.tg.cc{--g:var(--tc)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .tg.nm{--tc:#c8c8c8}:root:not([data-theme="light"]) .tg.un{--tc:#d27a30}}
+:root[data-theme="dark"] .tg.nm{--tc:#c8c8c8}:root[data-theme="dark"] .tg.un{--tc:#d27a30}
 .tbl{overflow-x:auto;background:var(--sf);border:1px solid color-mix(in oklab,var(--g) 40%,var(--ln));border-radius:var(--r);margin-bottom:16px}
 /* 열 폭 고정: 보조 문구 길이 등 내용에 따라 열이 들쭉날쭉해지지 않게 함.
    - 베이스 열: 모든 탭의 장비명 중 가장 긴 것에 맞춤 (render() 의 fitBase 가 th 폭을 지정). iLvl 은 그 바로 옆.
@@ -86,7 +96,7 @@ fieldset.col>:not(legend){display:none}
 </head>
 <body>
 <main class="wrap">
-<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Oversocket Base Overquality Flipping Profit Calculator">오버소켓 베이스 오버퀄리티 플리핑</h1><p class="sub" data-en="Calculates the average profit from crafting normal-rarity oversocket bases to maximum quality and reselling them. Because the site cannot know the prices at which items actually sell, base and market price information is an estimate based on listed items found in searches; for more accurate information, we recommend checking the auction house yourself.">일반 등급 오버소켓 베이스를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 사이트는 장비가 실제로 판매되는 가격을 알 수 없기 때문에 베이스, 시장가 등은 검색된 매물 정보를 기반으로 한 추정치입니다. 보다 정확한 정보는 직접 경매장을 확인하는 것을 추천합니다.</p><p class="note" id="src"></p></div></div>
+<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html" data-en="Path of Exile 2">패스 오브 엑자일 2 (Path of Exile 2)</a><h1 data-en="Overquality Flipping Profit Calculator">오버퀄리티 플리핑</h1><p class="sub" data-en="Calculates the average profit from crafting equipment to maximum quality and reselling it. Because the site cannot know the prices at which items actually sell, base and market price information is an estimate based on listed items found in searches; for more accurate information, we recommend checking the auction house yourself.">장비를 최대 퀄리티로 제작해 재판매할 때의 평균적인 수익을 계산. 사이트는 장비가 실제로 판매되는 가격을 알 수 없기 때문에 베이스, 시장가 등은 검색된 매물 정보를 기반으로 한 추정치입니다. 보다 정확한 정보는 직접 경매장을 확인하는 것을 추천합니다.</p><p class="note" id="src"></p></div></div>
 <p id="err" class="note" hidden style="color:var(--bad)"></p>
 <noscript><p class="note">(JavaScript required) 이 페이지는 JavaScript가 필요합니다. github.com 파일 보기 화면이 아니라 GitHub Pages(github.io) 주소로 열어주세요.</p></noscript>
 <div class="grid">
@@ -111,7 +121,7 @@ let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||(document.documentElement.lang
 const tt=(ko,en)=>LANG==="en"?en:ko;
 try{localStorage.removeItem("gh_dispatch_token")}catch(x){}  /* 삭제된 '갱신 요청' 버튼이 이 브라우저에 저장해 둔 GitHub 토큰 정리 */
 function applyStatic(){document.querySelectorAll("[data-en]").forEach(e=>{if(e.dataset.ko===undefined)e.dataset.ko=e.textContent;e.textContent=LANG==="en"?e.dataset.en:e.dataset.ko});
-document.title=tt("PoE 2 오버소켓 베이스 오버퀄리티 플리핑","PoE 2 Oversocket Base Overquality Flipping Profit Calculator")}
+document.title=tt("PoE 2 오버퀄리티 플리핑","PoE 2 Overquality Flipping Profit Calculator")}
 window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyStatic();panel();render()});
 //M
 function model(p){const q=new Array(22).fill(0);for(let i=19;i>=0;i--)q[i]=1+(1-p)*q[i+1]+p*q[Math.min(i+2,20)];
@@ -169,7 +179,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem(k);const x=v?JSON.parse(v):d;return x==null?d:x}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const P2=20,MIN_N=1;
-const BASEDEF={div:515,chaos:67,inf:{armourer:60,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:.15,whetstone:.15,etcher:0}};  /* armourer·scrap 기본값은 대장장이·숫돌과 같은 임시값 (poe.ninja 값이 있으면 그것을 씀) */
+const BASEDEF={div:515,chaos:67,inf:{armourer:60,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:.15,whetstone:.15,etcher:0},cat:{xoph:0,tul:0,esh:0}};  /* armourer·scrap 기본값은 대장장이·숫돌과 같은 임시값 (poe.ninja 값이 있으면 그것을 씀) */
 /* 리그별 기본값: 여기에 없는 리그(시즌 리그)는 BASEDEF. 값은 Ex 기준 (Divine = 200 Ex 처럼) */
 const LGDEF={Standard:{div:200,chaos:80,inf:{blacksmith:500,armourer:500}}};
 /* 기본값 우선순위: overquality-flip-prices.json 의 리그별 rates (수집기가 poe.ninja 에서 읽어 저장, 모두 Exalted 기준) > LGDEF > BASEDEF.
@@ -184,17 +194,17 @@ const defFor=l=>{const o=LGDEF[l]||{},r=((PRICES.leagues||{})[l]||{}).rates||{},
   if(p.u==="d"){if(p.v<1)d[k]={v:p.v*dv,u:"e"};return}  /* d 로 읽은 값: 1 이상이면 그대로, 미만이면 e 로 환산 */
   const ex=p.u==="c"?p.v*d.chaos.v:p.v;d[k]=ex>=dv?{v:ex/dv,u:"d"}:{v:ex,u:"e"}});  /* c / e 로 읽은 값: Exalted 환산 후 1 Divine 이상이면 d, 미만이면 e */
  return d};  /* {키: {v,u}} */
-const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"]};
+const CATS={weapon:["무기","Weapon"],armour:["방어구","Armour"],accessory:["장신구","Accessory"],unique:["장신구","Accessory"]};
 const TABS=Object.assign({rec:["추천","Recommended"]},CATS),REC_N=5;  /* 추천 탭: 카테고리(무기/방어구/장신구)별 추천 점수 내림차순 상위 REC_N개 */
 const REC_BONUS_ROI=1;  /* 예상 ROI 가 이 값(100%)을 넘는 행은 REC_N 을 넘어도 추가로 표시 (카테고리별, 추천 점수 순서 그대로) */
 const REC_MIN_ROI=.25;  /* 추천 탭에는 예상 ROI 가 이 값(25%) 이상인 행만 표시 */
 const REC_W=.5;  /* 추천 정렬 가중치: 점수 = 예상 마진^W × 수익률^(1-W). 0.5면 둘을 동일 비중(기하평균)으로, 1에 가까울수록 마진, 0에 가까울수록 수익률 중시 */
 const L2=(ko,en)=>LANG==="en"?`${en}<span class="en">${ko}</span>`:`${ko}<span class="en">${en}</span>`;
 const FIELDS=()=>[[tt("화폐","Currency"),[["div",tt("디바인 =","Divine =")],["chaos",tt("카오스 =","Chaos =")]]],
-[tt("바알 주입기 가격","Vaal Infuser prices"),[["inf.blacksmith",L2("바알 대장장이의 주입기","Vaal Blacksmith's Infuser")],["inf.armourer",L2("바알 방어구 장인의 주입기","Vaal Armourer's Infuser")],["inf.arcanist",L2("바알 신비학자의 주입기","Vaal Arcanist's Infuser")],["inf.catalysing",L2("바알 촉진시키는 주입기","Vaal Catalysing Infuser")]]],
-[tt("퀄리티 화폐 가격","Quality currency prices"),[["q.whetstone",L2("대장장이의 숫돌","Blacksmith's Whetstone")],["q.scrap",L2("방어구 장인의 고철","Armourer's Scrap")],["q.etcher",L2("신비학자의 식각기","Arcanist's Etcher")]]]];
-const OFF=["inf.arcanist","inf.catalysing","q.etcher"];  /* 아직 쓰는 장비가 없는 화폐: 입력 비활성 + 0 고정 (갑옷용 inf.armourer / q.scrap 은 사용 중) */
-const KEYS=FIELDS().flatMap(([,fs])=>fs.map(f=>f[0]));  /* 설정 항목 키 전체 (div, chaos, inf.*, q.*) */
+[tt("바알 화폐 가격","Vaal currency prices"),[["inf.blacksmith",L2("바알 대장장이의 주입기","Vaal Blacksmith's Infuser")],["inf.armourer",L2("바알 방어구 장인의 주입기","Vaal Armourer's Infuser")],["inf.arcanist",L2("바알 신비학자의 주입기","Vaal Arcanist's Infuser")],["inf.catalysing",L2("바알 촉진시키는 주입기","Vaal Catalysing Infuser")]]],
+[tt("일반 화폐 가격","Regular currency prices"),[["q.whetstone",L2("대장장이의 숫돌","Blacksmith's Whetstone")],["q.scrap",L2("방어구 장인의 고철","Armourer's Scrap")],["q.etcher",L2("신비학자의 식각기","Arcanist's Etcher")]]],
+[tt("기폭제 가격","Catalyst prices"),[["cat.xoph",L2("조프의 기폭제","Xoph's Catalyst")],["cat.tul",L2("툴의 기폭제","Tul's Catalyst")],["cat.esh",L2("에쉬의 기폭제","Esh's Catalyst")]]]];
+const KEYS=FIELDS().flatMap(([,fs])=>fs.map(f=>f[0]));  /* 설정 항목 키 전체 (div, chaos, inf.*, q.*, cat.*) */
 const gp=(o,p)=>p.split(".").reduce((a,k)=>a[k],o);
 const gq=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);  /* gp 와 같지만 없으면 undefined */
 /* poe.ninja 에서 받아온 값의 표시: 10 이상이면 소수점 없이, 10 미만이면 소수점 한 자리까지. 표시만 바꾸고 계산에는 원래 값(S)을 그대로 쓴다.
@@ -203,15 +213,14 @@ const rnd=v=>v>=10?Math.round(v):v>=0.1?Math.round(v*10)/10:v>0?+v.toPrecision(1
 const ninja=k=>gq(((PRICES.leagues||{})[S.league]||{}).rates||{},k)!=null;
 const inShow=k=>{const p=S.R[k];return gq(SAVED.by[S.league]||{},k)===undefined&&ninja(k)?rnd(p.v):p.v};
 const sp=(o,p,v)=>{const a=p.split(".");const l=a.pop();a.reduce((x,k)=>x[k],o)[l]=v};
-let PRICES={leagues:{}},S={league:"",div:BASEDEF.div,chaos:BASEDEF.chaos,inf:{...BASEDEF.inf},q:{...BASEDEF.q},R:{}},SAVED={league:"",by:{}},BASES=[],TAB="rec",COL=new Set();  /* PRICES 를 먼저 선언: defFor 가 읽는다 */
+let PRICES={leagues:{}},S={league:"",div:BASEDEF.div,chaos:BASEDEF.chaos,inf:{...BASEDEF.inf},q:{...BASEDEF.q},cat:{...BASEDEF.cat},R:{}},SAVED={league:"",by:{}},BASES=[],TAB="rec",COL=new Set();  /* PRICES 를 먼저 선언: defFor 가 읽는다 */
 /* 설정 저장 형식(poe2bq:settings2): {league: 직접 고른 리그("" = 항상 최신), by: {리그 이름: {직접 수정한 항목만: div, chaos, inf:{..}, q:{..}}}}.
    수정하지 않은 항목은 저장하지 않으므로 overquality-flip-prices.json 의 poe.ninja 환율이 갱신되면 자동으로 따라간다. 수정한 항목은 그 값이 우선 */
 /* S.R = 화면에 보이는 값 {키: {v,u}} (직접 수정한 값 > 자동값). S.div / S.chaos / S.inf / S.q 는 계산용 Exalted 환산값 (d 단위는 × div, c 단위는 × chaos) */
 function useLeague(l){const d=defFor(l),o=SAVED.by[l]||{},R={};
  KEYS.forEach(k=>{R[k]=gq(o,k)!==undefined?asP(gq(o,k),k):d[k]});
- OFF.forEach(k=>R[k]={v:0,u:R[k].u});
  const ex=k=>R[k].v*(R[k].u==="d"?R.div.v:R[k].u==="c"?R.chaos.v:1);
- S={league:l,R,div:R.div.v,chaos:R.chaos.v,inf:{},q:{}};
+ S={league:l,R,div:R.div.v,chaos:R.chaos.v,inf:{},q:{},cat:{}};
  KEYS.forEach(k=>{if(k!=="div"&&k!=="chaos")sp(S,k,ex(k))})}
 function loadSettings(){const s=LS.get("poe2bq:settings2",null)||{league:(LS.get("poe2bq:settings",{})||{}).league};  /* 이전 형식은 리그 선택만 가져옴 (이전 값은 전부 직접 수정으로 굳어 있어 버림) */
  SAVED={league:typeof s.league==="string"?s.league:"",by:s.by&&typeof s.by==="object"?s.by:{}};
@@ -250,7 +259,7 @@ const TOUCH=window.matchMedia("(hover:none) and (pointer:coarse)");  /* 터치�
 const colHint=()=>TOUCH.matches?tt("탭하여 접기/펼치기","Tap to collapse/expand"):tt("더블클릭으로 접기/펼치기","Double-click to collapse/expand");
 const fsH=(i,t)=>`<fieldset data-i="${i}"${COLP.has(i)?' class="col"':""}><legend tabindex="0" role="button" aria-expanded="${!COLP.has(i)}" title="${colHint()}">${t}</legend>`;
 function panel(){let h=fsH(0,tt("리그","League"))+`<label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${esc(l)}</option>`).join("")}</select></label></fieldset>`;
-let fi=0;for(const[t,fs]of FIELDS())h+=fsH(++fi,t)+`${fs.map(([k,l])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"${OFF.includes(k)?" disabled":""}><em title="${UNITS[S.R[k].u][LANG==="en"?1:0]}">${S.R[k].u}</em></span></label>`).join("")}</fieldset>`;
+let fi=0;for(const[t,fs]of FIELDS())h+=fsH(++fi,t)+`${fs.map(([k,l])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"><em title="${UNITS[S.R[k].u][LANG==="en"?1:0]}">${S.R[k].u}</em></span></label>`).join("")}</fieldset>`;
 h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label></div>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
@@ -279,7 +288,10 @@ function render(){
  $("thRec").hidden=!REC;
  $("rows").closest("table").classList.toggle("rec",REC);fitBase();
  $("stats").innerHTML=[[tt("최대 퀄리티 도달 확률","Chance to reach max quality"),trim(M.P*100,1)+"%"],[tt("필요 베이스 수 (평균)","Bases needed (avg.)"),trim(1/M.P,1)+tt("개","")],[tt("필요 바알 화폐 (평균)","Vaal currency needed (avg.)"),trim(M.E/M.P,1)+tt("개","")],[tt("필요 퀄리티 화폐 (평균)","Quality currency needed (avg.)"),trim(M.Q/M.P,0)+tt("개","")]].map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join("");
- $("tabs").innerHTML=Object.keys(TABS).map(c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${LANG==="en"?TABS[c][1]:TABS[c][0]} <small>${LANG==="en"?TABS[c][0]:TABS[c][1]}</small></button>`).join("");
+ const tb=c=>`<button type="button" class="tab${c===TAB?" on":""}" data-c="${c}">${LANG==="en"?TABS[c][1]:TABS[c][0]} <small>${LANG==="en"?TABS[c][0]:TABS[c][1]}</small></button>`;
+ $("tabs").innerHTML=tb("rec")+`<div class="tg nm"><span class="tgl">${tt("일반 오버소켓 베이스","Normal oversocketed bases")}</span><div class="tgb">${["weapon","armour","accessory"].map(tb).join("")}</div></div><div class="tg un"><span class="tgl">${tt("고유","Unique")}</span><div class="tgb">${tb("unique")}</div></div>`;
+ const tgc=()=>{const T=$("tabs"),G=T.querySelectorAll(".tg"),on=T.querySelector(".tg .tab.on");G.forEach(g=>g.classList.remove("cc"));if(on)on.style.color="";const t=T.querySelector(".tab:not(.on)")||T.querySelector(".tab"),c0=t?getComputedStyle(t).color:"",c1=on?getComputedStyle(on).color:"";G.forEach(g=>{g.querySelector(".tgl").style.color=g.contains(on)?c1:c0});if(on)on.style.color=c1;G.forEach(g=>g.classList.add("cc"))};tgc();  /* 구분 문구 글자색: 평소엔 아래 탭 글자색, 그 묶음의 탭이 선택되면 선택된 탭 글자색. 카테고리 색(--g, 마름모 등)은 .cc 로 적용하되 선택된 탭의 글자색은 원래 색으로 고정 */
+ if(!window._tgo){window._tgo=new MutationObserver(tgc);window._tgo.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","class"]})}
  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{TAB=b.dataset.c;render()}));
  const groups=new Map();
  if(TAB==="rec")Object.keys(CATS).forEach(c=>groups.set("rec:"+c,{ko:CATS[c][0],en:CATS[c][1],list:[]}));  /* 추천 탭: 무기·방어구·장신구 순서로 그룹을 먼저 만들어 둠 (추천할 항목이 없는 그룹은 아래에서 제거) */
@@ -312,7 +324,7 @@ function render(){
    (m==null?`<td><span class="dim">-</span><small>&#12288;</small></td>`:`<td>${fm(r.cost,0)}<small>&#12288;</small></td>`)+
    `<td${r.T.reason?` title="${esc(r.T.reason)}"`:""}>${cellT(r.T,"sell30")}</td>`+
    (m==null?`<td colspan="${NC-5}" class="dim">${r.msg}</td>`:`<td class="mg ${m>=0?"pos":"neg"}">${m>=0?"+":"−"}${fmM(Math.abs(m))}</td><td class="roi ${m>=0?"pos":"neg"}">${(r.roi*100).toFixed(0)}%</td>`+(REC?triesCell(r,M):""))+`</tr>`}});
- $("rows").innerHTML=h||`<tr><td colspan="${NC}" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 베이스가 없습니다.","No bases in this category.")}</td></tr>`;
+ $("rows").innerHTML=h||`<tr><td colspan="${NC}" class="dim" style="text-align:left">${TAB==="rec"?tt("추천할 데이터가 없습니다.","Nothing to recommend yet."):tt("이 카테고리에 항목이 없습니다.","No items in this category.")}</td></tr>`;
  /* 수집 로그: 경매장(GGG 거래소) 데이터와 환율(poe.ninja) 데이터는 수집 시각이 서로 달라 한 줄에 구분해 표시 */
  const aT=tt("경매장 데이터: ","Trade-site data: ")+(lg.collectedAt?fmT(lg.collectedAt):tt("없음 (가격 파일을 불러오세요)","none (load a price file)")),
   rT=tt("환율 데이터: ","Rates data: ")+(lg.rates&&lg.rates.updatedAt?fmT(lg.rates.updatedAt):tt("없음 (기본값 사용)","none (using defaults)"));
