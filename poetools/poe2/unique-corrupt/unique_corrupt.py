@@ -347,6 +347,10 @@ UNIQUES = [
         "ko": "조련",
         "type": "Prismatic Ring",
         "slot": "ring",
+        "quality_max": 20,   # 타락 검색의 퀄리티 최대값 (min 20 & max 20 = 정확히 20)
+        "quality_types": ["Fire", "Cold", "Lightning"],   # 타락 검색 결과 중 이 속성 퀄리티(Quality (X Modifiers))가 붙은 매물만 계산
+        "catalyst": {"names": ["Xoph's Catalyst", "Tul's Catalyst", "Esh's Catalyst"], "quality": 20, "per": 1.2, "label": "Quality 20%", "ko": "퀄리티 20%"},   # 퀄리티 20 비용 = 촉매 중 최저가 x 20/1.2 (poe.ninja). 베이스 옆 가공 노드(label)에 베이스+가공 비용 합산가로 표시
+        "quality_scale": ["+#% to all Elemental Resistances", "#% increased Damage for each type of Elemental Ailment on Enemy"],   # 퀄리티 조건이 있는 검색에서 이 옵션들의 min/max 에 (1 + 퀄리티/100) 을 곱함 (반올림)
         "base": "",
         "root_text": ["Damage per Ailment type ≥18%", "All Ele Resist ≥15%"],
         "root_text_ko": ["상태 이상 유형당 피해 ≥ 18%", "모든 원소 저항 ≥ 15%"],
@@ -373,15 +377,18 @@ UNIQUES = [
             {"en": "Dexterity",                 "ratio": 1.0},
             {"en": "Intelligence",              "ratio": 1.0},
         ],
+        # (라벨의 구간은 퀄리티 20 배율 x1.2 를 적용한 표시값: 17 이하 -> 20 이하, 18~20 -> 22~24, 21 이상 -> 25 이상)
         # 수치 변동: 피해 증가 수치(18~20, 중간값 19) 기준. 기본 범위(18~20) 안이면 변화 없음과 같은 가격
         "reroll": {
             "label": "Dmg per Ailment", "ko": "상태 이상당 피해", "roll": 19,
             "outcomes": [
-                {"range": (None, 17), "text": "≤17%", "text_ko": "≤ 17%", "search": {"mods": [
+                {"range": (None, 17), "text": "≤20%", "text_ko": "≤ 20%", "search": {"mods": [
                     M("#% increased Damage for each type of Elemental Ailment on Enemy", max=17),
                 ]}},
-                {"range": (18, 20), "text": "18—20%", "text_ko": "18—20%"},
-                {"range": (21, None), "text": "21%+", "text_ko": "21% 이상", "search": {"mods": [
+                {"range": (18, 20), "text": "22—24%", "text_ko": "22—24%", "search": {"mods": [
+                    M("#% increased Damage for each type of Elemental Ailment on Enemy", min=18, max=20),
+                ]}},
+                {"range": (21, None), "text": "25%+", "text_ko": "25% 이상", "search": {"mods": [
                     M("#% increased Damage for each type of Elemental Ailment on Enemy", min=21),
                 ]}},
             ],
@@ -683,6 +690,7 @@ def load_rates(league):
         lid = next((x.get("id") for x in nl if isinstance(x, dict) and key in (_norm(x.get("id")), _norm(x.get("name")))), None)
         if lid is None:
             raise ValueError(f"poe.ninja 에 '{league}' 리그 없음")
+        ONLINE["lid"] = lid
         ov = ninja_parse(ninja_get("exchange/current/overview", {"league": lid, "type": "Currency"}))
         per = ninja_ex_per(ov)
         if "divine" not in per or "chaos" not in per or per["divine"] <= per["chaos"]:
@@ -772,12 +780,27 @@ def _range(lo, hi):
     return r
 
 
+def quality_factor(u, spec):
+    """quality_scale 이 설정된 장비의 타락 검색에서 퀄리티 최소값이 있으면 (100 + 퀄리티) / 100, 아니면 None."""
+    qmin = spec.get("quality_min", QUALITY_MIN) if spec["corrupted"] else None
+    return Fraction(100 + qmin, 100) if qmin is not None and u.get("quality_scale") else None
+
+
+def scaled(v, f):
+    return None if v is None else int(math.floor(Fraction(str(v)) * f + Fraction(1, 2)))
+
+
 def build_query(u, spec, extra_mods=()):
+    qf = quality_factor(u, spec)
+
     def to_filters(mods):
         out = []
         for m in mods:
             f = {"id": m.get("id") or stat_id(m["stat"], m.get("group", "explicit"))}
-            v = _range(m.get("min"), m.get("max"))
+            lo, hi = m.get("min"), m.get("max")
+            if qf is not None and m.get("stat") in u["quality_scale"]:
+                lo, hi = scaled(lo, qf), scaled(hi, qf)
+            v = _range(lo, hi)
             if v:
                 f["value"] = v
             out.append(f)
@@ -802,6 +825,8 @@ def build_query(u, spec, extra_mods=()):
     qmin = spec.get("quality_min", QUALITY_MIN) if spec["corrupted"] else None
     if qmin is not None:
         q["filters"]["misc_filters"]["filters"]["quality"] = {"min": qmin}
+        if u.get("quality_max") is not None:
+            q["filters"]["misc_filters"]["filters"]["quality"]["max"] = u["quality_max"]
     if u.get("type"):
         q["type"] = u["type"]
     lo, hi = spec.get("sockets") or (None, None)
@@ -816,6 +841,15 @@ def search_url(u, league, spec, extra_mods=()):
     return f"{BASE}/trade2/search/poe2/{quote(league)}?q={quote(q)}"
 
 
+def _quality_ok(e, types):
+    """매물의 속성 퀄리티(Quality (Fire Modifiers) 등)가 허용 목록에 있는지."""
+    for p in (e.get("item") or {}).get("properties") or []:
+        m = re.match(r"^Quality \((.+?) Modifiers\)$", str(p.get("name") or ""))
+        if m:
+            return m.group(1) in types
+    return False
+
+
 def cheapest(u, league, spec, extra_mods=()):
     s = call("POST", f"{BASE}/api/trade2/search/poe2/{league}", json=build_query(u, spec, extra_mods))
     total = s.get("total", 0)
@@ -824,6 +858,8 @@ def cheapest(u, league, spec, extra_mods=()):
     for i in range(0, len(ids), FETCH_MAX):
         f = call("GET", f"{BASE}/api/trade2/fetch/{','.join(ids[i:i + FETCH_MAX])}", params={"query": s["id"]})
         for e in f.get("result", []):
+            if spec["corrupted"] and u.get("quality_types") and not _quality_ok(e, u["quality_types"]):
+                continue
             listing = e.get("listing") or {}
             price = listing.get("price") or {}
             rows.append({
@@ -900,6 +936,10 @@ def search_fp(u, spec, kind="price"):
     nots = [[m.get("id") or m["stat"], m.get("group", "explicit")] for m in spec.get("not_mods") or []]
     key = [u["name"], u.get("type"), mods, nots, corrupted, CORRUPT_FILTERS if corrupted else None, spec.get("quality_min", QUALITY_MIN) if corrupted else None,
            list(spec.get("sockets") or (None, None)), kind, TOP_N]
+    if quality_factor(u, spec) is not None:
+        key.append(["quality_scale", u["quality_scale"]])
+    if corrupted and u.get("quality_max") is not None:
+        key.append(["quality_max", u["quality_max"]])
     return hashlib.sha1(json.dumps(key, ensure_ascii=False).encode("utf-8")).hexdigest()[:12]
 
 
@@ -917,6 +957,36 @@ def search_specs(u):
 def reroll_spec(u, o):
     """수치 변동 검색: 변화 없음 검색처럼 인챈트 옵션 전체를 NOT 그룹으로 제외 (인챈트가 붙은 매물 배제)."""
     return {**o["search"], "not_mods": no_enchant_mods(u) + list(o["search"].get("not_mods") or [])}
+
+
+def catalyst_price(u):
+    """촉매(names) 중 가장 싼 것의 Divine 가격 x quality/per = 퀄리티 올리는 비용. 못 구하면 None."""
+    c = u["catalyst"]
+    lid = ONLINE.get("lid")
+    if not lid:
+        return None
+    per = {"exalted": 1.0, "divine": CMP_RATES["divine"], "chaos": CMP_RATES["chaos"]}
+    want = {_norm(n): n for n in c["names"]}
+    found = {}
+    for t in ("Breach", "Currency", "Fragments"):
+        try:
+            ov = ninja_parse(ninja_get("exchange/current/overview", {"league": lid, "type": t}))
+        except (requests.RequestException, ValueError, AttributeError):
+            continue
+        for k, name in want.items():
+            cid = ov["keys"].get(k)
+            r = _ex_price(ov, cid, ("exalted", "divine", "chaos"), per) if cid else None
+            if r and name not in found:
+                found[name] = r[0] / CMP_RATES["divine"]
+        if len(found) == len(want):
+            break
+    if not found:
+        print("  ⚠ poe.ninja 에서 촉매 가격을 구하지 못했습니다")
+        return None
+    name, p = min(found.items(), key=lambda x: x[1])
+    cost = p * c["quality"] / c["per"]
+    print(f"  [촉매] {name} {rnd(p)} div x {c['quality']}/{c['per']} = {rnd(cost)} div (확인: {', '.join(f'{n} {rnd(v)}' for n, v in found.items())})")
+    return cost
 
 
 def ensure_online(league):
@@ -1097,6 +1167,15 @@ def analyze(u, league, old=None):
     data = {"name": u.get("title") or u["name"], "base": u.get("base", ""), "unit": "d", "cost": cost,
             "vaalCost": vaal_div, "rootText": u.get("root_text", []),
             "outcomes": outcomes, "searches": dict(CACHE_OUT)}
+    if u.get("catalyst"):
+        ensure_online(league)
+        cq = catalyst_price(u)
+        if cq:
+            c = u["catalyst"]
+            step = {"label": c.get("label") or "Quality", "cost": rnd(cost + cq)}      # 가공 노드: 베이스 + 퀄리티 비용 합산가 (html: 총 비용의 베이스 비용으로 사용)
+            if c.get("ko"):
+                step["ko"] = c["ko"]
+            data["steps"] = [step]
     if u.get("def_type"):
         data["defType"] = u["def_type"]      # 다음 실행부터 재판별 없이 사용
     if base_url:
