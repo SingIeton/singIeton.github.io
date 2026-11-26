@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-크래프팅 시트(crafting-sheet.html)용 재화 시세 수집 - poe.ninja (PoE 2)
+크래프팅 시트(crafting_sheet.html)용 재화 시세 수집 - poe.ninja (PoE 2)
 
 수집할 재화는 이 파일 맨 위의 '사용자 설정' 구간에서 수정합니다.
 가격은 모두 디바인 오브(Divine Orb) 1개 기준 단가로 변환해 저장합니다(페이지의 PRICES 형식과 동일).
 
 사용법:
-  python crafting-sheet-prices.py                              # CURRENCIES 목록을 받아 crafting-sheet-prices.js 생성
-  python crafting-sheet-prices.py --list                       # poe.ninja가 알려주는 리그 목록 출력
-  python crafting-sheet-prices.py --league "Runes of Aldur"    # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
-  python crafting-sheet-prices.py --dump-currencies all.txt    # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
-  python crafting-sheet-prices.py --no-cache                   # 30분 이내 받은 응답도 무시하고 새로 요청
-  python crafting-sheet-prices.py --use-cache                  # 만료 시간과 무관하게 raw_data/ 의 기존 응답을 사용(없는 항목만 새로 요청)
-  python crafting-sheet-prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트 옆 price-history 폴더)
+  python crafting_sheet_prices.py                              # CURRENCIES 목록을 받아 crafting_sheet_prices.js 생성
+  python crafting_sheet_prices.py --list                       # poe.ninja가 알려주는 리그 목록 출력
+  python crafting_sheet_prices.py --league "Runes of Aldur"    # LEAGUE 설정 대신 리그를 직접 지정(이름 또는 id)
+  python crafting_sheet_prices.py --dump-currencies all.txt    # 조회 가능한 전체 재화 이름을 붙여넣기용 텍스트로 저장
+  python crafting_sheet_prices.py --no-cache                   # 30분 이내 받은 응답도 무시하고 새로 요청
+  python crafting_sheet_prices.py --use-cache                  # 만료 시간과 무관하게 raw_data/ 의 기존 응답을 사용(없는 항목만 새로 요청)
+  python crafting_sheet_prices.py --out "C:\\path\\to\\folder" # 결과 저장 폴더 지정(기본: 이 스크립트 옆 price-history 폴더)
 
 저장 위치(기본값: 이 스크립트 옆 price-history 폴더):
-  crafting-sheet-prices.js             결과(페이지가 <script> 로 읽음. 파일을 직접 열어도 동작)
+  crafting_sheet_prices.js             결과(페이지가 <script> 로 읽음. 파일을 직접 열어도 동작)
   raw_data/                               poe.ninja 원본 응답 캐시(지워도 됩니다)
 
 데이터 출처: poe.ninja 공식 이코노미 API  https://poe.ninja/docs/api
@@ -226,7 +226,7 @@ ALIASES = {
 SEARCH_UNIQUES = True
 
 # ---- 기타 --------------------------------------------------------------------
-OUTPUT_JS_FILE = "crafting-sheet-prices.js"  # 결과 JS 파일 이름(페이지가 <script> 로 읽음)
+OUTPUT_JS_FILE = "crafting_sheet_prices.js"  # 결과 JS 파일 이름(페이지가 <script> 로 읽음)
 JS_VARIABLE = "CRAFT_PRICES"  # JS 파일이 만드는 전역 변수 이름(window.CRAFT_PRICES). 페이지 쪽과 같아야 함
 FORCE_CACHE = False       # --use-cache 지정 시 True: 만료 시간 무시
 CACHE_MINUTES = 30        # 이 시간(분) 안에 받은 원본 응답이 있으면 재사용. 0 이면 캐시 안 씀

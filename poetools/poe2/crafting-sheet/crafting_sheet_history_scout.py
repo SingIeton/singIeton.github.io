@@ -2,19 +2,19 @@
 """
 크래프팅 시트용 '과거 리그 N일차' 재화 시세 수집 - poe2scout (PoE 2)
 
-crafting-sheet-prices.js 에 시세가 들어 있는 항목들을 대상으로, 지정한 리그의 N일차 가격을
+crafting_sheet_prices.js 에 시세가 들어 있는 항목들을 대상으로, 지정한 리그의 N일차 가격을
 디바인 오브(Divine Orb) 1개 기준 단가로 변환해 저장합니다(기존 파일의 prices 와 같은 단위).
 
 사용법:
-  python crafting-sheet-history-scout.py --list                                        # poe2scout 리그 목록 출력
-  python crafting-sheet-history-scout.py --league "Fate of the Vaal" --day 4 7 10 15 30
-  python crafting-sheet-history-scout.py --league "Fate of the Vaal" --day 7 --start 2025-12-12   # 리그 시작일 직접 지정
-  python crafting-sheet-history-scout.py --league "Fate of the Vaal" --day 7 --source "C:\\path\\crafting-sheet-prices.js"
-  python crafting-sheet-history-scout.py --league "Fate of the Vaal" --day 7 --no-cache
-  python crafting-sheet-history-scout.py --league "Fate of the Vaal" --day 7 --use-cache   # 만료 시간과 무관하게 기존 응답 사용
+  python crafting_sheet_history_scout.py --list                                        # poe2scout 리그 목록 출력
+  python crafting_sheet_history_scout.py --league "Fate of the Vaal" --day 4 7 10 15 30
+  python crafting_sheet_history_scout.py --league "Fate of the Vaal" --day 7 --start 2025-12-12   # 리그 시작일 직접 지정
+  python crafting_sheet_history_scout.py --league "Fate of the Vaal" --day 7 --source "C:\\path\\crafting_sheet_prices.js"
+  python crafting_sheet_history_scout.py --league "Fate of the Vaal" --day 7 --no-cache
+  python crafting_sheet_history_scout.py --league "Fate of the Vaal" --day 7 --use-cache   # 만료 시간과 무관하게 기존 응답 사용
 
 저장 위치(기본값: 이 스크립트 옆 price-history 폴더):
-  crafting-sheet-prices-<리그>-day<일차>.js      결과(window.CRAFT_PRICES_HISTORY). 일차마다 파일이 하나씩 만들어집니다
+  crafting_sheet_prices-<리그>-day<일차>.js      결과(window.CRAFT_PRICES_HISTORY). 일차마다 파일이 하나씩 만들어집니다
   price-history-index.js                                 위 파일들의 목록(HTML 이 읽음. 실행할 때마다 자동 갱신)
   raw_data/poe2scout/                              원본 응답 캐시(지워도 됩니다)
 
@@ -46,7 +46,7 @@ DEFAULT_OUT = SCRIPT_DIR / "price-history"  # 결과 파일의 기본 저장 위
 # =============================================================================
 # 사용자 설정
 # =============================================================================
-SOURCE_JS = "crafting-sheet-prices.js"   # 항목 목록을 읽을 파일(price-history 폴더 안). --source 로 바꿀 수 있음
+SOURCE_JS = "crafting_sheet_prices.js"   # 항목 목록을 읽을 파일(price-history 폴더 안). --source 로 바꿀 수 있음
 JS_VARIABLE = "CRAFT_PRICES_HISTORY"        # 결과 JS 가 만드는 전역 변수 이름
 DAY_COUNT = 500             # DailyStatsHistory 로 요청할 일수(API 는 '최근 N일'을 돌려줌. 리그보다 길어야 시작일이 잘리지 않음)
 TOLERANCE_DAYS = 1          # N일차 데이터가 없을 때 허용하는 날짜 차이
@@ -181,7 +181,7 @@ def get_json(path, params=None, raw_dir=None, use_cache=True, retries=4):
 
 # ---------------------------------------------------------------- 입력(기존 JS)
 def load_wanted(path):
-    """crafting-sheet-prices.js -> 시세가 있는 항목 이름 목록(파일 순서 유지)."""
+    """crafting_sheet_prices.js -> 시세가 있는 항목 이름 목록(파일 순서 유지)."""
     if not path.exists():
         sys.exit(f"항목 목록 파일을 찾지 못했습니다: {path}  (--source 로 지정하세요)")
     text = path.read_text(encoding="utf-8")
@@ -312,7 +312,7 @@ def write_atomic(path, text):
 
 def write_history_index(out_dir):
     """out_dir 안의 일차별 시세 파일을 스캔해 price-history-index.js 를 갱신(HTML 이 이 목록으로 파일을 읽음)."""
-    files = sorted(p.name for p in out_dir.glob("crafting-sheet-prices-*-day*.js"))
+    files = sorted(p.name for p in out_dir.glob("crafting_sheet_prices-*-day*.js"))
     write_atomic(out_dir / "price-history-index.js", "window.CRAFT_HISTORY_INDEX = " + json.dumps(files, ensure_ascii=False, indent=1) + ";\n")
     log(f"  목록 갱신 -> {out_dir / 'price-history-index.js'} ({len(files)}개)")
 
@@ -460,7 +460,7 @@ def run_league(league, wanted, days, start_override, raw_dir, out_dir, use_cache
             "missing": missing,    # 이 리그에서 이름을 찾지 못한 항목
         }
         body = json.dumps(result, ensure_ascii=False, indent=1).replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
-        path = out_dir / f"crafting-sheet-prices-{safe_name(league)}-day{n}.js"
+        path = out_dir / f"crafting_sheet_prices-{safe_name(league)}-day{n}.js"
         write_atomic(path, f"window.{JS_VARIABLE} = {body};\n")
         log(f"  완료 -> {path}")
     write_history_index(out_dir)
@@ -473,7 +473,7 @@ def main():
     ap.add_argument("--league", metavar="이름", help="리그 이름(예: \"Fate of the Vaal\")")
     ap.add_argument("--day", type=int, nargs="+", metavar="N", help="일차(여러 개 가능). 예: --day 4 7 10 15 30")
     ap.add_argument("--start", metavar="YYYY-MM-DD", help="리그 시작일(1일차) 직접 지정. 생략하면 시계열의 가장 이른 날짜")
-    ap.add_argument("--source", default=str(DEFAULT_OUT / SOURCE_JS), help="항목 목록을 읽을 JS 파일(기본: price-history/crafting-sheet-prices.js)")
+    ap.add_argument("--source", default=str(DEFAULT_OUT / SOURCE_JS), help="항목 목록을 읽을 JS 파일(기본: price-history/crafting_sheet_prices.js)")
     ap.add_argument("--out", default=str(DEFAULT_OUT), help="결과 저장 폴더(기본: 스크립트 옆 price-history 폴더)")
     grp = ap.add_mutually_exclusive_group()
     grp.add_argument("--no-cache", action="store_true", help="캐시를 무시하고 새로 요청")
