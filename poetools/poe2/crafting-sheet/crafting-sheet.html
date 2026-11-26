@@ -311,7 +311,8 @@ function loadHistory(){
   });
   return HISTORY_FILES.reduce((p,f)=>p.then(()=>one(f)),Promise.resolve()).then(fillPsrc);
 }
-const psrcOpts=()=>`<option value="latest"${PSEL==="latest"?" selected":""}>${T("최신 (2026-11-22)","Latest (2026-11-22)")}</option>`+[...HIST].sort((a,b)=>(b.start||"").localeCompare(a.start||"")).map(h=>`<optgroup label="${esc(h.league)}">`+Object.keys(h.days).sort((a,b)=>b-a).map(n=>{const v=h.league+"|"+n;return`<option value="${esc(v)}"${v===PSEL?" selected":""}>${esc(h.league)} · ${T(n+"일","Day "+n)}</option>`}).join("")+`</optgroup>`).join("");
+const latestDate=()=>{const t=LATEST&&LATEST.generated_at?new Date(LATEST.generated_at):null;if(!t||isNaN(t))return"";const p=n=>String(n).padStart(2,"0");return` (${t.getFullYear()}-${p(t.getMonth()+1)}-${p(t.getDate())})`};
+const psrcOpts=()=>`<option value="latest"${PSEL==="latest"?" selected":""}>${T("최신","Latest")+latestDate()}</option>`+[...HIST].sort((a,b)=>(b.start||"").localeCompare(a.start||"")).map(h=>`<optgroup label="${esc(h.league)}">`+Object.keys(h.days).sort((a,b)=>b-a).map(n=>{const v=h.league+"|"+n;return`<option value="${esc(v)}"${v===PSEL?" selected":""}>${esc(h.league)} · ${T(n+"일","Day "+n)}</option>`}).join("")+`</optgroup>`).join("");
 const fillPsrc=()=>{const el=$("psrc");if(el)el.innerHTML=psrcOpts();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{PRDY=true;const e=$("psrc");if(e)e.classList.add("ready")})};
 function selectPrices(v){
   if(v==="latest"){if(!LATEST){const el=$("psrc");if(el)el.value=PSEL;return}setPrices(LATEST);priceInfo();upd();return}
