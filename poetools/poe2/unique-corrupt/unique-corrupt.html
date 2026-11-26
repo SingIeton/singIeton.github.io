@@ -69,7 +69,7 @@ body.dbg .ghead{outline:1px dashed gray}
 <main class="wrap" id="main">
   <div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1 data-en="Unique Corruption Flipping">고유 타락 플리핑</h1><p class="sub" data-en="Expected corruption return for unique items, with the expected market price and profit/loss of every corruption outcome visualized">고유 장비의 타락 분기별 시장가와 예상 손익을 시각화하고, 총 평균 손익을 예상.</p></div></div>
   <div class="layout">
-    <aside><div class="seg" id="sort"><button type="button" data-s="name" data-en="Name">이름</button><button type="button" data-s="rate" data-en="Return">수익</button></div><div class="list" id="list"></div></aside>
+    <aside><div class="seg" id="sort"><button type="button" data-s="default" data-en="Default">기본</button><button type="button" data-s="name" data-en="Name">이름</button><button type="button" data-s="rate" data-en="Return">수익</button></div><div class="list" id="list"></div></aside>
     <section><div id="detail"></div></section>
   </div>
 </main>
@@ -82,6 +82,7 @@ body.dbg .ghead{outline:1px dashed gray}
    데이터 구조:
    {
      name, base, unit, cost, vaalCost,   // 영문이 기본. 한글 번역이 있으면 ko / baseKo / rootTextKo 필드를 추가 (없으면 영문 표시)
+     steps:[{label, ko, cost}],   // (선택) 베이스에서 수평으로 이어지는 가공 노드 (cost = 베이스 + 가공 비용 합산가). 총 비용의 베이스 비용은 마지막 노드의 cost 를 사용
      rootText:["문구1","문구2"],   // (선택) root(베이스) 노드 아래에 표시되는 문자열 목록 (스크립트의 root_text 에서 수정)
      (baseUrl: 베이스 구매 검색 링크(선택). 모든 outcomes 항목에는 선택 필드 url: "경매장 검색 링크" 사용 가능. outcomes 항목의 low:true = 검색 매물 부족으로 ratio(또는 변화 없음) 가격을 쓴 경우, 매물 건 텍스트를 붉게 표시)
      outcomes:[ {group:"none"|"reroll"|"vaal"|"socket", label, p, price, n}, ... ]   // 수치 변동(reroll)도 값(-3/-4/-5 등)마다 동등한 항목 1개
@@ -108,24 +109,24 @@ const cls=v=>v>0?"pos":v<0?"neg":"";
 const unitOf=it=>(!it.unit||it.unit==="div")?"d":it.unit; /* 단위 표시: div -> d */
 
 window.UC_DATA=[];
-let SORT="name"; /* 목록 정렬: name = 이름순(기본), rate = 수익률 높은 순 */
+let SORT="default"; /* 목록 정렬: default = js 파일(데이터) 순서, name = 이름순, rate = 수익률 높은 순 */
 let FILTER=10; /* 기여도 필터(%): 총 이익 비율이 이 값 미만인 노드의 수익은 숨김 */
 let MODE="amt"; /* 항목별 수익 표시: amt = 금액, pct = 총 평균 수익 대비 기여 비율 */
 let items=[],sel=null,TH=785,TW=680,VW=680; /* TH: 트리 높이(내부 좌표). fit()이 화면 세로 크기에 맞춰 자동 갱신 */
 
-const CMP={name:(a,b)=>pk(a,"name").localeCompare(pk(b,"name"),LANG==="en"?"en":"ko",{numeric:true}),rate:(a,b)=>b.rate-a.rate};
+const CMP={default:(a,b)=>a.ord-b.ord,name:(a,b)=>pk(a,"name").localeCompare(pk(b,"name"),LANG==="en"?"en":"ko",{numeric:true}),rate:(a,b)=>b.rate-a.rate};
 function sortItems(){ /* 정렬 후에도 선택된 장비 유지 */
   const cur=items[sel];
   items.sort((a,b)=>CMP[SORT](a,b)||CMP.name(a,b));
   sel=items.length?(cur?items.indexOf(cur):0):null;
 }
 function analyze(it){
-  const total=it.cost+(it.vaalCost||0),off=it.off||[]; /* off: 계산에서 제외한 outcomes 인덱스 */
+  const steps=it.steps||[],baseCost=steps.length?steps[steps.length-1].cost:it.cost,total=baseCost+(it.vaalCost||0),off=it.off||[]; /* off: 계산에서 제외한 outcomes 인덱스 */
   const outs=(it.outcomes||[]).map((o,i)=>({...o,i,off:off.includes(i),profit:o.price-total,rate:(o.price-total)/total}));
   const on=outs.filter(o=>!o.off);
   const psum=on.reduce((a,o)=>a+o.p,0)||1; // 확률 합이 1이 아니어도 정규화
   const avg=on.reduce((a,o)=>a+o.p*o.price,0)/psum;
-  return {...it,off,total,outs,psum,avg,profit:avg-total,rate:(avg-total)/total};
+  return {...it,off,baseCost,total,outs,psum,avg,profit:avg-total,rate:(avg-total)/total};
 }
 
 /* 목록 폭 = 가장 긴 항목의 폭 (최소 235px). 본문 위치는 고정, 목록은 왼쪽으로 확장 (--aw 를 .layout 이 사용) */
@@ -141,10 +142,10 @@ function fitList(){
     while(el.scrollWidth>el.clientWidth+0.5&&fs>9){fs-=0.5;el.style.fontSize=fs+"px"}
   });
 }
-/* 아이콘: icon/<이름>.webp (이름 = 괄호 부분을 뺀 영문 이름을 소문자·하이픈으로. 데이터에 icon 이 있으면 그 값 사용) */
-const iconOf=it=>{const s=it.icon||String(it.name).replace(/\s*\(.*\)\s*$/,"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");return s?"icon/"+s+".webp":""};
+/* 아이콘: ../icon/uniques/<이름>.webp (이름 = 괄호 부분을 뺀 영문 이름을 소문자·하이픈으로. 데이터에 icon 이 있으면 그 값 사용) */
+const iconOf=it=>{const s=it.icon||String(it.name).replace(/\s*\(.*\)\s*$/,"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");return s?"../icon/uniques/"+s+".webp":""};
 function renderList(){
-  $("list").innerHTML=items.length?items.map((it,i)=>`<button class="row hi${i===sel?" on":""}" data-i="${i}"><img class="ic" src="${esc(iconOf(it))}" alt="" width="36" height="36" onerror="this.parentNode.classList.remove('hi');this.remove()"><span class="nm">${esc(pk(it,"name"))}</span><span class="rt ${cls(it.rate)}">${spct(it.rate)}</span><small>${esc([LANG==="ko"&&it.ko?it.name:"",(LANG==="ko"&&it.baseKo?it.baseKo:(it.base||"")).replace(/샘플\s*/g,"")].filter(Boolean).join(" · "))}</small><small style="text-align:right">${fp(it.cost)} → ${fp(it.avg)} ${esc(unitOf(it))}</small></button>`).join(""):`<div class="empty">${tt("분석된 장비가 없습니다.","No items analyzed.")}</div>`;
+  $("list").innerHTML=items.length?items.map((it,i)=>`<button class="row hi${i===sel?" on":""}" data-i="${i}"><img class="ic" src="${esc(iconOf(it))}" alt="" width="36" height="36" onerror="this.parentNode.classList.remove('hi');this.remove()"><span class="nm">${esc(pk(it,"name"))}</span><span class="rt ${cls(it.rate)}">${spct(it.rate)}</span><small>${esc([LANG==="ko"&&it.ko?it.name:"",(LANG==="ko"&&it.baseKo?it.baseKo:(it.base||"")).replace(/샘플\s*/g,"")].filter(Boolean).join(" · "))}</small><small style="text-align:right">${fp(it.baseCost)} → ${fp(it.avg)} ${esc(unitOf(it))}</small></button>`).join(""):`<div class="empty">${tt("분석된 장비가 없습니다.","No items analyzed.")}</div>`;
 }
 
 function renderDetail(){
@@ -154,7 +155,8 @@ function renderDetail(){
     return;
   }
   const u=esc(unitOf(it));
-  const W=VW=Math.max(TW,560),pad=14,padB=34,RX=8,LX=W-320,POS=0.62,GX=RX+POS*(LX-RX); /* 그룹 노드 위치 = 시작점에서 마지막 점까지 거리 */
+  const st=it.steps||[],W=VW=Math.max(TW,560+90*st.length),pad=14,padB=34,RX=8,LX=W-320,POS=0.62,GX=RX+POS*(LX-RX); /* 그룹 노드 위치 = 시작점에서 마지막 점까지 거리 */
+  const SX=st.map((s,i)=>RX+(GX-RX)*(i+1)/(st.length+1)),FX=st.length?SX[st.length-1]:RX; /* 베이스에서 수평으로 이동한 가공 노드 x 좌표, FX = 마지막 베이스 노드 x */
   const gs=Object.keys(GROUPS).filter(g=>it.outs.some(o=>o.group===g)).map(g=>{
     const rs=it.outs.filter(o=>o.group===g),on=rs.filter(o=>!o.off),ps=on.reduce((a,o)=>a+o.p,0);
     return {g,rs,off:!on.length,p:ps/it.psum,avg:ps?on.reduce((a,o)=>a+o.p*o.price,0)/ps:0};
@@ -165,17 +167,20 @@ function renderDetail(){
   let y=pad;
   gs.forEach((G,i)=>{G.rs.forEach(o=>{o.cy=y+LH/2;y+=LH});G.cy=(G.rs[0].cy+G.rs[G.rs.length-1].cy)/2;y+=gaps[i]||0});
   const H=HH,rcy=gs.reduce((a,G)=>a+G.cy,0)/gs.length;
-  const edge=(x1,y1,x2,y2,w,c)=>{const m=(x1+x2)/2;return `<path class="ed" d="M${x1} ${y1}C${m} ${y1} ${m} ${y2} ${x2} ${y2}" stroke="${c}" stroke-opacity=".5" stroke-width="${Math.max(2,w*44).toFixed(1)}" stroke-linecap="round"/>`};
+  const EDGE_SCALE=30,EDGE_MIN=2,EDGE_MAX=12.5; /* 선 두께 = 비율×EDGE_SCALE, EDGE_MIN~EDGE_MAX로 제한 */
+  const edge=(x1,y1,x2,y2,w,c)=>{const m=(x1+x2)/2;return `<path class="ed" d="M${x1} ${y1}C${m} ${y1} ${m} ${y2} ${x2} ${y2}" stroke="${c}" stroke-opacity=".5" stroke-width="${Math.max(EDGE_MIN,Math.min(EDGE_MAX,w*EDGE_SCALE)).toFixed(1)}" stroke-linecap="round"/>`};
   let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  st.forEach((s,i)=>{svg+=edge(i?SX[i-1]:RX,rcy,SX[i],rcy,1,"var(--g)")});
   gs.forEach(G=>{
-    if(!G.off)svg+=edge(RX,rcy,GX,G.cy,G.p,"var(--g)");
+    if(!G.off)svg+=edge(FX,rcy,GX,G.cy,G.p,"var(--g)");
     G.rs.forEach(o=>{if(!o.off)svg+=edge(GX,G.cy,LX,o.cy,o.p/it.psum,"var(--g)")});
   });
   const link=url=>url?`<a href="${esc(url)}" target="_blank" rel="noopener" aria-label="${tt("거래소에서 보기","Open in trade site")}"><title>${tt("거래소에서 보기","Open in trade site")}</title><tspan dx="6">↗</tspan></a>`:"";
   const rt=(LANG==="ko"&&it.rootTextKo)||it.rootText||[];
   svg+=`<circle cx="${RX}" cy="${rcy}" r="8" fill="var(--g)"/><text x="${RX}" y="${rcy-36}" style="font-weight:700">${tt("베이스","Base")}${link(it.baseUrl)}</text>`;
-  svg+=`<text class="bp" x="${RX}" y="${rcy-17}">${fp(it.cost)} ${u}</text>`;
+  svg+=`<text class="bp" x="${RX}" y="${rcy-17}">${st.length?fmt(it.cost,1):fp(it.cost)} ${u}</text>`;
   rt.forEach((c,i)=>{svg+=`<text class="mu" x="${RX}" y="${rcy+26+i*15}">${esc(c)}</text>`});
+  st.forEach((s,i)=>{svg+=`<circle cx="${SX[i]}" cy="${rcy}" r="8" fill="var(--g)"/><text x="${SX[i]}" y="${rcy-36}" text-anchor="middle" style="font-weight:700">${esc(pk(s,"label"))}</text><text class="bp" x="${SX[i]}" y="${rcy-17}" text-anchor="middle">${fmt(s.cost,1)} ${u}</text>`}); /* 가공 노드: 이름 + (베이스+가공 비용) 가격, 하부 조건 표시 없음 */
   gs.forEach(G=>{
     svg+=`<g${G.off?' class="off"':""}><circle class="gd" data-g="${G.g}" cx="${GX}" cy="${G.cy}" r="14" fill="transparent"><title>${tt("클릭하여 하위 항목 전체를 계산에서 제외/포함","Click to exclude/include all children in calculation")}</title></circle><circle cx="${GX}" cy="${G.cy}" r="8" pointer-events="none" ${G.off?'fill="none" stroke="var(--mute)" stroke-width="2"':'fill="var(--g)"'}/><text x="${GX}" y="${G.cy-16}" text-anchor="middle" style="font-weight:700">${tt(GROUPS[G.g][1],GROUPS[G.g][0])}</text>${G.off?"":`<text class="mu" x="${GX}" y="${G.cy+28}" text-anchor="middle">${pf(G.p*100)}%</text><text class="gp ${G.avg>=it.total?"tp":"tn"}" x="${GX}" y="${G.cy+46}" text-anchor="middle">${sd(G.avg-it.total)} ${u} (${spct((G.avg-it.total)/it.total)})</text>`}</g>`;
     G.rs.forEach(o=>{
@@ -256,7 +261,7 @@ window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyS
 applyStatic();
 const load=f=>new Promise(r=>{const s=document.createElement("script");s.src=encodeURI(f);s.onload=s.onerror=()=>r();document.head.appendChild(s)});
 load("uniques/index.js").then(()=>Promise.all((window.UC_FILES||[]).map(f=>load("uniques/"+f)))).then(()=>{
-  items=window.UC_DATA.map(analyze);sortItems();
+  items=window.UC_DATA.map((d,i)=>analyze({...d,ord:i}));sortItems();
   render();
 });
 </script>
