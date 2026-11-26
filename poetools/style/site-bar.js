@@ -45,7 +45,7 @@
   var STYLES = [
     { id: "default",  file: "theme.css",              ko: "기본",     en: "default" },
     // { id: "theme2", file: "theme2.css",             ko: "theme2",    en: "theme2" },
-	// { id: "theme3", file: "theme3.css",             ko: "theme3",    en: "theme2" },
+	// { id: "theme3", file: "theme3.css",             ko: "theme3",    en: "theme3" },
   ];
   function readStyle() {
     if (!STYLE_PICKER) return STYLES[0].id;
