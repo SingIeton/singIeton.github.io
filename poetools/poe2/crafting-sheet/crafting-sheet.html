@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Crafting Sheet | PoE Tools</title>
+<title>제작 시트 | PoE Tools</title>
+<meta name="description" content="PoE 2 크래프팅 레시피를 단계별로 기록하고 소모 재화와 총 비용 계산">
 <link rel="stylesheet" href="../../style/theme.css">
 <script src="../../style/site-bar.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700&display=swap">
@@ -383,7 +384,7 @@ const icons=()=>document.querySelectorAll(".it").forEach(r=>setIcon(r.querySelec
 const msg=()=>{}; /* 안내 문구는 표시하지 않음 */
 
 function renderAll(){
-  document.title=T("크래프팅 시트","Crafting Sheet")+" | PoE 2 | PoE Tools";
+  document.title=T("제작 시트","Crafting Sheet")+" | PoE Tools";
   $("app").innerHTML=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><div class="toprow"><a class="game" href="../poe2.html">Path of Exile 2</a><span class="exts"><select id="modsel" aria-label="${T("아이템 타입","Item type")}">${modOpts()}</select><a class="ext" id="poe2db" href="${modUrl(MODSEL)}" target="_blank" rel="noopener noreferrer">PoE2DB ↗</a><a class="ext" href="https://www.craftofexile.com/?game=poe2" target="_blank" rel="noopener noreferrer">Craft of Exile ↗</a></span></div><h1>${T("크래프팅 시트","Crafting Sheet")}</h1><div class="subrow"><p class="sub">${T("레시피를 단계별로 기록하고, 단계별·전체 소모 재화와 총 비용을 확인합니다.","Record a recipe step by step and see per-step and total currency used and total cost.")}</p><select id="psrc" class="psrc${PRDY?" ready":""}" aria-label="${T("시세","Prices")}">${psrcOpts()}</select></div></div></div>
 <div class="bar"><input type="text" class="rn" id="rname" value="${esc(R.name)}" placeholder="${T("레시피 이름","Recipe name")}" aria-label="${T("레시피 이름","Recipe name")}"></div>
 <div class="acts-bar"><div class="acts"><div class="l"><div class="grp"><button type="button" data-a="new">${ICO.reset}${T("초기화","Reset")}</button></div></div>
