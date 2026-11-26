@@ -59,7 +59,7 @@
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
   - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
 
-결과는 이 스크립트 옆의 out/overquality-flip-prices.json 에 저장된다 (index.html 이 같은 out/ 에서 읽음, 기존 파일이 있으면 병합).
+결과는 이 스크립트 옆의 overquality-flip-prices.json 에 저장된다 (index.html 이 같은 폴더에서 읽음, 기존 파일이 있으면 병합).
 
 실행:
   python overquality_flip.py                          # 기본: 전체 24종 (무기 13 + 갑옷 10 + 고유 1, QUERY_BASES = BASES), 최신 리그만,
@@ -76,7 +76,7 @@
   python overquality_flip.py all --league "latest,previous:6,standard:24"
       # 최신 리그는 매번, 직전(second latest) 리그는 마지막 수집 후 6시간이 지났을 때만, Standard 는 24시간이 지났을 때만 수집.
       # 리그 뒤의 ":시간" 은 최소 수집 간격이다 (생략하면 매번 수집). 실행 소요 시간·지연을 감안해 1.5시간 일찍 도래한 것으로 본다 (INTERVAL_MARGIN_H).
-  python overquality_flip.py all --out other/overquality-flip-prices.json   # 저장 위치 지정 (기본: out/overquality-flip-prices.json)
+  python overquality_flip.py all --out other/overquality-flip-prices.json   # 저장 위치 지정 (기본: overquality-flip-prices.json)
   python overquality_flip.py --rates-only             # poe.ninja 환율만 갱신 (GGG 검색 없음)
   python overquality_flip.py all --no-rates           # poe.ninja 환율 갱신 생략
 """
@@ -93,7 +93,7 @@ import requests
 
 BASE = "https://www.pathofexile.com"
 POESESSID = ""                        # 선택
-OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")   # index.html 과 같은 위치의 ./out
+OUT_DIR = os.path.dirname(os.path.abspath(__file__))   # index.html 과 같은 폴더
 DEFAULT_OUT = os.path.join(OUT_DIR, "overquality-flip-prices.json")
 KEEP_LEAGUES = 2               # 수집·표시할 시즌 리그 수 (최신 + 직전)
 INTERVAL_MARGIN_H = 1.5        # '--league 이름:N' 의 N시간 간격을 판단할 때 앞당겨 보는 시간.
@@ -1376,7 +1376,7 @@ def main():
                     help="latest | previous(직전 리그) | standard | all(모든 소프트코어 리그) | 리그 이름 직접 지정. 쉼표로 여러 개. "
                          "'이름:시간' 으로 최소 수집 간격 지정 (예: latest,previous:6,standard:24 / all:6) (기본: %(default)s)")
     ap.add_argument("--out", default=DEFAULT_OUT,
-                    help="결과 저장 경로 (기본: 스크립트 옆 out/overquality-flip-prices.json, 기존 파일이 있으면 병합)")
+                    help="결과 저장 경로 (기본: 스크립트 옆 overquality-flip-prices.json, 기존 파일이 있으면 병합)")
     ap.add_argument("--retry-stopped", action="store_true",
                     help="all 실행에서도 '수집 중지'된 항목(베이스+ilvl)을 다시 조회")
     ap.add_argument("--stopped-retry", default="",

@@ -360,7 +360,7 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  $("rows").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr.g");if(!tr)return;e.preventDefault();const c=tr.dataset.cls;tg(tr);const n=[...$("rows").querySelectorAll("tr.g")].find(x=>x.dataset.cls===c);if(n)n.focus()});
  applyStatic();loadSettings();panel();
  BASES=fb.bases;
- const cached=LS.get("poe2bq:prices",{leagues:{}}),fresh=await jget("out/overquality-flip-prices.json");
+ const cached=LS.get("poe2bq:prices",{leagues:{}}),fresh=await jget("overquality-flip-prices.json");
  if(fresh&&fresh.leagues)for(const k of Object.keys(cached.leagues||{}))if(!fresh.leagues[k])delete cached.leagues[k];  /* 서버의 overquality-flip-prices.json 이 있으면 그 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
  PRICES=merge(cached,fresh||{leagues:{}});
  fixLeague();autoCollapse();
