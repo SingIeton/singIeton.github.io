@@ -23,7 +23,7 @@ jobs:
     env:
       # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 out/overquality-flip-prices.json 에 저장됩니다.
       SCRIPT_DIR: poetools/poe2/overquality-flip
-      SCRIPT_NAME: poe2_overquality-flip.py
+      SCRIPT_NAME: overquality-flip.py
     steps:
       - uses: actions/checkout@v4
 
