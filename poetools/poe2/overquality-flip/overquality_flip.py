@@ -62,23 +62,23 @@
 결과는 이 스크립트 옆의 out/overquality-flip-prices.json 에 저장된다 (index.html 이 같은 out/ 에서 읽음, 기존 파일이 있으면 병합).
 
 실행:
-  python overquality-flip.py                          # 기본: 전체 24종 (무기 13 + 갑옷 10 + 고유 1, QUERY_BASES = BASES), 최신 리그만,
+  python overquality_flip.py                          # 기본: 전체 24종 (무기 13 + 갑옷 10 + 고유 1, QUERY_BASES = BASES), 최신 리그만,
                                                       # 수집 중지 항목은 STOPPED_RETRY_DAYS(1일)마다 자동 재조회 (--stopped-retry 로 리그별 지정 가능)
-  python overquality-flip.py "Warmonger Bow"          # 지정한 베이스 하나 (수집 중지여도 조회)
-  python overquality-flip.py all                      # 전체 24종 (요청 최대: 무기 베이스당 10회, 갑옷·고유 장비당 5회)
-  python overquality-flip.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
-  python overquality-flip.py all --league "latest,previous:6,standard:24" --stopped-retry "latest:1,previous:3,standard:10"
+  python overquality_flip.py "Warmonger Bow"          # 지정한 베이스 하나 (수집 중지여도 조회)
+  python overquality_flip.py all                      # 전체 24종 (요청 최대: 무기 베이스당 10회, 갑옷·고유 장비당 5회)
+  python overquality_flip.py all --retry-stopped      # 수집 중지된 항목도 다시 조회
+  python overquality_flip.py all --league "latest,previous:6,standard:24" --stopped-retry "latest:1,previous:3,standard:10"
       # 수집 중지 항목 재조회: 최신 1일 / 직전 3일 / Standard 10일마다
-  python overquality-flip.py all --league latest      # 최신 리그만 (기본값)
-  python overquality-flip.py all --league "이름"       # 리그 이름 직접 지정
-  python overquality-flip.py all --league all         # 거래소에 있는 모든 소프트코어 리그 (시즌 리그 전부 + Standard)
-  python overquality-flip.py all --league all:6       # 위와 같되, 리그마다 마지막 수집 후 6시간이 지났을 때만 수집
-  python overquality-flip.py all --league "latest,previous:6,standard:24"
+  python overquality_flip.py all --league latest      # 최신 리그만 (기본값)
+  python overquality_flip.py all --league "이름"       # 리그 이름 직접 지정
+  python overquality_flip.py all --league all         # 거래소에 있는 모든 소프트코어 리그 (시즌 리그 전부 + Standard)
+  python overquality_flip.py all --league all:6       # 위와 같되, 리그마다 마지막 수집 후 6시간이 지났을 때만 수집
+  python overquality_flip.py all --league "latest,previous:6,standard:24"
       # 최신 리그는 매번, 직전(second latest) 리그는 마지막 수집 후 6시간이 지났을 때만, Standard 는 24시간이 지났을 때만 수집.
       # 리그 뒤의 ":시간" 은 최소 수집 간격이다 (생략하면 매번 수집). 실행 소요 시간·지연을 감안해 1.5시간 일찍 도래한 것으로 본다 (INTERVAL_MARGIN_H).
-  python overquality-flip.py all --out other/overquality-flip-prices.json   # 저장 위치 지정 (기본: out/overquality-flip-prices.json)
-  python overquality-flip.py --rates-only             # poe.ninja 환율만 갱신 (GGG 검색 없음)
-  python overquality-flip.py all --no-rates           # poe.ninja 환율 갱신 생략
+  python overquality_flip.py all --out other/overquality-flip-prices.json   # 저장 위치 지정 (기본: out/overquality-flip-prices.json)
+  python overquality_flip.py --rates-only             # poe.ninja 환율만 갱신 (GGG 검색 없음)
+  python overquality_flip.py all --no-rates           # poe.ninja 환율 갱신 생략
 """
 import argparse
 import json
