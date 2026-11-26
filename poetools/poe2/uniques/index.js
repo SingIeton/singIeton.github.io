@@ -1,1 +1,0 @@
-window.UC_FILES = ["The_Taming.js", "Constricting_Command.js", "Constricting_Command_Oversocket.js", "Svalinn_0-1.js", "Svalinn_2-5.js", ];
