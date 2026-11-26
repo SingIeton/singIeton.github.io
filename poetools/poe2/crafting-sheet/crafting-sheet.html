@@ -252,9 +252,9 @@ function fillCur(extra){
 buildKo();fillCur();
 
 /* 가격: 재화 이름 → 디바인 단가.
-   AUTO   = 시세 파일(crafting-sheet-prices.json)에서 읽은 값 (이름은 nk()로 정규화)
+   AUTO   = 시세 파일(crafting-sheet-prices.js)에서 읽은 값 (이름은 nk()로 정규화)
    PRICES = 사용자가 직접 입력한 값 (브라우저에 저장, AUTO보다 우선) */
-const PRICE_URL="price-history/crafting-sheet-prices.json"; /* 이 HTML 기준 상대 경로 */
+const PRICE_URL="price-history/crafting-sheet-prices.js"; /* 이 HTML 기준 상대 경로 */
 let PRICES={};try{PRICES=JSON.parse(localStorage.getItem("craftPrices")||"{}")}catch(e){}
 let AUTO={},META=null,PERR="";
 let LATEST=null,PSEL="latest",HIST=[],PRDY=false; /* LATEST = 최신(ninja) 시세 파일 내용, PSEL = 드롭다운에서 고른 시세("latest" 또는 "리그|일차"), HIST = 과거(scout) 시세 [{league,source,start,days:{일차:{date,prices}}}] */
@@ -326,7 +326,7 @@ function selectPrices(v){
 async function loadPrices(){
   try{
     if(window.CRAFT_PRICES)setPrices(window.CRAFT_PRICES); /* crafting-sheet-prices.js (file:// 에서도 동작) */
-    else{const r=await fetch(PRICE_URL,{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);setPrices(await r.json())}
+    else{const r=await fetch(PRICE_URL,{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();setPrices(JSON.parse(t.slice(t.indexOf("{"),t.lastIndexOf("}")+1)))}
   }catch(e){PERR=e.message||"error"}
   priceInfo();upd();
 }
