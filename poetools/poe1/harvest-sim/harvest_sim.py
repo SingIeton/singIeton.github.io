@@ -1,6 +1,6 @@
-"""PoE1 수확(Harvest) 시뮬레이터용 시세 수집: poe.ninja -> out/harvest-rates.json
+"""PoE1 수확(Harvest) 시뮬레이터용 시세 수집: poe.ninja -> harvest-sim-prices.js
 
-harvest-sim.html 의 아래 입력값을 poe.ninja 의 PoE1 경제 API 에서 읽어 JSON 으로 저장한다.
+harvest-sim.html 의 아래 입력값을 poe.ninja 의 PoE1 경제 API 에서 읽어 JS 파일(window.HARVEST_SIM_PRICES = {...};)로 저장한다.
 최신 시즌 리그 2개(최신, 직전)와 Standard 를 한 파일에 리그별로 담고, harvest-sim.html 의 '리그' 드롭다운이 이 목록을 보여 준다.
 
   JSON 키 (리그마다)       harvest-sim.html          의미
@@ -21,6 +21,7 @@ harvest-sim.html 의 아래 입력값을 poe.ninja 의 PoE1 경제 API 에서 �
   {"version": 2, "source": "poe.ninja", "updatedAt": "...Z",
    "order": ["최신 시즌 리그", "직전 시즌 리그"],
    "leagues": {"최신 시즌 리그": {ratio, lifeforce, scarab, fragment, updatedAt}, "직전 시즌 리그": {...}, "Standard": {...}}}
+  실제 파일에는 위 JSON 이 \"window.HARVEST_SIM_PRICES = {...};\" 형태로 들어간다 (JSON 만 있는 파일도 읽을 수 있다).
   이전 형식(version 1: 단일 리그)의 파일은 읽을 때 자동으로 version 2 로 바꿔 저장한다.
 
 poe.ninja 규칙 (https://poe.ninja/docs/api):
@@ -38,11 +39,11 @@ poe.ninja 규칙 (https://poe.ninja/docs/api):
   - 의존성은 requests 하나뿐이고 입력·키 설정이 필요 없어 그대로 Actions 에 올릴 수 있다.
 
 실행:
-  python harvest_rates.py --force                          # 갱신 간격(최신 1h / 직전 6h / Standard 12h) 무시하고 전부 요청
-  python harvest_rates.py                                  # 최신 시즌 리그 2개 + Standard -> out/harvest-rates.json
-  python harvest_rates.py --league latest "Mirage"         # 직전 리그를 이름으로 직접 채워 넣기 (파일에 아직 없을 때, 처음 한 번)
-  python harvest_rates.py --out other/rates.json
-  python harvest_rates.py --dry-run                        # 저장하지 않고 결과만 출력
+  python harvest_sim.py --force                          # 갱신 간격(최신 1h / 직전 6h / Standard 12h) 무시하고 전부 요청
+  python harvest_sim.py                                  # 최신 시즌 리그 2개 + Standard -> harvest-sim-prices.js
+  python harvest_sim.py --league latest "Mirage"         # 직전 리그를 이름으로 직접 채워 넣기 (파일에 아직 없을 때, 처음 한 번)
+  python harvest_sim.py --out other/rates.json
+  python harvest_sim.py --dry-run                        # 저장하지 않고 결과만 출력
 """
 import argparse
 import json
@@ -56,8 +57,8 @@ import requests
 
 NINJA = "https://poe.ninja/poe1/api/economy"
 UA = "poe1-harvest-sim/0.1 (contact: augustusminu@gmail.com)"
-OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")
-DEFAULT_OUT = os.path.join(OUT_DIR, "harvest-rates.json")
+DEFAULT_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "harvest-sim-prices.js")
+JS_VAR = "HARVEST_SIM_PRICES"      # harvest-sim.html 이 <script> 로 읽어 가는 전역 변수 이름
 
 # 수집 항목: 키 -> (표시 이름, 매칭 후보, 찾아볼 exchange type 순서)
 # 후보는 id·이름·detailsId 에서 영숫자만 남겨 소문자로 만든 값과 비교한다
@@ -264,10 +265,11 @@ def load_store(path):
     store = {"order": [], "leagues": {}}
     try:
         with open(path, encoding="utf-8") as f:
-            loaded = json.load(f)
+            text = f.read()
+        loaded = json.loads(text[text.index("{"):text.rindex("}") + 1])      # \"window.X = {...};\" 의 JS 껍데기를 벗김
     except OSError:
         return store
-    except ValueError:
+    except ValueError:                  # index/rindex/json 파싱 실패 모두 ValueError
         print(f"  ⚠ 기존 {path} 를 읽지 못해 새로 만듭니다")
         return store
     if not isinstance(loaded, dict):
@@ -379,7 +381,9 @@ def save(path, store, season, std, results):
     }
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
+        f.write(f"window.{JS_VAR} = ")
         json.dump(data, f, ensure_ascii=False, indent=1)
+        f.write(";\n")
     return data
 
 
@@ -419,7 +423,7 @@ def main():
     ap.add_argument("--league", nargs="+", default=["latest"], metavar="LEAGUE",
                     help="latest | 리그 id 또는 이름 (여러 개 가능, 기본: latest = 진행 중인 최신 챌린지 리그). "
                          "시즌 리그는 최대 %d개, Standard 는 항상 함께 수집" % N_SEASON)
-    ap.add_argument("--out", default=DEFAULT_OUT, help="저장 경로 (기본: 스크립트 옆 out/harvest-rates.json)")
+    ap.add_argument("--out", default=DEFAULT_OUT, help="저장 경로 (기본: 스크립트와 같은 폴더의 harvest-sim-prices.js)")
     ap.add_argument("--dry-run", action="store_true", help="저장하지 않고 결과만 출력")
     ap.add_argument("--force", action="store_true", help="갱신 간격을 무시하고 모든 리그를 요청")
     args = ap.parse_args()

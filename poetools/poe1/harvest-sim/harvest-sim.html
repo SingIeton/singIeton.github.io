@@ -105,7 +105,7 @@ fieldset.col>:not(legend),.panel.col>:not(h2){display:none}
 <fieldset><legend>리그</legend>
 <label><select id="league" disabled></select></label>
 <p class="note" id="lgInfo"></p>
-<div class="lgrow"><label class="btn">시세 파일 불러오기<input type="file" id="rfile" accept=".json" hidden></label><button type="button" class="btn" id="rreset">시세 재설정</button></div>
+<div class="lgrow"><label class="btn">시세 파일 불러오기<input type="file" id="rfile" accept=".js,.json" hidden></label><button type="button" class="btn" id="rreset">시세 재설정</button></div>
 </fieldset>
 <fieldset><legend>생기 가격 (카오스)</legend>
 <div class="px"><span><i class="dot" style="background:var(--y)"></i>노랑</span><span><i class="dot" style="background:var(--b)"></i>파랑</span><span><i class="dot" style="background:var(--p)"></i>보라</span>
@@ -809,7 +809,7 @@ function fitMapBoxes(){
   if(w>0)els.forEach(e=>e.style.width=w+"px");
 }
 fitMapBoxes();window.addEventListener("load",fitMapBoxes);window.addEventListener("resize",fitMapBoxes);
-/* ---------- 리그별 시세: harvest_rates.py 가 poe.ninja 에서 받아 out/harvest-rates.json 에 저장 ----------
+/* ---------- 리그별 시세: harvest_sim.py 가 poe.ninja 에서 받아 harvest-sim-prices.js 에 저장 ----------
    형식 v2: {order:[최신 시즌 리그, 직전 시즌 리그], leagues:{리그 이름:{ratio, lifeforce:{yellow,blue,purple}, scarab:{doubling,lineage}, updatedAt}}}
    드롭다운에는 파일에 있는 리그(시즌 최근 2개 + Standard)만 표시 */
 Object.assign(EN,{"마지막 1개 집중":"Last-crop focus","시뮬레이션을 실행하면 계산됨":"Calculated when the simulation runs","계산 중...":"Calculating...","리그":"League","시세 파일 불러오기":"Load rates file","실행 중...":"Running...","시세 파일 없음 (입력창의 기본값 사용)":"No rates file (using the default inputs)","시세 재설정":"Reset rates","작물 감소 패시브 추천":"Crop reduction passive recommendation","작물 감소 패시브 추천이 꺼져 있음":"Crop reduction passive recommendation is off"});
@@ -861,14 +861,16 @@ function fixLeague(){const L=leagueList(),s=lsGet(LK,""),l=L.includes(s)?s:(L[0]
 ["ratio","py","pb","pp","scdp","sclp","fsp","fmp"].forEach(id=>$(id).addEventListener("input",()=>{delete $(id).dataset.raw}));   /* 직접 수정하면 입력한 값을 그대로 사용 */
 $("league").addEventListener("change",e=>{const l=e.target.value;lsSet(LK,l===leagueList()[0]?"":l);renderLeague(l);applyRates(l)});
 $("rfile").addEventListener("change",async e=>{
-  try{const d=normRates(JSON.parse(await e.target.files[0].text()));if(!d)throw 0;RATES=mergeRates(RATES,d);lsSet(RK,RATES);fixLeague()}
-  catch(x){alert(LANG==="en"?"Not a valid harvest-rates.json file.":"올바른 harvest-rates.json 형식이 아닙니다.")}
+  try{const d=normRates(parseRates(await e.target.files[0].text()));if(!d)throw 0;RATES=mergeRates(RATES,d);lsSet(RK,RATES);fixLeague()}
+  catch(x){alert(LANG==="en"?"Not a valid harvest-sim-prices.js file.":"올바른 harvest-sim-prices.js 형식이 아닙니다.")}
   e.target.value="";
 });
-async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
+const parseRates=t=>JSON.parse(t.slice(t.indexOf("{"),t.lastIndexOf("}")+1));   /* "window.HARVEST_SIM_PRICES = {...};" 또는 JSON 에서 객체만 꺼냄 */
+function jget(u){return new Promise(res=>{const s=document.createElement("script");s.src=u+"?t="+Date.now();   /* <script> 로 읽어 file:// 에서도 동작, 시각 값으로 캐시 방지 */
+  const done=v=>{s.remove();res(v)};s.onload=()=>{const d=window.HARVEST_SIM_PRICES;delete window.HARVEST_SIM_PRICES;done(d||null)};s.onerror=()=>done(null);document.head.appendChild(s)})}
 async function loadRates(){
   let fresh=null;
-  fresh=normRates(await jget("out/harvest-rates.json"));
+  fresh=normRates(await jget("harvest-sim-prices.js"));
   const cached=normRates(lsGet(RK,null))||{order:[],leagues:{}};
   if(fresh)for(const k of Object.keys(cached.leagues))if(!fresh.leagues[k])delete cached.leagues[k];   /* 서버의 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
   RATES=fresh?mergeRates(cached,fresh):cached;
