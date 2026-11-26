@@ -43,6 +43,13 @@ jobs:
         working-directory: ${{ env.SCRIPT_DIR }}
         run: python -u "$SCRIPT_NAME"
 
+      # 커밋 전에 결과 파일이 올바른 JSON인지 검사 (깨진 파일은 커밋하지 않음)
+      # 파일은 'window.CRAFT_PRICES = {...};' 형식이라 첫 '{' ~ 마지막 '}' 사이만 잘라서 검사합니다.
+      - name: Validate crafting-sheet-prices.js
+        if: ${{ success() }}
+        run: |
+          python -c "import json; t=open('${SCRIPT_DIR}/price-history/crafting-sheet-prices.js', encoding='utf-8').read(); json.loads(t[t.find('{'):t.rfind('}')+1])"
+
       # 스크립트가 성공했을 때만 커밋 (실패하면 기존 결과 파일을 그대로 유지)
       # raw_data/ 같은 중간 산출물은 커밋하지 않습니다.
       - name: Commit results

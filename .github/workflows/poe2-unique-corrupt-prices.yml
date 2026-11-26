@@ -43,6 +43,36 @@ jobs:
         working-directory: ${{ env.SCRIPT_DIR }}
         run: python -u "$SCRIPT_NAME"
 
+      # 커밋 전에 이번 실행에서 바뀌었거나 새로 생긴 uniques/*.js 가 올바른 JSON 인지 검사 (깨진 파일은 커밋하지 않음)
+      # 장비 파일은 'window.UC_DATA.push({...});', index.js 는 'window.UC_FILES = [...];' 형식이라 JSON 부분만 잘라서 검사합니다.
+      - name: Validate uniques/*.js
+        if: ${{ success() }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess, sys
+
+          d = os.environ["SCRIPT_DIR"] + "/uniques"
+          out = subprocess.run(["git", "ls-files", "-m", "-o", "--exclude-standard", "--", d],
+                               capture_output=True, text=True, check=True).stdout
+          bad = []
+          for path in out.splitlines():
+              if not path.endswith(".js"):
+                  continue
+              try:
+                  text = open(path, encoding="utf-8").read()
+                  if path.endswith("/index.js"):
+                      body = text.split("window.UC_FILES = ", 1)[1].rsplit(";", 1)[0]
+                  else:
+                      body = text.split("window.UC_DATA.push(", 1)[1].rsplit(");", 1)[0]
+                  json.loads(body)
+                  print("OK  ", path)
+              except Exception as e:
+                  bad.append(path)
+                  print("FAIL", path, "->", e)
+          if bad:
+              sys.exit(f"JSON 검증 실패로 커밋하지 않습니다: {bad}")
+          PY
+
       # 스크립트가 성공했을 때만 커밋 (실패하면 기존 결과 파일을 그대로 유지)
       # raw_data/ 같은 중간 산출물은 커밋하지 않습니다.
       - name: Commit results
