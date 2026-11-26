@@ -412,7 +412,7 @@ function build(){
   document.documentElement.lang=LANG;
   document.title=T("시즌 스냅샷","Season Snapshot")+" | PoE Tools";
   $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
-  const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1></div></div>`;
+  const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">Path of Exile 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1></div></div>`;
   if(!CUR.length){
     $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>season_snapshot.py</code>를 실행해 만든 <code>season-snapshot-prices.js</code> 파일을 이 페이지와 같은 폴더에 두세요.","Run <code>season_snapshot.py</code> and put the generated <code>season-snapshot-prices.js</code> in the same folder as this page.")}</p></section>`;
     return;
