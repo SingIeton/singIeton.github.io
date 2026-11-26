@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PoE 2 오버퀄리티 플리핑</title>
+<title>오버퀄리티 플리핑 | PoE Tools</title>
+<meta name="description" content="PoE 2 장비를 최대 퀄리티로 제작해 재판매할 때의 평균 수익 계산">
 <link rel="stylesheet" href="../../style/theme.css">
 <script src="../../style/site-bar.js"></script>
 <style>
@@ -121,7 +122,7 @@ let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||(document.documentElement.lang
 const tt=(ko,en)=>LANG==="en"?en:ko;
 try{localStorage.removeItem("gh_dispatch_token")}catch(x){}  /* 삭제된 '갱신 요청' 버튼이 이 브라우저에 저장해 둔 GitHub 토큰 정리 */
 function applyStatic(){document.querySelectorAll("[data-en]").forEach(e=>{if(e.dataset.ko===undefined)e.dataset.ko=e.textContent;e.textContent=LANG==="en"?e.dataset.en:e.dataset.ko});
-document.title=tt("PoE 2 오버퀄리티 플리핑","PoE 2 Overquality Flipping Profit Calculator")}
+document.title=tt("오버퀄리티 플리핑 | PoE Tools","Overquality Flipping Profit Calculator | PoE Tools")}
 window.addEventListener("sitebar:lang",e=>{LANG=e.detail==="en"?"en":"ko";applyStatic();panel();render()});
 //M
 function model(p){const q=new Array(22).fill(0);for(let i=19;i>=0;i--)q[i]=1+(1-p)*q[i+1]+p*q[Math.min(i+2,20)];
