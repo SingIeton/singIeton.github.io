@@ -1,10 +1,10 @@
-/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-26T06:52:09Z */
+/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-26T15:51:41Z */
 window.UC_DATA.push({
  "name": "Svalinn (0-1%)",
  "base": "",
  "unit": "d",
  "cost": 12.0,
- "vaalCost": 0.01483,
+ "vaalCost": 0.01605,
  "rootText": [
   "Armour ≥250%",
   "Blocked Hits 0-1%"
@@ -172,5 +172,5 @@ window.UC_DATA.push({
  ],
  "ko": "스발린 (0-1%)",
  "league": "Forbidden Rites",
- "stamp": "2026-11-26T06:52:09Z"
+ "stamp": "2026-11-26T15:51:41Z"
 });
