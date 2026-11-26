@@ -21,7 +21,7 @@ jobs:
       # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준) ← 실제 위치에 맞게 수정하세요.
       # 결과 파일은 이 폴더 안에 생긴다고 가정하고, 이 폴더의 변경분을 커밋합니다.
       SCRIPT_DIR: poetools/poe2/crafting-sheet
-      SCRIPT_NAME: crafting-sheet-prices.py
+      SCRIPT_NAME: crafting_sheet_prices.py
     steps:
       - uses: actions/checkout@v4
 
