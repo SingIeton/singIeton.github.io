@@ -121,8 +121,8 @@ main#app.wrap{max-width:min(1440px,100%);width:100%} /* 메인 영역(표·그�
 <body>
 <button class="skip" id="skip" type="button"></button>
 <main class="wrap" id="app" tabindex="-1"></main>
-<!-- 데이터: fetch_currency_history.py 가 스크립트와 같은 폴더에 생성 (currency_data.js). 이 HTML과 같은 폴더에 두고 실행하세요 -->
-<script src="currency_data.js"></script>
+<!-- 데이터: season_snapshot.py 가 스크립트와 같은 폴더에 생성 (season-snapshot-prices.js). 이 HTML과 같은 폴더에 두고 실행하세요 -->
+<script src="season-snapshot-prices.js"></script>
 <script>
 /* 언어·테마는 site-bar.js 가 관리합니다. 현재 언어는 PoEPrefs.lang, 바뀌면 "sitebar:lang" 이벤트가 옵니다. */
 let LANG=(window.PoEPrefs&&window.PoEPrefs.lang)||document.documentElement.lang||"ko";
@@ -244,7 +244,6 @@ const NAME_KO={
 	"Architect's Orb":             "건축가의 오브",
     "Vaal Cultivation Orb":        "바알 함양 오브",
     "Crystallised Corruption":     "결정화된 타락",
-	"Vaal Catalysing Infuser":     "바알 촉진시키는 주입기",	
 	"Jiquani's Thesis":            "지콰니의 명제",
 	"Quipolatl's Thesis":          "퀴폴라틀의 명제",
 	"Guatelitzi's Thesis":         "과텔리치의 명제",
@@ -263,7 +262,7 @@ const NAME_KO={
 	"Raven-Touched Shard":         "큰까마귀의 손길에 닿은 파편",
 	
   },
-  /* 카테고리(드롭다운 그룹 제목): 키는 fetch_currency_history.py 가 기록하는 영어 이름(첫 글자 대문자)과 같아야 합니다. */
+  /* 카테고리(드롭다운 그룹 제목): 키는 season_snapshot.py 가 기록하는 영어 이름(첫 글자 대문자)과 같아야 합니다. */
   categories:{
     "Currency": "화폐",
     "Abyss":    "심연",
@@ -305,7 +304,7 @@ const cmp=v=>v==null?"-":v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?Math.round(v/1e3)+
 const swatch=(c,w=24,dash)=>`<svg class="sw-i" width="${w}" height="8" aria-hidden="true"><line x1="0" y1="4" x2="${w}" y2="4" stroke="${c}" stroke-width="3"${dash?` stroke-dasharray="${w>20?"6 3":"5 3"}"`:""}/></svg>`;
 
 /* ---------- 데이터 ---------- */
-/* DATA.leagues[리그].currencies[화폐].days[] 구조 (fetch_currency_history.py 출력). 가격은 모두 Exalted 기준 */
+/* DATA.leagues[리그].currencies[화폐].days[] 구조 (season_snapshot.py 출력). 가격은 모두 Exalted 기준 */
 const dayMap=c=>new Map(((c&&c.days)||[]).map(d=>[d.date,d]));
 function prep(){
   const seen=new Map();
@@ -415,7 +414,7 @@ function build(){
   $("skip").textContent=T("본문으로 건너뛰기","Skip to content");
   const head=`<div class="ghead sm"><span class="mini" aria-hidden="true">2</span><div><a class="game" href="../poe2.html">PoE 2</a><h1>${T("시즌 스냅샷","Season Snapshot")}</h1></div></div>`;
   if(!CUR.length){
-    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>fetch_currency_history.py</code>를 실행해 만든 <code>currency_data.js</code> 파일을 이 페이지와 같은 폴더에 두세요.","Run <code>fetch_currency_history.py</code> and put the generated <code>currency_data.js</code> in the same folder as this page.")}</p></section>`;
+    $("app").innerHTML=head+`<section class="panel"><h2>${T("가격 데이터가 없습니다","No price data found")}</h2><p>${T("<code>season_snapshot.py</code>를 실행해 만든 <code>season-snapshot-prices.js</code> 파일을 이 페이지와 같은 폴더에 두세요.","Run <code>season_snapshot.py</code> and put the generated <code>season-snapshot-prices.js</code> in the same folder as this page.")}</p></section>`;
     return;
   }
   const chips=chipsHtml();
