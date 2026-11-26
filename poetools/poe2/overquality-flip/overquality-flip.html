@@ -182,7 +182,7 @@ const P2=20,MIN_N=1;
 const BASEDEF={div:515,chaos:67,inf:{armourer:60,blacksmith:60,arcanist:0,catalysing:0},q:{scrap:.15,whetstone:.15,etcher:0},cat:{xoph:0,tul:0,esh:0}};  /* armourer·scrap 기본값은 대장장이·숫돌과 같은 임시값 (poe.ninja 값이 있으면 그것을 씀) */
 /* 리그별 기본값: 여기에 없는 리그(시즌 리그)는 BASEDEF. 값은 Ex 기준 (Divine = 200 Ex 처럼) */
 const LGDEF={Standard:{div:200,chaos:80,inf:{blacksmith:500,armourer:500}}};
-/* 기본값 우선순위: overquality-flip-prices.json 의 리그별 rates (수집기가 poe.ninja 에서 읽어 저장, 모두 Exalted 기준) > LGDEF > BASEDEF.
+/* 기본값 우선순위: overquality-flip-prices.js 의 리그별 rates (수집기가 poe.ninja 에서 읽어 저장, 모두 Exalted 기준) > LGDEF > BASEDEF.
    수집기가 못 찾은 항목은 rates 에 없으므로 자동으로 다음 순위 값을 쓴다 */
 /* 가격 값 형식: 숫자(이전 형식 = Exalted) 또는 {v:값, u:"e"|"d"|"c"} — 수집기가 poe.ninja 에서 읽은 값 그대로와 그 화폐 단위 (e = Exalted, d = Divine, c = Chaos).
    디바인·카오스 환율(div, chaos) 자체는 항상 Exalted. 화면에는 1 Divine 이상이면 d, 그보다 작으면 읽은 단위와 무관하게 e 로 환산해 보여준다 (defFor). 계산은 항상 Exalted 환산값 */
@@ -215,7 +215,7 @@ const inShow=k=>{const p=S.R[k];return gq(SAVED.by[S.league]||{},k)===undefined&
 const sp=(o,p,v)=>{const a=p.split(".");const l=a.pop();a.reduce((x,k)=>x[k],o)[l]=v};
 let PRICES={leagues:{}},S={league:"",div:BASEDEF.div,chaos:BASEDEF.chaos,inf:{...BASEDEF.inf},q:{...BASEDEF.q},cat:{...BASEDEF.cat},R:{}},SAVED={league:"",by:{}},BASES=[],TAB="rec",COL=new Set();  /* PRICES 를 먼저 선언: defFor 가 읽는다 */
 /* 설정 저장 형식(poe2bq:settings2): {league: 직접 고른 리그("" = 항상 최신), by: {리그 이름: {직접 수정한 항목만: div, chaos, inf:{..}, q:{..}}}}.
-   수정하지 않은 항목은 저장하지 않으므로 overquality-flip-prices.json 의 poe.ninja 환율이 갱신되면 자동으로 따라간다. 수정한 항목은 그 값이 우선 */
+   수정하지 않은 항목은 저장하지 않으므로 overquality-flip-prices.js 의 poe.ninja 환율이 갱신되면 자동으로 따라간다. 수정한 항목은 그 값이 우선 */
 /* S.R = 화면에 보이는 값 {키: {v,u}} (직접 수정한 값 > 자동값). S.div / S.chaos / S.inf / S.q 는 계산용 Exalted 환산값 (d 단위는 × div, c 단위는 × chaos) */
 function useLeague(l){const d=defFor(l),o=SAVED.by[l]||{},R={};
  KEYS.forEach(k=>{R[k]=gq(o,k)!==undefined?asP(gq(o,k),k):d[k]});
@@ -237,14 +237,14 @@ const newer=(y,x)=>{const a=tsOf(y),b=tsOf(x);return a!==b?a>b:String(y)>=String
 const fmT=s=>{const t=tsOf(s);if(!t)return s;const d=new Date(t),p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
 function merge(a,b){const o={leagues:Object.assign({},a.leagues),order:b.order||a.order};for(const k in(b.leagues||{})){const x=o.leagues[k],y=b.leagues[k];if(!x||newer(y.collectedAt,x.collectedAt))o.leagues[k]=y}return o}
 const STD="Standard";
-/* 시즌 리그: 최근 2개(최신, 직전). 수집기가 overquality-flip-prices.json 의 order 에 순서를 기록하며, 없으면 수집 시각이 최근인 순 */
+/* 시즌 리그: 최근 2개(최신, 직전). 수집기가 overquality-flip-prices.js 의 order 에 순서를 기록하며, 없으면 수집 시각이 최근인 순 */
 const hasData=k=>{const l=(PRICES.leagues||{})[k];return!!(l&&(l.entries||[]).length)};  /* 가격 항목이 하나라도 있는 리그 (환율만 있는 리그는 제외) */
 const seasonLeagues=()=>{const L=PRICES.leagues||{},ok=k=>k!==STD&&hasData(k);
  const o=(PRICES.order||[]).filter(ok);
  const rest=Object.keys(L).filter(k=>ok(k)&&!o.includes(k)).sort((a,b)=>(tsOf(L[b].collectedAt)-tsOf(L[a].collectedAt))||String(L[b].collectedAt).localeCompare(String(L[a].collectedAt)));
  return[...o,...rest].slice(0,2)};
 const latestLeague=()=>seasonLeagues()[0]||"";
-const leagueList=()=>[...seasonLeagues(),...(hasData(STD)?[STD]:[])];  /* 드롭다운: overquality-flip-prices.json 에 데이터가 있는 리그만 */
+const leagueList=()=>[...seasonLeagues(),...(hasData(STD)?[STD]:[])];  /* 드롭다운: overquality-flip-prices.js 에 데이터가 있는 리그만 */
 /* 선택된 리그가 목록에 없으면(미설정·리그 교체) 목록의 첫 리그(최신)로, 데이터가 전혀 없으면 빈 리그로 */
 /* 가격 파일을 읽은 뒤에는 항상 다시 계산해 새로 읽은 poe.ninja 환율을 반영 */
 const fixLeague=()=>useLeague(leagueList().includes(S.league)?S.league:(leagueList()[0]||""));
@@ -260,14 +260,14 @@ const colHint=()=>TOUCH.matches?tt("탭하여 접기/펼치기","Tap to collapse
 const fsH=(i,t)=>`<fieldset data-i="${i}"${COLP.has(i)?' class="col"':""}><legend tabindex="0" role="button" aria-expanded="${!COLP.has(i)}" title="${colHint()}">${t}</legend>`;
 function panel(){let h=fsH(0,tt("리그","League"))+`<label><select data-k="league">${leagueList().map(l=>`<option${l===S.league?" selected":""}>${esc(l)}</option>`).join("")}</select></label></fieldset>`;
 let fi=0;for(const[t,fs]of FIELDS())h+=fsH(++fi,t)+`${fs.map(([k,l])=>`<label><span>${l}</span><span class="in"><input type="number" step="any" min="0" data-k="${k}" value="${inShow(k)}"><em title="${UNITS[S.R[k].u][LANG==="en"?1:0]}">${S.R[k].u}</em></span></label>`).join("")}</fieldset>`;
-h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".json" hidden></label></div>`;
+h+=`<div class="row"><button class="sec" id="reset" type="button">${tt("설정 초기화","Reset settings")}</button><label class="btn">${tt("가격 파일 불러오기","Load price file")}<input type="file" id="file" accept=".js,.json" hidden></label></div>`;
 $("set").innerHTML=h;
 $("set").querySelectorAll("[data-k]").forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;
  if(k==="league"){SAVED.league=e.value===latestLeague()?"":e.value;saveSettings();useLeague(e.value);autoCollapse();  /* 리그 전환: 그 리그의 설정값으로 바꾸고 전체 다시 계산 */
   $("set").querySelectorAll("input[data-k]").forEach(i=>{const kk=i.dataset.k,em=i.parentNode.querySelector("em");i.value=inShow(kk);if(em){em.textContent=S.R[kk].u;em.title=UNITS[S.R[kk].u][LANG==="en"?1:0]}});markOv();render();return}
  const v=Math.max(0,parseFloat(e.value)||0),a=defFor(S.league)[k],u=S.R[k].u;
  setOv(S.league,k,{v,u},u===a.u&&(v===a.v||v===(ninja(k)?rnd(a.v):a.v)));useLeague(S.league);saveSettings();markOv();render()}));  /* 수정 값은 표시된 단위 그대로 저장. 자동값(단위 포함)과 같으면 수정 표시 해제 */
-$("file").addEventListener("change",async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);fixLeague();autoCollapse();panel();render()}catch(x){alert(tt("올바른 overquality-flip-prices.json 형식이 아닙니다.","Not a valid overquality-flip-prices.json file."))}});
+$("file").addEventListener("change",async e=>{try{const d=(t=>JSON.parse(t.slice(t.indexOf("{"),t.lastIndexOf("}")+1)))(await e.target.files[0].text());if(!d.leagues)throw 0;PRICES=merge(PRICES,d);LS.set("poe2bq:prices",PRICES);fixLeague();autoCollapse();panel();render()}catch(x){alert(tt("올바른 overquality-flip-prices.js 형식이 아닙니다.","Not a valid overquality-flip-prices.js file."))}});
 $("reset").addEventListener("click",()=>{LS.del("poe2bq:settings");LS.del("poe2bq:settings2");loadSettings();fixLeague();autoCollapse();panel();render()});
 markOv()}
 const trim=(x,d)=>x.toLocaleString(LANG==="en"?"en-US":"ko-KR",{minimumFractionDigits:0,maximumFractionDigits:d});
@@ -347,7 +347,7 @@ $("rows").addEventListener("focusin",e=>{const w=whyOf(e);if(w)showTip(w)});
 $("rows").addEventListener("focusout",e=>{if(whyOf(e))hideTip()});
 document.addEventListener("click",e=>{if(!TOUCH.matches)return;const w=e.target.closest&&e.target.closest(".why");if(w&&w!==tipFor)showTip(w);else hideTip()});
 addEventListener("scroll",hideTip,true);addEventListener("resize",hideTip);
-async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok?await r.json():null}catch(e){return null}}
+function jget(u){return new Promise(res=>{const s=document.createElement("script");s.src=u+"?v="+Date.now();s.onload=()=>{res(window.OVERQUALITY_DATA||null);s.remove()};s.onerror=()=>{res(null);s.remove()};document.head.appendChild(s)})}  /* 가격 파일은 window.OVERQUALITY_DATA = {...}; 형식의 JS (file:// 에서도 읽힘) */
 (async()=>{
  const fb=JSON.parse($("fb").textContent);
  const tg=tr=>{const c=tr.dataset.cls;COL.has(c)?COL.delete(c):COL.add(c);render()};
@@ -360,8 +360,8 @@ async function jget(u){try{const r=await fetch(u,{cache:"no-store"});return r.ok
  $("rows").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr.g");if(!tr)return;e.preventDefault();const c=tr.dataset.cls;tg(tr);const n=[...$("rows").querySelectorAll("tr.g")].find(x=>x.dataset.cls===c);if(n)n.focus()});
  applyStatic();loadSettings();panel();
  BASES=fb.bases;
- const cached=LS.get("poe2bq:prices",{leagues:{}}),fresh=await jget("overquality-flip-prices.json");
- if(fresh&&fresh.leagues)for(const k of Object.keys(cached.leagues||{}))if(!fresh.leagues[k])delete cached.leagues[k];  /* 서버의 overquality-flip-prices.json 이 있으면 그 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
+ const cached=LS.get("poe2bq:prices",{leagues:{}}),fresh=await jget("overquality-flip-prices.js");
+ if(fresh&&fresh.leagues)for(const k of Object.keys(cached.leagues||{}))if(!fresh.leagues[k])delete cached.leagues[k];  /* 서버의 overquality-flip-prices.js 이 있으면 그 파일이 기준: 파일에 없는 리그의 브라우저 캐시는 버림 */
  PRICES=merge(cached,fresh||{leagues:{}});
  fixLeague();autoCollapse();
  panel();LS.set("poe2bq:prices",PRICES);render();

@@ -30,8 +30,8 @@
 
 요청 절약 규칙:
   - 최대 오버퀄리티 매물(4-A / 5-A)이 데이터 부족(정상 매물 1개 이하)이면 같은 ilvl 의 베이스 검색(4-B / 5-B)은 생략한다.
-    생략된 항목은 overquality-flip-prices.json 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
-  - 최대 오버퀄리티 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 overquality-flip-prices.json (리그 항목의 stopped, 키 "베이스:ilvl")에
+    생략된 항목은 overquality-flip-prices.js 에 buy0.omitted = true 로 저장되고, index.html 은 '-', '-개' 로 표시한다.
+  - 최대 오버퀄리티 매물이 데이터 부족인 '베이스+ilvl' 은 각각 '수집 중지'로 overquality-flip-prices.js (리그 항목의 stopped, 키 "베이스:ilvl")에
     기록하고, 이후 실행에서는 그 항목만 건너뛴다 (예: Siege Crossbow ilvl 82 만 중지, 81 은 계속 조회).
     index.html 은 해당 ilvl 행을 '수집 중지'로 표시한다. 마지막 확인(checkedAt) 후 재조회 간격이 지나면
     다음 실행에서 자동으로 다시 조회한다 (그 리그가 수집되는 실행에서). 재조회 간격은 --stopped-retry 로 리그별 지정
@@ -47,7 +47,7 @@
 
 화폐 환율 (poe.ninja):
   - 실행할 때마다 리그별로 Divine, Chaos, 바알 대장장이/방어구 장인의 주입기, 대장장이의 숫돌·방어구 장인의 고철 가격을 poe.ninja 의 PoE2 화폐 거래소
-    집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
+    집계(Exalted 기준, 약 1시간 단위 갱신)에서 읽어 overquality-flip-prices.js 의 리그 항목 "rates" 에 저장한다.
     poe.ninja 가 기본으로 주는 primaryValue 는 리그·시점에 따라 바뀌는 기준 화폐(core.primary, adaptive)로 매긴 값이라 싼 화폐는 오차가 크다.
     그래서 항목별로 '그 화폐로 매겨진 실제 시세'(거래량이 가장 많은 상대 화폐 maxVolumeCurrency 와, 그 화폐 1개로 살 수 있는 개수 maxVolumeRate -> 가격 = 1 / maxVolumeRate)를 읽는다.
       · 바알 주입기·퀄리티 화폐(숫돌·고철): 읽은 값을 Exalted 로 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다 (u = e Exalted / d Divine / c Chaos).
@@ -59,7 +59,7 @@
   - 일부 항목을 찾지 못하면 그 항목은 이전 값을 유지하고, poe.ninja 접속에 실패해도 GGG 가격 수집은 계속한다.
   - --no-rates 로 건너뛰고, --rates-only 로 환율만 갱신할 수 있다 (GGG 검색 없이 몇 초).
 
-결과는 이 스크립트 옆의 overquality-flip-prices.json 에 저장된다 (index.html 이 같은 폴더에서 읽음, 기존 파일이 있으면 병합).
+결과는 이 스크립트 옆의 overquality-flip-prices.js 에 저장된다 (index.html 이 같은 폴더에서 읽음, 기존 파일이 있으면 병합).
 
 실행:
   python overquality_flip.py                          # 기본: 전체 24종 (무기 13 + 갑옷 10 + 고유 1, QUERY_BASES = BASES), 최신 리그만,
@@ -76,7 +76,7 @@
   python overquality_flip.py all --league "latest,previous:6,standard:24"
       # 최신 리그는 매번, 직전(second latest) 리그는 마지막 수집 후 6시간이 지났을 때만, Standard 는 24시간이 지났을 때만 수집.
       # 리그 뒤의 ":시간" 은 최소 수집 간격이다 (생략하면 매번 수집). 실행 소요 시간·지연을 감안해 1.5시간 일찍 도래한 것으로 본다 (INTERVAL_MARGIN_H).
-  python overquality_flip.py all --out other/overquality-flip-prices.json   # 저장 위치 지정 (기본: overquality-flip-prices.json)
+  python overquality_flip.py all --out other/overquality-flip-prices.js   # 저장 위치 지정 (기본: overquality-flip-prices.js)
   python overquality_flip.py --rates-only             # poe.ninja 환율만 갱신 (GGG 검색 없음)
   python overquality_flip.py all --no-rates           # poe.ninja 환율 갱신 생략
 """
@@ -94,7 +94,18 @@ import requests
 BASE = "https://www.pathofexile.com"
 POESESSID = ""                        # 선택
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))   # index.html 과 같은 폴더
-DEFAULT_OUT = os.path.join(OUT_DIR, "overquality-flip-prices.json")
+DEFAULT_OUT = os.path.join(OUT_DIR, "overquality-flip-prices.js")
+PRICES_VAR = "OVERQUALITY_DATA"   # 가격 파일은 'window.OVERQUALITY_DATA = {...};' 형식 (file:// 로 열어도 <script src> 로 읽힘)
+
+
+def read_prices(f):
+    """가격 파일(window.OVERQUALITY_DATA = {...};)에서 JSON 부분만 읽는다. 순수 JSON 파일도 읽을 수 있다."""
+    text = f.read()
+    return json.loads(text[text.find("{"):text.rfind("}") + 1])
+
+
+def write_prices(f, data):
+    f.write(f"window.{PRICES_VAR} = {json.dumps(data, ensure_ascii=False, indent=1)};\n")
 KEEP_LEAGUES = 2               # 수집·표시할 시즌 리그 수 (최신 + 직전)
 INTERVAL_MARGIN_H = 1.5        # '--league 이름:N' 의 N시간 간격을 판단할 때 앞당겨 보는 시간.
                                # 수집 시각은 그 리그 수집이 끝난 뒤에 찍히고, 직전 리그·Standard 는 최신 리그 뒤에 수집되므로
@@ -140,7 +151,7 @@ STOPPED_RETRY_DAYS = 1             # 수집 중지 항목을 이 일수마다 �
                                    # 재조회는 그 리그가 수집되는 실행에서만 일어나므로, 리그 수집 주기가 이 일수보다 길면 그 주기를 따른다.
                                    # (중지 목록은 리그별로 관리되고, 그 리그가 수집되는 실행에서 확인한다)
 # 서로 다른 통화의 매물을 비교하기 위한 환율(Exalted 기준). 이상치 판정과 정렬에만 쓰이고, 저장되는 가격은 매물 원래의 (금액, 통화)다.
-# 실제 값은 리그 수집을 시작할 때 overquality-flip-prices.json 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
+# 실제 값은 리그 수집을 시작할 때 overquality-flip-prices.js 의 그 리그 poe.ninja 환율(rates)로 덮어쓴다 (use_cmp_rates).
 # 아래 기본값은 poe.ninja 환율이 없을 때(--no-rates 이고 저장된 값도 없음, 조회 실패)만 쓰인다.
 DEFAULT_CMP_RATES = {"exalted": 1.0, "chaos": 67.0, "divine": 515.0}
 CMP_RATES = dict(DEFAULT_CMP_RATES)
@@ -148,14 +159,14 @@ CMP_RATES = dict(DEFAULT_CMP_RATES)
 # 검색 조건 (overquality.txt 4-A, 4-B, 5-A, 5-B)
 # ilvl_max / q_max 가 None 이면 "이상(>=)", 값이 있으면 min~max 범위(같으면 정확히 일치)
 # q_min 이 None 이면 퀄리티 필터를 검색 조건에 넣지 않음(퀄리티 제한 없음)
-# entry_ilvl : overquality-flip-prices.json 에서 이 결과가 들어갈 행 / side : sell30(최대 오버퀄리티 시장가) 또는 buy0(베이스, 퀄리티 제한 없음)
+# entry_ilvl : overquality-flip-prices.js 에서 이 결과가 들어갈 행 / side : sell30(최대 오버퀄리티 시장가) 또는 buy0(베이스, 퀄리티 제한 없음)
 SEARCHES = [
     {"label": "4-A", "ilvl_min": 82, "ilvl_max": None, "q_min": 30, "q_max": None, "entry_ilvl": 82, "side": "sell30"},
     {"label": "4-B", "ilvl_min": 82, "ilvl_max": None, "q_min": None, "q_max": None, "entry_ilvl": 82, "side": "buy0"},
     {"label": "5-A", "ilvl_min": 81, "ilvl_max": 81,   "q_min": 30, "q_max": None, "entry_ilvl": 81, "side": "sell30"},
     {"label": "5-B", "ilvl_min": 81, "ilvl_max": 81,   "q_min": None, "q_max": None, "entry_ilvl": 81, "side": "buy0"},
 ]
-ILVLS = sorted({sp["entry_ilvl"] for sp in SEARCHES}, reverse=True)   # overquality-flip-prices.json 의 ilvl 행 (82, 81)
+ILVLS = sorted({sp["entry_ilvl"] for sp in SEARCHES}, reverse=True)   # overquality-flip-prices.js 의 ilvl 행 (82, 81)
 UNIQUE_ILVL = 0                # 고유 장비는 ilvl 구분 없이 이 값 한 행만 저장한다
 # 고유 장비: ilvl 조건 없음(ilvl_min None). 최대 오버퀄리티(U-A) -> 베이스(U-B) 순서는 SEARCHES 와 같다.
 UNIQUE_SEARCHES = [
@@ -360,7 +371,7 @@ def call(method, url, **kw):
 
 # ---------------------------------------------------------------- poe.ninja 환율 (Exalted 기준)
 # 오버퀄리티 계산에 쓰는 가격을 리그별로 poe.ninja 의 PoE2 화폐 거래소 집계(exchange overview, 약 1시간 단위 갱신)에서 읽어
-# overquality-flip-prices.json 의 리그 항목 "rates" 에 저장한다.
+# overquality-flip-prices.js 의 리그 항목 "rates" 에 저장한다.
 #   - div, chaos: '1개 = Exalted 몇 개' (항상 Exalted 기준 숫자)
 #   - inf.*, q.*, cat.*: poe.ninja 가 그 화폐로 매겨 준 값을 환산하지 않고 그대로 {"v": 값, "u": 단위} 로 저장한다.
 #     단위 u 는 e = Exalted, d = Divine, c = Chaos. (예: {"v": 0.1364, "u": "d"} = 1개 = 0.1364 Divine)
@@ -644,12 +655,12 @@ def cheapest_catalyst(rates):
 
 
 def save_rates(path, league, found, order=None, touch=True):
-    """found({키: (값, 화폐 이름)})를 overquality-flip-prices.json 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
+    """found({키: (값, 화폐 이름)})를 overquality-flip-prices.js 의 league.rates 에 병합 저장 (찾지 못한 항목은 이전 값 유지)."""
     data = {"version": 1, "leagues": {}}
     if os.path.exists(path):
         try:
             with open(path, encoding="utf-8") as f:
-                loaded = json.load(f)
+                loaded = read_prices(f)
             if isinstance(loaded.get("leagues"), dict):
                 data = loaded
         except (OSError, ValueError):
@@ -678,7 +689,7 @@ def save_rates(path, league, found, order=None, touch=True):
     if touch or not rates.get("updatedAt"):         # 일부 항목만 채운 경우(touch=False)에는 기존 갱신 시각 유지
         rates["updatedAt"] = utc_stamp()
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=1)
+        write_prices(f, data)
 
 
 def update_rates(leagues, out, order=None, only=None):
@@ -709,10 +720,10 @@ FILL_KEYS = ("inf.arcanist", "inf.catalysing", "q.etcher", "cat.xoph", "cat.tul"
 
 
 def missing_fill_keys(path, league):
-    """overquality-flip-prices.json 의 이 리그 rates 에 아직 저장되지 않은 FILL_KEYS 를 반환한다."""
+    """overquality-flip-prices.js 의 이 리그 rates 에 아직 저장되지 않은 FILL_KEYS 를 반환한다."""
     try:
         with open(path, encoding="utf-8") as f:
-            rates = (json.load(f).get("leagues", {}).get(league) or {}).get("rates") or {}
+            rates = (read_prices(f).get("leagues", {}).get(league) or {}).get("rates") or {}
     except (OSError, ValueError, AttributeError):
         rates = {}
     miss = []
@@ -733,14 +744,14 @@ def fill_missing_rates(leagues, out, order=None):
 
 
 def use_cmp_rates(path, league):
-    """이 리그의 poe.ninja 환율(overquality-flip-prices.json 의 rates.chaos / rates.div)을 CMP_RATES 에 반영한다.
+    """이 리그의 poe.ninja 환율(overquality-flip-prices.js 의 rates.chaos / rates.div)을 CMP_RATES 에 반영한다.
     값이 없거나 비정상(숫자가 아니거나 0 이하, Divine <= Chaos)이면 기본값을 쓴다. 리그마다 호출해 다른 리그 값이 섞이지 않게 한다.
     index.html 이 같은 rates 를 읽어 정렬·계산하므로, 이상치 판정(몇 개를 제외할지)이 화면의 기준과 일치한다."""
     CMP_RATES.clear()
     CMP_RATES.update(DEFAULT_CMP_RATES)
     try:
         with open(path, encoding="utf-8") as f:
-            rates = (json.load(f).get("leagues", {}).get(league) or {}).get("rates") or {}
+            rates = (read_prices(f).get("leagues", {}).get(league) or {}).get("rates") or {}
     except (OSError, ValueError, AttributeError):
         rates = {}
     chaos, div = rates.get("chaos"), rates.get("div")
@@ -798,11 +809,11 @@ def all_leagues(out_path):
 
 
 def known_season(path, idx):
-    """리그 목록 조회가 실패했을 때의 대체값: overquality-flip-prices.json 에 기록된 시즌 리그 순서(order)의 idx 번째 (0=최신, 1=직전).
+    """리그 목록 조회가 실패했을 때의 대체값: overquality-flip-prices.js 에 기록된 시즌 리그 순서(order)의 idx 번째 (0=최신, 1=직전).
     order 가 없으면 Standard 아닌 리그를 수집 시각이 최근인 순으로 놓고 idx 번째."""
     try:
         with open(path, encoding="utf-8") as f:
-            data = json.load(f)
+            data = read_prices(f)
         leagues = data["leagues"]
         order = [x for x in (data.get("order") or []) if isinstance(x, str) and x in leagues]
         if len(order) > idx:
@@ -814,10 +825,10 @@ def known_season(path, idx):
 
 
 def hours_since_collected(path, league):
-    """overquality-flip-prices.json 에서 이 리그를 마지막으로 수집한 뒤 지난 시간(시). 기록이 없거나 시각 형식을 읽지 못하면 None (= 수집해야 함)."""
+    """overquality-flip-prices.js 에서 이 리그를 마지막으로 수집한 뒤 지난 시간(시). 기록이 없거나 시각 형식을 읽지 못하면 None (= 수집해야 함)."""
     try:
         with open(path, encoding="utf-8") as f:
-            ts = json.load(f)["leagues"][league]["collectedAt"]
+            ts = read_prices(f)["leagues"][league]["collectedAt"]
         last = datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         return None
@@ -1009,7 +1020,7 @@ def effective_count(rows):
 def fair_price(rows, market=False):
     """적정 최저가 판정.
 
-    반환 dict (overquality-flip-prices.json 의 sell30.fair / buy0.fair 로 그대로 저장됨):
+    반환 dict (overquality-flip-prices.js 의 sell30.fair / buy0.fair 로 그대로 저장됨):
       status     : "ok" | "insufficient"(데이터 부족)
       a, c       : 적정 최저가 (매물 원래의 금액, 통화). insufficient 면 None
       n          : 판정에 쓴 정상 매물 수
@@ -1161,7 +1172,7 @@ def show(spec, sockets, total, rows, fair):
         print(f"    -> 적정 최저가: {fair['a']} {fair['c']}  [{CONF_KO[fair['confidence']]}] {fair['reason']}")
 
 
-# ---------------------------------------------------------------- 저장 (index.html 이 읽는 overquality-flip-prices.json)
+# ---------------------------------------------------------------- 저장 (index.html 이 읽는 overquality-flip-prices.js)
 def side_payload(total, rows, fair):
     return {
         "total": total,
@@ -1199,10 +1210,10 @@ def retry_due(info, now=None, days=None):
 
 
 def load_stopped(path, league):
-    """overquality-flip-prices.json 에 기록된 '수집 중지' 항목 {"베이스slug:ilvl": {since(중지 시작), checkedAt(마지막 확인), reason}}."""
+    """overquality-flip-prices.js 에 기록된 '수집 중지' 항목 {"베이스slug:ilvl": {since(중지 시작), checkedAt(마지막 확인), reason}}."""
     try:
         with open(path, encoding="utf-8") as f:
-            raw = json.load(f)["leagues"].get(league, {}).get("stopped", {})
+            raw = read_prices(f)["leagues"].get(league, {}).get("stopped", {})
     except (OSError, ValueError, KeyError, AttributeError):
         return {}
     out = {}
@@ -1216,10 +1227,10 @@ def load_stopped(path, league):
 
 
 def load_order(path):
-    """overquality-flip-prices.json 의 시즌 리그 순서 ["최신", "직전"] (html 이 최신/직전을 구분하는 데 사용)."""
+    """overquality-flip-prices.js 의 시즌 리그 순서 ["최신", "직전"] (html 이 최신/직전을 구분하는 데 사용)."""
     try:
         with open(path, encoding="utf-8") as f:
-            order = json.load(f).get("order")
+            order = read_prices(f).get("order")
     except (OSError, ValueError, AttributeError):
         return []
     return [x for x in order if isinstance(x, str)] if isinstance(order, list) else []
@@ -1241,7 +1252,7 @@ def save_prices(path, league, entries, stopped=None, order=None):
     if os.path.exists(path):
         try:
             with open(path, encoding="utf-8") as f:
-                loaded = json.load(f)
+                loaded = read_prices(f)
             if isinstance(loaded.get("leagues"), dict):
                 data = loaded
         except (OSError, ValueError):
@@ -1263,7 +1274,7 @@ def save_prices(path, league, entries, stopped=None, order=None):
         else:
             lg.pop("stopped", None)
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=1)
+        write_prices(f, data)
 
 
 def omitted_payload():
@@ -1274,7 +1285,7 @@ def omitted_payload():
 
 
 def run(league, base_name, sockets, ilvls):
-    """베이스 하나를 조회하고 overquality-flip-prices.json 용 entries 를 반환 (ilvls 에 든 항목만).
+    """베이스 하나를 조회하고 overquality-flip-prices.js 용 entries 를 반환 (ilvls 에 든 항목만).
     SEARCHES 는 ilvl 마다 최대 오버퀄리티(A) -> 베이스(B) 순서라, 최대 오버퀄리티 매물이 데이터 부족이면 같은 ilvl 의 베이스 검색은 생략한다."""
     if base_name in UNIQUES:
         print(f"\n=== {base_name} (고유 {UNIQUES[base_name]}) ===")
@@ -1376,7 +1387,7 @@ def main():
                     help="latest | previous(직전 리그) | standard | all(모든 소프트코어 리그) | 리그 이름 직접 지정. 쉼표로 여러 개. "
                          "'이름:시간' 으로 최소 수집 간격 지정 (예: latest,previous:6,standard:24 / all:6) (기본: %(default)s)")
     ap.add_argument("--out", default=DEFAULT_OUT,
-                    help="결과 저장 경로 (기본: 스크립트 옆 overquality-flip-prices.json, 기존 파일이 있으면 병합)")
+                    help="결과 저장 경로 (기본: 스크립트 옆 overquality-flip-prices.js, 기존 파일이 있으면 병합)")
     ap.add_argument("--retry-stopped", action="store_true",
                     help="all 실행에서도 '수집 중지'된 항목(베이스+ilvl)을 다시 조회")
     ap.add_argument("--stopped-retry", default="",
