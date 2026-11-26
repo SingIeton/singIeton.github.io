@@ -21,9 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 out/overquality-flip-prices.json 에 저장됩니다.
+      # 수집 스크립트가 있는 폴더 (리포지토리 루트 기준). 결과는 이 폴더의 overquality-flip-prices.json 에 저장됩니다.
       SCRIPT_DIR: poetools/poe2/overquality-flip
-      SCRIPT_NAME: overquality-flip.py
+      SCRIPT_NAME: overquality_flip.py
     steps:
       - uses: actions/checkout@v4
 
@@ -44,10 +44,10 @@ jobs:
       - name: Validate and commit overquality-flip-prices.json
         if: ${{ !cancelled() }}                # 수집 중 일부 실패해도, 저장된 진행분은 커밋
         run: |
-          python -c "import json,sys; json.load(open('${SCRIPT_DIR}/out/overquality-flip-prices.json', encoding='utf-8'))"
+          python -c "import json,sys; json.load(open('${SCRIPT_DIR}/overquality-flip-prices.json', encoding='utf-8'))"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "${SCRIPT_DIR}/out/overquality-flip-prices.json"
+          git add "${SCRIPT_DIR}/overquality-flip-prices.json"
           if git diff --cached --quiet; then
             echo "변경 없음"
             exit 0
