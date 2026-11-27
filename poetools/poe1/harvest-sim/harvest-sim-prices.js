@@ -1,20 +1,20 @@
 window.HARVEST_SIM_PRICES = {
  "version": 2,
  "source": "poe.ninja",
- "updatedAt": "2026-11-27T01:49:31Z",
+ "updatedAt": "2026-11-27T11:00:44Z",
  "order": [
   "Covens",
   "Allflame"
  ],
  "leagues": {
   "Covens": {
-   "ratio": 157.2,
+   "ratio": 147.6,
    "lifeforce": {
-    "yellow": 27.61,
-    "blue": 27.58,
-    "purple": 40.05
+    "yellow": 28.3,
+    "blue": 29.9,
+    "purple": 43.88
    },
-   "updatedAt": "2026-11-27T01:49:31Z"
+   "updatedAt": "2026-11-27T11:00:44Z"
   },
   "Allflame": {
    "ratio": 516.3,
@@ -36,17 +36,17 @@ window.HARVEST_SIM_PRICES = {
    }
   },
   "Standard": {
-   "ratio": 842.3,
+   "ratio": 816.5,
    "lifeforce": {
-    "yellow": 2.07,
-    "blue": 1.08,
-    "purple": 1.41
+    "yellow": 2.71,
+    "blue": 2.66,
+    "purple": 2.57
    },
    "scarab": {
     "doubling": 9.2,
     "lineage": 8.6
    },
-   "updatedAt": "2026-11-26T17:47:51Z",
+   "updatedAt": "2026-11-27T11:00:44Z",
    "fragment": {
     "sacrifice": 0.79,
     "mortal": 41.79,
