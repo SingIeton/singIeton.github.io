@@ -27,18 +27,14 @@ window.OVERQUALITY_DATA = {
        "n_eff": 2.0,
        "confidence": "low",
        "skipped": 0,
-       "age": 4.2,
-       "group_age": 4.2,
+       "age": 4.3,
+       "group_age": 4.3,
        "reason": "매물 2개, 최저가/중앙값 89%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 4일 전이지만 최저가 근처 매물층(하위 2개)의 나이 중앙값이 4일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 1단계 하향"
       }
      },
      "buy0": {
       "total": 90,
       "listings": [
-       {
-        "a": 15,
-        "c": "divine"
-       },
        {
         "a": 16,
         "c": "divine"
@@ -114,22 +110,26 @@ window.OVERQUALITY_DATA = {
        {
         "a": 20,
         "c": "divine"
+       },
+       {
+        "a": 20,
+        "c": "divine"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 15,
+       "a": 16,
        "c": "divine",
        "n": 20,
        "n_eff": 19.0,
        "confidence": "high",
        "skipped": 0,
-       "age": 0.1,
-       "group_age": 0.2,
-       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 88%"
+       "age": 0.5,
+       "group_age": 0.5,
+       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 94%"
       }
      },
-     "collectedAt": "2026-11-27T22:24:15Z"
+     "collectedAt": "2026-11-27T23:28:31Z"
     },
     {
      "base": "obliterator-bow",
@@ -200,14 +200,18 @@ window.OVERQUALITY_DATA = {
        "n_eff": 4.5,
        "confidence": "medium",
        "skipped": 0,
-       "age": 0.9,
-       "group_age": 1.8,
+       "age": 1.0,
+       "group_age": 1.9,
        "reason": "매물 5개(같은 판매자 보정 후 4.5개 상당), 최저가/중앙값 100%"
       }
      },
      "buy0": {
-      "total": 116,
+      "total": 117,
       "listings": [
+       {
+        "a": 22,
+        "c": "divine"
+       },
        {
         "a": 22,
         "c": "divine"
@@ -283,10 +287,6 @@ window.OVERQUALITY_DATA = {
        {
         "a": 33,
         "c": "divine"
-       },
-       {
-        "a": 33,
-        "c": "divine"
        }
       ],
       "fair": {
@@ -295,14 +295,14 @@ window.OVERQUALITY_DATA = {
        "c": "divine",
        "n": 20,
        "n_eff": 19.0,
-       "confidence": "medium",
+       "confidence": "high",
        "skipped": 0,
-       "age": 3.5,
-       "group_age": 2.6,
-       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 85%; 최저가 매물이 4일 전 등록이라 신뢰도 1단계 하향"
+       "age": 0.2,
+       "group_age": 0.2,
+       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 88%"
       }
      },
-     "collectedAt": "2026-11-27T22:24:25Z"
+     "collectedAt": "2026-11-27T23:28:32Z"
     },
     {
      "base": "warmonger-bow",
@@ -565,7 +565,7 @@ window.OVERQUALITY_DATA = {
       }
      },
      "buy0": {
-      "total": 131,
+      "total": 138,
       "listings": [
        {
         "a": 18,
@@ -653,15 +653,15 @@ window.OVERQUALITY_DATA = {
        "a": 18,
        "c": "divine",
        "n": 20,
-       "n_eff": 19.5,
+       "n_eff": 19.0,
        "confidence": "high",
        "skipped": 0,
        "age": 0.0,
-       "group_age": 0.4,
-       "reason": "매물 20개(같은 판매자 보정 후 19.5개 상당), 최저가/중앙값 82%"
+       "group_age": 0.5,
+       "reason": "매물 20개(같은 판매자 보정 후 19.0개 상당), 최저가/중앙값 82%"
       }
      },
-     "collectedAt": "2026-11-27T22:25:15Z"
+     "collectedAt": "2026-11-27T23:28:43Z"
     },
     {
      "base": "sinister-quarterstaff",
@@ -687,14 +687,18 @@ window.OVERQUALITY_DATA = {
        "n_eff": 2.0,
        "confidence": "low",
        "skipped": 0,
-       "age": 0.2,
-       "group_age": 0.2,
+       "age": 0.3,
+       "group_age": 0.3,
        "reason": "매물 2개, 최저가/중앙값 77%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용"
       }
      },
      "buy0": {
-      "total": 48,
+      "total": 49,
       "listings": [
+       {
+        "a": 15,
+        "c": "divine"
+       },
        {
         "a": 15,
         "c": "divine"
@@ -770,10 +774,6 @@ window.OVERQUALITY_DATA = {
        {
         "a": 25,
         "c": "divine"
-       },
-       {
-        "a": 28,
-        "c": "divine"
        }
       ],
       "fair": {
@@ -784,12 +784,12 @@ window.OVERQUALITY_DATA = {
        "n_eff": 16.39,
        "confidence": "high",
        "skipped": 0,
-       "age": 0.0,
-       "group_age": 0.0,
+       "age": 0.1,
+       "group_age": 0.1,
        "reason": "매물 20개(같은 판매자 보정 후 16.4개 상당), 최저가/중앙값 94%"
       }
      },
-     "collectedAt": "2026-11-27T22:25:15Z"
+     "collectedAt": "2026-11-27T23:28:43Z"
     },
     {
      "base": "bolting-quarterstaff",
@@ -1067,28 +1067,12 @@ window.OVERQUALITY_DATA = {
        "skipped": 0,
        "age": 40.5,
        "group_age": 40.5,
-       "reason": "매물 3개, 최저가/중앙값 92%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 40일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 40일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
+       "reason": "매물 3개, 최저가/중앙값 92%; 매물 3개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 41일 전이지만 최저가 근처 매물층(하위 3개)의 나이 중앙값이 41일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
       }
      },
      "buy0": {
-      "total": 233,
+      "total": 222,
       "listings": [
-       {
-        "a": 1,
-        "c": "chaos"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
-       {
-        "a": 2,
-        "c": "chaos"
-       },
        {
         "a": 2,
         "c": "chaos"
@@ -1148,22 +1132,42 @@ window.OVERQUALITY_DATA = {
        {
         "a": 8,
         "c": "chaos"
+       },
+       {
+        "a": 8,
+        "c": "chaos"
+       },
+       {
+        "a": 8,
+        "c": "chaos"
+       },
+       {
+        "a": 9,
+        "c": "chaos"
+       },
+       {
+        "a": 9,
+        "c": "chaos"
+       },
+       {
+        "a": 10,
+        "c": "chaos"
        }
       ],
       "fair": {
        "status": "ok",
-       "a": 2,
+       "a": 3,
        "c": "chaos",
        "n": 18,
-       "n_eff": 17.5,
+       "n_eff": 18.0,
        "confidence": "low",
-       "skipped": 1,
-       "age": 0.6,
-       "group_age": 2.3,
-       "reason": "매물 18개(같은 판매자 보정 후 17.5개 상당), 최저가/중앙값 44%; 중앙값의 50% 미만인 최근 저가 1개 제외"
+       "skipped": 2,
+       "age": 8.5,
+       "group_age": 5.4,
+       "reason": "매물 18개, 최저가/중앙값 55%; 중앙값의 50% 미만인 최근 저가 2개 제외; 최저가 매물이 8일 전 등록이라 신뢰도 2단계 하향"
       }
      },
-     "collectedAt": "2026-11-27T22:25:37Z"
+     "collectedAt": "2026-11-27T23:28:52Z"
     },
     {
      "base": "spiny-talisman",
@@ -1557,7 +1561,7 @@ window.OVERQUALITY_DATA = {
       }
      },
      "buy0": {
-      "total": 56,
+      "total": 57,
       "listings": [
        {
         "a": 42,
@@ -1648,12 +1652,12 @@ window.OVERQUALITY_DATA = {
        "n_eff": 18.06,
        "confidence": "high",
        "skipped": 0,
-       "age": 0.0,
-       "group_age": 0.1,
+       "age": 0.1,
+       "group_age": 0.2,
        "reason": "매물 20개(같은 판매자 보정 후 18.1개 상당), 최저가/중앙값 86%"
       }
      },
-     "collectedAt": "2026-11-27T22:29:27Z"
+     "collectedAt": "2026-11-27T23:28:53Z"
     },
     {
      "base": "death-mail",
@@ -1778,8 +1782,8 @@ window.OVERQUALITY_DATA = {
        "n_eff": 2.0,
        "confidence": "low",
        "skipped": 0,
-       "age": 22.4,
-       "group_age": 22.4,
+       "age": 22.5,
+       "group_age": 22.5,
        "reason": "매물 2개, 최저가/중앙값 89%; 매물 2개뿐이라 이상치 판정 불가, 최저가 사용; 최저가 매물은 22일 전이지만 최저가 근처 매물층(하위 2개)의 나이 중앙값이 22일이라 (재등록으로 새것처럼 보였을 수 있음) 신뢰도 2단계 하향"
       }
      },
@@ -1876,11 +1880,11 @@ window.OVERQUALITY_DATA = {
        "confidence": "low",
        "skipped": 0,
        "age": 1.7,
-       "group_age": 1.6,
+       "group_age": 0.6,
        "reason": "매물 20개, 최저가/중앙값 50%"
       }
      },
-     "collectedAt": "2026-11-27T22:29:46Z"
+     "collectedAt": "2026-11-27T23:29:02Z"
     },
     {
      "base": "sacrificial-regalia",
@@ -1956,63 +1960,63 @@ window.OVERQUALITY_DATA = {
     }
    ],
    "rates": {
-    "div": 412.0,
-    "chaos": 33.33,
+    "div": 399.6,
+    "chaos": 32.75,
     "inf": {
      "blacksmith": {
-      "v": 0.7634,
+      "v": 0.9174,
       "u": "d"
      },
      "armourer": {
-      "v": 1.568,
+      "v": 1.577,
       "u": "d"
      },
      "arcanist": {
-      "v": 1.0,
-      "u": "e"
+      "v": 0.025,
+      "u": "d"
      },
      "catalysing": {
-      "v": 6.752,
+      "v": 6.649,
       "u": "d"
      }
     },
     "q": {
      "whetstone": {
-      "v": 0.01025,
+      "v": 0.01091,
       "u": "d"
      },
      "scrap": {
-      "v": 0.009709,
+      "v": 0.009588,
       "u": "d"
      },
      "etcher": {
-      "v": 0.03799,
+      "v": 0.03852,
       "u": "d"
      },
      "catalyst": {
-      "v": 0.02991,
+      "v": 0.03018,
       "u": "d",
       "from": "esh"
      }
     },
     "source": "poe.ninja",
-    "updatedAt": "2026-11-27T22:23:53Z",
+    "updatedAt": "2026-11-27T23:28:15Z",
     "cat": {
      "xoph": {
-      "v": 0.07402,
+      "v": 0.06944,
       "u": "d"
      },
      "tul": {
-      "v": 0.0401,
+      "v": 0.04342,
       "u": "d"
      },
      "esh": {
-      "v": 0.02991,
+      "v": 0.03018,
       "u": "d"
      }
     }
    },
-   "collectedAt": "2026-11-27T22:30:15Z",
+   "collectedAt": "2026-11-27T23:29:02Z",
    "stopped": {
     "obliterator-bow:81": {
      "since": "2026-11-10T05:48:36Z",
