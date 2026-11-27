@@ -1,20 +1,20 @@
 window.HARVEST_SIM_PRICES = {
  "version": 2,
  "source": "poe.ninja",
- "updatedAt": "2026-11-27T11:00:44Z",
+ "updatedAt": "2026-11-27T20:03:40Z",
  "order": [
   "Covens",
   "Allflame"
  ],
  "leagues": {
   "Covens": {
-   "ratio": 147.6,
+   "ratio": 140.3,
    "lifeforce": {
-    "yellow": 28.3,
-    "blue": 29.9,
-    "purple": 43.88
+    "yellow": 29.9,
+    "blue": 29.18,
+    "purple": 43.29
    },
-   "updatedAt": "2026-11-27T11:00:44Z"
+   "updatedAt": "2026-11-27T20:03:40Z"
   },
   "Allflame": {
    "ratio": 516.3,
