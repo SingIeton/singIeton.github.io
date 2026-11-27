@@ -1,10 +1,10 @@
-/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-27T00:54:27Z */
+/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-27T10:13:06Z */
 window.UC_DATA.push({
  "name": "Svalinn (0-1%)",
  "base": "",
  "unit": "d",
- "cost": 12.0,
- "vaalCost": 0.01637,
+ "cost": 1.0,
+ "vaalCost": 0.01634,
  "rootText": [
   "Armour ≥250%",
   "Blocked Hits 0-1%"
@@ -23,7 +23,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Armour",
    "p": 0.03571428571428571,
-   "price": 13.2,
+   "price": 1.1,
    "n": 0,
    "ko": "방어도 % 증가",
    "low": true,
@@ -34,7 +34,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Reduced Attribute Requirements",
    "p": 0.03571428571428571,
-   "price": 9.0,
+   "price": 0.75,
    "n": 0,
    "ko": "능력치 요구사항 감소",
    "low": true,
@@ -45,7 +45,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Thorns Damage",
    "p": 0.03571428571428571,
-   "price": 9.0,
+   "price": 0.75,
    "n": 0,
    "ko": "가시 피해 % 증가",
    "low": true,
@@ -56,7 +56,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Block Chance",
    "p": 0.03571428571428571,
-   "price": 24.0,
+   "price": 2.0,
    "n": 1,
    "ko": "막기 확률 % 증가",
    "low": true,
@@ -67,7 +67,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Maximum Block Chance",
    "p": 0.03571428571428571,
-   "price": 120.0,
+   "price": 10.0,
    "n": 1,
    "ko": "최대 막기 확률 +%",
    "low": true,
@@ -115,8 +115,8 @@ window.UC_DATA.push({
  ],
  "searches": {
   "704acc8882e4": [
-   12.0,
-   39,
+   1.0,
+   40,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VQQW7CMBD8CtpzhJI0RjTXPoHeKoSMs6grOXa6tiko8t-7CRwSid7smZ2Z3RkhRB1TgHYEP0TyDloIaBLrs0XIBTjdo2CHq7bkHBSzQOa_Roj3YaK06wS-kI3ID4I6gfE2WDIUt5PgVJW7ui73TdPIrHglnCJ7krxalTkXL1X1e6lUpd7UWqVv0FY5H_NxkfvY57T4L56smeJ9dWVy9CN-WbJlj2D-URrPnIaI3Up80TbM9fTE7Pk1O1s_S_rgZEgq3Xz6X-TN4ZvQdpD_AG9ZKxOAAQAA"
   ],
   "548ed33f742f": [
@@ -173,5 +173,5 @@ window.UC_DATA.push({
  ],
  "ko": "스발린 (0-1%)",
  "league": "Forbidden Rites",
- "stamp": "2026-11-27T00:54:27Z"
+ "stamp": "2026-11-27T10:13:06Z"
 });
