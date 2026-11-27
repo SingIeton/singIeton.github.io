@@ -1,10 +1,10 @@
-/* Svalinn_2-5 / 리그: Forbidden Rites / 수집: 2026-11-26T15:52:31Z */
+/* Svalinn_2-5 / 리그: Forbidden Rites / 수집: 2026-11-27T00:55:17Z */
 window.UC_DATA.push({
  "name": "Svalinn (2-5%)",
  "base": "",
  "unit": "d",
  "cost": 3.0,
- "vaalCost": 0.01605,
+ "vaalCost": 0.01637,
  "rootText": [
   "Armour ≥250%",
   "Blocked Hits 2-5%"
@@ -16,7 +16,7 @@ window.UC_DATA.push({
    "ko": "변화 없음",
    "p": 0.25,
    "price": 1.0,
-   "n": 51,
+   "n": 52,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVJa26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2aqK1phzwhlfUWWoF2e04SHsJvVtGD241WG0PAj9f5Zf30cCK1hNS45rmiAQRniZs4qlCDSvCOOM1FWCkFe4rIuS4QReFrTAuKQ8ZUAoJRUjLBrswu7hycsqmof7w9EIA-7y9NtewzHuNcQ_iJu1MqGUgzF-dKp9Ejvj55T0YMxg_oB70dkZdSeQqlnvcCdZoaWDPaTwo48JXGZfAoDnkdXRw9gr7VIv9lo1dpBfytm7ltzCQ8Lc45adN-MlxNi_vA8nZV62B1Bdi8IPmsLSFiQDAAA"
   },
   {
@@ -43,7 +43,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Thorns Damage",
    "p": 0.03571428571428571,
-   "price": 3.29,
+   "price": 3.42,
    "n": 4,
    "ko": "가시 피해 % 증가",
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27CMBD8FbTnqMrLLeXKJ9BbhSLX2YhVEzux1wWE_O81CUWhCjd7Z2dnPOsLOJbsHWwuYHomo2EDDpW38qtFCAlo2WGs7X5kS1pDMhJi_-cF-NxfIanrWG6oZbQTQHUs46lvSRG_XAlVlr7mebouyzL2xlker5IdRb1cpCEki6z8PRUiE4VYYCXQyRNsxIyr1UHqP8EiE29lsS5yCPuwnxmcjFez--xopSU-P8ThNQ1ROEShKO3UE6Yy1vqesX4gs_VjjB1Za-w_sJGtG1E-ksJqecK9yUmtmBp6hg8-rmjyPiWUjpZx8NR3qPnZi73Gyhn1jezu3OyWbhbGGbdNb61XFP_F6sMc0a52B8K2hvAL4u9E4EUCAAA",
@@ -54,7 +54,7 @@ window.UC_DATA.push({
    "label": "Increased Block Chance",
    "p": 0.03571428571428571,
    "price": 25.0,
-   "n": 8,
+   "n": 7,
    "ko": "막기 확률 % 증가",
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WSwW6DMAyGX6XyGU1AyUS57hHa21ShLBjVGgSaOGsrlHdfgK6iE70l_v35d-wMYFmys1AM0PVMnYYCLCpn5FeD4CPQssUQ2__IhrSGaAJC_ucAfOtHSeoqhGtqGM0sUBXCeO0bUsRvI1Am8XuaxnmWZSE31HI4WrYU_FIRex-tUukuFiIRW7FCRdDKKxRiwWp1kvoPzfJkK7bJLgd_9MdFg3Pj5eK-OBppiG9P43CazsHYB6NgbdULUnXGuJ6xeoLZuGmMLRnTmX9iLRs7qXwhheV6hUeSlVox1fRKP7uworn3eULx1DKeHfUtan71YqextJ36RrYPNrlPN_FTjfumP4xTFP7F5tBd0Gz2J8KmAv8LQWAkkEUCAAA",
    "range": "10—15"
@@ -94,7 +94,7 @@ window.UC_DATA.push({
    "label": "Socket +1",
    "ko": "소켓 +1",
    "p": 0.25,
-   "price": 10.0,
+   "price": 3.0,
    "n": 22,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WRwW6DMAyGX6XKGU2UkWnjukdob1OFsmA0ayEBx1lbobz7Akwbnegt8e_P_m2PwrPi4EU1CtczOisq4UEHUu8GRMyEVR2k2OFLGbRWZDOQ8t9Gwdd-kpRtUrhFw0CLgE0Kw6U3qJEfJqDe509FkT-XZZlyU60AU8sOU79C5jFmm1Txkku5l49yg8pEpy6ikjGe4mnVf_FVr_6rJylCvt5MGywOqW5MHlJlr--Q2hGFnqG5gZnCvKUOiRz9E1tl_KzyGTXU2xV-k7yymrHFe_oQ0gUW78sC8tkyDAH7DizfmzhYqL3Tn8D-j40z-3PAVwoa07l3R3cG2h0-EEwj4jde68MyHAIAAA"
   },
@@ -104,7 +104,7 @@ window.UC_DATA.push({
    "p": 0.25,
    "ko": "막기 피해 2—5%",
    "price": 1.0,
-   "n": 51,
+   "n": 52,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVJa26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2aqK1phzwhlfUWWoF2e04SHsJvVtGD241WG0PAj9f5Zf30cCK1hNS45rmiAQRniZs4qlCDSvCOOM1FWCkFe4rIuS4QReFrTAuKQ8ZUAoJRUjLBrswu7hycsqmof7w9EIA-7y9NtewzHuNcQ_iJu1MqGUgzF-dKp9Ejvj55T0YMxg_oB70dkZdSeQqlnvcCdZoaWDPaTwo48JXGZfAoDnkdXRw9gr7VIv9lo1dpBfytm7ltzCQ8Lc45adN-MlxNi_vA8nZV62B1Bdi8IPmsLSFiQDAAA"
   }
  ],
@@ -116,7 +116,7 @@ window.UC_DATA.push({
   ],
   "0254e44dd639": [
    1.0,
-   51,
+   52,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVJa26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2aqK1phzwhlfUWWoF2e04SHsJvVtGD241WG0PAj9f5Zf30cCK1hNS45rmiAQRniZs4qlCDSvCOOM1FWCkFe4rIuS4QReFrTAuKQ8ZUAoJRUjLBrswu7hycsqmof7w9EIA-7y9NtewzHuNcQ_iJu1MqGUgzF-dKp9Ejvj55T0YMxg_oB70dkZdSeQqlnvcCdZoaWDPaTwo48JXGZfAoDnkdXRw9gr7VIv9lo1dpBfytm7ltzCQ8Lc45adN-MlxNi_vA8nZV62B1Bdi8IPmsLSFiQDAAA"
   ],
   "e87687550012": [
@@ -130,13 +130,13 @@ window.UC_DATA.push({
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS227CMAyGXwX5upp6Clu55RHY3YSqLDXCWpu2iTNAVd596UGoTHCX-Pfn37EzgGXJzsJugLZjajXswKJyRn7XCD4CLRsMscOvrElriCYg5H8NwLdulKSuQvhENaOZBapCGK9dTYr4bQTKJN6mafyR53nIDbUcjpYNBb9UxN5HT6m0iIVIRCaeUBE08go7sWK1Oku9oNk2K9J3ERcp-KM_rhqcGy9X99XRSEN8exiH09QHYx-MgrVVL0jVGuM6xuoBZuOmMTZkTGv-iSdZ20nlCyksn1e4J1mpFdOJXum9Cyuae58nFE8tY--oa1Dzqxc7jaVt1Q-yvbPJMt3ETzWWTe-NUxT-xeazvaDZHM6EdQX-D0TMV6JFAgAA"
   ],
   "686d27c48796": [
-   3.29,
+   3.42,
    4,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27CMBD8FbTnqMrLLeXKJ9BbhSLX2YhVEzux1wWE_O81CUWhCjd7Z2dnPOsLOJbsHWwuYHomo2EDDpW38qtFCAlo2WGs7X5kS1pDMhJi_-cF-NxfIanrWG6oZbQTQHUs46lvSRG_XAlVlr7mebouyzL2xlker5IdRb1cpCEki6z8PRUiE4VYYCXQyRNsxIyr1UHqP8EiE29lsS5yCPuwnxmcjFez--xopSU-P8ThNQ1ROEShKO3UE6Yy1vqesX4gs_VjjB1Za-w_sJGtG1E-ksJqecK9yUmtmBp6hg8-rmjyPiWUjpZx8NR3qPnZi73Gyhn1jezu3OyWbhbGGbdNb61XFP_F6sMc0a52B8K2hvAL4u9E4EUCAAA"
   ],
   "c7758fe5c1dd": [
    25.0,
-   8,
+   7,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WSwW6DMAyGX6XyGU1AyUS57hHa21ShLBjVGgSaOGsrlHdfgK6iE70l_v35d-wMYFmys1AM0PVMnYYCLCpn5FeD4CPQssUQ2__IhrSGaAJC_ucAfOtHSeoqhGtqGM0sUBXCeO0bUsRvI1Am8XuaxnmWZSE31HI4WrYU_FIRex-tUukuFiIRW7FCRdDKKxRiwWp1kvoPzfJkK7bJLgd_9MdFg3Pj5eK-OBppiG9P43CazsHYB6NgbdULUnXGuJ6xeoLZuGmMLRnTmX9iLRs7qXwhheV6hUeSlVox1fRKP7uworn3eULx1DKeHfUtan71YqextJ36RrYPNrlPN_FTjfumP4xTFP7F5tBd0Gz2J8KmAv8LQWAkkEUCAAA"
   ],
   "fc40601dec2f": [
@@ -155,7 +155,7 @@ window.UC_DATA.push({
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WSwW7CMAyGXwX5XE1NSifGdY_AbhOqstQV1tK0TZwBQnn3hZahMpVb4t-ff8fOBTwrDh62F-h6ps7CFjzq4NSXQYgZWNViiu1-lCFrIRuBlP95AT73V0nZOoUbMoxuEqhOYTz1hjTxyxWoRP4qZb5Zr9cpN9UKeLVsKfnJMo8xW6TkW16WoizKBSqDVp1gW85Yqw_K_qFCSrEpRLGBuI_7WYNT49XsPjs65YjPD-MIloZkHJNRsvb6Cak750LPWD_A7MI4xpac69w_sVHGjyofSWO1XOGe5JXVTA0904eQVjT1Pk0oH1vGIVDfouVnLw4WK9_pb2R_Z8VtuiKONW6bfndBU_oXq4_uiG61OxCaGuIvxvnWI0UCAAA"
   ],
   "f87b9675ac4e": [
-   10.0,
+   3.0,
    22,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WRwW6DMAyGX6XKGU2UkWnjukdob1OFsmA0ayEBx1lbobz7Akwbnegt8e_P_m2PwrPi4EU1CtczOisq4UEHUu8GRMyEVR2k2OFLGbRWZDOQ8t9Gwdd-kpRtUrhFw0CLgE0Kw6U3qJEfJqDe509FkT-XZZlyU60AU8sOU79C5jFmm1Txkku5l49yg8pEpy6ikjGe4mnVf_FVr_6rJylCvt5MGywOqW5MHlJlr--Q2hGFnqG5gZnCvKUOiRz9E1tl_KzyGTXU2xV-k7yymrHFe_oQ0gUW78sC8tkyDAH7DizfmzhYqL3Tn8D-j40z-3PAVwoa07l3R3cG2h0-EEwj4jde68MyHAIAAA"
   ]
@@ -168,5 +168,5 @@ window.UC_DATA.push({
  ],
  "ko": "스발린 (2-5%)",
  "league": "Forbidden Rites",
- "stamp": "2026-11-26T15:52:31Z"
+ "stamp": "2026-11-27T00:55:17Z"
 });
