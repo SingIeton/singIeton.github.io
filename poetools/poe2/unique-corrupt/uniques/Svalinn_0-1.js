@@ -1,10 +1,10 @@
-/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-27T10:13:06Z */
+/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-27T19:44:27Z */
 window.UC_DATA.push({
  "name": "Svalinn (0-1%)",
  "base": "",
  "unit": "d",
- "cost": 1.0,
- "vaalCost": 0.01634,
+ "cost": 15.0,
+ "vaalCost": 0.01706,
  "rootText": [
   "Armour ≥250%",
   "Blocked Hits 0-1%"
@@ -16,14 +16,14 @@ window.UC_DATA.push({
    "ko": "변화 없음",
    "p": 0.25,
    "price": 11.0,
-   "n": 31,
+   "n": 32,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVOG26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2VMVrTHnhDP-qBJntCEh7CbVbQg9uKdDaHkQ-v8Mv35rAitYTUuOa5ogEEZ4mbOKpQg0rwjjjNRVgpBXuKyLkuEEXha0wLikPGVAKCUVIywa7MJu9eRlFc3qvjoaYcBdHn7ZazjGfYa4-_gPViaUcjDGj061D2Jn_JyOHowZzB9wLzo7o-4EUjXPO9xJVmjpYA8p_Ohj8pbZl7jgeWR19DD2SrvUi71WjR3kl3L2riXZPTxTj1t23oyXEOP-8j6clHnZHkB1LQo_oEHncBwDAAA"
   },
   {
    "group": "vaal",
    "label": "Increased Armour",
    "p": 0.03571428571428571,
-   "price": 1.1,
+   "price": 16.5,
    "n": 0,
    "ko": "방어도 % 증가",
    "low": true,
@@ -34,7 +34,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Reduced Attribute Requirements",
    "p": 0.03571428571428571,
-   "price": 0.75,
+   "price": 11.25,
    "n": 0,
    "ko": "능력치 요구사항 감소",
    "low": true,
@@ -45,7 +45,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Thorns Damage",
    "p": 0.03571428571428571,
-   "price": 0.75,
+   "price": 11.25,
    "n": 0,
    "ko": "가시 피해 % 증가",
    "low": true,
@@ -56,8 +56,8 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Block Chance",
    "p": 0.03571428571428571,
-   "price": 2.0,
-   "n": 1,
+   "price": 30.0,
+   "n": 0,
    "ko": "막기 확률 % 증가",
    "low": true,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZr4y0R7u0fo7qYKZcGo1kKAxFlbobz7AmwIpnKX-PizT-wMzJIgZ9lpYG1H2Gp2YhakM-JTAfMR06KBEDt_C4Vas2gCQv7HwOjRjZLQVQjXqAjMLGAVwnDvFEqklxEok_g1TeMiz_OQG2o5GFs2GPqlPPY-ekqlx5jzhGd8S4k7OyUrRsur0H9IXiQZz5JjwfzFX1bGZsPl6r46GmGQHpsxOI19aOhDo2DUyh1Stsa4jqDawGTcNL4GjWnNP7EWyk4q3VBC-bzCkmSFloQ17um9C6uZvc_zjCfL0DvsGtC092KnobSt_AKyC5tEy3THGr8bfjNOYvgPh_f2BuZwviKoivkf_hwziD0CAAA",
@@ -67,7 +67,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Maximum Block Chance",
    "p": 0.03571428571428571,
-   "price": 10.0,
+   "price": 150.0,
    "n": 1,
    "ko": "최대 막기 확률 +%",
    "low": true,
@@ -100,7 +100,7 @@ window.UC_DATA.push({
    "ko": "소켓 +1",
    "p": 0.25,
    "price": 155.0,
-   "n": 3,
+   "n": 4,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WR3W6DMAyFX6XKNZqAwbRxu0do76YKZcFo1kICjrO2Qnn3BZg2mMpd4uPPxz-jcCzZO1GNwvaM1ohKOFCe5LsGERJhZAcxdvySGo0RyQzE_LdR8K2fJGmaGG5RM9AiYBPDcO01KuSHCaiz9CnP0-eiKGJurOVhsuww-uVlGkJyl8pf0rLMysdyS8mrqLIQzuG88l36qVf_1ZMkId82U3qDQ6wXonfsw6kdUlki3zM0G5jJz9vpkMjSP7GV2s0qX1BBfb_Cb5KTRjG2uKcPPm5-6X1ZVzq3DIPHvgPDexN7A7Wz6hPY_bFhZn8O90peYTzz4WQvQIfjB4JuRPgGZ_yHwhQCAAA"
   },
   {
@@ -109,19 +109,19 @@ window.UC_DATA.push({
    "p": 0.25,
    "ko": "막기 피해 0—1%",
    "price": 11.0,
-   "n": 31,
+   "n": 32,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVOG26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2VMVrTHnhDP-qBJntCEh7CbVbQg9uKdDaHkQ-v8Mv35rAitYTUuOa5ogEEZ4mbOKpQg0rwjjjNRVgpBXuKyLkuEEXha0wLikPGVAKCUVIywa7MJu9eRlFc3qvjoaYcBdHn7ZazjGfYa4-_gPViaUcjDGj061D2Jn_JyOHowZzB9wLzo7o-4EUjXPO9xJVmjpYA8p_Ohj8pbZl7jgeWR19DD2SrvUi71WjR3kl3L2riXZPTxTj1t23oyXEOP-8j6clHnZHkB1LQo_oEHncBwDAAA"
   }
  ],
  "searches": {
   "704acc8882e4": [
-   1.0,
-   40,
+   15.0,
+   38,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VQQW7CMBD8CtpzhJI0RjTXPoHeKoSMs6grOXa6tiko8t-7CRwSid7smZ2Z3RkhRB1TgHYEP0TyDloIaBLrs0XIBTjdo2CHq7bkHBSzQOa_Roj3YaK06wS-kI3ID4I6gfE2WDIUt5PgVJW7ui73TdPIrHglnCJ7krxalTkXL1X1e6lUpd7UWqVv0FY5H_NxkfvY57T4L56smeJ9dWVy9CN-WbJlj2D-URrPnIaI3Up80TbM9fTE7Pk1O1s_S_rgZEgq3Xz6X-TN4ZvQdpD_AG9ZKxOAAQAA"
   ],
   "548ed33f742f": [
    11.0,
-   31,
+   32,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VSy27DIBD8lYqzVfEwfuTaT0hvVWRRTJRVbezwaBJF_HuxHaVOG26wM7OzLHNF1gnnLdpc0TA6GDTaIKukN-KzUyhkSItexdr2W3SgNcpmQeR_XJG7jBMkdBvLe-icMgsAbSyr89iBBPc6CRqCC0pxled55MZeXk2WPUQ_ynEI2VMVrTHnhDP-qBJntCEh7CbVbQg9uKdDaHkQ-v8Mv35rAitYTUuOa5ogEEZ4mbOKpQg0rwjjjNRVgpBXuKyLkuEEXha0wLikPGVAKCUVIywa7MJu9eRlFc3qvjoaYcBdHn7ZazjGfYa4-_gPViaUcjDGj061D2Jn_JyOHowZzB9wLzo7o-4EUjXPO9xJVmjpYA8p_Ohj8pbZl7jgeWR19DD2SrvUi71WjR3kl3L2riXZPTxTj1t23oyXEOP-8j6clHnZHkB1LQo_oEHncBwDAAA"
   ],
   "cc856a5bf7d3": [
@@ -141,7 +141,7 @@ window.UC_DATA.push({
   ],
   "f2169dd28199": [
    null,
-   1,
+   0,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZr4y0R7u0fo7qYKZcGo1kKAxFlbobz7AmwIpnKX-PizT-wMzJIgZ9lpYG1H2Gp2YhakM-JTAfMR06KBEDt_C4Vas2gCQv7HwOjRjZLQVQjXqAjMLGAVwnDvFEqklxEok_g1TeMiz_OQG2o5GFs2GPqlPPY-ekqlx5jzhGd8S4k7OyUrRsur0H9IXiQZz5JjwfzFX1bGZsPl6r46GmGQHpsxOI19aOhDo2DUyh1Stsa4jqDawGTcNL4GjWnNP7EWyk4q3VBC-bzCkmSFloQ17um9C6uZvc_zjCfL0DvsGtC092KnobSt_AKyC5tEy3THGr8bfjNOYvgPh_f2BuZwviKoivkf_hwziD0CAAA"
   ],
   "1b5e8657fb08": [
@@ -161,7 +161,7 @@ window.UC_DATA.push({
   ],
   "e17f786d3c81": [
    155.0,
-   3,
+   4,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WR3W6DMAyFX6XKNZqAwbRxu0do76YKZcFo1kICjrO2Qnn3BZg2mMpd4uPPxz-jcCzZO1GNwvaM1ohKOFCe5LsGERJhZAcxdvySGo0RyQzE_LdR8K2fJGmaGG5RM9AiYBPDcO01KuSHCaiz9CnP0-eiKGJurOVhsuww-uVlGkJyl8pf0rLMysdyS8mrqLIQzuG88l36qVf_1ZMkId82U3qDQ6wXonfsw6kdUlki3zM0G5jJz9vpkMjSP7GV2s0qX1BBfb_Cb5KTRjG2uKcPPm5-6X1ZVzq3DIPHvgPDexN7A7Wz6hPY_bFhZn8O90peYTzz4WQvQIfjB4JuRPgGZ_yHwhQCAAA"
   ]
  },
@@ -173,5 +173,5 @@ window.UC_DATA.push({
  ],
  "ko": "스발린 (0-1%)",
  "league": "Forbidden Rites",
- "stamp": "2026-11-27T10:13:06Z"
+ "stamp": "2026-11-27T19:44:27Z"
 });
