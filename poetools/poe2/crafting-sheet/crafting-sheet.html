@@ -585,10 +585,9 @@ function apply(o){
   if(!R.steps.length)R.steps.push(newStep());
   UNDO.length=0;renderAll();SNAP=json();return true;
 }
-async function loadList(){ /* recipe/sample.js 가 있으면 그것을, 없으면 recipe/index.js 를 읽어 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
+async function loadList(){ /* recipe/index.js 를 읽어 window.CRAFT_RECIPE_INDEX 를 만듭니다 */
   window.CRAFT_RECIPE_INDEX=undefined;
-  try{await loadScript("recipe/sample.js")}catch(e){}
-  if(!Array.isArray(window.CRAFT_RECIPE_INDEX)){try{await loadScript("recipe/index.js")}catch(e){}}
+  try{await loadScript("recipe/index.js")}catch(e){}
   const a=window.CRAFT_RECIPE_INDEX;
   LIST=Array.isArray(a)?a.filter(x=>x&&x.file):null; /* index.js 순서 그대로 (최근 저장순 정렬 비활성) */
   fillList();
@@ -813,7 +812,7 @@ function dndLayout(){
   D.cx=false;
   if(X)D.cx=(X.side?D.x<X.b:D.y+scrollY>=X.b)!==X.bl; /* 반대쪽 흐름 위로 끌고 가면 그쪽으로 이동 */
   if(D.cx){
-    const n=X.n,tb=!X.bl,st0=tb?n:X.at,en=tb?X.all.length:n;let c=0;
+    const n=X.n,tb=!X.bl,st0=tb?n:0,en=tb?X.all.length:n;let c=0;
     for(let k=st0;k<en;k++)if(D.ar[k].top+D.ar[k].h/2<mid)c++;
     D.cnt=c;D.ins=st0+c;
     D.st.style.transform=`translate(${D.x-D.x0}px,${dy}px)`;
@@ -847,9 +846,11 @@ function dndEnd(e){
   D.els.forEach(el=>{if(D.row&&moved)el.style.transition="none";el.style.transform="";el.classList.remove("dragging")}); /* 줄은 DOM 순서를 바로 바꾸므로, 놓는 순간 되돌아가는 애니메이션이 보이지 않게 끔 */
   if(!moved)return;
   if(D.cx){ /* 다른 흐름(메인 ↔ 분기)으로 이동 */
-    const S=R.steps[D.si],snap=R.steps.map(x=>[x,!!x.b]),a0=R.at,n=D.X.n;
+    const S=R.steps[D.si],snap=R.steps.map(x=>[x,!!x.b]),a0=R.at,n=D.X.n,at0=D.X.at;
     R.steps.splice(D.si,1);
-    if(D.X.bl){delete S.b;R.steps.splice(D.ins,0,S)}else{S.b=true;R.steps.splice(n-1+D.cnt,0,S)}
+    if(D.X.bl){delete S.b;R.steps.splice(D.ins,0,S);R.at=at0+(D.ins<at0?1:0)} /* 분기점 위쪽에 끼워 넣으면 분기점이 한 칸 내려감 */
+    else{S.b=true;R.steps.splice(n-1+D.cnt,0,S);R.at=at0-(D.si<at0?1:0)} /* 분기점 위쪽 메인 단계가 빠지면 분기점이 한 칸 올라감 */
+    if(!R.steps.some(x=>x.b))delete R.at; /* 분기 단계가 남지 않으면 분기 자체가 사라짐 */
     UNDO.push(()=>{R.steps.splice(0,R.steps.length,...snap.map(x=>x[0]));snap.forEach(([x,b])=>{if(b)x.b=true;else delete x.b});R.at=a0});
     refresh();return;
   }
@@ -870,14 +871,14 @@ $("app").addEventListener("pointerdown",e=>{
   const row=h.classList.contains("rg"),sp=h.closest(".step");
   if(row&&R.steps[+sp.dataset.i].locked)return;
   const st=row?h.closest(".it"):sp,bl=!!R.steps[+sp.dataset.i].b,els=[...(row?sp.querySelectorAll(".it"):[...document.querySelectorAll(".step")].filter(x=>!!R.steps[+x.dataset.i].b===bl))]; /* 단계는 같은 흐름(메인 또는 분기) 안에서만 이동 */
-  if(els.length<2)return;
+  if(els.length<2&&!(!row&&bl&&mainN()<R.steps.length))return; /* 분기 단계가 하나뿐이어도, 메인으로 옮기기 위해 끌 수 있음 */
   e.preventDefault();
   if(row){const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur();acHide()} /* 입력 중이던 칸·자동완성 목록은 닫고 시작 */
   const i0=els.indexOf(st);
   let X=null,ar=null; /* 반대쪽 흐름으로 옮길 수 있는 경우: 각 흐름에 단계가 둘 이상 남아야 하고, 메인은 분기 시작 높이 이후 단계만 */
   if(!row){
     const n=mainN(),len=R.steps.length,at=Math.min(Math.max(R.at|0,0),n),si=+sp.dataset.i;
-    if(n<len&&(bl?len-n>=2:si>=at&&n-at>=2)){
+    if(n<len&&(bl||si<at||n-at>=2)){
       const all=[...document.querySelectorAll(".step")],lane=document.querySelector(".lane.bl"),madd=document.querySelector(".steps>.madd");
       if(lane&&madd&&all.length===len){
         const lr=lane.getBoundingClientRect(),side=lr.top<madd.getBoundingClientRect().top; /* 좌우 배치면 가로 경계, 좁은 화면(위아래 배치)이면 세로 경계 */
