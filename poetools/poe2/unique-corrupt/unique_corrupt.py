@@ -352,11 +352,11 @@ UNIQUES = [
         "catalyst": {"names": ["Xoph's Catalyst", "Tul's Catalyst", "Esh's Catalyst"], "quality": 20, "per": 1.2, "label": "Quality 20%", "ko": "퀄리티 20%"},   # 퀄리티 20 비용 = 촉매 중 최저가 x 20/1.2 (poe.ninja). 베이스 옆 가공 노드(label)에 베이스+가공 비용 합산가로 표시
         "quality_scale": ["+#% to all Elemental Resistances", "#% increased Damage for each type of Elemental Ailment on Enemy"],   # 퀄리티 조건이 있는 검색에서 이 옵션들의 min/max 에 (1 + 퀄리티/100) 을 곱함 (반올림)
         "base": "",
-        "root_text": ["Damage per Ailment type ≥18%", "All Ele Resist ≥15%"],
-        "root_text_ko": ["상태 이상 유형당 피해 ≥ 18%", "모든 원소 저항 ≥ 15%"],
+        "root_text": ["Damage per Ailment type ≥18%", "All Ele Resist ≥18%"],
+        "root_text_ko": ["상태 이상 유형당 피해 ≥ 18%", "모든 원소 저항 ≥ 18%"],
         # 반지는 소켓 조건 없음. 모든 원소 저항은 implicit 이 아닌 explicit 옵션
         "default_search": {"corrupted": True, "mods": [
-            M("+#% to all Elemental Resistances", min=15),
+            M("+#% to all Elemental Resistances", min=18),
             M("#% increased Damage for each type of Elemental Ailment on Enemy", min=18),
             M("Wind Skills which can be boosted by Elemental Ground Surfaces can be boosted by multiple Elemental Ground Surfaces"),
         ]},
