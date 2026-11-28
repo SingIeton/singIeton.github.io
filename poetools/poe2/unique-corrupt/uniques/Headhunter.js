@@ -1,10 +1,10 @@
-/* Headhunter / 리그: Forbidden Rites / 수집: 2026-11-28T10:24:57Z */
+/* Headhunter / 리그: Forbidden Rites / 수집: 2026-11-28T11:03:11Z */
 window.UC_DATA.push({
  "name": "Headhunter",
  "base": "",
  "unit": "d",
- "cost": 14.47,
- "vaalCost": 0.01755,
+ "cost": 14.75,
+ "vaalCost": 0.01777,
  "rootText": [
   "Charm Slots ≥2",
   "Life×1 + Attr×2 ≥150"
@@ -15,8 +15,8 @@ window.UC_DATA.push({
    "label": "No change",
    "ko": "변화 없음",
    "p": 0.5,
-   "price": 14.47,
-   "n": 939,
+   "price": 14.75,
+   "n": 938,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA32TTW6DMBCFr1J5HVX2-Ac7y656hyqKXOIolsBQY9JGEXfvQKIWUtwdzPtmePYbrqRLNvUd2V5J0ybfBLIlnSv7aN8rR4YNCbZ2WHt19nDqQ3KRbKYebHm7knRpR9WGA5aPvkL9JvgDlt1XW_nSp-exYc_BGC4KKjjOXSUE1VQwrYTIERwU05RxoX4JX88JJpgCg58CdHS2Ve_Gs9UeDwbDsBu77qZDk1ZNh_Jkw3-e5wCjCoBqsbC8AEBoaSilGR1l0BKkNhmA8wIkCBBFBhBogEJhIGtBFYwXiucnUCORUTIHMMkkqgpy17Ca3PIi_wb3AGgpmKGMYEi7WS63vPaz99ljtNGny2J7--A_MPRhwOWtfVdmOssmxr5N7rBoTrGftr72MTbxQTzaqpvU9OlLt1-f8AN1NpTJH_26Ptm7LyL-W-fL04urEhm-Ad2C52aRAwAA"
   },
   {
@@ -33,7 +33,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Armour",
    "p": 0.020833333333333332,
-   "price": 14.47,
+   "price": 14.75,
    "n": 0,
    "ko": "방어도 % 증가",
    "low": true,
@@ -44,7 +44,7 @@ window.UC_DATA.push({
    "group": "vaal",
    "label": "Increased Evasion Rating",
    "p": 0.020833333333333332,
-   "price": 14.47,
+   "price": 14.75,
    "n": 0,
    "ko": "회피 % 증가",
    "low": true,
@@ -96,7 +96,7 @@ window.UC_DATA.push({
    "label": "Maximum Fire Resistance",
    "p": 0.020833333333333332,
    "price": 19.0,
-   "n": 23,
+   "n": 24,
    "ko": "화염 저항 최대치 +%",
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VR0W6DMAz8lSnP1UQgDdDHPe0fpgplIaiWQmCJ0w2h_PsMnVo6tW-J787ns2cWUGEM7DCzYUQYHDuwYHT06tMalnbMqd5Q7d2o9hQdGs92q4YkHzPDaVxQ5Voqd2AJvwDQUtn8jBY04OsiaIq8rgtRZqKgvg8ZIqsywSspxDNGkUteZbwQ8saAfsvggsu8JqucJjorG82SrQcKlqdbV6dPyl1t670sudyXLB3TcRPkErDZ_DdPrzzgdLe56OCLDBMZkWXQT5R68D6OaNo7Mfq4brwH7wf_D-yUDSuK36BN87jDlRSU0wgdPMbX8f4uR3c9Ty9vxiJLvxou_20NAgAA",
    "range": "1—3"
@@ -155,20 +155,20 @@ window.UC_DATA.push({
    "label": "Values as is",
    "p": 0.25,
    "ko": "수치 그대로",
-   "price": 14.47,
-   "n": 939,
+   "price": 14.75,
+   "n": 938,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA32TTW6DMBCFr1J5HVX2-Ac7y656hyqKXOIolsBQY9JGEXfvQKIWUtwdzPtmePYbrqRLNvUd2V5J0ybfBLIlnSv7aN8rR4YNCbZ2WHt19nDqQ3KRbKYebHm7knRpR9WGA5aPvkL9JvgDlt1XW_nSp-exYc_BGC4KKjjOXSUE1VQwrYTIERwU05RxoX4JX88JJpgCg58CdHS2Ve_Gs9UeDwbDsBu77qZDk1ZNh_Jkw3-e5wCjCoBqsbC8AEBoaSilGR1l0BKkNhmA8wIkCBBFBhBogEJhIGtBFYwXiucnUCORUTIHMMkkqgpy17Ca3PIi_wb3AGgpmKGMYEi7WS63vPaz99ljtNGny2J7--A_MPRhwOWtfVdmOssmxr5N7rBoTrGftr72MTbxQTzaqpvU9OlLt1-f8AN1NpTJH_26Ptm7LyL-W-fL04urEhm-Ad2C52aRAwAA"
   }
  ],
  "searches": {
   "eac07c5860f5": [
-   14.47,
-   1043,
+   14.75,
+   1040,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VQyWrDMBD9lTLnUKwF186xp_5DCUGxJ3RAkh0tocbo3zN2CnUguUnzlnnzZojJpBxhP8MwJho87CFil4M5WYSyA28c8uwLTf-TfcIAu1XDku8Z0jQuqPE9j89kGb8D1PMYf0dLHaX3RXBUsm2V_qi0Yt-nDF01lRZNrfUrhpK1aCqhdP3PILdlCC1q2fIqyYmuxmZcbnPEh8lSDuWwyXnPf9z8N89gAqXpoZjs6cJ-pXAvjmL3QtkNIeQxYf8gPhsb10YdhTCE5-hq_VcqV36d3j7RJig3W6IB2agBAAA"
   ],
   "b64a5e3619a8": [
-   14.47,
-   939,
+   14.75,
+   938,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA32TTW6DMBCFr1J5HVX2-Ac7y656hyqKXOIolsBQY9JGEXfvQKIWUtwdzPtmePYbrqRLNvUd2V5J0ybfBLIlnSv7aN8rR4YNCbZ2WHt19nDqQ3KRbKYebHm7knRpR9WGA5aPvkL9JvgDlt1XW_nSp-exYc_BGC4KKjjOXSUE1VQwrYTIERwU05RxoX4JX88JJpgCg58CdHS2Ve_Gs9UeDwbDsBu77qZDk1ZNh_Jkw3-e5wCjCoBqsbC8AEBoaSilGR1l0BKkNhmA8wIkCBBFBhBogEJhIGtBFYwXiucnUCORUTIHMMkkqgpy17Ca3PIi_wb3AGgpmKGMYEi7WS63vPaz99ljtNGny2J7--A_MPRhwOWtfVdmOssmxr5N7rBoTrGftr72MTbxQTzaqpvU9OlLt1-f8AN1NpTJH_26Ptm7LyL-W-fL04urEhm-Ad2C52aRAwAA"
   ],
   "b2f28e04bab6": [
@@ -208,7 +208,7 @@ window.UC_DATA.push({
   ],
   "5604a0bcb69e": [
    19.0,
-   23,
+   24,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3VR0W6DMAz8lSnP1UQgDdDHPe0fpgplIaiWQmCJ0w2h_PsMnVo6tW-J787ns2cWUGEM7DCzYUQYHDuwYHT06tMalnbMqd5Q7d2o9hQdGs92q4YkHzPDaVxQ5Voqd2AJvwDQUtn8jBY04OsiaIq8rgtRZqKgvg8ZIqsywSspxDNGkUteZbwQ8saAfsvggsu8JqucJjorG82SrQcKlqdbV6dPyl1t670sudyXLB3TcRPkErDZ_DdPrzzgdLe56OCLDBMZkWXQT5R68D6OaNo7Mfq4brwH7wf_D-yUDSuK36BN87jDlRSU0wgdPMbX8f4uR3c9Ty9vxiJLvxou_20NAgAA"
   ],
   "38ee31132cf0": [
@@ -239,5 +239,5 @@ window.UC_DATA.push({
  ],
  "ko": "헤드헌터",
  "league": "Forbidden Rites",
- "stamp": "2026-11-28T10:24:57Z"
+ "stamp": "2026-11-28T11:03:11Z"
 });

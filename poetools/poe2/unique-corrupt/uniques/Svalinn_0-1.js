@@ -1,10 +1,10 @@
-/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-28T02:13:24Z */
+/* Svalinn_0-1 / 리그: Forbidden Rites / 수집: 2026-11-28T10:54:12Z */
 window.UC_DATA.push({
  "name": "Svalinn (0-1%)",
  "base": "",
  "unit": "d",
  "cost": 15.0,
- "vaalCost": 0.01753,
+ "vaalCost": 0.01777,
  "rootText": [
   "Armour ≥250%",
   "Blocked Hits 0-1%"
@@ -99,8 +99,8 @@ window.UC_DATA.push({
    "label": "Socket +1",
    "ko": "소켓 +1",
    "p": 0.25,
-   "price": 155.0,
-   "n": 4,
+   "price": 30.0,
+   "n": 5,
    "url": "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WR3W6DMAyFX6XKNZqAwbRxu0do76YKZcFo1kICjrO2Qnn3BZg2mMpd4uPPxz-jcCzZO1GNwvaM1ohKOFCe5LsGERJhZAcxdvySGo0RyQzE_LdR8K2fJGmaGG5RM9AiYBPDcO01KuSHCaiz9CnP0-eiKGJurOVhsuww-uVlGkJyl8pf0rLMysdyS8mrqLIQzuG88l36qVf_1ZMkId82U3qDQ6wXonfsw6kdUlki3zM0G5jJz9vpkMjSP7GV2s0qX1BBfb_Cb5KTRjG2uKcPPm5-6X1ZVzq3DIPHvgPDexN7A7Wz6hPY_bFhZn8O90peYTzz4WQvQIfjB4JuRPgGZ_yHwhQCAAA"
   },
   {
@@ -160,8 +160,8 @@ window.UC_DATA.push({
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WS3W6DMAyFX6XKNZoIPxPjdo_Q3k0VyoKrWoMEEmdthfLuC7AhmMpd4uPPPrEzMEuCnGXlwHRHqBUrmQXpjPhsgPmIKdFCiB2_RYNKsWgCQv7HwOjRjZJQdQhfsCEws4B1CMO9a1AivYxAxePXJImLLMtCbqjlYGzZYuiX5LH30VMqeYvznOdpvqXEnZV8xSh5FeoP4UnCi5SnBfNnf14Zmw1Xq_vqaIRBemzG4BT2oaEPjYJRK3dIqY1xHUG9gcm4aXwtGqPNP_EiGjupdEMJ1fMKS5IVShJecE_vXVjN7H2eZzxZht5h14KivRc7BZXV8gvILiyPlumONX43_G6cxPAfDid9A3M4XhGamvkfeYXBOz0CAAA"
   ],
   "e17f786d3c81": [
-   155.0,
-   4,
+   30.0,
+   5,
    "https://www.pathofexile.com/trade2/search/poe2/Forbidden%20Rites/H4sIAAAAAAAAA3WR3W6DMAyFX6XKNZqAwbRxu0do76YKZcFo1kICjrO2Qnn3BZg2mMpd4uPPxz-jcCzZO1GNwvaM1ohKOFCe5LsGERJhZAcxdvySGo0RyQzE_LdR8K2fJGmaGG5RM9AiYBPDcO01KuSHCaiz9CnP0-eiKGJurOVhsuww-uVlGkJyl8pf0rLMysdyS8mrqLIQzuG88l36qVf_1ZMkId82U3qDQ6wXonfsw6kdUlki3zM0G5jJz9vpkMjSP7GV2s0qX1BBfb_Cb5KTRjG2uKcPPm5-6X1ZVzq3DIPHvgPDexN7A7Wz6hPY_bFhZn8O90peYTzz4WQvQIfjB4JuRPgGZ_yHwhQCAAA"
   ]
  },
@@ -173,5 +173,5 @@ window.UC_DATA.push({
  ],
  "ko": "스발린 (0-1%)",
  "league": "Forbidden Rites",
- "stamp": "2026-11-28T02:13:24Z"
+ "stamp": "2026-11-28T10:54:12Z"
 });
