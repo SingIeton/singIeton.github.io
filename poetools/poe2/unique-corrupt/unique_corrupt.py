@@ -14,6 +14,7 @@
   python unique_corrupt.py --out other_dir      # 저장 폴더 (기본: 스크립트 옆 uniques/)
   (실행하면 캐시 사용 여부를 묻는다: 엔터/1 = yes, 2 = no(전체 검색). --use-cache 를 주면 묻지 않고 사용)
   python unique_corrupt.py --use-cache          # 같은 리그로 저장된 js 의 검색 결과 중 검색 조건이 같은 것은 재사용 (거래소 검색 생략)
+  python unique_corrupt.py "Headhunter" --url   # 거래소 검색 없이 검색 조건의 거래소 링크만 출력
 """
 import argparse
 import hashlib
@@ -46,17 +47,22 @@ CORRUPT_FILTERS = {          # 타락(corrupted) 검색 전체에 추가하는 m
     "sanctified": {"option": "false"},
 }
 OUTCOME_P = 0.25             # 타락 결과 1종의 확률
+WEIGHT_TYPE = "weight2"      # 거래소 '가중치 합' 그룹 타입 ("weight" = Weighted Sum V1, "weight2" = V2). 옵션별 min/max 를 쓰지 않으면 결과는 같다
 
 TOP_N = 10                   # 검색당 가져올 최저가 매물 수 (fetch 1회)
 FETCH_MAX = 10
 
 
-def M(stat, min=None, max=None, id=None):
-    """검색 옵션 하나. stat 은 거래소 옵션 문구(예: '# to maximum Life'), 스탯 id 를 알면 id 로 직접 지정 가능."""
-    return {"stat": stat, "min": min, "max": max, "id": id}
+def M(stat, min=None, max=None, id=None, weight=None):
+    """검색 옵션 하나. stat 은 거래소 옵션 문구(예: '# to maximum Life'), 스탯 id 를 알면 id 로 직접 지정 가능.
+    weight 는 검색 명세의 "weights"(가중치 합) 안에서만 사용: 이 옵션 수치에 곱할 가중치."""
+    return {"stat": stat, "min": min, "max": max, "id": id, "weight": weight}
 
 
 # 검색 명세: corrupted(True/False), sockets=(min, max) 증강 가능 소켓(None=제한 없음), mods=[M(...)]
+#   (선택) weights={"min": 합계 최소값, "mods": [M(옵션, weight=가중치), ...]} = 거래소 가중치 합(Weighted Sum) 조건. 기본 검색에 넣으면 모든 검색에 적용
+#   ※ 주의: 비로그인(POESESSID 없음) 상태에서는 weights(Weighted Sum) 를 넣으면 'Query is too complex' (400) 오류가 난다 (Headhunter 에서 발생, weights 를 끄면 정상. 비로그인 한도 때문으로 추정).
+#      가중치 합 대신 mods 의 일반 스탯 필터(and)를 쓸 것.
 # 바알 인챈트 정보: 장비 부위(slot)별 고정 목록. en = 영문명, ko = 한글명, range = 수치 범위, mod = 거래소 인챈트 옵션 문구.
 # 어떤 인챈트를 검색/ratio 로 평가할지와 ratio 값은 개별 장비의 "enchants" 에서 설정한다.
 ENCHANTS = {
@@ -94,6 +100,24 @@ ENCHANTS = {
         {"en": "Dexterity",                       "ko": "민첩",                   "range": "10—15",  "mod": "+# to Dexterity"},
         {"en": "Intelligence",                    "ko": "지능",                   "range": "10—15",  "mod": "+# to Intelligence"},
     ],
+    "belt": [
+        {"en": "Maximum Life",                    "ko": "최대 생명력 +",            "range": "30—40",  "mod": "+# to maximum Life"},
+        {"en": "Increased Armour",                "ko": "방어도 % 증가",            "range": "15—25",  "mod": "#% increased Armour"},
+        {"en": "Increased Evasion Rating",        "ko": "회피 % 증가",             "range": "15—25",  "mod": "#% increased Evasion Rating"},
+        {"en": "Increased Energy Shield",         "ko": "에너지 보호막 % 증가",      "range": "15—25",  "mod": "#% increased maximum Energy Shield"},
+        {"en": "Fire Resistance",                 "ko": "화염 저항 +%",            "range": "20—25",  "mod": "+#% to Fire Resistance"},
+        {"en": "Cold Resistance",                 "ko": "냉기 저항 +%",            "range": "20—25",  "mod": "+#% to Cold Resistance"},
+        {"en": "Lightning Resistance",            "ko": "번개 저항 +%",            "range": "20—25",  "mod": "+#% to Lightning Resistance"},
+        {"en": "Maximum Fire Resistance",         "ko": "화염 저항 최대치 +%",      "range": "1—3",    "mod": "+#% to Maximum Fire Resistance"},
+        {"en": "Maximum Endurance Charges +1",    "ko": "인내 충전 최대치 +1",      "range": "1",      "mod": "+# to Maximum Endurance Charges"},
+        {"en": "Strength",                        "ko": "힘",                    "range": "10—15",  "mod": "+# to Strength"},
+        {"en": "Dexterity",                       "ko": "민첩",                   "range": "10—15",  "mod": "+# to Dexterity"},
+        {"en": "Intelligence",                    "ko": "지능",                   "range": "10—15",  "mod": "+# to Intelligence"},
+        # 이번 시즌 추가 예정 (헤드헌터가 '연막 보행자(Shroud Walker, 적에게 순간이동)' 를 훔치지 않게 하는 인챈트). 문구가 확정되면 이름(en/ko)을 고치고
+        # "pending": True 를 지운 뒤 "range" / "mod"(거래소 인챈트 옵션 문구) 를 채우고, 장비의 "enchants" 에 {"en": 이름, "ratio": 값} 을 추가하면 계산에 포함된다.
+        # pending 인 동안은 거래소 검색·확률·가격 계산 없이 html 에 '추가 예정' 노드로만 표시된다.
+        {"en": "Doesn't steal Shroud Walker",     "ko": "연막 보행자 훔치지 않음",    "pending": True},
+    ],
 }
 
 
@@ -127,9 +151,12 @@ def enchants_of(u):
     """장비의 enchants 설정에 ENCHANTS[slot] 의 en/ko/range/mod 를 합쳐서 반환."""
     if u.get("slot") not in ENCHANTS:
         sys.exit(f"{u['name']}: slot 이 없거나 ENCHANTS 에 없는 부위입니다 (사용 가능: {', '.join(ENCHANTS)})")
-    base = {e.get("key", e["en"]): e for e in slot_enchants(u)}
+    base = {e.get("key", e["en"]): e for e in slot_enchants(u) if not e.get("pending")}
+    pend = {e["en"] for e in slot_enchants(u) if e.get("pending")}
     out = []
     for c in u["enchants"]:
+        if c["en"] in pend:
+            sys.exit(f"{u['name']}: '{c['en']}' 은 아직 추가 예정(pending) 인챈트입니다. ENCHANTS 에서 pending 을 지우고 range/mod 를 채운 뒤 사용하세요")
         if c["en"] not in base:
             sys.exit(f"{u['name']}: ENCHANTS['{u['slot']}'] 에 없는 인챈트입니다: {c['en']}")
         e = {**base[c["en"]], **c, "en": base[c["en"]]["en"]}      # 표시 이름은 종류에 맞게 확정된 이름
@@ -140,6 +167,11 @@ def enchants_of(u):
             sys.exit(f"{u['name']}: '{e['en']}' 은 search 도 ratio 도 설정되지 않았습니다")
         out.append(e)
     return out
+
+
+def pending_enchants(u):
+    """아직 게임에 없는(추가 예정) 인챈트: 검색·확률·가격 계산 없이 html 에 '추가 예정' 노드로만 표시."""
+    return [e for e in slot_enchants(u) if e.get("pending")]
 
 
 def no_enchant_mods(u):
@@ -391,6 +423,52 @@ UNIQUES = [
                 {"range": (21, None), "text": "25%+", "text_ko": "25% 이상", "search": {"mods": [
                     M("#% increased Damage for each type of Elemental Ailment on Enemy", min=21),
                 ]}},
+            ],
+        },
+    },
+    {
+        "name": "Headhunter",
+        "file": "Headhunter",
+        "title": "Headhunter",
+        "ko": "헤드헌터",
+        "type": "Heavy Belt",
+        "slot": "belt",
+        "base": "",
+        "root_text": ["Charm Slots ≥2", "Life×1 + Attr×2 ≥150"],
+        "root_text_ko": ["호신부 슬롯 ≥ 2", "생명력×1 + 능력치×2 ≥ 150"],
+        # 기본 검색: 호신부 슬롯 2 이상 + 가중치 합(최대 생명력 x1 + 힘 x2 + 민첩 x2) 150 이상.
+        #   벨트는 퀄리티가 없으므로 quality_min 을 None 으로 두어 퀄리티 조건을 끈다 (전역 QUALITY_MIN 무시).
+        "default_search": {"corrupted": True, "quality_min": None,
+            "mods": [
+                M("# to maximum Life"),
+                M("# to Strength"),
+                M("# to Dexterity"),
+                {**M("Has # Charm Slot", min=2), "group": ("implicit", "explicit")},      # 벨트 호신부 슬롯은 보통 implicit (실행 시 거래소 옵션 목록에서 있는 그룹을 자동 선택)
+            ]},
+        "base_search": {"corrupted": False},
+        "enchant_search": {},
+        "socket_search": None,      # 벨트는 소켓이 없음 -> 변화 없음으로 합산
+        # 바알 인챈트 12종 (ENCHANTS["belt"]). 추가 예정 인챈트는 위 ENCHANTS 의 pending 항목으로 표시만 하고 여기에는 넣지 않는다.
+        # 인챈트는 모두 거래소 검색으로 가격을 구하고, 검색 실패 시에만 베이스 가격 x ratio 로 대체한다 (ratio 는 임시값 1.0).
+        "enchants": [
+            {"en": "Maximum Life",                 "ratio": 1.0},
+            {"en": "Increased Armour",             "ratio": 1.0},
+            {"en": "Increased Evasion Rating",     "ratio": 1.0},
+            {"en": "Increased Energy Shield",      "ratio": 1.0},
+            {"en": "Fire Resistance",              "ratio": 1.0},
+            {"en": "Cold Resistance",              "ratio": 1.0},
+            {"en": "Lightning Resistance",         "ratio": 1.0},
+            {"en": "Maximum Fire Resistance",      "ratio": 1.0},
+            {"en": "Maximum Endurance Charges +1", "ratio": 1.0},
+            {"en": "Strength",                     "ratio": 1.0},
+            {"en": "Dexterity",                    "ratio": 1.0},
+            {"en": "Intelligence",                 "ratio": 1.0},
+        ],
+        # 수치 변동: 여러 옵션(생명력/힘/민첩)이 함께 바뀌어 한 값으로 모델링하기 어려우므로 우선 '변화 없음' 가격과 동일하게 취급한다 (search/ratio 없음).
+        "reroll": {
+            "label": "Values", "ko": "수치", "roll": 1,
+            "outcomes": [
+                {"value": 1, "text": "as is", "text_ko": "그대로"},
             ],
         },
     },
@@ -757,6 +835,9 @@ STATS = {}
 def stat_id(text, group="explicit"):
     if not STATS:                      # 옵션 목록은 실제로 필요할 때(검색/링크 생성)만 로드
         STATS.update(load_stats())
+    if isinstance(group, (list, tuple)):      # 그룹을 여러 개 주면 문구가 있는 첫 그룹을 사용 (예: ("implicit", "explicit"))
+        found = [g for g in group if STATS.get(g, {}).get(norm_stat(text)) or STATS.get(g, {}).get(raw_stat(text))]
+        group = found[0] if found else group[0]
     pool = STATS.get(group, {})
     ids = pool.get(raw_stat(text)) if "(local)" in str(text).lower() else None
     ids = ids or pool.get(norm_stat(text))
@@ -790,6 +871,16 @@ def scaled(v, f):
     return None if v is None else int(math.floor(Fraction(str(v)) * f + Fraction(1, 2)))
 
 
+def weight_group(wg):
+    """가중치 합 그룹: 옵션 수치 x weight 의 합이 min(~max) 범위. wg = {"min": .., "max": .., "mods": [M(.., weight=..)]}"""
+    return {
+        "type": WEIGHT_TYPE,
+        "value": _range(wg.get("min"), wg.get("max")),
+        "filters": [{"id": m.get("id") or stat_id(m["stat"], m.get("group", "explicit")), "value": {"weight": m["weight"]}}
+                    for m in wg["mods"]],
+    }
+
+
 def build_query(u, spec, extra_mods=()):
     qf = quality_factor(u, spec)
 
@@ -811,6 +902,7 @@ def build_query(u, spec, extra_mods=()):
         "status": {"option": "securable"},
         "name": u["name"],
         "stats": [{"type": "and", "filters": filters}]
+                 + ([weight_group(spec["weights"])] if spec.get("weights") else [])
                  + ([{"type": "not", "filters": to_filters(spec["not_mods"])}] if spec.get("not_mods") else []),
         "filters": {
             "type_filters": {"filters": {"rarity": {"option": "unique"}}},
@@ -936,6 +1028,10 @@ def search_fp(u, spec, kind="price"):
     nots = [[m.get("id") or m["stat"], m.get("group", "explicit")] for m in spec.get("not_mods") or []]
     key = [u["name"], u.get("type"), mods, nots, corrupted, CORRUPT_FILTERS if corrupted else None, spec.get("quality_min", QUALITY_MIN) if corrupted else None,
            list(spec.get("sockets") or (None, None)), kind, TOP_N]
+    if spec.get("weights"):
+        wg = spec["weights"]
+        key.append(["weights", wg.get("min"), wg.get("max"),
+                    [[m.get("id") or m["stat"], m.get("group", "explicit"), m["weight"]] for m in wg["mods"]]])
     if quality_factor(u, spec) is not None:
         key.append(["quality_scale", u["quality_scale"]])
     if corrupted and u.get("quality_max") is not None:
@@ -1146,6 +1242,12 @@ def analyze(u, league, old=None):
             o["url"] = url
         if e.get("range"):
             o["range"] = e["range"]
+        outcomes.append(o)
+
+    for e in pending_enchants(u):      # 추가 예정 인챈트: 확률 0·가격 없음. html 이 계산에서 제외하고 '추가 예정' 으로만 표시
+        o = {"group": "vaal", "label": e["en"], "p": 0, "price": None, "n": None, "pending": True}
+        if e.get("ko"):
+            o["ko"] = e["ko"]
         outcomes.append(o)
 
     if socket_ok:
